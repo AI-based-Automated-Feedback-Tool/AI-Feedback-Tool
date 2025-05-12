@@ -16,3 +16,7 @@ This is the official repository for **Project 39** — an AI-powered web applica
 - 🤖 AI-generated feedback on programming tasks
 - 📈 Instructor dashboard and reporting
 - 📁 CSV export of student performance
+
+## 🔗 UI Wireframe (Figma)
+
+You can view the UI wireframe here: [Click to open Figma Design](https://www.figma.com/design/pk7MWiVJ9oJxGG89NFyQTW/AI-Powered-Exam---Assignment-Web-App?node-id=1-20&t=osN0aruyoFza96fe-1)
