@@ -19,4 +19,4 @@ This is the official repository for **Project 39** — an AI-powered web applica
 
 ## 🔗 UI Wireframe (Figma)
 
-You can view the UI wireframe here: [Click to open Figma Design](https://www.figma.com/design/pk7MWiVJ9oJxGG89NFyQTW/AI-Powered-Exam---Assignment-Web-App?node-id=1-20&t=osN0aruyoFza96fe-1)
+You can view the UI wireframe here: [Click to open Figma Design](https://www.figma.com/design/pk7MWiVJ9oJxGG89NFyQTW/AI-Powered-Exam---Assignment-Web-App?node-id=1-20&t=79hujBb7N1vTSMNq-1)
