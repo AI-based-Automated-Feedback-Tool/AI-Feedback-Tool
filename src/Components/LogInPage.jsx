@@ -18,6 +18,14 @@ const LogInPage = () => {
     e.preventDefault();
     //clear previous errors
     setError("");
+
+    if (!email || !password) {
+      setError("Email and password are required.");
+      return;
+    }
+
+    console.log("Email:", email, "Password:", password);
+
     try {
       //signin user with provided email
       const { error } = await supabase.auth.signInWithPassword({
@@ -29,6 +37,7 @@ const LogInPage = () => {
         //set msg if err occur during login
         setError(error.message);
       } else {
+        console.log("Login successful. Waiting for auth state change...");
         //redirect to dashboard
         navigate("/dashboard");
       }
