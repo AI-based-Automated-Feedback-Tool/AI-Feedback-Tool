@@ -2,14 +2,20 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate } from 'react-router-dom';
 
 const MainPage = () => {
-    const navigate = useNavigate()
+  const navigate = useNavigate();
 
-    const studentPageBtn = () => {
-        navigate("/logIn")
-    }
-    const teacherPageBtn = () => {
-        navigate("/logIn")
-    }
+  const studentPageBtn = () => {
+    navigate("/logIn");
+  };
+
+  const teacherPageBtn = () => {
+    navigate("/logIn");
+  };
+
+  const skipToDashboard = () => {
+    navigate("/dashboard");
+  };
+
   return (
     <div className="container py-5">
       <header className="text-center mb-5">
@@ -31,7 +37,9 @@ const MainPage = () => {
                   <li className="list-group-item">✔️ Real-time AI feedback</li>
                   <li className="list-group-item">✔️ Encouragement and solution suggestions</li>
                 </ul>
-                <button className="btn btn-primary mt-3 w-100" onClick={studentPageBtn}>Explore Student Features</button>
+                <button className="btn btn-primary mt-3 w-100" onClick={studentPageBtn}>
+                  Explore Student Features
+                </button>
               </div>
             </div>
           </div>
@@ -46,10 +54,19 @@ const MainPage = () => {
                   <li className="list-group-item">🛠️ Task configuration with AI assistance</li>
                   <li className="list-group-item">📁 Exportable student reports</li>
                 </ul>
-                <button className="btn btn-success mt-3 w-100" onClick={teacherPageBtn}>Explore Instructor Features</button>
+                <button className="btn btn-success mt-3 w-100" onClick={teacherPageBtn}>
+                  Explore Instructor Features
+                </button>
               </div>
             </div>
           </div>
+        </div>
+
+        {/* ✅ Development-only Skip Button */}
+        <div className="text-center mt-4">
+          <button className="btn btn-outline-secondary" onClick={skipToDashboard}>
+            🚧 Skip Login – Go to Student Dashboard
+          </button>
         </div>
 
         <p className="text-muted text-center mt-4">✅ Initial setup complete. Project ready to build.</p>
@@ -59,7 +76,7 @@ const MainPage = () => {
         <p>Project 39 • React + Vite • Summer 2025</p>
       </footer>
     </div>
-  )
-}
+  );
+};
 
-export default MainPage; 
+export default MainPage;
