@@ -1,17 +1,47 @@
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { supabase } from "../SupabaseAuth/supabaseClient";
 
 const LogInPage = () => {
     const navigate = useNavigate()
-    
+    //state to store email and pw
+    const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+
     const handleSignUpClick = () => {
         navigate('/register')
     }
+
+    //handle login
+    const handleLogin = async (e) => {
+      e.preventDefault();
+      //clear previous errors
+      setError(""); 
+      try {
+        //signin user with provided email
+        const { error } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
+  
+        if (error) {
+          //set msg if err occur during login
+          setError(error.message);
+        } else {
+          //redirect to dashboard
+          navigate("/dashboard"); 
+        }
+      } catch (err) {
+        setError("An unexpected error occurred. Please try again.");
+      }
+    };
 
   return (
     <div className="d-flex justify-content-center align-items-center vh-100 bg-light">
       <div className="card p-4 shadow" style={{ width: '24rem' }}>
         <h2 className="card-title text-center mb-4">Log In</h2>
-        <form>
+        <form onSubmit={handleLogin}>
           <div className="mb-3">
             <label htmlFor="email" className="form-label">
               Email address
@@ -22,6 +52,8 @@ const LogInPage = () => {
               id="email"
               placeholder="Enter your email"
               required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
           </div>
           <div className="mb-3">
@@ -34,8 +66,11 @@ const LogInPage = () => {
               id="password"
               placeholder="Enter your password"
               required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             />
           </div>
+          {error && <p className="text-danger">{error}</p>}
           <button type="submit" className="btn btn-success w-100">
             Log In
           </button>
