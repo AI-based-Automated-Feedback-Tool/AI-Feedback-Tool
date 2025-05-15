@@ -14,54 +14,66 @@ const SignInPage = () => {
   //to submit signup
   const handleSignUp = async (e) => {
     e.preventDefault();
-  
+
     //trim input values to remove extra spaces
     const trimmedEmail = email.trim();
     const trimmedName = name.trim();
     const trimmedStudentId = studentId.trim();
     const trimmedPassword = password.trim();
-  
+
     try {
       //validate email
       if (!trimmedEmail || !/\S+@\S+\.\S+/.test(trimmedEmail)) {
         alert("Please enter a valid email address.");
         return;
       }
-  
+
       //ensure all required fields are filled
       if (!trimmedName || !trimmedStudentId || !role) {
         alert("All fields are required. Please fill out the form completely.");
         return;
       }
-  
+
+      //validate password length and special character
+      const specialCharRegex = /[!@#$%^&*(),.?":{}|<>]/; //regex to check for special characters
+      if (
+        trimmedPassword.length < 6 ||
+        !specialCharRegex.test(trimmedPassword)
+      ) {
+        alert(
+          "Password must be at least 6 characters long and contain at least one special character."
+        );
+        return;
+      }
+
       //attempt to sign up the user using Supabase auth
       const { data: signUpData, error } = await supabase.auth.signUp({
         email: trimmedEmail,
         password: trimmedPassword,
       });
-  
+
       //handle err during signUp
       if (error) {
         console.error("Error signing up:", error.message);
         alert("Error: " + error.message);
         return;
       }
-  
+
       //retrieve the current session to get the user id
       const {
         data: { session },
       } = await supabase.auth.getSession();
-  
+
       //extract userid from session
       const userId = session?.user?.id;
-  
+
       //if userid is not found, prompt the user to verify their email
       if (!userId) {
         console.warn("User ID not found. need to verify email.");
         alert("Sign-up successful! Please verify your email and log in.");
         return;
       }
-  
+
       //insert user detail to users table
       const { error: insertError } = await supabase.from("users").insert([
         {
@@ -72,7 +84,7 @@ const SignInPage = () => {
           role,
         },
       ]);
-  
+
       //handle err during the database insertion
       if (insertError) {
         console.error("Error saving user info:", insertError.message);
@@ -87,7 +99,7 @@ const SignInPage = () => {
       alert("An unexpected error occurred.");
     }
   };
-  
+
   return (
     <div className="container mt-5">
       <div className="card p-4 shadow">
