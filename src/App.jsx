@@ -16,7 +16,13 @@ function App() {
         <Route path="/register" element={<SignInPage/>} />
         <Route path="/dashboard" element={<StudentDashboard/>} />
         <Route path="/configure-exam" element={<ConfigureExam />} />      
-        <Route path="/teacherProfile"  element={<TeacherLayout/>}/>  
+        <Route path="/teacher" element={<TeacherLayout />}>
+          <Route index element={""} />
+          <Route path="exams" element={<ConfigureExam />} />
+          <Route path="exams/:examId/questions" element={""} />
+          <Route path="students" element={""} />
+          <Route path="reports" element={""} />
+        </Route> 
 
       </Routes>
     </Router>

@@ -3,6 +3,7 @@ import { Container, Row, Col, Button, Navbar, Nav, Offcanvas } from "react-boots
 import Header from "../Components/Header";
 import SidebarTeacher from "../Components/SidebarTeacher";
 import ConfigureExam from "../Components/ConfigureExam";
+import { Outlet } from "react-router-dom";
 
 const TeacherLayout = () => {
   // State to manage sidebar visibility
@@ -24,7 +25,7 @@ const TeacherLayout = () => {
           
           {/* Main content area */}
           <Col xs={12} md={9} className="p-4">
-            <ConfigureExam />
+            <Outlet />
           </Col>
         </Row>
       </Container>

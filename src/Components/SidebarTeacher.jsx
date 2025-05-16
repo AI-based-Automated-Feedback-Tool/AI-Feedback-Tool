@@ -1,5 +1,6 @@
 import React from 'react'
 import { Nav, Offcanvas } from "react-bootstrap";
+import { Link } from 'react-router-dom';
 
 export default function SidebarTeacher({show, onHide}) {
   return (
@@ -12,10 +13,10 @@ export default function SidebarTeacher({show, onHide}) {
           </Offcanvas.Header>
           <Offcanvas.Body>
             <Nav className="flex-column">
-              <Nav.Link href="#dashboard">Dashboard</Nav.Link>
-              <Nav.Link href="#exams">Configure Exam</Nav.Link>
-              <Nav.Link href="#reports">Reports</Nav.Link>
-              <Nav.Link href="#students">Students</Nav.Link>
+              <Nav.Link as={Link} to="/teacher">Dashboard</Nav.Link>
+              <Nav.Link as={Link} to="/teacher/exams">Configure Exam</Nav.Link>
+              <Nav.Link as={Link} to={"/teacher/reports"}>Reports</Nav.Link>
+              <Nav.Link as={Link} to={"/teacher/students"}>Students</Nav.Link>
             </Nav>
           </Offcanvas.Body>
         </Offcanvas>
@@ -24,10 +25,10 @@ export default function SidebarTeacher({show, onHide}) {
       {/* Static sidebar for md+ screens */}
       <div className="d-none d-md-block bg-light vh-100" style={{ position: "sticky", top: 0 }}>
         <Nav className="flex-column pt-3">
-          <Nav.Link href="#dashboard">Dashboard</Nav.Link>
-          <Nav.Link href="#exams">Configure Exam</Nav.Link>
-          <Nav.Link href="#reports">Reports</Nav.Link>
-          <Nav.Link href="#students">Students</Nav.Link>
+          <Nav.Link as={Link} to="/teacher">Dashboard</Nav.Link>
+          <Nav.Link as={Link} to="/teacher/exams">Configure Exam</Nav.Link>
+          <Nav.Link as={Link} to={"/teacher/reports"}>Reports</Nav.Link>
+          <Nav.Link as={Link} to={"/teacher/students"}>Students</Nav.Link>
         </Nav>
       </div>
     </>
