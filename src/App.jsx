@@ -5,6 +5,7 @@ import LogInPage from './Components/LogInPage';
 import SignInPage from './Components/signInPage';
 import StudentDashboard from './Components/StudentDashboard';
 import ProtectedRoute from './Components/ProtectedRoute';
+import TeacherDashboard from "./Components/TearcherDashboard"
 import ConfigureExam from './Components/ConfigureExam';
 
 function App() {
@@ -18,6 +19,9 @@ function App() {
           <Route index element={<StudentDashboard />} />
         </Route>        <Route path="/configure-exam" element={<ConfigureExam />} />       
 
+        <Route path="/dashboard/teacher" element={<ProtectedRoute />}>
+          <Route index element={<TeacherDashboard />} />
+        </Route>
       </Routes>
     </Router>
   );

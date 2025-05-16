@@ -2,6 +2,7 @@ import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useState } from "react";
 import { supabase } from "../SupabaseAuth/supabaseClient";
+import { useNavigate } from "react-router-dom";
 
 const SignInPage = () => {
   //states to store user input
@@ -10,7 +11,7 @@ const SignInPage = () => {
   const [studentId, setStudentId] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("");
-
+  const navigate = useNavigate(); 
   //to submit signup
   const handleSignUp = async (e) => {
     e.preventDefault();
@@ -92,6 +93,7 @@ const SignInPage = () => {
       } else {
         console.log("User info saved successfully.");
         alert("Sign-up complete!");
+        navigate("/logIn");
       }
     } catch (err) {
       //catch any unexpected err

@@ -16,7 +16,6 @@ const LogInPage = () => {
   //handle login
   const handleLogin = async (e) => {
     e.preventDefault();
-    //clear previous errors
     setError("");
 
     if (!email || !password) {
@@ -24,22 +23,50 @@ const LogInPage = () => {
       return;
     }
 
-    console.log("Email:", email, "Password:", password);
-
     try {
-      //signin user with provided email
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
+      // Sign in user
+      const { data: signInData, error: signInError } =
+        await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
 
-      if (error) {
-        //set msg if err occur during login
-        setError(error.message);
-      } else {
-        console.log("Login successful. Waiting for auth state change...");
-        //redirect to dashboard
+      if (signInError) {
+        setError(signInError.message);
+        return;
+      }
+
+      // Get current user ID from session
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      const userId = session?.user?.id;
+      if (!userId) {
+        setError("User session not found.");
+        return;
+      }
+
+      //fetch user role from your users table
+      const { data: userData, error: userError } = await supabase
+        .from("users")
+        .select("role")
+        .eq("id", userId)
+        .single();
+
+      if (userError || !userData) {
+        setError("Could not retrieve user role.");
+        return;
+      }
+
+      //redirect based on role
+      if (userData.role === "teacher") {
+        navigate("/dashboard/teacher");
+      } else if (userData.role === "student") {
         navigate("/dashboard");
+      } else {
+        //fallback if role is unknown
+        navigate("/");
       }
     } catch (err) {
       setError("An unexpected error occurred. Please try again.");
