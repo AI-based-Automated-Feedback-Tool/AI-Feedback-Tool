@@ -22,7 +22,6 @@ const LogInPage = () => {
       setError("Email and password are required.");
       return;
     }
-
     try {
       // Sign in user
       const { data: signInData, error: signInError } =
@@ -35,7 +34,6 @@ const LogInPage = () => {
         setError(signInError.message);
         return;
       }
-
       // Get current user ID from session
       const {
         data: { session },
@@ -46,7 +44,6 @@ const LogInPage = () => {
         setError("User session not found.");
         return;
       }
-
       //fetch user role from your users table
       const { data: userData, error: userError } = await supabase
         .from("users")

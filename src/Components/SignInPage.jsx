@@ -70,7 +70,6 @@ const SignInPage = () => {
 
       //if userid is not found, prompt the user to verify their email
       if (!userId) {
-        console.warn("User ID not found. need to verify email.");
         alert("Sign-up successful! Please verify your email and log in.");
         return;
       }
