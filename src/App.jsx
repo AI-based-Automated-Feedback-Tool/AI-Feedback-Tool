@@ -5,6 +5,7 @@ import LogInPage from './Components/LogInPage';
 import SignInPage from './Components/signInPage';
 import StudentDashboard from './Components/StudentDashboard';
 import ConfigureExam from './Components/ConfigureExam';
+import TeacherLayout from './layouts/TeacherLayout';
 
 function App() {
   return (
@@ -14,7 +15,8 @@ function App() {
         <Route path="/logIn" element={<LogInPage/>} />
         <Route path="/register" element={<SignInPage/>} />
         <Route path="/dashboard" element={<StudentDashboard/>} />
-        <Route path="/configure-exam" element={<ConfigureExam />} />       
+        <Route path="/configure-exam" element={<ConfigureExam />} />      
+        <Route path="/teacherProfile"  element={<TeacherLayout/>}/>  
 
       </Routes>
     </Router>
