@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import AssignmentCard from "./AssignmentCard";
 
 const StudentDashboard = () => {
   const navigate = useNavigate();
@@ -20,6 +21,11 @@ const StudentDashboard = () => {
     },
   ];
 
+  const handleStart = (title) => {
+    console.log("Start clicked for:", title);
+    // Example: navigate(`/exam/${id}`) in the future
+  };
+
   const renderContent = () => {
     switch (currentView) {
       case "dashboard":
@@ -29,18 +35,12 @@ const StudentDashboard = () => {
             <div className="row">
               {assignments.map((a, i) => (
                 <div className="col-md-4 mb-4" key={i}>
-                  <div className="card h-100 shadow-sm">
-                    <div className="card-body d-flex flex-column justify-content-between">
-                      <h5 className="card-title">{a.title}</h5>
-                      {a.timeRemaining && (
-                        <p className="card-text text-muted">⏰ {a.timeRemaining}</p>
-                      )}
-                      {a.due && (
-                        <p className="card-text text-muted">📅 {a.due}</p>
-                      )}
-                      <button className="btn btn-primary mt-auto">Start</button>
-                    </div>
-                  </div>
+                  <AssignmentCard
+                    title={a.title}
+                    timeRemaining={a.timeRemaining}
+                    due={a.due}
+                    onStart={() => handleStart(a.title)}
+                  />
                 </div>
               ))}
             </div>
