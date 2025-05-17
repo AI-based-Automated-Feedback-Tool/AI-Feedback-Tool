@@ -6,24 +6,14 @@ const StudentDashboard = () => {
   const navigate = useNavigate();
   const [currentView, setCurrentView] = useState("dashboard");
 
-  const assignments = [
-    {
-      title: "Week 01 Exam",
-      timeRemaining: "55:30 Remaining",
-    },
-    {
-      title: "Coding Assignment",
-      timeRemaining: "2:15:00 Remaining",
-    },
-    {
-      title: "Quiz: JavaScript",
-      due: "Due: August 25",
-    },
+  const tasks = [
+    { id: "exam01", title: "Week 01 Exam", type: "exam", dueDate: "2025-06-01" },
+    { id: "assignment01", title: "JS Assignment", type: "assignment", dueDate: "2025-06-03" },
+    { id: "quiz01", title: "HTML/CSS Quiz", type: "quiz", dueDate: "2025-06-05" }
   ];
 
-  const handleStart = (title) => {
-    console.log("Start clicked for:", title);
-    // Example: navigate(`/exam/${id}`) in the future
+  const handleStart = (task) => {
+    navigate(`/task/${task.id}`);
   };
 
   const renderContent = () => {
@@ -33,13 +23,12 @@ const StudentDashboard = () => {
           <>
             <h5 className="mb-3">Upcoming Tasks</h5>
             <div className="row">
-              {assignments.map((a, i) => (
-                <div className="col-md-4 mb-4" key={i}>
+              {tasks.map((task) => (
+                <div className="col-md-4 mb-4" key={task.id}>
                   <AssignmentCard
-                    title={a.title}
-                    timeRemaining={a.timeRemaining}
-                    due={a.due}
-                    onStart={() => handleStart(a.title)}
+                    title={task.title}
+                    due={new Date(task.dueDate).toLocaleDateString()}
+                    onStart={() => handleStart(task)}
                   />
                 </div>
               ))}
@@ -84,12 +73,12 @@ const StudentDashboard = () => {
 
       {/* Main Content */}
       <div className="flex-grow-1 p-4 bg-white">
-        {/* Top blue bar */}
+        {/* Top bar */}
         <div className="bg-primary text-white p-3 rounded-top mb-4 d-flex align-items-center">
           <h5 className="mb-0">Student Dashboard</h5>
         </div>
 
-        {/* Dynamic view content */}
+        {/* Render content based on view */}
         {renderContent()}
       </div>
     </div>
