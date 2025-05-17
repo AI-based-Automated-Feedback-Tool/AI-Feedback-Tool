@@ -1,24 +1,20 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import AssignmentCard from "./AssignmentCard";
 
 const StudentDashboard = () => {
   const navigate = useNavigate();
   const [currentView, setCurrentView] = useState("dashboard");
 
-  const assignments = [
-    {
-      title: "Week 01 Exam",
-      timeRemaining: "55:30 Remaining",
-    },
-    {
-      title: "Coding Assignment",
-      timeRemaining: "2:15:00 Remaining",
-    },
-    {
-      title: "Quiz: JavaScript",
-      due: "Due: August 25",
-    },
+  const tasks = [
+    { id: "exam01", title: "Week 01 Exam", type: "exam", dueDate: "2025-06-01" },
+    { id: "assignment01", title: "JS Assignment", type: "assignment", dueDate: "2025-06-03" },
+    { id: "quiz01", title: "HTML/CSS Quiz", type: "quiz", dueDate: "2025-06-05" }
   ];
+
+  const handleStart = (task) => {
+    navigate(`/task/${task.id}`);
+  };
 
   const renderContent = () => {
     switch (currentView) {
@@ -27,20 +23,13 @@ const StudentDashboard = () => {
           <>
             <h5 className="mb-3">Upcoming Tasks</h5>
             <div className="row">
-              {assignments.map((a, i) => (
-                <div className="col-md-4 mb-4" key={i}>
-                  <div className="card h-100 shadow-sm">
-                    <div className="card-body d-flex flex-column justify-content-between">
-                      <h5 className="card-title">{a.title}</h5>
-                      {a.timeRemaining && (
-                        <p className="card-text text-muted">⏰ {a.timeRemaining}</p>
-                      )}
-                      {a.due && (
-                        <p className="card-text text-muted">📅 {a.due}</p>
-                      )}
-                      <button className="btn btn-primary mt-auto">Start</button>
-                    </div>
-                  </div>
+              {tasks.map((task) => (
+                <div className="col-md-4 mb-4" key={task.id}>
+                  <AssignmentCard
+                    title={task.title}
+                    due={new Date(task.dueDate).toLocaleDateString()}
+                    onStart={() => handleStart(task)}
+                  />
                 </div>
               ))}
             </div>
@@ -84,12 +73,12 @@ const StudentDashboard = () => {
 
       {/* Main Content */}
       <div className="flex-grow-1 p-4 bg-white">
-        {/* Top blue bar */}
+        {/* Top bar */}
         <div className="bg-primary text-white p-3 rounded-top mb-4 d-flex align-items-center">
           <h5 className="mb-0">Student Dashboard</h5>
         </div>
 
-        {/* Dynamic view content */}
+        {/* Render content based on view */}
         {renderContent()}
       </div>
     </div>
