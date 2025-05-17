@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AssignmentCard from "./AssignmentCard";
+import LogOut from "./LogOut";
 
 const StudentDashboard = () => {
   const navigate = useNavigate();
@@ -65,10 +66,8 @@ const StudentDashboard = () => {
               Past Exams
             </button>
           </li>
+          <LogOut/>
         </ul>
-        <button className="btn btn-outline-danger mt-5 w-100" onClick={() => navigate("/")}>
-          Log Out
-        </button>
       </div>
 
       {/* Main Content */}
