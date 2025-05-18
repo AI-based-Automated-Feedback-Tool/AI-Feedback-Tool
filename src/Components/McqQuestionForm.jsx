@@ -3,17 +3,21 @@ import { Form, Button, Container, Row, Col, Card } from "react-bootstrap";
 import { useState } from 'react';
 
 export default function McqQuestionForm() {
-    // State to manage answer options and set their values
+    const [questionText, setQuestionText] = useState("");
     const [answerOptions, setAnswerOptions] = useState(["","","",""])
+    const [correctAnswers, setCorrectAnswers] = useState([]);
+    const [numOfAnswers, setNumOfAnswers] = useState(1);
+    const [points, setPoints] = useState("");
+    const [errors, setErrors] = useState({});
+
+    // Set answer options
     const handleAnswerOptionsChange = (e, index) => {
         const latestAnswerOptions = [...answerOptions];
         latestAnswerOptions[index] = e.target.value;
         setAnswerOptions(latestAnswerOptions)
     }
 
-    // State to manage correct answers,Toggle checkbox for correct answers and remove if already selected
-    const [correctAnswers, setCorrectAnswers] = useState([]);
-    // Toggle checkbox for correct answers
+    // Toggle checkbox for correct answers and remove if already selected
     const handleCheckboxChange = (value) => {
         if (correctAnswers.includes(value)) {
             setCorrectAnswers(correctAnswers.filter(ans => ans !== value));
@@ -22,12 +26,31 @@ export default function McqQuestionForm() {
         }
     };
 
-    //State to manage number of answers
-    const [numOfAnswers, setNumOfAnswers] = useState(1);
+    //Set number of answers
     const handleNumOfAnswersChange = (e) => {
         const enteredValue = parseInt(e.target.value);
         setNumOfAnswers(enteredValue);
     }
+
+    // Form validation before submission
+    const handleAddQuestion = () => {
+        const trimmedAnswers = answerOptions.map(opt => opt.trim());
+        const newErrors = {};
+
+        if (!questionText.trim()) newErrors.question = "Question is required.";
+        if (trimmedAnswers.includes("")) {
+            newErrors.answers = "All answer options must be filled.";
+        }
+        if (!points || isNaN(points) || parseInt(points) < 1) {
+            newErrors.points = "Points must be at least 1.";
+        }
+        if (correctAnswers.length !== parseInt(numOfAnswers)) {
+            newErrors.correct = `Select exactly ${numOfAnswers} correct answer(s).`;
+        }
+
+    setErrors(newErrors);
+    }
+    
       
   return (
     <Card>
@@ -39,7 +62,8 @@ export default function McqQuestionForm() {
                 {/* Question */}
                 <Form.Group className="mb-3">
                     <Form.Label>Question</Form.Label>
-                    <Form.Control as="textarea" rows={3} className="fs-6"/>
+                    <Form.Control as="textarea" rows={3} className="fs-6" onChange={e => setQuestionText(e.target.value)}/>
+                    {errors.question && <div className="text-danger small">{errors.question}</div>}
                 </Form.Group>
 
                 {/* Answer Options */}
@@ -52,6 +76,7 @@ export default function McqQuestionForm() {
                             </Col>
                         ))}
                     </Row>
+                    {errors.answers && <div className="text-danger small">{errors.answers}</div>}
                 </Form.Group>
 
                 {/* No of answers */}
@@ -80,16 +105,31 @@ export default function McqQuestionForm() {
                                     onChange={() => handleCheckboxChange(opt)}
                                 />
                             )
-                        )}
-                        {answerOptions.filter(opt => opt.trim() !== "").length == 4 && (
-                            correctAnswers.length !== numOfAnswers && (
-                                <small className="text-danger d-block mt-1">
-                                    *Please select exactly {numOfAnswers} correct answer(s).
-                                </small>
-                            )
-                        )}
+                        )}                    
+                        {errors.correct && <div className="text-danger small">{errors.correct}</div>}
                     </Form.Group>
-                )}                
+                )}  
+
+                {/* Points for the Question */}
+                <Form.Group className="mb-3">
+                    <Form.Label>Number of points </Form.Label>
+                    <Form.Control
+                        type="number"
+                        min="1"
+                        placeholder="Enter points for this question"
+                        value={points}
+                        onChange={(e) => setPoints(Number(e.target.value))}
+                        required
+                    />
+                    {errors.points && <div className="text-danger small">{errors.points}</div>}
+                </Form.Group>    
+
+                {/* Submit Button */}
+                <div className="d-flex justify-content-end" onClick={handleAddQuestion}>
+                    <Button variant="primary" >
+                        ➕ Save Question
+                    </Button>
+                </div>          
             </Form>
         </Card.Body>
     </Card>
