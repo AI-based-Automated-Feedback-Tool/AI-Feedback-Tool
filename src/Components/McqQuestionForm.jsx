@@ -9,6 +9,7 @@ export default function McqQuestionForm() {
     const [numOfAnswers, setNumOfAnswers] = useState(1);
     const [points, setPoints] = useState("");
     const [errors, setErrors] = useState({});
+    const [questions, setQuestions] = useState([]);
 
     // Set answer options
     const handleAnswerOptionsChange = (e, index) => {
@@ -48,7 +49,26 @@ export default function McqQuestionForm() {
             newErrors.correct = `Select exactly ${numOfAnswers} correct answer(s).`;
         }
 
-    setErrors(newErrors);
+        setErrors(newErrors);
+
+        if (Object.keys(newErrors).length === 0){
+            const newQuestion = {
+                question: questionText,
+                answers: trimmedAnswers,
+                noOfQuestions: numOfAnswers,
+                correctAnswers: correctAnswers,
+                points: points
+            }
+            setQuestions([...questions, newQuestion]);
+
+            // Reset form fields
+            setQuestionText("");
+            setAnswerOptions(["", "", "", ""]);
+            setCorrectAnswers([]);
+            setNumOfAnswers(1);
+            setPoints("");
+            setErrors({});
+        }
     }
     
       
