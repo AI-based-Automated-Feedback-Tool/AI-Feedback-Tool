@@ -50,120 +50,162 @@ const ConfigureExam = () => {
     }
   };
 
-  return (
+    return (
     <Container className="my-4">
       <Card>
         <Card.Header className="bg-primary text-white">
-          <h4>📝 Configure Exam</h4>
+          <h4>📝 Configure New Exam</h4>
         </Card.Header>
         <Card.Body>
           {error && <Alert variant="danger">{error}</Alert>}
           <Form onSubmit={handleSubmit}>
-            <Form.Group className="mb-3">
-              <Form.Label>Exam Title</Form.Label>
-              <Form.Control 
-                name="title" 
-                onChange={handleChange}
-                value={exam.title}
-                placeholder="e.g., Midterm Exam - Data Structures"
-                required
-              />
-            </Form.Group>
-
-            <Row className="mb-3">
-              <Col>
-                <Form.Group>
-                  <Form.Label>Course ID</Form.Label>
+            {/* Basic Information Section */}
+            <Card className="mb-4 border-0 shadow-sm">
+              <Card.Header className="bg-light">
+                <h5 className="mb-0">Basic Information</h5>
+              </Card.Header>
+              <Card.Body>
+                <Form.Group className="mb-3">
+                  <Form.Label className="fw-bold">Exam Title *</Form.Label>
                   <Form.Control 
-                    name="course_id" 
+                    name="title" 
                     onChange={handleChange}
-                    value={exam.course_id}
-                    placeholder="e.g., CS101, MATH201" 
+                    value={exam.title}
+                    placeholder="Enter a descriptive title (e.g., 'Data Structures Final Exam')"
                     required
                   />
                 </Form.Group>
-              </Col>
-              <Col>
-                <Form.Group>
-                  <Form.Label>Duration (minutes)</Form.Label>
+
+                <Row className="mb-3">
+                  <Col md={6}>
+                    <Form.Group>
+                      <Form.Label className="fw-bold">Course Code *</Form.Label>
+                      <Form.Control 
+                        name="course_id" 
+                        onChange={handleChange}
+                        value={exam.course_id}
+                        placeholder="Department + Number (e.g., 'CS401')" 
+                        required
+                      />
+                    </Form.Group>
+                  </Col>
+                  <Col md={6}>
+                    <Form.Group>
+                      <Form.Label className="fw-bold">Exam Duration (Minutes) *</Form.Label>
+                      <Form.Control 
+                        type="number" 
+                        name="duration" 
+                        onChange={handleChange}
+                        value={exam.duration}
+                        placeholder="Estimated completion time (e.g., '120')"
+                        min="1"
+                        required
+                      />
+                    </Form.Group>
+                  </Col>
+                </Row>
+              </Card.Body>
+            </Card>
+
+            {/* Exam Rules Section */}
+            <Card className="mb-4 border-0 shadow-sm">
+              <Card.Header className="bg-light">
+                <h5 className="mb-0">Exam Rules & Instructions</h5>
+              </Card.Header>
+              <Card.Body>
+                <Form.Group className="mb-3">
+                  <Form.Label className="fw-bold">Student Instructions</Form.Label>
                   <Form.Control 
-                    type="number" 
-                    name="duration" 
+                    as="textarea" 
+                    rows={3} 
+                    name="instructions"
                     onChange={handleChange}
-                    value={exam.duration}
-                    placeholder="e.g., 90 for 1.5 hours"
-                    min="1"
-                    required
+                    value={exam.instructions}
+                    placeholder="Provide clear rules for students:
+  - Allowed materials
+  - Submission guidelines
+  - Special requirements"
                   />
+                  <Form.Text className="text-muted">
+                    These instructions will be visible to students
+                  </Form.Text>
                 </Form.Group>
-              </Col>
-            </Row>
+              </Card.Body>
+            </Card>
 
-            <Form.Group className="mb-3">
-              <Form.Label>Exam Instructions</Form.Label>
-              <Form.Control 
-                as="textarea" 
-                rows={2} 
-                name="instructions"
-                onChange={handleChange}
-                value={exam.instructions}
-                placeholder="e.g., - Complete all questions within the time limit
-- No external help or AI assistance allowed
-- Keep your camera on during the exam"
-              />
-            </Form.Group>
-
-            <Form.Group className="mb-3">
-              <Form.Label>AI Assessment Guide</Form.Label>
-              <Form.Control
-                as="textarea"
-                rows={3}
-                name="ai_assessment_guide"
-                onChange={handleChange}
-                value={exam.ai_assessment_guide}
-                placeholder="e.g., - Deduct 10% for missing comments
-- Award extra points for efficient algorithms
-- Strictly check for plagiarism"
-              />
-              <Form.Text className="text-muted">
-                These criteria will guide the AI evaluation process
-              </Form.Text>
-            </Form.Group>
-
-            <Row className="mb-3">
-              <Col>
-                <Form.Group>
-                  <Form.Label>Question Type</Form.Label>
-                  <Form.Select 
-                    name="type" 
+            {/* Grading Criteria Section */}
+            <Card className="mb-4 border-0 shadow-sm">
+              <Card.Header className="bg-light">
+                <h5 className="mb-0">Grading Configuration</h5>
+              </Card.Header>
+              <Card.Body>
+                <Form.Group className="mb-3">
+                  <Form.Label className="fw-bold">AI Assessment Guidelines</Form.Label>
+                  <Form.Control
+                    as="textarea"
+                    rows={3}
+                    name="ai_assessment_guide"
                     onChange={handleChange}
-                    value={exam.type}
-                  >
-                    <option value="mcq">Multiple Choice</option>
-                    <option value="code">Code Question</option>
-                    <option value="essay">Essay</option>
-                  </Form.Select>
-                </Form.Group>
-              </Col>
-              <Col>
-                <Form.Group>
-                  <Form.Label>Number of Questions</Form.Label>
-                  <Form.Control 
-                    type="number" 
-                    name="question_count"
-                    onChange={handleChange}
-                    value={exam.question_count}
-                    placeholder="Total questions students must answer"
-                    min="1"
-                    required
+                    value={exam.ai_assessment_guide}
+                    placeholder="Define evaluation criteria:
+  1. Points deduction for late submissions
+  2. Required code documentation
+  3. Plagiarism check severity"
                   />
+                  <Form.Text className="text-muted">
+                    These instructions guide the automated grading system
+                  </Form.Text>
                 </Form.Group>
-              </Col>
-            </Row>
 
-            <div className="d-flex justify-content-end">
-              <Button type="submit" disabled={loading}>
-                {loading ? "Saving..." : "Create Questions"}
+                <Row>
+                  <Col md={6}>
+                    <Form.Group className="mb-3">
+                      <Form.Label className="fw-bold">Question Type *</Form.Label>
+                      <Form.Select 
+                        name="type" 
+                        onChange={handleChange}
+                        value={exam.type}
+                        className="form-select"
+                      >
+                        <option value="mcq">Multiple Choice Questions</option>
+                        <option value="code">Programming/Coding</option>
+                        <option value="essay">Written Responses</option>
+                      </Form.Select>
+                    </Form.Group>
+                  </Col>
+                  <Col md={6}>
+                    <Form.Group className="mb-3">
+                      <Form.Label className="fw-bold">Total Questions *</Form.Label>
+                      <Form.Control 
+                        type="number" 
+                        name="question_count"
+                        onChange={handleChange}
+                        value={exam.question_count}
+                        placeholder="Number of questions (e.g., '15')"
+                        min="1"
+                        required
+                      />
+                    </Form.Group>
+                  </Col>
+                </Row>
+              </Card.Body>
+            </Card>
+
+            <div className="d-flex justify-content-end mt-4">
+              <Button 
+                type="submit" 
+                disabled={loading}
+                variant="primary"
+                size="lg"
+              >
+                {loading ? (
+                  <>
+                    <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                    Saving Configuration...
+                  </>
+                ) : (
+                  "Save & Proceed to Questions"
+                )}
               </Button>
             </div>
           </Form>
