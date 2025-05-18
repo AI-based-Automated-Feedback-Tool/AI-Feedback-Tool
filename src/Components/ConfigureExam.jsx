@@ -9,11 +9,12 @@ const ConfigureExam = () => {
   const navigate = useNavigate();
   const [exam, setExam] = useState({
     title: "",
-    courseCode: "",
-    description: "",
+    course_id: "",
+    instructions: "",
     type: "mcq",
     duration: "",
-    questionCount: ""
+    question_count: "",
+    ai_assessment_guide: ""
   });
 
   const handleChange = (e) => {
@@ -55,7 +56,31 @@ const ConfigureExam = () => {
 
             <Form.Group className="mb-3">
               <Form.Label>Exam Instructions</Form.Label>
-              <Form.Control as="textarea" rows={2} name="instructions" onChange={handleChange} />
+              <Form.Control 
+                as="textarea" 
+                rows={2} 
+                name="instructions"
+                onChange={handleChange}
+                placeholder="e.g., - Complete all questions within the time limit
+- No external help or AI assistance allowed
+- Keep your camera on during the exam"
+              />
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label>AI Assessment Guide</Form.Label>
+              <Form.Control
+                as="textarea"
+                rows={3}
+                name="ai_assessment_guide"
+                onChange={handleChange}
+                placeholder="e.g., - Deduct 10% for missing comments
+- Award extra points for efficient algorithms
+- Strictly check for plagiarism"
+              />
+              <Form.Text className="text-muted">
+                These criteria will guide the AI evaluation process
+              </Form.Text>
             </Form.Group>
 
             <Row className="mb-3">
