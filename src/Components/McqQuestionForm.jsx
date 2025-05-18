@@ -21,6 +21,13 @@ export default function McqQuestionForm() {
             setCorrectAnswers([...correctAnswers, value]);
         }
     };
+
+    //State to manage number of answers
+    const [numOfAnswers, setNumOfAnswers] = useState(1);
+    const handleNumOfAnswersChange = (e) => {
+        const enteredValue = parseInt(e.target.value);
+        setNumOfAnswers(enteredValue);
+    }
       
   return (
     <Card>
@@ -50,7 +57,7 @@ export default function McqQuestionForm() {
                 {/* No of answers */}
                 <Form.Group className="mb-3">
                     <Form.Label>No of answers</Form.Label>
-                    <Form.Select  >
+                    <Form.Select  value={numOfAnswers} onChange={e => handleNumOfAnswersChange(e)}>
                         <option value="1">01</option>
                         <option value="2">02</option>
                         <option value="3">03</option>
@@ -72,6 +79,13 @@ export default function McqQuestionForm() {
                                     checked={correctAnswers.includes(opt)}
                                     onChange={() => handleCheckboxChange(opt)}
                                 />
+                            )
+                        )}
+                        {answerOptions.filter(opt => opt.trim() !== "").length == 4 && (
+                            correctAnswers.length !== numOfAnswers && (
+                                <small className="text-danger d-block mt-1">
+                                    *Please select exactly {numOfAnswers} correct answer(s).
+                                </small>
                             )
                         )}
                     </Form.Group>
