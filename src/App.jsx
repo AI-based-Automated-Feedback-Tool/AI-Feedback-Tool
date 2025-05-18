@@ -6,7 +6,7 @@ import SignInPage from './Components/signInPage';
 import StudentDashboard from './Components/StudentDashboard';
 import ProtectedRoute from './Components/ProtectedRoute';
 import TeacherDashboard from "./Components/TearcherDashboard"
-import ConfigureExam from './Components/ConfigureExam';
+import ConfigureExam from './Components/ConfigureExam/ConfigureExam';
 import TeacherLayout from './layouts/TeacherLayout';
 
 function App() {
