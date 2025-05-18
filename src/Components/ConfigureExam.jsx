@@ -36,20 +36,33 @@ const ConfigureExam = () => {
           <Form>
             <Form.Group className="mb-3">
               <Form.Label>Exam Title</Form.Label>
-              <Form.Control name="title" onChange={handleChange} />
+              <Form.Control 
+                name="title" 
+                onChange={handleChange} 
+                placeholder="e.g., Midterm Exam - Data Structures"
+              />
             </Form.Group>
 
             <Row className="mb-3">
               <Col>
                 <Form.Group>
-                  <Form.Label>Course</Form.Label>
-                  <Form.Control name="courseCode" onChange={handleChange} />
+                  <Form.Label>Course ID</Form.Label>
+                  <Form.Control 
+                    name="course_id" 
+                    onChange={handleChange} 
+                    placeholder="e.g., CS101, MATH201"
+                  />
                 </Form.Group>
               </Col>
               <Col>
                 <Form.Group>
                   <Form.Label>Duration (minutes)</Form.Label>
-                  <Form.Control type="number" name="duration" onChange={handleChange} />
+                  <Form.Control 
+                    type="number" 
+                    name="duration" 
+                    onChange={handleChange} 
+                    placeholder="e.g., 90 for 1.5 hours"
+                  />
                 </Form.Group>
               </Col>
             </Row>
@@ -90,13 +103,19 @@ const ConfigureExam = () => {
                   <Form.Select name="type" onChange={handleChange}>
                     <option value="mcq">Multiple Choice</option>
                     <option value="code">Code Question</option>
+                    <option value="essay">Essay</option>
                   </Form.Select>
                 </Form.Group>
               </Col>
               <Col>
                 <Form.Group>
                   <Form.Label>Number of Questions</Form.Label>
-                  <Form.Control type="number" name="questionCount" onChange={handleChange} />
+                  <Form.Control 
+                    type="number" 
+                    name="question_count"
+                    onChange={handleChange}
+                    placeholder="Total questions students must answer"
+                  />
                 </Form.Group>
               </Col>
             </Row>
