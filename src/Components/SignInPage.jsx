@@ -8,7 +8,6 @@ const SignInPage = () => {
   //states to store user input
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [studentId, setStudentId] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("");
   const navigate = useNavigate(); 
@@ -19,7 +18,6 @@ const SignInPage = () => {
     //trim input values to remove extra spaces
     const trimmedEmail = email.trim();
     const trimmedName = name.trim();
-    const trimmedStudentId = studentId.trim();
     const trimmedPassword = password.trim();
 
     try {
@@ -30,7 +28,7 @@ const SignInPage = () => {
       }
 
       //ensure all required fields are filled
-      if (!trimmedName || !trimmedStudentId || !role) {
+      if (!trimmedName || !role) {
         alert("All fields are required. Please fill out the form completely.");
         return;
       }
@@ -77,10 +75,9 @@ const SignInPage = () => {
       //insert user detail to users table
       const { error: insertError } = await supabase.from("users").insert([
         {
-          id: userId,
+          user_id: userId,
           name: trimmedName,
           email: trimmedEmail,
-          studentId: trimmedStudentId,
           role,
         },
       ]);
@@ -133,19 +130,6 @@ const SignInPage = () => {
                 placeholder="Enter your email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
-            <div className="mb-3">
-              <label htmlFor="id" className="form-label">
-                Student ID
-              </label>
-              <input
-                type="text"
-                className="form-control"
-                id="id"
-                placeholder="Enter your ID"
-                value={studentId}
-                onChange={(e) => setStudentId(e.target.value)}
               />
             </div>
             <div className="mb-3">
