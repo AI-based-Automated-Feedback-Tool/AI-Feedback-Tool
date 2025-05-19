@@ -8,6 +8,7 @@ export default function EditQuestion({show, handleClose, questionDetails, onSave
     const [numOfAnswers, setNumOfAnswers] = useState(questionDetails.numOfAnswers);
     const [correctAnswers, setCorrectAnswers] = useState(questionDetails.correctAnswers);
     const [points, setPoints] = useState(questionDetails.points);
+    const [errors, setErrors] = useState({});
 
     const updateAnswers = (index, e) => {
         const updatedAnswers = [...answerOptions];
@@ -24,14 +25,35 @@ export default function EditQuestion({show, handleClose, questionDetails, onSave
     }
 
     const handleEdit = () => {
-        const updatedQuestion = {
-            question: questiontext,
-            answers: answerOptions,
-            numOfAnswers: parseInt(numOfAnswers),
-            correctAnswers: correctAnswers,
-            points: parseInt(points)
-        };
-        onSave(updatedQuestion);
+        const trimmedAnswers = answerOptions.map(opt => opt.trim());
+        const newErrors = {};
+
+        if (!questiontext.trim()) {
+            newErrors.question = "Question is required."
+        }
+        if (trimmedAnswers.includes("")) {
+            newErrors.answers = "All answer options must be filled."
+        }
+        if (!points || isNaN(points) || parseInt(points) < 1) {
+            newErrors.points = "Points must be at least 1."
+        }
+        if (correctAnswers.length !== parseInt(numOfAnswers)) {
+            newErrors.correct = `Select exactly ${numOfAnswers} correct answer(s).`;
+        }
+
+        setErrors(newErrors);
+
+        if (Object.keys(newErrors).length === 0) {
+            const updatedQuestion = {
+                question: questiontext.trim(),
+                answers: trimmedAnswers,
+                numOfAnswers: parseInt(numOfAnswers),
+                correctAnswers: correctAnswers,
+                points: parseInt(points)
+            };
+            onSave(updatedQuestion);
+            setErrors({});
+        }        
     }
 
     return (
@@ -49,6 +71,7 @@ export default function EditQuestion({show, handleClose, questionDetails, onSave
                     value={questiontext}
                     onChange={(e) => setQuestionText(e.target.value)}
                 />
+                {errors.question && <div className="text-danger small">{errors.question}</div>}
             </Form.Group>
         
             <Form.Group className="mb-3">
@@ -61,6 +84,7 @@ export default function EditQuestion({show, handleClose, questionDetails, onSave
                         onChange={(e) => updateAnswers(index, e)}
                     />
                 ))}
+                {errors.answers && <div className="text-danger small">{errors.answers}</div>}
             </Form.Group>
 
             <Form.Group className="mb-3">
@@ -83,6 +107,7 @@ export default function EditQuestion({show, handleClose, questionDetails, onSave
                             onChange={() => handleChange(answer)}
                         />
             ))}
+            {errors.correct && <div className="text-danger small">{errors.correct}</div>}
             </Form.Group>
 
             <Form.Group className="mb-3">
@@ -93,6 +118,7 @@ export default function EditQuestion({show, handleClose, questionDetails, onSave
                     onChange={(e) => setPoints(e.target.value)}
                 />
             </Form.Group>
+            {errors.points && <div className="text-danger small">{errors.points}</div>}
       </Modal.Body>
 
       <Modal.Footer>
