@@ -58,7 +58,7 @@ const LogInPage = () => {
 
       //redirect based on role
       if (userData.role === "teacher") {
-        navigate("/dashboard/teacher");
+        navigate("/teacher");
       } else if (userData.role === "student") {
         navigate("/dashboard");
       } else {
