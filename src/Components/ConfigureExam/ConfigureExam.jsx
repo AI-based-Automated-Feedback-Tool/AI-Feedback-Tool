@@ -34,14 +34,15 @@ const ConfigureExam = () => {
           ...exam,
           teacher_id: "c0a80100-0000-4000-a000-000000000001" // Replace with actual auth later
         }
-      );
+      );  
+      navigate(`/teacher/exams/${response.data.examId}/questions`);   
 
       // Save to localStorage and navigate
       localStorage.setItem("examConfig", JSON.stringify({
         ...exam,
         examId: response.data.examId
       }));
-      navigate("/create-questions");
+      
     } catch (err) {
       console.error("Error saving exam:", err);
       setError(err.response?.data?.error || "Failed to save exam configuration");
