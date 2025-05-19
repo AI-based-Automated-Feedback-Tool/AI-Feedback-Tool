@@ -5,15 +5,19 @@ import Header from './Header';
 import SidebarTeacher from './SidebarTeacher';
 import { Container, Row, Col } from 'react-bootstrap';
 import QuestionTable from './QuestionTable';
+import EditQuestion from './editQuestion';
 
 export default function CreateMcqQuestionsContent() {
-    //grab examid from url
-    //const {examId} = useParams();
+    
+    //const {examId} = useParams();//grab examid from url
     const examId = 1; // Placeholder for examId, replace with actual logic to get examId from URL
 
     // State to manage sidebar visibility
     const [showSidebar, setShowSidebar] = useState(false);
     const [questions, setQuestions] = useState([]);
+    const [showEditQuestion, setShowEditQuestion] = useState(false);
+    const [editQuestionIndex, setEditQuestionIndex] = useState(null);
+
     // Function to toggle sidebar visibility
     const toggleSidebar = () => setShowSidebar(!showSidebar);
     // Add question from child form
@@ -26,6 +30,18 @@ export default function CreateMcqQuestionsContent() {
         updated.splice(index, 1);
         setQuestions(updated);
     };
+    // Edit question
+    const editQuestion = (index) => {
+        setEditQuestionIndex(index);
+        setShowEditQuestion(true);  
+    }
+    // Save edited question
+    const saveEditedQuestion = (updatedQuestion) => {
+        const updatedQuestions = [...questions];
+        updatedQuestions[editQuestionIndex] = updatedQuestion;
+        setQuestions(updatedQuestions);
+        setShowEditQuestion(false);
+    }
 
   return (
     <>
@@ -43,7 +59,21 @@ export default function CreateMcqQuestionsContent() {
           <Col xs={12} md={9} className="p-4">
             <McqQuestionForm onSave={addQuestion}/>
             {questions.length > 0 && (
-              <QuestionTable questions={questions} onDelete={deleteQuestion} />
+                <>
+                    <QuestionTable 
+                        questions={questions} 
+                        onDelete={deleteQuestion} 
+                        onEdit={editQuestion}
+                    />
+                    {editQuestionIndex !== null && questions[editQuestionIndex] && (
+                    <EditQuestion 
+                        show={showEditQuestion}
+                        handleClose={() => setShowEditQuestion(false)}
+                        questionDetails = {questions[editQuestionIndex]}
+                        onSave={saveEditedQuestion}
+                    />
+                    )}
+                </>              
             )}
           </Col>
         </Row>
