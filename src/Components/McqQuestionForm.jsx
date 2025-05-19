@@ -1,15 +1,15 @@
 import React from 'react'
 import { Form, Button, Container, Row, Col, Card } from "react-bootstrap";
 import { useState } from 'react';
+import { Table } from 'react-bootstrap';
 
-export default function McqQuestionForm() {
+export default function McqQuestionForm({onSave}) {
     const [questionText, setQuestionText] = useState("");
     const [answerOptions, setAnswerOptions] = useState(["","","",""])
     const [correctAnswers, setCorrectAnswers] = useState([]);
     const [numOfAnswers, setNumOfAnswers] = useState(1);
     const [points, setPoints] = useState("");
     const [errors, setErrors] = useState({});
-    const [questions, setQuestions] = useState([]);
 
     // Set answer options
     const handleAnswerOptionsChange = (e, index) => {
@@ -55,11 +55,11 @@ export default function McqQuestionForm() {
             const newQuestion = {
                 question: questionText,
                 answers: trimmedAnswers,
-                noOfQuestions: numOfAnswers,
+                numOfAnswers: numOfAnswers,
                 correctAnswers: correctAnswers,
                 points: points
             }
-            setQuestions([...questions, newQuestion]);
+            onSave( newQuestion);
 
             // Reset form fields
             setQuestionText("");
@@ -82,7 +82,7 @@ export default function McqQuestionForm() {
                 {/* Question */}
                 <Form.Group className="mb-3">
                     <Form.Label>Question</Form.Label>
-                    <Form.Control as="textarea" rows={3} className="fs-6" onChange={e => setQuestionText(e.target.value)}/>
+                    <Form.Control as="textarea" rows={3} className="fs-6" value={questionText} onChange={e => setQuestionText(e.target.value)}/>
                     {errors.question && <div className="text-danger small">{errors.question}</div>}
                 </Form.Group>
 
