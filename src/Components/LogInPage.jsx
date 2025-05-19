@@ -48,7 +48,7 @@ const LogInPage = () => {
       const { data: userData, error: userError } = await supabase
         .from("users")
         .select("role")
-        .eq("id", userId)
+        .eq("user_id", userId)
         .single();
 
       if (userError || !userData) {
