@@ -8,6 +8,7 @@ import ProtectedRoute from './Components/ProtectedRoute';
 import TeacherDashboard from "./Components/TearcherDashboard"
 import ConfigureExam from './Components/ConfigureExam/ConfigureExam';
 import TeacherLayout from './layouts/TeacherLayout';
+import TaskPage from './Components/TaskPage';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path="/register" element={<SignInPage/>} />
         <Route path="/dashboard" element={<ProtectedRoute />}>
           <Route index element={<StudentDashboard />} />
+          <Route path="task/:id" element={<TaskPage />} />
         </Route>        
         <Route path="/configure-exam" element={<ConfigureExam />} />       
         <Route path="/teacher" element={<TeacherLayout />}>
@@ -26,6 +28,7 @@ function App() {
           <Route path="exams/:examId/questions" element={""} />
           <Route path="students" element={""} />
           <Route path="reports" element={""} />
+
         </Route> 
 
         <Route path="/dashboard/teacher" element={<ProtectedRoute />}>
