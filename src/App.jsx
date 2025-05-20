@@ -9,6 +9,7 @@ import TeacherDashboard from "./Components/TearcherDashboard"
 import ConfigureExam from './Components/ConfigureExam/ConfigureExam';
 import TeacherLayout from './layouts/TeacherLayout';
 import TaskPage from './Components/TaskPage';
+import CreateMcqQuestionsContent from './Components/CreateMcqQuestionsContent';
 
 function App() {
   return (
@@ -25,7 +26,7 @@ function App() {
         <Route path="/teacher" element={<TeacherLayout />}>
           <Route index element={""} />
           <Route path="exams" element={<ConfigureExam />} />
-          <Route path="exams/:examId/questions" element={""} />
+          <Route path="exams/:examId/questions" element={<CreateMcqQuestionsContent />} />
           <Route path="students" element={""} />
           <Route path="reports" element={""} />
 

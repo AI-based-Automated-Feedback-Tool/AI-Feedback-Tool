@@ -1,8 +1,6 @@
 import React, { use } from 'react'
 import { useState } from 'react';
 import McqQuestionForm from './McqQuestionForm';
-import Header from './Header';
-import SidebarTeacher from './SidebarTeacher';
 import { Container, Row, Col, CardHeader, CardBody, Card, Button } from 'react-bootstrap';
 import QuestionTable from './QuestionTable';
 import EditQuestion from './editQuestion';
@@ -44,19 +42,9 @@ export default function CreateMcqQuestionsContent() {
     }
 
   return (
-    <>
-      {/* Header */}
-      <Header toggleSidebar={toggleSidebar} />
-
-      {/*Sidebar */}
-      <Container fluid>
-        <Row>
-            <Col md={3}>
-                <SidebarTeacher show={showSidebar} onHide={toggleSidebar} />
-            </Col>
-          
+    <>               
             {/* Main content area */}
-            <Col xs={12} md={9} className="p-4">
+            <Col className="w-100">
                 <McqQuestionForm onSave={addQuestion}/>
                 <Card className="mt-4">
                     <CardHeader className='bg-primary text-white '>
@@ -88,9 +76,7 @@ export default function CreateMcqQuestionsContent() {
                         )}
                     </CardBody>
                 </Card>
-            </Col>
-        </Row>
-      </Container>
+            </Col>        
     </>
   );
 }
