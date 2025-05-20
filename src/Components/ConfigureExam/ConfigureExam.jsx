@@ -8,7 +8,7 @@ const ConfigureExam = () => {
   const navigate = useNavigate();
   const [exam, setExam] = useState({
     title: "",
-    course_id: "",
+    course_code: "",
     instructions: "",
     type: "mcq",
     duration: "",
@@ -97,7 +97,7 @@ const ConfigureExam = () => {
                     <Form.Group>
                       <Form.Label className="fw-bold">Course Code *</Form.Label>
                       <Form.Control 
-                        name="course_id" 
+                        name="course_code" 
                         onChange={handleChange}
                         value={exam.course_id}
                         placeholder="Department + Number (e.g., 'CS401')" 
