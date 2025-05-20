@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AssignmentCard from "./AssignmentCard";
+import LogOut from "./LogOut";
 
 const StudentDashboard = () => {
   const navigate = useNavigate();
   const [currentView, setCurrentView] = useState("dashboard");
 
+   // 🔧 Replace this with a fetch from Supabase later
   const tasks = [
     { id: "exam01", title: "Week 01 Exam", type: "exam", dueDate: "2025-06-01" },
     { id: "assignment01", title: "JS Assignment", type: "assignment", dueDate: "2025-06-03" },
@@ -27,7 +29,8 @@ const StudentDashboard = () => {
                 <div className="col-md-4 mb-4" key={task.id}>
                   <AssignmentCard
                     title={task.title}
-                    due={new Date(task.dueDate).toLocaleDateString()}
+                    type={task.type}
+                    due={task.dueDate}
                     onStart={() => handleStart(task)}
                   />
                 </div>
@@ -65,10 +68,8 @@ const StudentDashboard = () => {
               Past Exams
             </button>
           </li>
+          <LogOut/>
         </ul>
-        <button className="btn btn-outline-danger mt-5 w-100" onClick={() => navigate("/")}>
-          Log Out
-        </button>
       </div>
 
       {/* Main Content */}

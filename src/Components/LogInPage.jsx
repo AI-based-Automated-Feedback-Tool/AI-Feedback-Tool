@@ -48,7 +48,7 @@ const LogInPage = () => {
       const { data: userData, error: userError } = await supabase
         .from("users")
         .select("role")
-        .eq("id", userId)
+        .eq("user_id", userId)
         .single();
 
       if (userError || !userData) {
@@ -58,7 +58,7 @@ const LogInPage = () => {
 
       //redirect based on role
       if (userData.role === "teacher") {
-        navigate("/dashboard/teacher");
+        navigate("/teacher");
       } else if (userData.role === "student") {
         navigate("/dashboard");
       } else {
