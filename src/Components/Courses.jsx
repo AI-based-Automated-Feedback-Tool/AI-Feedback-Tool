@@ -5,6 +5,9 @@ import StudentSideBar from "./StudentSideBar";
 const Courses = () => {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
+  
+  //array to add bg colour
+  const bgColors = ["#FF5733", "#33FF57", "#3357FF", "#FF33A1", "#FFC300", "#DAF7A6"];
 
   //fetch courses from Supabase
   useEffect(() => {
@@ -30,22 +33,41 @@ const Courses = () => {
     <div className="d-flex">
       <StudentSideBar />
 
-      {/*main contents*/}
+      {/*main contents */}
       <div className="container mt-5">
         <h1>Welcome to Student Dashboard</h1>
-        <h2>Courses</h2>
+
         {loading ? (
-          <p>Loading...</p>
-        ) : courses.length > 0 ? (
-          <ul className="list-group">
-            {courses.map((course) => (
-              <li key={course.id} className="list-group-item">
-                {course.name} - {course.description}
-              </li>
-            ))}
-          </ul>
+          <p>Loading courses...</p>
         ) : (
-          <p>No courses available.</p>
+          <div className="row mt-5">
+            {courses.map((course, index) => (
+              <div
+                key={course.id}
+                className="col-md-4 mb-4"
+                onClick={() => alert(`You clicked on ${course.name}`)}
+                style={{ cursor: "pointer" }}
+              >
+                <div className="card h-100 shadow">
+                  {/* img part with bg color */}
+                  <div
+                    className="card-header text-white text-center"
+                    style={{
+                      backgroundColor: bgColors[index % bgColors.length],
+                      padding: "50px",
+                      fontSize: "1.5rem",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    {course.name}
+                  </div>
+                  <div className="card-body">
+                    <p className="card-text">{course.description}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         )}
       </div>
     </div>
