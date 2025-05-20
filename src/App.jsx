@@ -9,6 +9,7 @@ import TeacherDashboard from "./Components/TearcherDashboard"
 import ConfigureExam from './Components/ConfigureExam/ConfigureExam';
 import TeacherLayout from './layouts/TeacherLayout';
 import TaskPage from './Components/TaskPage';
+import Courses from './Components/Courses';
 
 function App() {
   return (
@@ -33,6 +34,10 @@ function App() {
 
         <Route path="/dashboard/teacher" element={<ProtectedRoute />}>
           <Route index element={<TeacherDashboard />} />
+        </Route>
+
+        <Route path="/courses" element={<ProtectedRoute />}>
+          <Route index element={<Courses />} />
         </Route>
       </Routes>
     </Router>

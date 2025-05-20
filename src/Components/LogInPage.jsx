@@ -60,7 +60,7 @@ const LogInPage = () => {
       if (userData.role === "teacher") {
         navigate("/teacher");
       } else if (userData.role === "student") {
-        navigate("/dashboard");
+        navigate("/courses");
       } else {
         //fallback if role is unknown
         navigate("/");
