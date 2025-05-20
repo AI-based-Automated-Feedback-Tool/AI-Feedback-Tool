@@ -10,6 +10,7 @@ import ConfigureExam from './Components/ConfigureExam/ConfigureExam';
 import TeacherLayout from './layouts/TeacherLayout';
 import TaskPage from './Components/StudentsComponents/TaskPage';
 import Courses from './Components/StudentsComponents/Courses';
+import TeacherCourses from './Components/TeachersComponents/TeacherCourses';
 
 function App() {
   return (
@@ -24,7 +25,7 @@ function App() {
         </Route>        
         <Route path="/configure-exam" element={<ConfigureExam />} />       
         <Route path="/teacher" element={<TeacherLayout />}>
-          <Route index element={""} />
+          <Route index element={<TeacherCourses />} />
           <Route path="exams" element={<ConfigureExam />} />
           <Route path="exams/:examId/questions" element={""} />
           <Route path="students" element={""} />

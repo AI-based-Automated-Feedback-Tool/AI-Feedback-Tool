@@ -1,0 +1,41 @@
+/* TeacherCourses.css */
+.courses-container {
+  padding: 2rem;
+}
+
+.course-card {
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: none;
+}
+
+.course-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.course-code {
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: #6c757d !important;
+}
+
+.course-title {
+  font-weight: 700;
+  color: #343a40;
+  margin-bottom: 1rem;
+}
+
+.course-description {
+  color: #495057;
+  font-size: 0.95rem;
+  min-height: 60px; /* Ensures consistent card height */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .courses-container {
+    padding: 1rem;
+  }
+}
