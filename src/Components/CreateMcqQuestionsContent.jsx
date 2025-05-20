@@ -3,7 +3,7 @@ import { useState } from 'react';
 import McqQuestionForm from './McqQuestionForm';
 import Header from './Header';
 import SidebarTeacher from './SidebarTeacher';
-import { Container, Row, Col } from 'react-bootstrap';
+import { Container, Row, Col, CardHeader, CardBody, Card, Button } from 'react-bootstrap';
 import QuestionTable from './QuestionTable';
 import EditQuestion from './editQuestion';
 
@@ -51,31 +51,44 @@ export default function CreateMcqQuestionsContent() {
       {/*Sidebar */}
       <Container fluid>
         <Row>
-          <Col md={3}>
-            <SidebarTeacher show={showSidebar} onHide={toggleSidebar} />
-          </Col>
+            <Col md={3}>
+                <SidebarTeacher show={showSidebar} onHide={toggleSidebar} />
+            </Col>
           
-          {/* Main content area */}
-          <Col xs={12} md={9} className="p-4">
-            <McqQuestionForm onSave={addQuestion}/>
-            {questions.length > 0 && (
-                <>
-                    <QuestionTable 
-                        questions={questions} 
-                        onDelete={deleteQuestion} 
-                        onEdit={editQuestion}
-                    />
-                    {editQuestionIndex !== null && questions[editQuestionIndex] && (
-                    <EditQuestion 
-                        show={showEditQuestion}
-                        handleClose={() => setShowEditQuestion(false)}
-                        questionDetails = {questions[editQuestionIndex]}
-                        onSave={saveEditedQuestion}
-                    />
-                    )}
-                </>              
-            )}
-          </Col>
+            {/* Main content area */}
+            <Col xs={12} md={9} className="p-4">
+                <McqQuestionForm onSave={addQuestion}/>
+                <Card className="mt-4">
+                    <CardHeader className='bg-primary text-white '>
+                        <h4>Preview Questions</h4>
+                    </CardHeader>
+                    <CardBody>
+                        {questions.length > 0 && (
+                        <>
+                            <QuestionTable 
+                                questions={questions} 
+                                onDelete={deleteQuestion} 
+                                onEdit={editQuestion}
+                            />
+                            {editQuestionIndex !== null && questions[editQuestionIndex] && (
+                            <EditQuestion 
+                                show={showEditQuestion}
+                                handleClose={() => setShowEditQuestion(false)}
+                                questionDetails = {questions[editQuestionIndex]}
+                                onSave={saveEditedQuestion}
+                            />
+                            )}
+                            {/* Submit Button */}
+                            <div className="d-flex justify-content-end" >
+                                <Button variant="primary" >
+                                    ➕ Save All Question
+                                </Button>
+                </div> 
+                        </>              
+                        )}
+                    </CardBody>
+                </Card>
+            </Col>
         </Row>
       </Container>
     </>
