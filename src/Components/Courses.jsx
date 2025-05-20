@@ -27,6 +27,7 @@ const Courses = () => {
 
   return (
     <div className="container mt-5">
+      <h1>Welcome to Student Dashboard</h1>
       <h2>Courses</h2>
       {loading ? (
         <p>Loading...</p>
