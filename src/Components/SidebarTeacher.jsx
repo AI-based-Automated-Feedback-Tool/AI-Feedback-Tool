@@ -1,36 +1,83 @@
-import React from 'react'
 import { Nav, Offcanvas } from "react-bootstrap";
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import { 
+  FaTachometerAlt,
+  FaBook,
+  FaUsers,
+  FaChartBar 
+} from "react-icons/fa";
 
-export default function SidebarTeacher({show, onHide}) {
+export default function SidebarTeacher({ show, onHide }) {
+  const location = useLocation();
+  
+  const menuItems = [
+    { path: "/teacher", icon: <FaTachometerAlt />, label: "Dashboard" },
+    { path: "/teacher/exams", icon: <FaBook />, label: "Configure Exam" },
+    { path: "/teacher/students", icon: <FaUsers />, label: "Students" },
+    { path: "/teacher/reports", icon: <FaChartBar />, label: "Reports" }
+  ];
+
   return (
     <>
-      {/* Offcanvas sidebar for small screens */}
-      <div className="d-md-none">
-        <Offcanvas show={show} onHide={onHide} className="bg-light">
-          <Offcanvas.Header closeButton>
-            <Offcanvas.Title>Menu</Offcanvas.Title>
-          </Offcanvas.Header>
-          <Offcanvas.Body>
-            <Nav className="flex-column">
-              <Nav.Link as={Link} to="/teacher">Dashboard</Nav.Link>
-              <Nav.Link as={Link} to="/teacher/exams">Configure Exam</Nav.Link>
-              <Nav.Link as={Link} to={"/teacher/reports"}>Reports</Nav.Link>
-              <Nav.Link as={Link} to={"/teacher/students"}>Students</Nav.Link>
-            </Nav>
-          </Offcanvas.Body>
-        </Offcanvas>
-      </div>
+      {/* Mobile Sidebar */}
+      <Offcanvas 
+        show={show} 
+        onHide={onHide} 
+        className="d-md-none"
+        style={{ width: "280px" }}
+      >
+        <Offcanvas.Header closeButton className="border-bottom pb-3">
+          <Offcanvas.Title className="fw-bold">Menu</Offcanvas.Title>
+        </Offcanvas.Header>
+        <Offcanvas.Body className="px-0">
+          <Nav className="flex-column">
+            {menuItems.map((item) => (
+              <Nav.Link
+                as={Link}
+                to={item.path}
+                key={item.path}
+                className={`px-4 py-3 ${
+                  location.pathname === item.path 
+                    ? "bg-primary text-white" 
+                    : "text-dark hover-bg-light"
+                }`}
+              >
+                <span className="me-3">{item.icon}</span>
+                {item.label}
+              </Nav.Link>
+            ))}
+          </Nav>
+        </Offcanvas.Body>
+      </Offcanvas>
 
-      {/* Static sidebar for md+ screens */}
-      <div className="d-none d-md-block bg-light vh-100" style={{ position: "sticky", top: 0 }}>
+      {/* Desktop Sidebar */}
+      <div 
+        className="d-none d-md-block bg-white border-end" 
+        style={{ 
+          width: "280px", 
+          minHeight: "calc(100vh - 56px)",
+          position: "sticky",
+          top: "56px"
+        }}
+      >
         <Nav className="flex-column pt-3">
-          <Nav.Link as={Link} to="/teacher">Dashboard</Nav.Link>
-          <Nav.Link as={Link} to="/teacher/exams">Configure Exam</Nav.Link>
-          <Nav.Link as={Link} to={"/teacher/reports"}>Reports</Nav.Link>
-          <Nav.Link as={Link} to={"/teacher/students"}>Students</Nav.Link>
+          {menuItems.map((item) => (
+            <Nav.Link
+              as={Link}
+              to={item.path}
+              key={item.path}
+              className={`px-4 py-3 ${
+                location.pathname === item.path
+                  ? "bg-primary text-white"
+                  : "text-dark hover-bg-light"
+              }`}
+            >
+              <span className="me-3">{item.icon}</span>
+              {item.label}
+            </Nav.Link>
+          ))}
         </Nav>
       </div>
     </>
   );
-};
+}
