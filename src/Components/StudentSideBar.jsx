@@ -25,7 +25,7 @@ const StudentSideBar = () => {
         <li className="nav-item mb-2">
           <a
             className="nav-link text-white d-flex align-items-center"
-            href="#"
+            href="/courses"
             style={{ fontSize: "1.2rem" }}
           >
             <i className="fas fa-book me-2"></i> Courses
