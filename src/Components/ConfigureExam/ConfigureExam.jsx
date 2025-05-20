@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Form, Button, Container, Row, Col, Card, Alert } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { supabase } from "../../SupabaseAuth/supabaseClient"; 
 
 const ConfigureExam = () => {
   const navigate = useNavigate();
@@ -27,25 +28,39 @@ const ConfigureExam = () => {
     setError(null);
 
     try {
-      // Send to backend
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+      
+      if (sessionError || !session?.user?.id) {
+        throw new Error("Please login to create exams");
+      }
+      
+      const { data: userData, error: userError } = await supabase
+        .from('users')
+        .select('role')
+        .eq('user_id', session.user.id)
+        .single();
+
+      if (userError || userData?.role !== 'teacher') {
+        throw new Error("Only teachers can create exams");
+      }
+
       const response = await axios.post(
         "http://localhost:5000/api/configureExam",
         {
           ...exam,
-          teacher_id: "c0a80100-0000-4000-a000-000000000001" // Replace with actual auth later
+          user_id: session.user.id // Use actual user ID
         }
-      );  
-      navigate(`/teacher/exams/${response.data.examId}/questions`);   
-
-      // Save to localStorage and navigate
-      localStorage.setItem("examConfig", JSON.stringify({
+      );
+            localStorage.setItem("examConfig", JSON.stringify({
         ...exam,
         examId: response.data.examId
       }));
       
+      navigate(`/teacher/exams/${response.data.examId}/questions`);
+
     } catch (err) {
       console.error("Error saving exam:", err);
-      setError(err.response?.data?.error || "Failed to save exam configuration");
+      setError(err.message || "Failed to save exam configuration");
     } finally {
       setLoading(false);
     }
