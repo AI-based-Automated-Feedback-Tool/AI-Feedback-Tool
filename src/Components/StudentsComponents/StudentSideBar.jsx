@@ -1,5 +1,5 @@
 import React from "react";
-import LogOut from "./LogOut";
+import LogOut from "../LogOut";
 
 const StudentSideBar = () => {
   return (

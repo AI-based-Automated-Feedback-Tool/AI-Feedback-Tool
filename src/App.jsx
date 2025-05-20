@@ -1,15 +1,15 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import MainPage from './Components/MainPage';
+import MainPage from './Components/StudentsComponents/MainPage';
 import LogInPage from './Components/LogInPage';
 import SignInPage from './Components/signInPage';
-import StudentDashboard from './Components/StudentDashboard';
+import StudentDashboard from './Components/StudentsComponents/StudentDashboard';
 import ProtectedRoute from './Components/ProtectedRoute';
-import TeacherDashboard from "./Components/TearcherDashboard"
+import TeacherDashboard from "./Components/StudentsComponents/TearcherDashboard"
 import ConfigureExam from './Components/ConfigureExam/ConfigureExam';
 import TeacherLayout from './layouts/TeacherLayout';
-import TaskPage from './Components/TaskPage';
-import Courses from './Components/Courses';
+import TaskPage from './Components/StudentsComponents/TaskPage';
+import Courses from './Components/StudentsComponents/Courses';
 
 function App() {
   return (

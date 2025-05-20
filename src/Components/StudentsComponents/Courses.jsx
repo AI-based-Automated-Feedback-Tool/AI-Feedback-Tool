@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { supabase } from "../SupabaseAuth/supabaseClient";
+import { supabase } from "../../SupabaseAuth/supabaseClient";
 import StudentSideBar from "./StudentSideBar";
 import '@fortawesome/fontawesome-free/css/all.min.css';
 

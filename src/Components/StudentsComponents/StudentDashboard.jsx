@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AssignmentCard from "./AssignmentCard";
-import LogOut from "./LogOut";
+import LogOut from "../LogOut";
 
 const StudentDashboard = () => {
   const navigate = useNavigate();
