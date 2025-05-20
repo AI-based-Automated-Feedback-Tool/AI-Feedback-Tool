@@ -52,7 +52,7 @@ const Courses = () => {
             {courses.map((course, index) => (
               <div
                 key={course.id || index}
-                className="col-md-4 col-12 col-sm-6 mb-4"
+                className="col-md-4 col-12 col-sm-6 mb-4 "
                 onClick={() => alert(`You clicked on ${course.title}`)}
                 style={{ cursor: "pointer" }}
               >
@@ -76,7 +76,7 @@ const Courses = () => {
                       className="card-subtitle mb-2 text-muted"
                       style={{ fontSize: "0.8rem" }}
                     >
-                      Course ID: {course.course_id}
+                      Course code: {course.course_code}
                     </h6>
                     {/*description*/}
                     <p className="card-text mt-3">{course.description}</p>
