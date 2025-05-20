@@ -11,6 +11,7 @@ import TeacherLayout from './layouts/TeacherLayout';
 import TaskPage from './Components/StudentsComponents/TaskPage';
 import Courses from './Components/StudentsComponents/Courses';
 import TeacherCourses from './Components/TeachersComponents/TeacherCourses';
+import ExamsPage from './Components/StudentsComponents/ExamsPage';
 
 function App() {
   return (
@@ -22,6 +23,9 @@ function App() {
         <Route path="/dashboard" element={<ProtectedRoute />}>
           <Route index element={<StudentDashboard />} />
           <Route path="task/:id" element={<TaskPage />} />
+          <Route path="courses/:courseId/exams" element={<ExamsPage />} />
+         
+
         </Route>        
         <Route path="/configure-exam" element={<ConfigureExam />} />       
         <Route path="/teacher" element={<TeacherLayout />}>

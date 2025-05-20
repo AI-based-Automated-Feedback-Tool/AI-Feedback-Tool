@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom"; 
 import { supabase } from "../../SupabaseAuth/supabaseClient";
 import StudentSideBar from "./StudentSideBar";
 import "@fortawesome/fontawesome-free/css/all.min.css";
@@ -6,6 +7,7 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 const Courses = () => {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   //array to add bg colour
   const bgColors = [
@@ -53,7 +55,9 @@ const Courses = () => {
               <div
                 key={course.id || index}
                 className="col-md-4 col-12 col-sm-6 mb-4 "
-                onClick={() => alert(`You clicked on ${course.title}`)}
+                onClick={() => navigate(`/dashboard/courses/${course.course_code}/exams`)}
+
+
                 style={{ cursor: "pointer" }}
               >
                 <div className="card h-100 shadow">
