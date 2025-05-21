@@ -11,6 +11,7 @@ import TeacherLayout from './layouts/TeacherLayout';
 import TaskPage from './Components/StudentsComponents/TaskPage';
 import Courses from './Components/StudentsComponents/Courses';
 import TeacherCourses from './Components/TeachersComponents/TeacherCourses';
+import CreateMcqQuestionsContent from './Components/CreateMcqQuestions/CreateMcqQuestionsContent';
 
 function App() {
   return (
