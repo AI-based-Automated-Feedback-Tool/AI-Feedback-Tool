@@ -5,13 +5,13 @@ import LogInPage from './Components/LogInPage';
 import SignInPage from './Components/signInPage';
 import StudentDashboard from './Components/StudentsComponents/StudentDashboard';
 import ProtectedRoute from './Components/ProtectedRoute';
-import TeacherDashboard from "./Components/StudentsComponents/TearcherDashboard"
 import ConfigureExam from './Components/ConfigureExam/ConfigureExam';
 import TeacherLayout from './layouts/TeacherLayout';
 import TaskPage from './Components/StudentsComponents/TaskPage';
 import Courses from './Components/StudentsComponents/Courses';
 import TeacherCourses from './Components/TeachersComponents/TeacherCourses';
 import CreateMcqQuestionsContent from './Components/CreateMcqQuestions/CreateMcqQuestionsContent';
+import ExamsPage from './Components/StudentsComponents/ExamsPage';
 
 function App() {
   return (
@@ -23,6 +23,9 @@ function App() {
         <Route path="/dashboard" element={<ProtectedRoute />}>
           <Route index element={<StudentDashboard />} />
           <Route path="task/:id" element={<TaskPage />} />
+          <Route path="courses/:courseId/exams" element={<ExamsPage />} />
+         
+
         </Route>        
         <Route path="/configure-exam" element={<ConfigureExam />} />       
         <Route path="/teacher" element={<TeacherLayout />}>
@@ -32,13 +35,9 @@ function App() {
           <Route path="students" element={""} />
           <Route path="reports" element={""} />
 
-        </Route> 
-
-        <Route path="/dashboard/teacher" element={<ProtectedRoute />}>
-          <Route index element={<TeacherDashboard />} />
         </Route>
 
-        <Route path="/courses" element={<ProtectedRoute />}>
+        <Route path="/student/courses/:userId" element={<ProtectedRoute />}>
           <Route index element={<Courses />} />
         </Route>
       </Routes>

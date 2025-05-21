@@ -39,15 +39,19 @@ const LogInPage = () => {
         data: { session },
       } = await supabase.auth.getSession();
 
-      const userId = session?.user?.id;
+      //const userId = session?.user?.id;
+      const userId = signInData?.session?.user?.id;
+
       if (!userId) {
         setError("User session not found.");
         return;
       }
+      console.log("User ID from signInData:", signInData?.session?.user?.id);
+
       //fetch user role from your users table
       const { data: userData, error: userError } = await supabase
         .from("users")
-        .select("role")
+        .select("role, name")
         .eq("user_id", userId)
         .single();
 
@@ -58,9 +62,9 @@ const LogInPage = () => {
 
       //redirect based on role
       if (userData.role === "teacher") {
-        navigate("/teacher");
+        navigate("/teacher", { state: { userName: userData.name } });
       } else if (userData.role === "student") {
-        navigate("/courses");
+        navigate(`/student/courses/${userId}`, { state: { userName: userData.name } });
       } else {
         //fallback if role is unknown
         navigate("/");
