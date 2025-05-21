@@ -1,9 +1,9 @@
 import React, { use } from 'react'
 import { useState } from 'react';
-import McqQuestionForm from '../McqQuestionForm';
+import McqQuestionForm from './McqQuestionForm';
 import { Container, Row, Col, CardHeader, CardBody, Card, Button, Alert } from 'react-bootstrap';
-import QuestionTable from '../QuestionTable';
-import EditQuestion from '../editQuestion';
+import QuestionTable from './QuestionTable';
+import EditQuestion from './EditQuestion';
 import {useMcqQuestion} from './useMcqQuestion';
 
 export default function CreateMcqQuestionsContent() {
