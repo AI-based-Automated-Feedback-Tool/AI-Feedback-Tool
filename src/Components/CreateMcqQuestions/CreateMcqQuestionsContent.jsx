@@ -23,6 +23,7 @@ export default function CreateMcqQuestionsContent() {
         saveEditedQuestion,
         saveAllQuestions,
         setShowEditQuestion,
+        clearQuestions,
         error,
         loading,
     } = useMcqQuestion(examId,userId);
@@ -30,6 +31,7 @@ export default function CreateMcqQuestionsContent() {
     const handleSaveQuestions = async () => {
         await saveAllQuestions();
         if (!error) {
+            clearQuestions();
             alert("Questions saved successfully!");
         }        
     }

@@ -55,6 +55,11 @@ export const useMcqQuestion = (examId,userId) => {
         }
                      
     }
+    // Clear all questions of table
+    const clearQuestions = () => {
+        setQuestions([]);
+    };
+
     return {
         questions,
         showEditQuestion,
@@ -65,6 +70,7 @@ export const useMcqQuestion = (examId,userId) => {
         saveEditedQuestion,
         saveAllQuestions,
         setShowEditQuestion,
+        clearQuestions,
         error,
         loading
     }
