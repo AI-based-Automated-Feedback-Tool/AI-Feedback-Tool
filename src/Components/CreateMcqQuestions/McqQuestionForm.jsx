@@ -81,18 +81,29 @@ export default function McqQuestionForm({onSave}) {
             <Form>
                 {/* Question */}
                 <Form.Group className="mb-3">
-                    <Form.Label>Question</Form.Label>
-                    <Form.Control as="textarea" rows={3} className="fs-6" value={questionText} onChange={e => setQuestionText(e.target.value)}/>
-                    {errors.question && <div className="text-danger small">{errors.question}</div>}
-                </Form.Group>
+                    <Form.Label className="fw-bold">Question *</Form.Label>
+                    <Form.Control 
+                        as="textarea" 
+                        rows={3} className="fs-6" 
+                        value={questionText} 
+                        onChange={e => setQuestionText(e.target.value)}
+                        placeholder='Enter your question here...'
+                    />
+                        {errors.question && <div className="text-danger small">{errors.question}</div>}
+                    </Form.Group>
 
                 {/* Answer Options */}
                 <Form.Group className="mb-3">
-                    <Form.Label >Answer Options</Form.Label>
+                    <Form.Label className="fw-bold">Answer Options *</Form.Label>
                     <Row>
                         {answerOptions.map((option, index) => (
                             <Col key={index} md={6} xs={12}>
-                                <Form.Control className='mb-2' placeholder= {`Option ${index+1}`} onChange={(e) => handleAnswerOptionsChange(e,index)} value= {option}/>
+                                <Form.Control 
+                                    className='mb-2' 
+                                    placeholder= {`Option ${index+1}`} 
+                                    onChange={(e) => handleAnswerOptionsChange(e,index)} 
+                                    value= {option}
+                                />
                             </Col>
                         ))}
                     </Row>
@@ -101,8 +112,11 @@ export default function McqQuestionForm({onSave}) {
 
                 {/* No of answers */}
                 <Form.Group className="mb-3">
-                    <Form.Label>No of answers</Form.Label>
-                    <Form.Select  value={numOfAnswers} onChange={e => handleNumOfAnswersChange(e)}>
+                    <Form.Label className="fw-bold">No of answers *</Form.Label>
+                    <Form.Select  
+                        value={numOfAnswers} 
+                        onChange={e => handleNumOfAnswersChange(e)}
+                    >
                         <option value="1">01</option>
                         <option value="2">02</option>
                         <option value="3">03</option>
@@ -113,7 +127,7 @@ export default function McqQuestionForm({onSave}) {
                 {/* Correct Answers Checkbox */}
                 {answerOptions.filter(opt => opt.trim() !== "").length > 0 && (
                     <Form.Group className="mb-3">
-                        <Form.Label>Select Correct Answer(s)</Form.Label>
+                        <Form.Label className="fw-bold">Select Correct Answer(s) *</Form.Label>
                         {answerOptions.map((opt, idx) =>
                             opt.trim() && (
                                 <Form.Check
@@ -132,7 +146,7 @@ export default function McqQuestionForm({onSave}) {
 
                 {/* Points for the Question */}
                 <Form.Group className="mb-3">
-                    <Form.Label>Number of points </Form.Label>
+                    <Form.Label className="fw-bold">Number of points *</Form.Label>
                     <Form.Control
                         type="number"
                         min="1"
