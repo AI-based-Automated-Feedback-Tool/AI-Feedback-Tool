@@ -21,8 +21,8 @@ const TeacherLayout = () => {
           
           <Col 
             xs={12} 
-            md={9} 
-            className="p-4"
+            md={10} 
+            className="p-2"
             style={{ 
               backgroundColor: "#f8f9fa",
               minHeight: "calc(100vh - 56px)"
