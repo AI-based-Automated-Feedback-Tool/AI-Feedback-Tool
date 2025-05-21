@@ -14,24 +14,31 @@ const TeacherLayout = () => {
       <Header toggleSidebar={toggleSidebar} />
       
       <Container fluid className="px-0">
-        <Row className="g-0">
-          <Col md={2}>
-            <SidebarTeacher show={showSidebar} onHide={toggleSidebar} />
-          </Col>
-          
-          <Col 
-            xs={12} 
-            md={10} 
-            className="p-2"
-            style={{ 
-              backgroundColor: "#f8f9fa",
-              minHeight: "calc(100vh - 56px)"
-            }}
-          >
-            <Outlet />
-          </Col>
-        </Row>
-      </Container>
+  <Row className="g-0">
+    <Col
+      xs={12}
+      md="auto"  
+      lg={2}    
+      className="sidebar-col"
+    >
+      <SidebarTeacher show={showSidebar} onHide={toggleSidebar} />
+    </Col>
+
+    <Col
+      xs={12}
+      md
+      lg={10}
+      className="p-2"
+      style={{
+        backgroundColor: "#f8f9fa",
+        minHeight: "calc(100vh - 56px)"
+      }}
+    >
+      <Outlet />
+    </Col>
+  </Row>
+</Container>
+
     </div>
   );
 };

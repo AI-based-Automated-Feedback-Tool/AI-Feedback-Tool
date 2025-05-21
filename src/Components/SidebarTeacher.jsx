@@ -51,10 +51,11 @@ export default function SidebarTeacher({ show, onHide }) {
       </Offcanvas>
 
       {/* Desktop Sidebar */}
-      <div 
-        className="d-none d-md-block bg-white border-end" 
-        style={{ 
-          width: "280px", 
+      <div
+        className="d-none d-md-block bg-white border-end"
+        style={{
+          width: "100%", 
+          maxWidth: "280px", 
           minHeight: "calc(100vh - 56px)",
           position: "sticky",
           top: "56px"
