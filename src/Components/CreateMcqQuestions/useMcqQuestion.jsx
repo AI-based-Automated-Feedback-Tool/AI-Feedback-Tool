@@ -1,13 +1,28 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { saveMcqQuestion } from "./mcqQuestionService";
+import { supabase } from "../../SupabaseAuth/supabaseClient"; 
 
-export const useMcqQuestion = (examId,userId) => {
+export const useMcqQuestion = (examId) => {
     // State to manage sidebar visibility
+    const [userId, setUserId] = useState(null);
     const [questions, setQuestions] = useState([]);
     const [showEditQuestion, setShowEditQuestion] = useState(false);
     const [editQuestionIndex, setEditQuestionIndex] = useState(null);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
+
+
+    useEffect(() => {
+        const getUserId = async () => {
+            const { data, error } = await supabase.auth.getUser();
+            if (error) {
+                setError("Failed to get user ID");
+            } else {
+                setUserId(data.user.id);
+            }
+        }
+        getUserId();
+    }, []);
 
     // Add question from child form
     const addQuestion = (newQuestion) => {
@@ -33,6 +48,10 @@ export const useMcqQuestion = (examId,userId) => {
     }
     // Save all questions to the database
     const saveAllQuestions = async () => {
+        if(!userId){
+            setError("User not authenticated");
+            return;
+        }
         setLoading(true);
         setError(null);
         try{
@@ -72,6 +91,7 @@ export const useMcqQuestion = (examId,userId) => {
         setShowEditQuestion,
         clearQuestions,
         error,
-        loading
+        loading,
+        userId
     }
 }

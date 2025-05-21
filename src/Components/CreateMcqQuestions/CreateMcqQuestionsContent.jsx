@@ -1,16 +1,16 @@
 import React, { use } from 'react'
-import { useState} from 'react';
 import { useParams } from 'react-router-dom';
 import McqQuestionForm from './McqQuestionForm';
 import { Container, Row, Col, CardHeader, CardBody, Card, Button, Alert } from 'react-bootstrap';
 import QuestionTable from './QuestionTable';
 import EditQuestion from './EditQuestion';
 import {useMcqQuestion} from './useMcqQuestion';
+import { useNavigate } from 'react-router-dom';
 
 export default function CreateMcqQuestionsContent() {
     
     const {examId} = useParams();//grab examid from url
-    const userId = "5416a41e-d744-41cb-b6ab-48e89957f78c"; // Replace with actual user ID
+    const navigate = useNavigate();
 
     const {
         questions,
@@ -25,13 +25,15 @@ export default function CreateMcqQuestionsContent() {
         clearQuestions,
         error,
         loading,
-    } = useMcqQuestion(examId,userId);
+        userId
+    } = useMcqQuestion(examId);
 
     const handleSaveQuestions = async () => {
         await saveAllQuestions();
         if (!error) {
             clearQuestions();
             alert("Questions saved successfully!");
+            navigate("/teacher");
         }        
     }
 
