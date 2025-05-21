@@ -27,15 +27,17 @@ function App() {
          
 
         </Route>        
-        <Route path="/configure-exam" element={<ConfigureExam />} />       
-        <Route path="/teacher" element={<TeacherLayout />}>
-          <Route index element={<TeacherCourses />} />
-          <Route path="exams" element={<ConfigureExam />} />
-          <Route path="exams/:examId/questions" element={<CreateMcqQuestionsContent />} />
-          <Route path="students" element={""} />
-          <Route path="reports" element={""} />
+        <Route path="/configure-exam" element={<ConfigureExam />} /> 
+        <Route path="/teacher" element={<ProtectedRoute />}>     
+          <Route element={<TeacherLayout />}>
+            <Route index element={<TeacherCourses />} />
+            <Route path="exams" element={<ConfigureExam />} />
+            <Route path="exams/:examId/questions" element={<CreateMcqQuestionsContent />} />
+            <Route path="students" element={""} />
+            <Route path="reports" element={""} />
 
-        </Route>
+          </Route>
+        </Route> 
 
         <Route path="/student/courses/:userId" element={<ProtectedRoute />}>
           <Route index element={<Courses />} />
