@@ -63,7 +63,14 @@ export default function CreateMcqQuestionsContent() {
                             {/* Submit Button */}
                             <div className="d-flex justify-content-end" >
                                 <Button variant="primary" onClick={handleSaveQuestions} disabled={loading}>
-                                    {loading ? 'Saving...' : '➕ Save All Question'}                                
+                                    {loading ? (
+                                        <>
+                                            <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                                Saving Questions...
+                                        </>
+                                    ) : (
+                                        "➕ Save All Question"
+                                    )}                              
                                 </Button>
                             </div> 
                         </>              
