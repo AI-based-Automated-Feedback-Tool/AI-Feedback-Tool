@@ -1,13 +1,22 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom"; 
+import { useNavigate, useLocation } from "react-router-dom";
 import { supabase } from "../../SupabaseAuth/supabaseClient";
 import StudentSideBar from "./StudentSideBar";
 import "@fortawesome/fontawesome-free/css/all.min.css";
+import { useParams } from "react-router-dom";
 
 const Courses = () => {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  //hook for accessing location state
+  const location = useLocation();
+
+  const { userId } = useParams();
+  //extracting userName from the location state, with a fallback to user
+  const userName = location.state?.userName || "User";
+  console.log("User ID from URL:", userId);
+  console.log("User Name from state:", userName);
 
   //array to add bg colour
   const bgColors = [
@@ -45,7 +54,7 @@ const Courses = () => {
 
       {/*main contents */}
       <div className="container mt-5">
-        <h1>Welcome to Student Dashboard</h1>
+        <h1>Welcome to Student Dashboard,{userName}</h1>
 
         {loading ? (
           <p>Loading courses...</p>
@@ -55,9 +64,9 @@ const Courses = () => {
               <div
                 key={course.id || index}
                 className="col-md-4 col-12 col-sm-6 mb-4 "
-                onClick={() => navigate(`/dashboard/courses/${course.course_code}/exams`)}
-
-
+                onClick={() =>
+                  navigate(`/dashboard/courses/${course.course_code}/exams`)
+                }
                 style={{ cursor: "pointer" }}
               >
                 <div className="card h-100 shadow">

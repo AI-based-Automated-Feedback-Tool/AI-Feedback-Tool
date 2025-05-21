@@ -5,7 +5,6 @@ import LogInPage from './Components/LogInPage';
 import SignInPage from './Components/signInPage';
 import StudentDashboard from './Components/StudentsComponents/StudentDashboard';
 import ProtectedRoute from './Components/ProtectedRoute';
-import TeacherDashboard from "./Components/StudentsComponents/TearcherDashboard"
 import ConfigureExam from './Components/ConfigureExam/ConfigureExam';
 import TeacherLayout from './layouts/TeacherLayout';
 import TaskPage from './Components/StudentsComponents/TaskPage';
@@ -35,13 +34,9 @@ function App() {
           <Route path="students" element={""} />
           <Route path="reports" element={""} />
 
-        </Route> 
-
-        <Route path="/dashboard/teacher" element={<ProtectedRoute />}>
-          <Route index element={<TeacherDashboard />} />
         </Route>
 
-        <Route path="/courses" element={<ProtectedRoute />}>
+        <Route path="/student/courses/:userId" element={<ProtectedRoute />}>
           <Route index element={<Courses />} />
         </Route>
       </Routes>
