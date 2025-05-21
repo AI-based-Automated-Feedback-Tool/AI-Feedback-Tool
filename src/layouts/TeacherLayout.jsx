@@ -1,35 +1,38 @@
 import React, { useState } from "react";
-import { Container, Row, Col, Button, Navbar, Nav, Offcanvas } from "react-bootstrap";
+import { Container, Row, Col } from "react-bootstrap";
 import Header from "../Components/Header";
 import SidebarTeacher from "../Components/SidebarTeacher";
-import ConfigureExam from "../Components/ConfigureExam";
 import { Outlet } from "react-router-dom";
+import "../styles/teacher-styles.css"; 
 
 const TeacherLayout = () => {
-  // State to manage sidebar visibility
   const [showSidebar, setShowSidebar] = useState(false);
-  // Function to toggle sidebar visibility
   const toggleSidebar = () => setShowSidebar(!showSidebar);
 
   return (
-    <>
-      {/* Header */}
+    <div style={{ minHeight: "100vh" }}>
       <Header toggleSidebar={toggleSidebar} />
-
-      {/*Sidebar */}
-      <Container fluid>
-        <Row>
-          <Col md={3}>
+      
+      <Container fluid className="px-0">
+        <Row className="g-0">
+          <Col md={2}>
             <SidebarTeacher show={showSidebar} onHide={toggleSidebar} />
           </Col>
           
-          {/* Main content area */}
-          <Col xs={12} md={9} className="p-4">
+          <Col 
+            xs={12} 
+            md={9} 
+            className="p-4"
+            style={{ 
+              backgroundColor: "#f8f9fa",
+              minHeight: "calc(100vh - 56px)"
+            }}
+          >
             <Outlet />
           </Col>
         </Row>
       </Container>
-    </>
+    </div>
   );
 };
 

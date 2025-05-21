@@ -1,0 +1,26 @@
+/* Smooth hover effects */
+.hover-bg-light:hover {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+  transition: all 0.2s ease;
+}
+
+/* Active link indicator */
+.bg-primary {
+  transition: all 0.2s ease;
+}
+
+/* Better spacing for nav items */
+.nav-link {
+  border-radius: 0.25rem;
+  margin: 0.25rem 1rem;
+}
+
+/* Header shadow */
+.shadow-sm {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Sidebar border */
+.border-end {
+  border-right: 1px solid #dee2e6 !important;
+}
