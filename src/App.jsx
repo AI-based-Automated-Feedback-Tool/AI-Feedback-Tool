@@ -28,15 +28,15 @@ function App() {
         <Route path="/configure-exam" element={<ConfigureExam />} />
 
         {/*teacher protected route */}
-        <Route
-          path="/teacher"
-          element={<ProtectedRoute allowedRoles={["teacher"]} />}
-        >
-          <Route index element={<TeacherCourses />} />
-          <Route path="exams" element={<ConfigureExam />} />
-          <Route path="exams/:examId/questions" element={""} />
-          <Route path="students" element={""} />
-          <Route path="reports" element={""} />
+        <Route path="/teacher" element={<ProtectedRoute allowedRoles={["teacher"]} />}>     
+          <Route element={<TeacherLayout />}>
+            <Route index element={<TeacherCourses />} />
+            <Route path="exams" element={<ConfigureExam />} />
+            <Route path="exams/:examId/questions" element={<CreateMcqQuestionsContent />} />
+            <Route path="students" element={""} />
+            <Route path="reports" element={""} />
+
+          </Route>
         </Route>
 
         {/*student protected route */}
