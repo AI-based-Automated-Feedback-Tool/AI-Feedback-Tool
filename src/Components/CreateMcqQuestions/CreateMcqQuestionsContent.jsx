@@ -40,44 +40,46 @@ export default function CreateMcqQuestionsContent() {
             {/* Main content area */}
             <Col className="w-100">
                 <McqQuestionForm onSave={addQuestion}/>
-                <Card className="mt-4">
-                    <CardHeader className='bg-primary text-white '>
-                        <h4>Preview Questions</h4>
-                    </CardHeader>
-                    <CardBody>
-                        {error && <Alert variant="danger">{error}</Alert>}
-                        {questions.length > 0 && (
-                        <>
-                            <QuestionTable 
-                                questions={questions} 
-                                onDelete={deleteQuestion} 
-                                onEdit={editQuestion}
-                            />
-                            {editQuestionIndex !== null && questions[editQuestionIndex] && (
-                            <EditQuestion 
-                                show={showEditQuestion}
-                                handleClose={() => setShowEditQuestion(false)}
-                                questionDetails = {questions[editQuestionIndex]}
-                                onSave={saveEditedQuestion}
-                            />
-                            )}
-                            {/* Submit Button */}
-                            <div className="d-flex justify-content-end" >
-                                <Button variant="primary" onClick={handleSaveQuestions} disabled={loading}>
-                                    {loading ? (
-                                        <>
-                                            <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                                                Saving Questions...
-                                        </>
-                                    ) : (
-                                        "➕ Save All Question"
-                                    )}                              
-                                </Button>
-                            </div> 
-                        </>              
-                        )}
-                    </CardBody>
-                </Card>
+                {questions.length > 0 && (
+                    <Card className="mt-4">
+                        <CardHeader className='bg-primary text-white '>
+                            <h4>Preview Questions</h4>
+                        </CardHeader>
+                        <CardBody>
+                            {error && <Alert variant="danger">{error}</Alert>}
+                            
+                            <>
+                                <QuestionTable 
+                                    questions={questions} 
+                                    onDelete={deleteQuestion} 
+                                    onEdit={editQuestion}
+                                />
+                                {editQuestionIndex !== null && questions[editQuestionIndex] && (
+                                <EditQuestion 
+                                    show={showEditQuestion}
+                                    handleClose={() => setShowEditQuestion(false)}
+                                    questionDetails = {questions[editQuestionIndex]}
+                                    onSave={saveEditedQuestion}
+                                />
+                                )}
+                                {/* Submit Button */}
+                                <div className="d-flex justify-content-end" >
+                                    <Button variant="primary" onClick={handleSaveQuestions} disabled={loading}>
+                                        {loading ? (
+                                            <>
+                                                <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                                    Saving Questions...
+                                            </>
+                                        ) : (
+                                            "➕ Save All Question"
+                                        )}                              
+                                    </Button>
+                                </div> 
+                            </>              
+                            
+                        </CardBody>
+                    </Card>
+                )}
             </Col>        
     </>
   );
