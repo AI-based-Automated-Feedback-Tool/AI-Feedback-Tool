@@ -1,72 +1,83 @@
-import React from "react";
-import { Card, Container, Row, Col } from "react-bootstrap";
-import "../../styles/TeacherCourses.css";
+// TeacherCourses.js – Step 2: Fetch all courses
+
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { supabase } from "../../SupabaseAuth/supabaseClient";
+import "../../css/Courses.css";
 
 const TeacherCourses = () => {
-  const courses = [
-    {
-      id: 1,
-      code: "CS401",
-      title: "Advanced Data Structures",
-      description:
-        "Covers trees, graphs, and algorithm optimization techniques",
-    },
-    {
-      id: 2,
-      code: "CS402",
-      title: "Machine Learning Fundamentals",
-      description:
-        "Introduction to supervised and unsupervised learning algorithms",
-    },
-    {
-      id: 3,
-      code: "MATH301",
-      title: "Discrete Mathematics",
-      description: "Mathematical foundations for computer science",
-    },
-    {
-      id: 4,
-      code: "SE400",
-      title: "Software Engineering",
-      description: "Software development lifecycle and best practices",
-    },
-  ];
-  //extracting userName from the location state, with a fallback to user
-  const userName = location.state?.userName || "User";
+  const [courses, setCourses] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const { data, error } = await supabase.from("courses").select("*");
+        if (error) throw error;
+        setCourses(data);
+      } catch (err) {
+        console.error("Error fetching courses:", err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCourses();
+  }, []);
+
   return (
-    <Container className="my-4">
-      <Card>
-        <Card.Header className="bg-primary text-white">
-          <h4>📚 My Courses</h4>
-        </Card.Header>
-        <Card.Body>
-          <Row xs={1} md={2} lg={3} className="g-4">
-            {courses.map((course) => (
-              <Col key={course.id}>
-                <Card className="course-card h-100">
-                  <Card.Body>
-                    <Card.Subtitle className="mb-2 text-muted course-code">
-                      {course.code}
-                    </Card.Subtitle>
-                    <Card.Title className="course-title">
+    <div className="container mt-3">
+      <h4 className="mb-4">Welcome to Teacher Dashboard</h4>
+
+      {loading ? (
+        <p>Loading courses...</p>
+      ) : (
+        <div className="card shadow p-4">
+          <div className="card-header d-flex align-items-center">
+            <i className="fas fa-book fa-2x me-3 text-primary"></i>
+            <h2 className="mb-0">Courses</h2>
+          </div>
+          <div className="card-body">
+            <div className="row mt-3">
+              {courses.map((course, index) => (
+                <div
+                  key={course.id || index}
+                  className="col-md-4 col-sm-6 col-12 mb-4"
+                  onClick={() =>
+                    navigate(`/teacher/courses/${course.course_code}/exams`)
+                  }
+                  style={{ cursor: "pointer" }}
+                >
+                  <div className="card h-100 shadow">
+                    <div
+                      className="card-header text-white text-center"
+                      style={{
+                        backgroundColor: "#007bff",
+                        height: "60px",
+                        fontSize: "1.5rem",
+                        fontWeight: "bold",
+                      }}
+                    >
                       {course.title}
-                    </Card.Title>
-                    <Card.Text className="course-description">
-                      {course.description}
-                    </Card.Text>
-                  </Card.Body>
-                  <Card.Footer className="bg-transparent border-top-0">
-                    <button className="btn btn-outline-primary btn-sm">
-                      View Details
-                    </button>
-                  </Card.Footer>
-                </Card>
-              </Col>
-            ))}
-          </Row>
-        </Card.Body>
-      </Card>
-    </Container>
+                    </div>
+                    <div className="card-body">
+                      <h6 className="text-muted" style={{ fontSize: "0.85rem" }}>
+                        Course Code: {course.course_code}
+                      </h6>
+                      <p className="card-text mt-2">{course.description}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+              {courses.length === 0 && (
+                <p className="text-center text-muted">No courses available.</p>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
   );
 };
 

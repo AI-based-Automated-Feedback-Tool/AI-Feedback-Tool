@@ -18,29 +18,29 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<MainPage />} />
-        <Route path="/logIn" element={<LogInPage />} />
-        <Route path="/register" element={<SignInPage />} />
+        <Route path="/logIn" element={<LogInPage/>} />
+        <Route path="/register" element={<SignInPage/>} />
         <Route path="/dashboard" element={<ProtectedRoute />}>
           <Route index element={<StudentDashboard />} />
           <Route path="task/:id" element={<TaskPage />} />
           <Route path="courses/:courseId/exams" element={<ExamsPage />} />
-        </Route>
-        <Route path="/configure-exam" element={<ConfigureExam />} />
+         
 
-        {/*teacher protected route */}
-        <Route path="/teacher" element={<ProtectedRoute allowedRoles={["teacher"]} />}>     
+        </Route>        
+        <Route path="/configure-exam" element={<ConfigureExam />} /> 
+        <Route path="/teacher" element={<ProtectedRoute />}>     
           <Route element={<TeacherLayout />}>
             <Route index element={<TeacherCourses />} />
             <Route path="exams" element={<ConfigureExam />} />
             <Route path="exams/:examId/questions" element={<CreateMcqQuestionsContent />} />
+            <Route path="courses/:courseId/exams" element={""} />
             <Route path="students" element={""} />
             <Route path="reports" element={""} />
 
           </Route>
-        </Route>
+        </Route> 
 
-        {/*student protected route */}
-        <Route path="/student/courses/:userId" element={<ProtectedRoute allowedRoles={["student"]}/>}>
+        <Route path="/student/courses/:userId" element={<ProtectedRoute />}>
           <Route index element={<Courses />} />
         </Route>
       </Routes>
