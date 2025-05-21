@@ -40,7 +40,7 @@ function App() {
         </Route>
 
         {/*student protected route */}
-        <Route path="/student/courses/:userId" element={<ProtectedRoute />}>
+        <Route path="/student/courses/:userId" element={<ProtectedRoute allowedRoles={["student"]}/>}>
           <Route index element={<Courses />} />
         </Route>
       </Routes>
