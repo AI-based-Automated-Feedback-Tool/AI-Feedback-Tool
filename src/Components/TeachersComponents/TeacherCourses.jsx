@@ -1,5 +1,3 @@
-// TeacherCourses.js – Step 2: Fetch all courses
-
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../../SupabaseAuth/supabaseClient";
@@ -13,11 +11,46 @@ const TeacherCourses = () => {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const { data, error } = await supabase.from("courses").select("*");
-        if (error) throw error;
-        setCourses(data);
+        
+        const {
+          data: { user },
+          error: userError,
+        } = await supabase.auth.getUser();
+
+        if (userError || !user) {
+          throw new Error("Unable to fetch authenticated user");
+        }
+
+        const userId = user.id;
+
+        const { data: exams, error: examsError } = await supabase
+          .from("exams")
+          .select("course_code")
+          .eq("user_id", userId);
+
+        if (examsError) {
+          throw examsError;
+        }
+
+        const uniqueCourseCodes = [...new Set(exams.map((e) => e.course_code))];
+
+        if (uniqueCourseCodes.length === 0) {
+          setCourses([]); // No courses to show
+          return;
+        }
+
+        const { data: courseData, error: courseError } = await supabase
+          .from("courses")
+          .select("*")
+          .in("course_code", uniqueCourseCodes);
+
+        if (courseError) {
+          throw courseError;
+        }
+
+        setCourses(courseData);
       } catch (err) {
-        console.error("Error fetching courses:", err.message);
+        console.error("Error fetching filtered courses:", err.message || err);
       } finally {
         setLoading(false);
       }
