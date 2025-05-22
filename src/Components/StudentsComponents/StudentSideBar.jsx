@@ -35,7 +35,7 @@ const StudentSideBar = ({ show, onHide }) => {
             <Nav.Item>
               <Link
                 className="nav-link text-white d-flex align-items-center mb-2"
-                to="/profile/:userId"
+                to="/student/courses/:userId/profile"
                 style={{ fontSize: "1.2rem" }}
               >
                 <i className="fas fa-user me-2"></i> Profile
@@ -74,7 +74,7 @@ const StudentSideBar = ({ show, onHide }) => {
           <li className="nav-item mb-2">
             <Link
               className="nav-link text-white d-flex align-items-center"
-              to="/profile/:userId"
+              to="/student/courses/:userId/profile"
               style={{ fontSize: "1.2rem" }}
             >
               <i className="fas fa-user me-2"></i> Profile

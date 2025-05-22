@@ -43,10 +43,12 @@ function App() {
 
         <Route path="/student/courses/:userId" element={<ProtectedRoute />}>
           <Route index element={<Courses />} />
+          <Route path="profile" element={<Profile />} />
         </Route>
-        <Route path="/profile/:userId" element={<ProtectedRoute />}>
+        
+        {/*<Route path="/profile/:userId" element={<ProtectedRoute />}>
           <Route index element={<Profile />} />
-        </Route>
+        </Route>*/}
       </Routes>
     </Router>
   );
