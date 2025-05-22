@@ -81,7 +81,6 @@ const StudentSideBar = ({ show, onHide }) => {
             </Link>
           </li>
         </ul>
-
         {/*logout btn*/}
         <div className="mt-auto mb-4">
           <i className="fas fa-sign-out-alt me-2"></i>
