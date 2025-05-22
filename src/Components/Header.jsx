@@ -15,7 +15,7 @@ export default function Header({ toggleSidebar }) {
           <FaBars />
         </Button>
         
-        <Navbar.Brand href="#" className="fw-bold fs-4">
+        <Navbar.Brand href="http://localhost:5173/teacher" className="fw-bold fs-4">
           AI Feedback Tool
         </Navbar.Brand>
         
