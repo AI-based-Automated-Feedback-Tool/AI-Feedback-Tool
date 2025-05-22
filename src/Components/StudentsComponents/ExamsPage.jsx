@@ -27,7 +27,7 @@ const ExamsPage = () => {
         setExamsByCourse(groupedExams);
       }
     };
-    //call fun to fetch exam
+//call fun to fetch exam
     fetchExams();
   }, []);
 
@@ -51,9 +51,10 @@ const ExamsPage = () => {
                 <div className="col-md-4" key={exam.exam_id}>
                   <AssignmentCard
                     title={exam.title}
-                    due={exam.due_date}
+                    type={exam.type}
+                    due={exam.duration}
                     status="pending"
-                    onStart={() => handleStart(exam.id)}
+                    onStart={() => handleStart(exam.exam_id)}
                   />
                 </div>
               ))}
@@ -73,7 +74,8 @@ const ExamsPage = () => {
                 <div className="col-md-4" key={exam.exam_id}>
                   <AssignmentCard
                     title={exam.title}
-                    due={exam.due_date}
+                    type={exam.type}
+                    due={exam.duration}
                     status="completed"
                   />
                 </div>
