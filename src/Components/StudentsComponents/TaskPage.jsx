@@ -1,10 +1,9 @@
 // src/Components/TaskPage.jsx
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { supabase } from "../../SupabaseAuth/supabaseClient";
 
 const TaskPage = () => {
-  const { id } = useParams(); // exam_id from route
+  const { id } = useParams(); // exam_id from URL
   const [task, setTask] = useState(null);
   const [loading, setLoading] = useState(true);
   const [questionIndex, setQuestionIndex] = useState(0);
@@ -13,40 +12,25 @@ const TaskPage = () => {
   useEffect(() => {
     const fetchExamWithQuestions = async () => {
       try {
-        // 1. Fetch the exam
-        const { data: examData, error: examError } = await supabase
-          .from("exams")
-          .select("*")
-          .eq("exam_id", id)
-          .single();
+        // ✅ 1. Fetch exam from backend
+        const examRes = await fetch(`/api/exams/exam/${id}`);
+        const examData = await examRes.json();
 
-        if (examError || !examData) {
-          console.error("Error fetching exam:", examError);
-          setTask(null);
-          return;
-        }
-
-        // 2. Fetch related MCQ questions
-        const { data: questionsData, error: questionsError } = await supabase
-          .from("mcq_questions")
-          .select("*")
-          .eq("exam_id", id);
-
-        if (questionsError) {
-          console.error("Error fetching questions:", questionsError);
-        }
+        // ✅ 2. Fetch MCQ questions from backend
+        const questionRes = await fetch(`/api/questions/${id}`);
+        const questionsData = await questionRes.json();
 
         const formattedQuestions = (questionsData || []).map((q) => ({
           id: q.id,
-          question: q.question_text,
-          options: [q.option_a, q.option_b, q.option_c, q.option_d],
+          question: q.question,
+          options: q.options,
         }));
 
-        // 3. Set task and answers
+        // ✅ 3. Store in local state
         setTask({ ...examData, questions: formattedQuestions });
         setAnswers(new Array(formattedQuestions.length).fill(null));
       } catch (err) {
-        console.error("Unexpected error:", err);
+        console.error("❌ Error loading task:", err);
       } finally {
         setLoading(false);
       }
@@ -74,12 +58,12 @@ const TaskPage = () => {
   };
 
   const handleSubmit = () => {
-    console.log("Submitted answers:", answers);
-    alert("Submitted! 🎉");
-    // TODO: Store results in Supabase or navigate to feedback
+    console.log("✅ Submitted answers:", answers);
+    alert("✅ Answers submitted successfully!");
+    // TODO: Send answers to backend or navigate to feedback screen
   };
 
-  if (loading) return <div className="container mt-4">Loading task...</div>;
+  if (loading) return <div className="container mt-4">⏳ Loading task...</div>;
   if (!task || !task.questions || task.questions.length === 0)
     return (
       <div className="container mt-4 text-danger">
@@ -117,14 +101,22 @@ const TaskPage = () => {
         ))}
 
         <div className="d-flex justify-content-between mt-4">
-          <button className="btn btn-secondary" onClick={handleBack} disabled={questionIndex === 0}>
+          <button
+            className="btn btn-secondary"
+            onClick={handleBack}
+            disabled={questionIndex === 0}
+          >
             Back
           </button>
 
           {questionIndex === task.questions.length - 1 ? (
-            <button className="btn btn-success" onClick={handleSubmit}>Submit</button>
+            <button className="btn btn-success" onClick={handleSubmit}>
+              Submit
+            </button>
           ) : (
-            <button className="btn btn-primary" onClick={handleNext}>Next</button>
+            <button className="btn btn-primary" onClick={handleNext}>
+              Next
+            </button>
           )}
         </div>
       </div>
