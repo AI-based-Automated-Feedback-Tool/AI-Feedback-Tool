@@ -13,6 +13,7 @@ import TeacherCourses from './Components/TeachersComponents/TeacherCourses';
 import CreateMcqQuestionsContent from './Components/CreateMcqQuestions/CreateMcqQuestionsContent';
 import ExamsPage from './Components/StudentsComponents/ExamsPage';
 import Profile from './Components/Profile';
+import CourseExamsPage from './Components/TeachersComponents/CourseExamsPage';
 
 function App() {
   return (
@@ -34,7 +35,7 @@ function App() {
             <Route index element={<TeacherCourses />} />
             <Route path="exams" element={<ConfigureExam />} />
             <Route path="exams/:examId/questions" element={<CreateMcqQuestionsContent />} />
-            <Route path="courses/:courseId/exams" element={""} />
+            <Route path="courses/:course_code/exams" element={<CourseExamsPage />} />
             <Route path="students" element={""} />
             <Route path="reports" element={""} />
 
