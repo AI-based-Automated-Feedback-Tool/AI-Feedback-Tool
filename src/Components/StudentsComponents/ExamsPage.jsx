@@ -26,7 +26,7 @@ const ExamsPage = () => {
   const pending = exams.filter((e) => !e.completed);
   const completed = exams.filter((e) => e.completed);
 
-  const handleStart = (id) => navigate(`/task/${id}`);
+  const handleStart = (id) => navigate(`/dashboard/task/${id}`);
 
   return (
     <div className="container py-4">
@@ -35,12 +35,12 @@ const ExamsPage = () => {
       <h5 className="mt-4 text-primary">Pending Exams</h5>
       <div className="row">
         {pending.map((exam) => (
-          <div className="col-md-4" key={exam.id}>
+          <div className="col-md-4" key={exam.exam_id}>
             <AssignmentCard
               title={exam.title}
               due={exam.due_date}
               status="pending"
-              onStart={() => handleStart(exam.id)}
+              onStart={() => handleStart(exam.exam_id)}
             />
           </div>
         ))}
@@ -49,7 +49,7 @@ const ExamsPage = () => {
       <h5 className="mt-5 text-success">Completed Exams</h5>
       <div className="row">
         {completed.map((exam) => (
-          <div className="col-md-4" key={exam.id}>
+          <div className="col-md-4" key={exam.exam_id}>
             <AssignmentCard
               title={exam.title}
               due={exam.due_date}

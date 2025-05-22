@@ -1,43 +1,66 @@
 // src/Components/TaskPage.jsx
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { supabase } from "../../SupabaseAuth/supabaseClient";
 
 const TaskPage = () => {
-  const { id } = useParams(); // exam_id from URL
+  const { id } = useParams(); // exam_id from route
   const [task, setTask] = useState(null);
   const [loading, setLoading] = useState(true);
   const [questionIndex, setQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState([]);
 
   useEffect(() => {
-    const fetchExamWithQuestions = async () => {
-      try {
-        // ✅ 1. Fetch exam from backend
-        const examRes = await fetch(`/api/exams/exam/${id}`);
-        const examData = await examRes.json();
+  const fetchExamWithQuestions = async () => {
+    console.log("🔎 Route exam ID:", id);
 
-        // ✅ 2. Fetch MCQ questions from backend
-        const questionRes = await fetch(`/api/questions/${id}`);
-        const questionsData = await questionRes.json();
+    try {
+      const { data: examData, error: examError } = await supabase
+        .from("exams")
+        .select("*")
+        .eq("exam_id", id)
+        .single();
 
-        const formattedQuestions = (questionsData || []).map((q) => ({
-          id: q.id,
-          question: q.question,
-          options: q.options,
-        }));
+      console.log("📘 Exam data:", examData);
+      console.log("📕 Exam error:", examError);
 
-        // ✅ 3. Store in local state
-        setTask({ ...examData, questions: formattedQuestions });
-        setAnswers(new Array(formattedQuestions.length).fill(null));
-      } catch (err) {
-        console.error("❌ Error loading task:", err);
-      } finally {
-        setLoading(false);
+      if (examError || !examData) {
+        console.error("❌ Exam not found");
+        return;
       }
-    };
 
-    fetchExamWithQuestions();
-  }, [id]);
+      const { data: questionsData, error: questionsError } = await supabase
+  .from("mcq_questions")
+  .select("question_id, question_text, options")
+  .filter("exam_id", "eq", id); // this method ensures UUIDs are matched as strings
+
+
+      console.log("📋 Questions data:", questionsData);
+      console.log("📕 Questions error:", questionsError);
+
+      if (questionsError || !questionsData || questionsData.length === 0) {
+        console.error("❌ Questions not found");
+        return;
+      }
+
+      const formattedQuestions = questionsData.map((q) => ({
+        id: q.question_id,
+        question: q.question_text,
+        options: Array.isArray(q.options) ? q.options : [],
+      }));
+
+      setTask({ ...examData, questions: formattedQuestions });
+      setAnswers(new Array(formattedQuestions.length).fill(null));
+    } catch (error) {
+      console.error("🔥 Unexpected error:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchExamWithQuestions();
+}, [id]);
+
 
   const handleAnswerSelect = (index, answer) => {
     const updated = [...answers];
@@ -58,16 +81,15 @@ const TaskPage = () => {
   };
 
   const handleSubmit = () => {
-    console.log("✅ Submitted answers:", answers);
-    alert("✅ Answers submitted successfully!");
-    // TODO: Send answers to backend or navigate to feedback screen
+    console.log(" Submitted answers:", answers);
+    alert("Submitted! ");
   };
 
   if (loading) return <div className="container mt-4">⏳ Loading task...</div>;
   if (!task || !task.questions || task.questions.length === 0)
     return (
       <div className="container mt-4 text-danger">
-        ❌ Task or questions not found.
+         Task or questions not found.
       </div>
     );
 
@@ -77,10 +99,14 @@ const TaskPage = () => {
     <div className="container py-4">
       <div className="bg-light p-4 shadow rounded">
         <h2 className="text-primary mb-3">{task.title}</h2>
-        <p><strong>Type:</strong> {task.type || "Exam"}</p>
+        <p>
+          <strong>Type:</strong> {task.type || "Exam"}
+        </p>
 
         <hr />
-        <h5>Question {questionIndex + 1} of {task.questions.length}</h5>
+        <h5>
+          Question {questionIndex + 1} of {task.questions.length}
+        </h5>
         <p>{currentQuestion.question}</p>
 
         {currentQuestion.options.map((opt, idx) => (
@@ -94,7 +120,10 @@ const TaskPage = () => {
               checked={answers[questionIndex] === opt}
               onChange={() => handleAnswerSelect(questionIndex, opt)}
             />
-            <label className="form-check-label" htmlFor={`q${questionIndex}_${idx}`}>
+            <label
+              className="form-check-label"
+              htmlFor={`q${questionIndex}_${idx}`}
+            >
               {opt}
             </label>
           </div>
