@@ -1,5 +1,6 @@
 import { Navbar, Container, Nav, Button } from "react-bootstrap";
 import { FaUserCircle, FaBars } from "react-icons/fa";
+import LogOut from "./LogOut";
 
 export default function Header({ toggleSidebar }) {
   return (
@@ -21,8 +22,8 @@ export default function Header({ toggleSidebar }) {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ms-auto align-items-center gap-3">
             <Nav.Link className="d-flex align-items-center gap-2">
-              <FaUserCircle className="text-white fs-4" />
-              <span className="text-white">Logout</span>
+              <FaUserCircle className="text-white fs-4" />              
+              <LogOut />              
             </Nav.Link>
           </Nav>
         </Navbar.Collapse>
