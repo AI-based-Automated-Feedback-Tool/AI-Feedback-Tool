@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Form, Button, Container, Row, Col, Card, Alert } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -17,6 +17,38 @@ const ConfigureExam = () => {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [courses, setCourses] = useState([]);
+  const [fetchingCourses, setFetchingCourses] = useState(false);
+
+  // Fetch courses when component mounts
+  useEffect(() => {
+    const fetchCourses = async () => {
+      setFetchingCourses(true);
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        
+        if (!session?.user?.id) {
+          return;
+        }
+
+        const { data, error } = await supabase
+          .from('courses')
+          .select('course_id, title, course_code')
+          .order('created_at', { ascending: false });
+
+        if (error) throw error;
+        
+        setCourses(data || []);
+      } catch (err) {
+        console.error("Error fetching courses:", err);
+        setError("Failed to load courses");
+      } finally {
+        setFetchingCourses(false);
+      }
+    };
+
+    fetchCourses();
+  }, []);
 
   const handleChange = (e) => {
     setExam({ ...exam, [e.target.name]: e.target.value });
@@ -66,7 +98,7 @@ const ConfigureExam = () => {
     }
   };
 
-    return (
+  return (
     <Container className="my-4">
       <Card>
         <Card.Header className="bg-primary text-white">
@@ -95,14 +127,24 @@ const ConfigureExam = () => {
                 <Row className="mb-3">
                   <Col md={6}>
                     <Form.Group>
-                      <Form.Label className="fw-bold">Course Code *</Form.Label>
-                      <Form.Control 
-                        name="course_code" 
+                      <Form.Label className="fw-bold">Course *</Form.Label>
+                      <Form.Select
+                        name="course_code"
                         onChange={handleChange}
-                        value={exam.course_id}
-                        placeholder="Department + Number (e.g., 'CS401')" 
+                        value={exam.course_code}
                         required
-                      />
+                        disabled={fetchingCourses}
+                      >
+                        <option value="">Select a course</option>
+                        {courses.map((course) => (
+                          <option key={course.course_id} value={course.course_code}>
+                            {course.course_code} - {course.title}
+                          </option>
+                        ))}
+                      </Form.Select>
+                      {fetchingCourses && (
+                        <Form.Text className="text-muted">Loading courses...</Form.Text>
+                      )}
                     </Form.Group>
                   </Col>
                   <Col md={6}>
