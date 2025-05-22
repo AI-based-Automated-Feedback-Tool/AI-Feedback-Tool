@@ -12,6 +12,7 @@ import Courses from './Components/StudentsComponents/Courses';
 import TeacherCourses from './Components/TeachersComponents/TeacherCourses';
 import CreateMcqQuestionsContent from './Components/CreateMcqQuestions/CreateMcqQuestionsContent';
 import ExamsPage from './Components/StudentsComponents/ExamsPage';
+import Profile from './Components/Profile';
 
 function App() {
   return (
@@ -42,6 +43,9 @@ function App() {
 
         <Route path="/student/courses/:userId" element={<ProtectedRoute />}>
           <Route index element={<Courses />} />
+        </Route>
+        <Route path="/profile/:userId" element={<ProtectedRoute />}>
+          <Route index element={<Profile />} />
         </Route>
       </Routes>
     </Router>
