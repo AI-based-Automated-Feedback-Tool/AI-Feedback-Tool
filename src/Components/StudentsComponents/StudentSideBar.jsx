@@ -1,6 +1,7 @@
 import React from "react";
 import { Offcanvas, Nav } from "react-bootstrap";
 import LogOut from "../LogOut";
+import { Link } from "react-router-dom";
 
 const StudentSideBar = ({ show, onHide }) => {
   return (
@@ -31,22 +32,23 @@ const StudentSideBar = ({ show, onHide }) => {
 
           {/*nav link*/}
           <Nav className="flex-column">
-            <Nav.Link
-              href="#"
-              className="text-white d-flex align-items-center mb-2"
-              style={{ fontSize: "1.2rem" }}
-            >
-              <i className="fas fa-user me-2"></i> Profile
-            </Nav.Link>
+            <Nav.Item>
+              <Link
+                className="nav-link text-white d-flex align-items-center mb-2"
+                to="/student/courses/:userId/profile"
+                style={{ fontSize: "1.2rem" }}
+              >
+                <i className="fas fa-user me-2"></i> Profile
+              </Link>
+            </Nav.Item>
           </Nav>
 
           {/*logout btn*/}
           <div className="d-lg-none text-white mt-4 mx-4 ">
-          <i className="fas fa-sign-out-alt me-2"></i>
-          <LogOut />
+            <i className="fas fa-sign-out-alt me-2"></i>
+            <LogOut />
           </div>
         </Offcanvas.Body>
-
       </Offcanvas>
 
       {/*for desktop*/}
@@ -70,19 +72,18 @@ const StudentSideBar = ({ show, onHide }) => {
         {/*nav link*/}
         <ul className="nav flex-column w-100">
           <li className="nav-item mb-2">
-            <a
+            <Link
               className="nav-link text-white d-flex align-items-center"
-              href="#"
+              to="/student/courses/:userId/profile"
               style={{ fontSize: "1.2rem" }}
             >
               <i className="fas fa-user me-2"></i> Profile
-            </a>
+            </Link>
           </li>
         </ul>
-
         {/*logout btn*/}
         <div className="mt-auto mb-4">
-        <i className="fas fa-sign-out-alt me-2"></i>
+          <i className="fas fa-sign-out-alt me-2"></i>
           <LogOut />
         </div>
       </nav>
