@@ -14,6 +14,7 @@ import CreateMcqQuestionsContent from './Components/CreateMcqQuestions/CreateMcq
 import ExamsPage from './Components/StudentsComponents/ExamsPage';
 import Profile from './Components/Profile';
 import CourseExamsPage from './Components/TeachersComponents/CourseExamsPage';
+import ProfilePage from './Components/TeachersComponents/ProfilePage';
 
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
             <Route path="exams" element={<ConfigureExam />} />
             <Route path="exams/:examId/questions" element={<CreateMcqQuestionsContent />} />
             <Route path="courses/:course_code/exams" element={<CourseExamsPage />} />
+            <Route path="profile" element={<ProfilePage />} />
             <Route path="students" element={""} />
             <Route path="reports" element={""} />
 
