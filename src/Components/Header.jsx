@@ -1,8 +1,10 @@
 import { Navbar, Container, Nav, Button } from "react-bootstrap";
-import { FaUserCircle, FaBars } from "react-icons/fa";
+import { FaUserCircle, FaBars, FaSignOutAlt } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 import LogOut from "./LogOut";
 
 export default function Header({ toggleSidebar }) {
+  const navigate = useNavigate();
   return (
     <Navbar bg="primary" variant="dark" expand="md" className="shadow-sm py-2">
       <Container fluid>
@@ -15,16 +17,27 @@ export default function Header({ toggleSidebar }) {
           <FaBars />
         </Button>
         
-        <Navbar.Brand href="http://localhost:5173/teacher" className="fw-bold fs-4">
+        <Navbar.Brand 
+          onClick={() => navigate("/teacher")} 
+          className="fw-bold fs-4"
+          style={{ cursor: 'pointer' }}
+        >
           AI Feedback Tool
         </Navbar.Brand>
         
+        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+        
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ms-auto align-items-center gap-3">
-            <Nav.Link className="d-flex align-items-center gap-2">
-              <FaUserCircle className="text-white fs-4" />              
-              <LogOut />              
-            </Nav.Link>
+            <Button 
+              variant="link" 
+              className="text-white p-0"
+              onClick={() => navigate("/teacher/profile")}
+            >
+              <FaUserCircle className="fs-4" />
+            </Button>
+            
+            <LogOut className="text-white" />
           </Nav>
         </Navbar.Collapse>
       </Container>
