@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "../../SupabaseAuth/supabaseClient";
@@ -11,15 +10,21 @@ const ExamsPage = () => {
 
   useEffect(() => {
     const fetchExams = async () => {
+      //fetch exams with associated MCQ questions
       const { data, error } = await supabase
         .from("exams")
-        .select("*")
+        .select("*, mcq_questions!inner(exam_id)") //join with mcq_questions table
         .eq("course_code", courseId);
-
-      if (error) console.error("Error loading exams:", error);
-      else setExams(data);
+  
+      if (error) {
+        console.error("Error loading exams:", error);
+      } else {
+        //filter exams that have associated MCQ questions
+        const examsWithQuestions = data.filter((exam) => exam.mcq_questions.length > 0);
+        setExams(examsWithQuestions);
+      }
     };
-
+  
     fetchExams();
   }, [courseId]);
 
