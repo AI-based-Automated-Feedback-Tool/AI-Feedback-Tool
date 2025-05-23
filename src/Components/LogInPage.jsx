@@ -64,7 +64,9 @@ const LogInPage = () => {
       if (userData.role === "teacher") {
         navigate("/teacher", { state: { userName: userData.name } });
       } else if (userData.role === "student") {
-        navigate(`/student/courses/${userId}`, { state: { userName: userData.name } });
+        navigate(`/student/courses/${userId}`, {
+          state: { userName: userData.name },
+        });
       } else {
         //fallback if role is unknown
         navigate("/");

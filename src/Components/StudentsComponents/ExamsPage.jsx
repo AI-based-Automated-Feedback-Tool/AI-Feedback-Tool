@@ -15,16 +15,18 @@ const ExamsPage = () => {
         .from("exams")
         .select("*, mcq_questions!inner(exam_id)") //join with mcq_questions table
         .eq("course_code", courseId);
-  
+
       if (error) {
         console.error("Error loading exams:", error);
       } else {
         //filter exams that have associated MCQ questions
-        const examsWithQuestions = data.filter((exam) => exam.mcq_questions.length > 0);
+        const examsWithQuestions = data.filter(
+          (exam) => exam.mcq_questions.length > 0
+        );
         setExams(examsWithQuestions);
       }
     };
-  
+
     fetchExams();
   }, [courseId]);
 

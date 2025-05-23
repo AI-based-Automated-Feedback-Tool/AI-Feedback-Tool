@@ -15,7 +15,7 @@ const ProtectedRoute = ({ allowedRoles }) => {
   const [showError, setShowError] = useState(false);
   //to get the current location object from React Router
   const location = useLocation();
-  const navigate= useNavigate()
+  const navigate = useNavigate();
 
   //to handle session checking and role fetching
   useEffect(() => {
@@ -24,7 +24,7 @@ const ProtectedRoute = ({ allowedRoles }) => {
       //get the current session from Supabase
       const { data } = await supabase.auth.getSession();
       //update the session state
-      setSession(data.session); 
+      setSession(data.session);
 
       if (data.session) {
         //if a session exists, get the user id
@@ -85,10 +85,7 @@ const ProtectedRoute = ({ allowedRoles }) => {
         <p className="text-danger">
           You do not have permission to access this page.
         </p>
-        <button
-          className="btn btn-primary mt-3"
-          onClick={() => navigate("/")}
-        >
+        <button className="btn btn-primary mt-3" onClick={() => navigate("/")}>
           Main Page
         </button>
       </div>

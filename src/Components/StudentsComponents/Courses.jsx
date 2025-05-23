@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { supabase } from "../../SupabaseAuth/supabaseClient";
-import StudentSideBar from "./StudentSideBar";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import { useParams } from "react-router-dom";
 import "../../css/Courses.css"
@@ -12,9 +11,6 @@ const Courses = () => {
   const navigate = useNavigate();
   //hook for accessing location state
   const location = useLocation();
-  //for toogling navbar
-  const [showSidebar, setShowSidebar] = useState(false);
-
 
   const { userId } = useParams();
   //extracting userName from the location state, with a fallback to user
@@ -48,15 +44,11 @@ const Courses = () => {
         setLoading(false);
       }
     };
-
     fetchCourses();
   }, []);
 
   return (
     <div className="d-flex">
-  {/*fixed Icon to toggle sidebar*/}
- 
-
     <div className="container mt-2">
       <h5>Welcome to Student Dashboard</h5>
 

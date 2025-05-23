@@ -13,7 +13,9 @@ const StudentLayout = () => {
   const userId = location.state?.userId || userIdFromParams;
 
   if (!userId) {
-    console.error("User ID is undefined. Ensure it is passed in the route or state.");
+    console.error(
+      "User ID is undefined. Ensure it is passed in the route or state."
+    );
   }
 
   console.log("User ID in StudentLayout:", userId);
