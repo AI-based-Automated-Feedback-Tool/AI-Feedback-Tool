@@ -1,10 +1,10 @@
-// src/Components/TaskPage.jsx
+
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { supabase } from "../../SupabaseAuth/supabaseClient";
 
 const TaskPage = () => {
-  const { id } = useParams(); // exam_id from route
+  const { id } = useParams(); 
   const [task, setTask] = useState(null);
   const [loading, setLoading] = useState(true);
   const [questionIndex, setQuestionIndex] = useState(0);
