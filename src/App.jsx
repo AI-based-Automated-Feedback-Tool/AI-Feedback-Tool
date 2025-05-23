@@ -15,43 +15,44 @@ import ExamsPage from './Components/StudentsComponents/ExamsPage';
 import Profile from './Components/Profile';
 import CourseExamsPage from './Components/TeachersComponents/CourseExamsPage';
 import ProfilePage from './Components/TeachersComponents/ProfilePage';
+import StudentLayout from './Components/StudentsComponents/StudentLayout';
 
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<MainPage />} />
-        <Route path="/logIn" element={<LogInPage/>} />
-        <Route path="/register" element={<SignInPage/>} />
+        <Route path="/logIn" element={<LogInPage />} />
+        <Route path="/register" element={<SignInPage />} />
         <Route path="/dashboard" element={<ProtectedRoute />}>
-          <Route index element={<StudentDashboard />} />
           <Route path="task/:id" element={<TaskPage />} />
           <Route path="courses/:courseId/exams" element={<ExamsPage />} />
-         
-
-        </Route>        
-        <Route path="/configure-exam" element={<ConfigureExam />} /> 
-        <Route path="/teacher" element={<ProtectedRoute />}>     
+        </Route>
+        <Route path="/configure-exam" element={<ConfigureExam />} />
+        <Route path="/teacher" element={<ProtectedRoute />}>
           <Route element={<TeacherLayout />}>
             <Route index element={<TeacherCourses />} />
             <Route path="exams" element={<ConfigureExam />} />
-            <Route path="exams/:examId/questions" element={<CreateMcqQuestionsContent />} />
-            <Route path="courses/:course_code/exams" element={<CourseExamsPage />} />
+            <Route
+              path="exams/:examId/questions"
+              element={<CreateMcqQuestionsContent />}
+            />
+            <Route
+              path="courses/:course_code/exams"
+              element={<CourseExamsPage />}
+            />
             <Route path="profile" element={<ProfilePage />} />
             <Route path="students" element={""} />
             <Route path="reports" element={""} />
-
           </Route>
-        </Route> 
+        </Route>
 
         <Route path="/student/courses/:userId" element={<ProtectedRoute />}>
-          <Route index element={<Courses />} />
-          <Route path="profile" element={<Profile />} />
+          <Route element={<StudentLayout />}>
+            <Route index element={<Courses />} />
+            <Route path="profile" element={<Profile />} />
+          </Route>
         </Route>
-        
-        {/*<Route path="/profile/:userId" element={<ProtectedRoute />}>
-          <Route index element={<Profile />} />
-        </Route>*/}
       </Routes>
     </Router>
   );

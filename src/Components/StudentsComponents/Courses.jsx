@@ -55,13 +55,7 @@ const Courses = () => {
   return (
     <div className="d-flex">
   {/*fixed Icon to toggle sidebar*/}
-  <i
-    className="fas fa-bars fa-2x text-primary d-lg-none fixed-icon mt-4 icon-with-bg "
-    style={{ cursor: "pointer" }}
-    onClick={() => setShowSidebar(true)}
-  ></i>
-
-      <StudentSideBar show={showSidebar} onHide={() => setShowSidebar(false)} />
+ 
 
     <div className="container mt-2">
       <h5>Welcome to Student Dashboard</h5>
