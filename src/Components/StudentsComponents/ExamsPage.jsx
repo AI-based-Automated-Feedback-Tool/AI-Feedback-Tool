@@ -38,6 +38,7 @@ const ExamsPage = () => {
           <div className="col-md-4" key={exam.exam_id}>
             <AssignmentCard
               title={exam.title}
+              type={exam.type}
               due={exam.duration}
               status="pending"
               onStart={() => handleStart(exam.exam_id)}
@@ -52,6 +53,7 @@ const ExamsPage = () => {
           <div className="col-md-4" key={exam.exam_id}>
             <AssignmentCard
               title={exam.title}
+              type={exam.type}
               due={exam.duration}
               status="completed"
             />
