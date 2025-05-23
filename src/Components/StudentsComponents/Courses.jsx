@@ -64,7 +64,7 @@ const Courses = () => {
       <StudentSideBar show={showSidebar} onHide={() => setShowSidebar(false)} />
 
     <div className="container mt-2">
-      <h5>Welcome to Student Dashboard, {userName}</h5>
+      <h5>Welcome to Student Dashboard</h5>
 
       {loading ? (
         <p>Loading courses...</p>
