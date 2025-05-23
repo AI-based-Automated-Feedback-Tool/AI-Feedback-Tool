@@ -13,7 +13,6 @@ const Profile = () => {
   //form data for editing
   const [formData, setFormData] = useState({ name: "", email: "" });
 
-
   useEffect(() => {
     const fetchUserDetails = async () => {
       try {
@@ -45,6 +44,7 @@ const Profile = () => {
         }
         //set the user details in state
         setUserDetails(userData);
+        setFormData({ name: userData.name, email: userData.email });
       } catch (err) {
         console.error("Error fetching user details:", err.message);
         //set error message
@@ -70,16 +70,30 @@ const Profile = () => {
   const handleSave = async () => {
     try {
       setLoading(true);
+
+      //create an update object with only the changed fields
+      const updates = {};
+      if (formData.name !== userDetails.name) updates.name = formData.name;
+      if (formData.email !== userDetails.email) updates.email = formData.email;
+
+      // Only proceed if there are changes to update
+      if (Object.keys(updates).length === 0) {
+        setIsEditing(false);
+        setLoading(false);
+        return;
+      }
+
       const { error } = await supabase
         .from("users")
-        .update({ name: formData.name, email: formData.email })
+        .update(updates)
         .eq("user_id", userDetails.user_id);
 
       if (error) {
         throw error;
       }
 
-      setUserDetails({ ...userDetails, ...formData });
+      //update the local state with the new values
+      setUserDetails({ ...userDetails, ...updates });
       setIsEditing(false);
     } catch (err) {
       console.error("Error updating user details:", err.message);
