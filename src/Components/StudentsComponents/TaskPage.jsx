@@ -2,8 +2,11 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { supabase } from "../../SupabaseAuth/supabaseClient";
+import { useNavigate } from "react-router-dom";
+
 
 const TaskPage = () => {
+  const navigate = useNavigate(); 
   const { id } = useParams(); // exam_id from URL
   const [task, setTask] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -12,7 +15,7 @@ const TaskPage = () => {
   const [reviewMode, setReviewMode] = useState(false);
   const [alreadySubmitted, setAlreadySubmitted] = useState(false);
 
-  const navigate = useNavigate(); 
+  
 
   useEffect(() => {
     const fetchExamWithQuestions = async () => {
