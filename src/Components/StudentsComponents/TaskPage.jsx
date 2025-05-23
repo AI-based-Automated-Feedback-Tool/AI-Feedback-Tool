@@ -4,9 +4,6 @@ import { useParams } from "react-router-dom";
 import { supabase } from "../../SupabaseAuth/supabaseClient";
 import { useNavigate } from "react-router-dom"; 
 
-const navigate = useNavigate(); 
-
-
 const TaskPage = () => {
   const { id } = useParams(); // exam_id from URL
   const [task, setTask] = useState(null);
@@ -16,58 +13,60 @@ const TaskPage = () => {
   const [reviewMode, setReviewMode] = useState(false);
   const [alreadySubmitted, setAlreadySubmitted] = useState(false);
 
+  const navigate = useNavigate(); 
+
   useEffect(() => {
     const fetchExamWithQuestions = async () => {
       console.log("🔎 Route exam ID:", id);
-
+  
       const {
         data: { user },
       } = await supabase.auth.getUser();
-
+  
       const userId = user?.id;
-
+  
       // 🔒 Check if already submitted
       const { data: existingSubmissions } = await supabase
-        .from("exam_responses")
+        .from("exam_submission") // Updated table name
         .select("id")
         .eq("exam_id", id)
         .eq("user_id", userId)
         .limit(1);
-
+  
       if (existingSubmissions?.length > 0) {
         setAlreadySubmitted(true);
         setLoading(false);
         return;
       }
-
+  
       try {
         const { data: examData, error: examError } = await supabase
           .from("exams")
           .select("*")
           .eq("exam_id", id)
           .single();
-
+  
         if (examError || !examData) {
           console.error("❌ Exam not found");
           return;
         }
-
+  
         const { data: questionsData, error: questionsError } = await supabase
           .from("mcq_questions")
           .select("question_id, question_text, options")
           .filter("exam_id", "eq", id);
-
+  
         if (questionsError || !questionsData || questionsData.length === 0) {
           console.error("❌ Questions not found");
           return;
         }
-
+  
         const formattedQuestions = questionsData.map((q) => ({
           id: q.question_id,
           question: q.question_text,
           options: Array.isArray(q.options) ? q.options : [],
         }));
-
+  
         setTask({ exam_id: examData.exam_id, ...examData, questions: formattedQuestions });
         setAnswers(new Array(formattedQuestions.length).fill(null));
       } catch (error) {
@@ -76,7 +75,7 @@ const TaskPage = () => {
         setLoading(false);
       }
     };
-
+  
     fetchExamWithQuestions();
   }, [id]);
 
@@ -116,7 +115,7 @@ const TaskPage = () => {
       selected_option: answers[index],
     }));
 
-    const { error } = await supabase.from("exam_responses").insert(responses);
+    const { error } = await supabase.from("exam_submission").insert(responses);
 
     if (error) {
       console.error("❌ Error saving responses:", error);
@@ -124,6 +123,7 @@ const TaskPage = () => {
     } else {
       console.log("✅ Responses submitted successfully");
       alert("Answers submitted!");
+      navigate(`/student/courses/${userId}`);
       
     }
   };
