@@ -49,7 +49,8 @@ const TaskPage = () => {
         options: Array.isArray(q.options) ? q.options : [],
       }));
 
-      setTask({ ...examData, questions: formattedQuestions });
+      setTask({ exam_id: examData.exam_id, ...examData, questions: formattedQuestions });
+
       setAnswers(new Array(formattedQuestions.length).fill(null));
     } catch (error) {
       console.error("🔥 Unexpected error:", error);
@@ -80,10 +81,35 @@ const TaskPage = () => {
     }
   };
 
-  const handleSubmit = () => {
-    console.log(" Submitted answers:", answers);
-    alert("Submitted! ");
-  };
+ const handleSubmit = async () => {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const userId = user?.id;
+  if (!userId) {
+    alert("User not authenticated");
+    return;
+  }
+
+  const responses = task.questions.map((question, index) => ({
+    user_id: userId,
+    exam_id: task.exam_id,
+    question_id: question.id,
+    selected_option: answers[index],
+  }));
+
+  const { error } = await supabase.from("exam_responses").insert(responses);
+
+  if (error) {
+    console.error("❌ Error saving responses:", error);
+    alert("Failed to submit answers. Please try again.");
+  } else {
+    console.log("✅ Responses submitted successfully");
+    alert("Answers submitted!");
+  }
+};
+
 
   if (loading) return <div className="container mt-4">⏳ Loading task...</div>;
   if (!task || !task.questions || task.questions.length === 0)
