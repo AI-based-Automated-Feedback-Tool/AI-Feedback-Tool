@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { supabase } from "../../SupabaseAuth/supabaseClient";
+import { useNavigate } from "react-router-dom";
 
 const TaskPage = () => {
   const { id } = useParams(); // exam_id from URL
