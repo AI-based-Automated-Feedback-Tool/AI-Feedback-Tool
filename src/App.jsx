@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import MainPage from './Components/StudentsComponents/MainPage';
 import LogInPage from './Components/LogInPage';
 import SignInPage from './Components/signInPage';
-import StudentDashboard from './Components/StudentsComponents/StudentDashboard';
 import ProtectedRoute from './Components/ProtectedRoute';
 import ConfigureExam from './Components/ConfigureExam/ConfigureExam';
 import TeacherLayout from './layouts/TeacherLayout';
