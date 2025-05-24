@@ -120,16 +120,14 @@ fetchCourses();
                           className="card-header"
                           style={{
                             backgroundColor: (() => {
-                              let color;
-                              do {
-                                color = `#${Math.floor(
-                                  Math.random() * 16777215
-                                ).toString(16)}`;
-                              } while (
-                                parseInt(color.substring(1), 16) >
-                                0xffffff / 1.5
-                              );
-                              return color;
+                              //generate a random dark color
+                              const randomDarkColor = () => {
+                                const r = Math.floor(Math.random() * 128); 
+                                const g = Math.floor(Math.random() * 128); 
+                                const b = Math.floor(Math.random() * 128);
+                                return `rgb(${r}, ${g}, ${b})`;
+                              };
+                              return randomDarkColor();
                             })(),
                             color: "white",
                           }}
@@ -167,16 +165,14 @@ fetchCourses();
                         className="card-header"
                         style={{
                           backgroundColor: (() => {
-                            let color;
-                            do {
-                              color = `#${Math.floor(
-                                Math.random() * 16777215
-                              ).toString(16)}`;
-                            } while (
-                              parseInt(color.substring(1), 16) >
-                              0xffffff / 1.5
-                            );
-                            return color;
+                            //generate a random dark color
+                            const randomDarkColor = () => {
+                              const r = Math.floor(Math.random() * 128); 
+                              const g = Math.floor(Math.random() * 128); 
+                              const b = Math.floor(Math.random() * 128); 
+                              return `rgb(${r}, ${g}, ${b})`;
+                            };
+                            return randomDarkColor();
                           })(),
                           color: "white",
                         }}
