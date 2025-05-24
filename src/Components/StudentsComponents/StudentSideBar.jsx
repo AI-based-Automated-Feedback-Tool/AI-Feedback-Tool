@@ -1,9 +1,16 @@
 import React from "react";
 import { Offcanvas, Nav } from "react-bootstrap";
 import LogOut from "../LogOut";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import "../../css/studentSideBar.css";
 
 const StudentSideBar = ({ show, onHide, userId }) => {
+  //get the current route
+  const location = useLocation();
+
+  //fun to check if a route is active
+  const isActive = (path) => location.pathname === path;
+
   return (
     <>
       {/*for mobile*/}
@@ -27,14 +34,18 @@ const StudentSideBar = ({ show, onHide, userId }) => {
             href="#"
             style={{ fontSize: "1.5rem", fontWeight: "bold" }}
           >
-          AI Feedback Tool
+            AI Feedback Tool
           </a>
 
           {/*nav link*/}
           <Nav className="flex-column">
             <Nav.Item>
               <Link
-                className="nav-link text-white d-flex align-items-center"
+                className={`nav-link d-flex align-items-center ${
+                  window.location.pathname === `/student/courses/${userId}`
+                    ? "active"
+                    : "text-white"
+                }`}
                 to={`/student/courses/${userId}`}
                 style={{ fontSize: "1.2rem" }}
               >
@@ -43,7 +54,9 @@ const StudentSideBar = ({ show, onHide, userId }) => {
             </Nav.Item>
             <Nav.Item>
               <Link
-                className="nav-link text-white d-flex align-items-center"
+                className={`nav-link d-flex align-items-center ${
+                  isActive(`/results/${userId}`) ? "active" : "text-white"
+                }`}
                 to={`/results/${userId}`}
                 style={{ fontSize: "1.2rem" }}
               >
@@ -52,7 +65,11 @@ const StudentSideBar = ({ show, onHide, userId }) => {
             </Nav.Item>
             <Nav.Item>
               <Link
-                className="nav-link text-white d-flex align-items-center mb-2"
+                className={`nav-link d-flex align-items-center ${
+                  isActive(`/student/courses/${userId}/profile`)
+                    ? "active"
+                    : "text-white"
+                }`}
                 to={`/student/courses/${userId}/profile`}
                 style={{ fontSize: "1.2rem" }}
               >
@@ -84,14 +101,18 @@ const StudentSideBar = ({ show, onHide, userId }) => {
           href="#"
           style={{ fontSize: "1.5rem", fontWeight: "bold" }}
         >
-        AI Feedback Tool
+          AI Feedback Tool
         </a>
 
         {/*nav link*/}
         <ul className="nav flex-column w-100">
           <li className="nav-item mb-2">
             <Link
-              className="nav-link text-white d-flex align-items-center"
+              className={`nav-link d-flex align-items-center ${
+                window.location.pathname === `/student/courses/${userId}`
+                  ? "active"
+                  : "text-white"
+              }`}
               to={`/student/courses/${userId}`}
               style={{ fontSize: "1.2rem" }}
             >
@@ -101,7 +122,9 @@ const StudentSideBar = ({ show, onHide, userId }) => {
 
           <li className="nav-item mb-2">
             <Link
-              className="nav-link text-white d-flex align-items-center"
+              className={`nav-link d-flex align-items-center ${
+                isActive(`/results/${userId}`) ? "active" : "text-white"
+              }`}
               to={`/results/${userId}`}
               style={{ fontSize: "1.2rem" }}
             >
@@ -111,7 +134,11 @@ const StudentSideBar = ({ show, onHide, userId }) => {
 
           <li className="nav-item mb-2">
             <Link
-              className="nav-link text-white d-flex align-items-center"
+              className={`nav-link d-flex align-items-center ${
+                isActive(`/student/courses/${userId}/profile`)
+                  ? "active"
+                  : "text-white"
+              }`}
               to={`/student/courses/${userId}/profile`}
               style={{ fontSize: "1.2rem" }}
             >
