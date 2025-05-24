@@ -1,24 +1,35 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { supabase } from "../../SupabaseAuth/supabaseClient";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import { useParams } from "react-router-dom";
 import "../../css/Courses.css";
+import { UserContext } from "../../Context/userContext.jsx";
 
 const Courses = () => {
   const [allCourses, setAllCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   //hook for accessing location state
-  const location = useLocation();
+  //const location = useLocation();
   //my courses or all courses
   const [activeTab, setActiveTab] = useState("allCourses");
 
   const { userId } = useParams();
-  //extracting userName from the location state, with a fallback to user
-  const userName = location.state?.userName || "User";
+  const { userData, fetchUserData } = useContext(UserContext);
+
+  //fetch user data if not already available
+  useEffect(() => {
+    if (!userData && userId) {
+      fetchUserData(userId);
+    }
+  }, [userId, userData, fetchUserData]);
+
+  //fallback to "User"
+  const userName = userData?.name || "User";
+
   console.log("User ID from URL:", userId);
-  console.log("User Name from state:", userName);
+  console.log("User Name from context:", userName);
 
   //fetch courses from Supabase
   useEffect(() => {
