@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "../../SupabaseAuth/supabaseClient";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import { useParams } from "react-router-dom";
@@ -10,10 +10,10 @@ const Courses = () => {
   const [allCourses, setAllCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-  //hook for accessing location state
-  //const location = useLocation();
+  const [enrolledCourses, setEnrolledCourses] = useState([]);
+
   //my courses or all courses
-  const [activeTab, setActiveTab] = useState("allCourses");
+  const [activeTab, setActiveTab] = useState("enrolledCourses");
 
   const { userId } = useParams();
   const { userData, fetchUserData } = useContext(UserContext);
@@ -44,14 +44,28 @@ const Courses = () => {
         } else {
           setAllCourses(allCoursesData);
         }
-      } catch (err) {
-        console.error("Unexpected error:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchCourses();
-  }, []);
+         //fetch enrolled courses using studentid
+      const { data: enrolledCoursesData, error: enrolledCoursesError } =
+      await supabase
+        .from("student_courses")
+        .select("courses(*)")
+        .eq("student_id", userId)
+    if (enrolledCoursesError) {
+      console.error(
+        "Error fetching enrolled courses:",
+        enrolledCoursesError.message
+      );
+    } else {
+      setEnrolledCourses(enrolledCoursesData.map((e) => e.courses));
+    }
+  } catch (err) {
+    console.error("Unexpected error:", err);
+  } finally {
+    setLoading(false);
+  }
+};
+fetchCourses();
+}, [userId])
 
   return (
     <div className="container mt-5">
@@ -63,6 +77,17 @@ const Courses = () => {
         <>
           <h1 className="text-center mb-4">Welcome, {userName}!</h1>
           <ul className="nav nav-tabs mb-4">
+          <li className="nav-item">
+              <button
+                className={`nav-link ${
+                  activeTab === "enrolledCourses" ? "active" : ""
+                }`}
+                onClick={() => setActiveTab("enrolledCourses")}
+              >
+                Enrolled Courses
+              </button>
+            </li>
+
             <li className="nav-item">
               <button
                 className={`nav-link ${
@@ -74,6 +99,56 @@ const Courses = () => {
               </button>
             </li>
           </ul>
+          {activeTab === "enrolledCourses" && (
+            <div>
+              <h2>Enrolled Courses</h2>
+              {enrolledCourses.length > 0 ? (
+                <div className="row">
+                  {enrolledCourses.map((course) => (
+                    <div
+                      key={course.course_id}
+                      className="col-md-4 mb-4"
+                      onClick={() =>
+                        navigate(
+                          `/dashboard/courses/${course.course_code}/exams`
+                        )
+                      }
+                      style={{ cursor: "pointer" }}
+                    >
+                      <div className="card h-100">
+                        <div
+                          className="card-header"
+                          style={{
+                            backgroundColor: (() => {
+                              let color;
+                              do {
+                                color = `#${Math.floor(
+                                  Math.random() * 16777215
+                                ).toString(16)}`;
+                              } while (
+                                parseInt(color.substring(1), 16) >
+                                0xffffff / 1.5
+                              );
+                              return color;
+                            })(),
+                            color: "white",
+                          }}
+                        >
+                          <h5 className="mb-0">{course.title}</h5>
+                          <small>Course ID: {course.course_code}</small>
+                        </div>
+                        <div className="card-body">
+                          <p className="card-text">{course.description}</p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p>No enrolled courses found.</p>
+              )}
+            </div>
+          )}
           {activeTab === "allCourses" && (
             <div>
               <h2>All Courses</h2>
