@@ -27,11 +27,29 @@ const StudentSideBar = ({ show, onHide, userId }) => {
             href="#"
             style={{ fontSize: "1.5rem", fontWeight: "bold" }}
           >
-            <i className="fas fa-tachometer-alt me-2"></i> Dashboard
+          AI Feedback Tool
           </a>
 
           {/*nav link*/}
           <Nav className="flex-column">
+            <Nav.Item>
+              <Link
+                className="nav-link text-white d-flex align-items-center"
+                to={`/student/courses/${userId}`}
+                style={{ fontSize: "1.2rem" }}
+              >
+                <i className="fas fa-home me-2"></i> Dashboard
+              </Link>
+            </Nav.Item>
+            <Nav.Item>
+              <Link
+                className="nav-link text-white d-flex align-items-center"
+                to={`/results/${userId}`}
+                style={{ fontSize: "1.2rem" }}
+              >
+                <i className="fas fa-chart-bar me-2"></i> Results
+              </Link>
+            </Nav.Item>
             <Nav.Item>
               <Link
                 className="nav-link text-white d-flex align-items-center mb-2"
@@ -66,11 +84,31 @@ const StudentSideBar = ({ show, onHide, userId }) => {
           href="#"
           style={{ fontSize: "1.5rem", fontWeight: "bold" }}
         >
-          <i className="fas fa-tachometer-alt me-2"></i> Dashboard
+        AI Feedback Tool
         </a>
 
         {/*nav link*/}
         <ul className="nav flex-column w-100">
+          <li className="nav-item mb-2">
+            <Link
+              className="nav-link text-white d-flex align-items-center"
+              to={`/student/courses/${userId}`}
+              style={{ fontSize: "1.2rem" }}
+            >
+              <i className="fas fa-home me-2"></i> Dashboard
+            </Link>
+          </li>
+
+          <li className="nav-item mb-2">
+            <Link
+              className="nav-link text-white d-flex align-items-center"
+              to={`/results/${userId}`}
+              style={{ fontSize: "1.2rem" }}
+            >
+              <i className="fas fa-chart-bar me-2"></i> Results
+            </Link>
+          </li>
+
           <li className="nav-item mb-2">
             <Link
               className="nav-link text-white d-flex align-items-center"
