@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { supabase } from "../SupabaseAuth/supabaseClient";
+import { UserContext } from "../Context/userContext";
 
 const LogInPage = () => {
   const navigate = useNavigate();
@@ -8,6 +9,8 @@ const LogInPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  //destructure value from context
+  const { setUserId, fetchUserData } = useContext(UserContext);
 
   const handleSignUpClick = () => {
     navigate("/register");
@@ -34,10 +37,6 @@ const LogInPage = () => {
         setError(signInError.message);
         return;
       }
-      // Get current user ID from session
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
 
       //const userId = session?.user?.id;
       const userId = signInData?.session?.user?.id;
@@ -46,19 +45,18 @@ const LogInPage = () => {
         setError("User session not found.");
         return;
       }
+      //set the userId in the context
+      setUserId(userId);
+
       console.log("User ID from signInData:", signInData?.session?.user?.id);
 
       //fetch user role from your users table
-      const { data: userData, error: userError } = await supabase
-        .from("users")
-        .select("role, name")
-        .eq("user_id", userId)
-        .single();
-
-      if (userError || !userData) {
-        setError("Could not retrieve user role.");
+      const userData = await fetchUserData(userId);
+      if (!userData) {
+        setError("Could not retrieve user data.");
         return;
       }
+      sessionStorage.setItem("userId", userId);
 
       //redirect based on role
       if (userData.role === "teacher") {

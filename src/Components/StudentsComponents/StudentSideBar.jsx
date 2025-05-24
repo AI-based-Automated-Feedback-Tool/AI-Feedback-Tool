@@ -3,13 +3,22 @@ import { Offcanvas, Nav } from "react-bootstrap";
 import LogOut from "../LogOut";
 import { Link, useLocation } from "react-router-dom";
 import "../../css/studentSideBar.css";
+import { UserContext } from "../../Context/userContext";
+import { useContext, useEffect } from "react";
 
-const StudentSideBar = ({ show, onHide, userId }) => {
+const StudentSideBar = ({ show, onHide }) => {
+  const { userId, setUserId } = useContext(UserContext);
   //get the current route
   const location = useLocation();
 
   //fun to check if a route is active
   const isActive = (path) => location.pathname === path;
+
+  useEffect(() => {
+    const storedUserId = localStorage.getItem("userId");
+    setUserId(storedUserId);
+  }, [setUserId]);
+
 
   return (
     <>

@@ -15,9 +15,11 @@ import Profile from './Components/Profile';
 import CourseExamsPage from './Components/TeachersComponents/CourseExamsPage';
 import ProfilePage from './Components/TeachersComponents/ProfilePage';
 import StudentLayout from './Components/StudentsComponents/StudentLayout';
+import { UserProvider } from './Context/userContext.jsx';
 
 function App() {
   return (
+    <UserProvider>
     <Router>
       <Routes>
         <Route path="/" element={<MainPage />} />
@@ -54,6 +56,7 @@ function App() {
         </Route>
       </Routes>
     </Router>
+    </UserProvider>
   );
 }
 
