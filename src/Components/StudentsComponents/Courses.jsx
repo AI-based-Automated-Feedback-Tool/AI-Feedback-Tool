@@ -155,7 +155,7 @@ fetchCourses();
               <div className="row">
                 {allCourses.map((course, index) => (
                   <div
-                    key={course.id}
+                    key={course.course_id}
                     className="col-md-4 mb-4"
                     onClick={() =>
                       navigate(`/dashboard/courses/${course.course_code}/exams`)
