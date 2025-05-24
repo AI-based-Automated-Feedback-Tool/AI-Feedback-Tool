@@ -4,7 +4,6 @@ import { useParams } from "react-router-dom";
 import { supabase } from "../../SupabaseAuth/supabaseClient";
 import { useNavigate } from "react-router-dom";
 
-
 const TaskPage = () => {
   const navigate = useNavigate(); 
   const { id } = useParams(); // exam_id from URL
@@ -234,3 +233,5 @@ const TaskPage = () => {
 };
 
 export default TaskPage;
+
+
