@@ -8,7 +8,7 @@ const ConfigureExam = () => {
   const navigate = useNavigate();
   const [exam, setExam] = useState({
     title: "",
-    course_code: "",
+    course_id: "",
     instructions: "",
     type: "mcq",
     duration: "",
@@ -80,10 +80,10 @@ const ConfigureExam = () => {
         "http://localhost:5000/api/configureExam",
         {
           ...exam,
-          user_id: session.user.id // Use actual user ID
+          user_id: session.user.id
         }
-      );
-            localStorage.setItem("examConfig", JSON.stringify({
+      );      
+      localStorage.setItem("examConfig", JSON.stringify({
         ...exam,
         examId: response.data.examId
       }));
@@ -129,15 +129,15 @@ const ConfigureExam = () => {
                     <Form.Group>
                       <Form.Label className="fw-bold">Course *</Form.Label>
                       <Form.Select
-                        name="course_code"
+                        name="course_id"
                         onChange={handleChange}
-                        value={exam.course_code}
+                        value={exam.course_id}
                         required
                         disabled={fetchingCourses}
                       >
                         <option value="">Select a course</option>
                         {courses.map((course) => (
-                          <option key={course.course_id} value={course.course_code}>
+                          <option key={course.course_id} value={course.course_id}>
                             {course.course_code} - {course.title}
                           </option>
                         ))}
