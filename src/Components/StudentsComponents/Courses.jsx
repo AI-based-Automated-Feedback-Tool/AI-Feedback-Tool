@@ -78,11 +78,21 @@ const Courses = () => {
                   >
                     <div className="card h-100">
                       <div
-                        className="card-header text-white"
+                        className="card-header"
                         style={{
-                          backgroundColor: `#${Math.floor(
-                            Math.random() * 16777215
-                          ).toString(16)}`,
+                          backgroundColor: (() => {
+                            let color;
+                            do {
+                              color = `#${Math.floor(
+                                Math.random() * 16777215
+                              ).toString(16)}`;
+                            } while (
+                              parseInt(color.substring(1), 16) >
+                              0xffffff / 1.5
+                            );
+                            return color;
+                          })(),
+                          color: "white",
                         }}
                       >
                         <h5 className="mb-0">{course.title}</h5>
