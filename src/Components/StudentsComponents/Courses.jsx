@@ -1,46 +1,48 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { supabase } from "../../SupabaseAuth/supabaseClient";
-import StudentSideBar from "./StudentSideBar";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import { useParams } from "react-router-dom";
-import "../../css/Courses.css"
+import "../../css/Courses.css";
+import { UserContext } from "../../Context/userContext.jsx";
 
 const Courses = () => {
-  const [courses, setCourses] = useState([]);
+  const [allCourses, setAllCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   //hook for accessing location state
-  const location = useLocation();
-  //for toogling navbar
-  const [showSidebar, setShowSidebar] = useState(false);
-
+  //const location = useLocation();
+  //my courses or all courses
+  const [activeTab, setActiveTab] = useState("allCourses");
 
   const { userId } = useParams();
-  //extracting userName from the location state, with a fallback to user
-  const userName = location.state?.userName || "User";
-  console.log("User ID from URL:", userId);
-  console.log("User Name from state:", userName);
+  const { userData, fetchUserData } = useContext(UserContext);
 
-  //array to add bg colour
-  const bgColors = [
-    "#FF5733",
-    "#33FF57",
-    "#3357FF",
-    "#FF33A1",
-    "#FFC300",
-    "#DAF7A6",
-  ];
+  //fetch user data if not already available
+  useEffect(() => {
+    if (!userData && userId) {
+      fetchUserData(userId);
+    }
+  }, [userId, userData, fetchUserData]);
+
+  //fallback to "User"
+  const userName = userData?.name || "User";
+
+  console.log("User ID from URL:", userId);
+  console.log("User Name from context:", userName);
 
   //fetch courses from Supabase
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const { data, error } = await supabase.from("courses").select("*");
-        if (error) {
-          console.error("Error fetching courses:", error.message);
+        //fetch all courses
+        const { data: allCoursesData, error: allCoursesError } = await supabase
+          .from("courses")
+          .select("*");
+        if (allCoursesError) {
+          console.error("Error fetching all courses:", allCoursesError.message);
         } else {
-          setCourses(data);
+          setAllCourses(allCoursesData);
         }
       } catch (err) {
         console.error("Unexpected error:", err);
@@ -48,74 +50,77 @@ const Courses = () => {
         setLoading(false);
       }
     };
-
     fetchCourses();
   }, []);
 
   return (
-    <div className="d-flex">
-  {/*fixed Icon to toggle sidebar*/}
-  <i
-    className="fas fa-bars fa-2x text-primary d-lg-none fixed-icon mt-4 icon-with-bg "
-    style={{ cursor: "pointer" }}
-    onClick={() => setShowSidebar(true)}
-  ></i>
-
-      <StudentSideBar show={showSidebar} onHide={() => setShowSidebar(false)} />
-
-    <div className="container mt-2">
-      <h5>Welcome to Student Dashboard</h5>
-
+    <div className="container mt-5">
       {loading ? (
-        <p>Loading courses...</p>
+        <div className="text-center">
+          <p>Loading...</p>
+        </div>
       ) : (
-        <div className="card shadow p-4">
-          <div className="card-header d-flex align-items-center">
-            <i className="fas fa-book fa-2x me-3"></i>
-            <h2 className="mb-0">Courses</h2>
-          </div>
-          <div className="card-body">
-            <div className="row mt-3">
-              {courses.map((course, index) => (
-                <div
-                  key={course.id || index}
-                  className="col-md-4 col-12 col-sm-6 mb-4"
-                  onClick={() =>
-                    navigate(`/dashboard/courses/${course.course_code}/exams`)
-                  }
-                  style={{ cursor: "pointer" }}
-                >
-                  <div className="card h-100 shadow">
-                    <div
-                      className="card-header text-white text-center"
-                      style={{
-                        backgroundColor: bgColors[index % bgColors.length],
-                        height: "150px",
-                        width: "100%",
-                        fontSize: "1.5rem",
-                        fontWeight: "bold",
-                      }}
-                    >
-                      {course.title}
-                    </div>
-                    <div className="card-body">
-                      <h6
-                        className="card-subtitle mb-2 text-muted"
-                        style={{ fontSize: "0.8rem" }}
+        <>
+          <h1 className="text-center mb-4">Welcome, {userName}!</h1>
+          <ul className="nav nav-tabs mb-4">
+            <li className="nav-item">
+              <button
+                className={`nav-link ${
+                  activeTab === "allCourses" ? "active" : ""
+                }`}
+                onClick={() => setActiveTab("allCourses")}
+              >
+                All Courses
+              </button>
+            </li>
+          </ul>
+          {activeTab === "allCourses" && (
+            <div>
+              <h2>All Courses</h2>
+              <div className="row">
+                {allCourses.map((course, index) => (
+                  <div
+                    key={course.id}
+                    className="col-md-4 mb-4"
+                    onClick={() =>
+                      navigate(`/dashboard/courses/${course.course_code}/exams`)
+                    }
+                    style={{ cursor: "pointer" }}
+                  >
+                    <div className="card h-100">
+                      <div
+                        className="card-header"
+                        style={{
+                          backgroundColor: (() => {
+                            let color;
+                            do {
+                              color = `#${Math.floor(
+                                Math.random() * 16777215
+                              ).toString(16)}`;
+                            } while (
+                              parseInt(color.substring(1), 16) >
+                              0xffffff / 1.5
+                            );
+                            return color;
+                          })(),
+                          color: "white",
+                        }}
                       >
-                        Course code: {course.course_code}
-                      </h6>
-                      <p className="card-text mt-3">{course.description}</p>
+                        <h5 className="mb-0">{course.title}</h5>
+                        <small>Course ID: {course.course_code}</small>
+                      </div>
+                      <div className="card-body">
+                        <p className="card-text">{course.description}</p>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-          </div>
-        </div>
+          )}
+        </>
       )}
     </div>
-  </div>
   );
 };
 

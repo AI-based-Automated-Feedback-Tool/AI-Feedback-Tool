@@ -4,7 +4,8 @@ import {
   FaTachometerAlt,
   FaBook,
   FaUsers,
-  FaChartBar 
+  FaChartBar,
+  FaUser
 } from "react-icons/fa";
 
 export default function SidebarTeacher({ show, onHide }) {
@@ -14,7 +15,8 @@ export default function SidebarTeacher({ show, onHide }) {
     { path: "/teacher", icon: <FaTachometerAlt />, label: "Dashboard" },
     { path: "/teacher/exams", icon: <FaBook />, label: "Configure Exam" },
     { path: "/teacher/students", icon: <FaUsers />, label: "Students" },
-    { path: "/teacher/reports", icon: <FaChartBar />, label: "Reports" }
+    { path: "/teacher/reports", icon: <FaChartBar />, label: "Reports" },
+    { path: "/teacher/profile", icon: <FaUser />, label: "Profile" }
   ];
 
   return (

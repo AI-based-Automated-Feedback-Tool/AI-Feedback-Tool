@@ -1,9 +1,25 @@
 import React from "react";
 import { Offcanvas, Nav } from "react-bootstrap";
 import LogOut from "../LogOut";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import "../../css/studentSideBar.css";
+import { UserContext } from "../../Context/userContext";
+import { useContext, useEffect } from "react";
 
 const StudentSideBar = ({ show, onHide }) => {
+  const { userId, setUserId } = useContext(UserContext);
+  //get the current route
+  const location = useLocation();
+
+  //fun to check if a route is active
+  const isActive = (path) => location.pathname === path;
+
+  useEffect(() => {
+    const storedUserId = localStorage.getItem("userId");
+    setUserId(storedUserId);
+  }, [setUserId]);
+
+
   return (
     <>
       {/*for mobile*/}
@@ -27,15 +43,43 @@ const StudentSideBar = ({ show, onHide }) => {
             href="#"
             style={{ fontSize: "1.5rem", fontWeight: "bold" }}
           >
-            <i className="fas fa-tachometer-alt me-2"></i> Dashboard
+            AI Feedback Tool
           </a>
 
           {/*nav link*/}
           <Nav className="flex-column">
             <Nav.Item>
               <Link
-                className="nav-link text-white d-flex align-items-center mb-2"
-                to="/student/courses/:userId/profile"
+                className={`nav-link d-flex align-items-center ${
+                  window.location.pathname === `/student/courses/${userId}`
+                    ? "active"
+                    : "text-white"
+                }`}
+                to={`/student/courses/${userId}`}
+                style={{ fontSize: "1.2rem" }}
+              >
+                <i className="fas fa-home me-2"></i> Dashboard
+              </Link>
+            </Nav.Item>
+            <Nav.Item>
+              <Link
+                className={`nav-link d-flex align-items-center ${
+                  isActive(`/results/${userId}`) ? "active" : "text-white"
+                }`}
+                to={`/results/${userId}`}
+                style={{ fontSize: "1.2rem" }}
+              >
+                <i className="fas fa-chart-bar me-2"></i> Results
+              </Link>
+            </Nav.Item>
+            <Nav.Item>
+              <Link
+                className={`nav-link d-flex align-items-center ${
+                  isActive(`/student/courses/${userId}/profile`)
+                    ? "active"
+                    : "text-white"
+                }`}
+                to={`/student/courses/${userId}/profile`}
                 style={{ fontSize: "1.2rem" }}
               >
                 <i className="fas fa-user me-2"></i> Profile
@@ -66,15 +110,45 @@ const StudentSideBar = ({ show, onHide }) => {
           href="#"
           style={{ fontSize: "1.5rem", fontWeight: "bold" }}
         >
-          <i className="fas fa-tachometer-alt me-2"></i> Dashboard
+          AI Feedback Tool
         </a>
 
         {/*nav link*/}
         <ul className="nav flex-column w-100">
           <li className="nav-item mb-2">
             <Link
-              className="nav-link text-white d-flex align-items-center"
-              to="/student/courses/:userId/profile"
+              className={`nav-link d-flex align-items-center ${
+                window.location.pathname === `/student/courses/${userId}`
+                  ? "active"
+                  : "text-white"
+              }`}
+              to={`/student/courses/${userId}`}
+              style={{ fontSize: "1.2rem" }}
+            >
+              <i className="fas fa-home me-2"></i> Dashboard
+            </Link>
+          </li>
+
+          <li className="nav-item mb-2">
+            <Link
+              className={`nav-link d-flex align-items-center ${
+                isActive(`/results/${userId}`) ? "active" : "text-white"
+              }`}
+              to={`/results/${userId}`}
+              style={{ fontSize: "1.2rem" }}
+            >
+              <i className="fas fa-chart-bar me-2"></i> Results
+            </Link>
+          </li>
+
+          <li className="nav-item mb-2">
+            <Link
+              className={`nav-link d-flex align-items-center ${
+                isActive(`/student/courses/${userId}/profile`)
+                  ? "active"
+                  : "text-white"
+              }`}
+              to={`/student/courses/${userId}/profile`}
               style={{ fontSize: "1.2rem" }}
             >
               <i className="fas fa-user me-2"></i> Profile

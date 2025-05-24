@@ -10,7 +10,7 @@ const SignInPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("");
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
   //to submit signup
   const handleSignUp = async (e) => {
     e.preventDefault();

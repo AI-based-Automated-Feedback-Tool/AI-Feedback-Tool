@@ -1,10 +1,24 @@
 import React, { useState } from "react";
+import { useLocation, useParams } from "react-router-dom";
 import StudentSideBar from "./StudentSideBar";
 import { Outlet } from "react-router-dom";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 
 const StudentLayout = () => {
   const [showSidebar, setShowSidebar] = useState(false);
+
+  // Retrieve userId from location state or route params
+  const location = useLocation();
+  const { userId: userIdFromParams } = useParams();
+  const userId = location.state?.userId || userIdFromParams;
+
+  if (!userId) {
+    console.error(
+      "User ID is undefined. Ensure it is passed in the route or state."
+    );
+  }
+
+  console.log("User ID in StudentLayout:", userId);
 
   return (
     <div className="d-flex">

@@ -16,7 +16,6 @@ const MainPage = () => {
           Empowering users with intelligent, personalized coding feedback.
         </p>
       </header>
-
       <main>
         <div className="row justify-content-center">
           <div className="col-md-6 mb-4">
@@ -38,11 +37,9 @@ const MainPage = () => {
           </div>
         </div>
       </main>
-
       <p className="text-muted text-center mt-4">
         ✅ Initial setup complete. Project ready to build.
       </p>
-
       <footer className="text-center mt-5">
         <p>Project 39 • React + Vite • Summer 2025</p>
       </footer>

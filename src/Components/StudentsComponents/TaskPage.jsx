@@ -1,4 +1,3 @@
-// src/Components/TaskPage.jsx
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { supabase } from "../../SupabaseAuth/supabaseClient";
@@ -14,69 +13,74 @@ const TaskPage = () => {
   const [reviewMode, setReviewMode] = useState(false);
   const [alreadySubmitted, setAlreadySubmitted] = useState(false);
 
-  
+
 
   useEffect(() => {
     const fetchExamWithQuestions = async () => {
       console.log("🔎 Route exam ID:", id);
-  
+
       const {
         data: { user },
       } = await supabase.auth.getUser();
-  
+
       const userId = user?.id;
-  
-      // 🔒 Check if already submitted
+
+      //check if already submitted
       const { data: existingSubmissions } = await supabase
-        .from("exam_submission") // Updated table name
+        //updated table name
+        .from("exam_submission")
         .select("id")
         .eq("exam_id", id)
         .eq("user_id", userId)
         .limit(1);
-  
+
       if (existingSubmissions?.length > 0) {
         setAlreadySubmitted(true);
         setLoading(false);
         return;
       }
-  
+
       try {
         const { data: examData, error: examError } = await supabase
           .from("exams")
           .select("*")
           .eq("exam_id", id)
           .single();
-  
+
         if (examError || !examData) {
-          console.error("❌ Exam not found");
+          console.error("Exam not found");
           return;
         }
-  
+
         const { data: questionsData, error: questionsError } = await supabase
           .from("mcq_questions")
           .select("question_id, question_text, options")
           .filter("exam_id", "eq", id);
-  
+
         if (questionsError || !questionsData || questionsData.length === 0) {
-          console.error("❌ Questions not found");
+          console.error("Questions not found");
           return;
         }
-  
+
         const formattedQuestions = questionsData.map((q) => ({
           id: q.question_id,
           question: q.question_text,
           options: Array.isArray(q.options) ? q.options : [],
         }));
-  
-        setTask({ exam_id: examData.exam_id, ...examData, questions: formattedQuestions });
+
+        setTask({
+          exam_id: examData.exam_id,
+          ...examData,
+          questions: formattedQuestions,
+        });
         setAnswers(new Array(formattedQuestions.length).fill(null));
       } catch (error) {
-        console.error("🔥 Unexpected error:", error);
+        console.error("Unexpected error:", error);
       } finally {
         setLoading(false);
       }
     };
-  
+
     fetchExamWithQuestions();
   }, [id]);
 
@@ -119,13 +123,12 @@ const TaskPage = () => {
     const { error } = await supabase.from("exam_submission").insert(responses);
 
     if (error) {
-      console.error("❌ Error saving responses:", error);
+      console.error("Error saving responses:", error);
       alert("Failed to submit answers. Please try again.");
     } else {
-      console.log("✅ Responses submitted successfully");
+      console.log("Responses submitted successfully");
       alert("Answers submitted!");
       navigate(`/student/courses/${userId}`);
-      
     }
   };
 
@@ -134,7 +137,7 @@ const TaskPage = () => {
   if (alreadySubmitted) {
     return (
       <div className="container mt-4 text-danger">
-        ❌ You have already submitted this exam. You cannot retake it.
+        You have already submitted this exam. You cannot retake it.
       </div>
     );
   }
@@ -142,7 +145,7 @@ const TaskPage = () => {
   if (!task || !task.questions || task.questions.length === 0)
     return (
       <div className="container mt-4 text-danger">
-        ❌ Task or questions not found.
+        Task or questions not found.
       </div>
     );
 
@@ -164,7 +167,9 @@ const TaskPage = () => {
             <ul className="list-group">
               {task.questions.map((q, idx) => (
                 <li key={q.id} className="list-group-item">
-                  <strong>Q{idx + 1}: {q.question}</strong>
+                  <strong>
+                    Q{idx + 1}: {q.question}
+                  </strong>
                   <br />
                   <span className="text-primary">
                     Answer: {answers[idx] || "Not answered"}
@@ -174,7 +179,10 @@ const TaskPage = () => {
             </ul>
 
             <div className="d-flex justify-content-between mt-4">
-              <button className="btn btn-secondary" onClick={() => setReviewMode(false)}>
+              <button
+                className="btn btn-secondary"
+                onClick={() => setReviewMode(false)}
+              >
                 Go Back
               </button>
               <button className="btn btn-success" onClick={handleSubmit}>
@@ -200,7 +208,10 @@ const TaskPage = () => {
                   checked={answers[questionIndex] === opt}
                   onChange={() => handleAnswerSelect(questionIndex, opt)}
                 />
-                <label className="form-check-label" htmlFor={`q${questionIndex}_${idx}`}>
+                <label
+                  className="form-check-label"
+                  htmlFor={`q${questionIndex}_${idx}`}
+                >
                   {opt}
                 </label>
               </div>
@@ -216,7 +227,10 @@ const TaskPage = () => {
               </button>
 
               {questionIndex === task.questions.length - 1 ? (
-                <button className="btn btn-warning" onClick={() => setReviewMode(true)}>
+                <button
+                  className="btn btn-warning"
+                  onClick={() => setReviewMode(true)}
+                >
                   Review Answers
                 </button>
               ) : (
