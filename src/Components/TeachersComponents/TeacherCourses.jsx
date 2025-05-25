@@ -14,22 +14,41 @@ const TeacherCourses = () => {
     const fetchCourses = async () => {
       try {
         setLoading(true);
-        setError(null);        
+        setError(null);
         
+        // Get authenticated user
         const { data: { user }, error: userError } = await supabase.auth.getUser();
         if (userError || !user) {
           throw new Error("Please login to view courses");
         }
 
-        // Fetch ALL courses (simplified approach)
-        const { data: courseData, error: courseError } = await supabase
-          .from("courses")
-          .select("course_id, course_code, title, description")
-          .order("created_at", { ascending: false });
+        // Step 1: Get all exams created by this user
+        const { data: exams, error: examsError } = await supabase
+          .from('exams')
+          .select('course_id')
+          .eq('user_id', user.id)
+          .not('course_id', 'is', null); 
 
-        if (courseError) throw courseError;
+        if (examsError) throw examsError;
+
+        // Extract unique course_ids from exams
+        const courseIds = [...new Set(exams.map(exam => exam.course_id))];
         
-        setCourses(courseData || []);
+        if (courseIds.length === 0) {
+          setCourses([]);
+          return;
+        }
+
+        // Step 2: Get course details for these course_ids
+        const { data: coursesData, error: coursesError } = await supabase
+          .from('courses')
+          .select('course_id, course_code, title, description')
+          .in('course_id', courseIds)
+          .order('title', { ascending: true });
+
+        if (coursesError) throw coursesError;
+
+        setCourses(coursesData || []);
       } catch (err) {
         console.error("Error fetching courses:", err);
         setError(err.message);
@@ -52,13 +71,13 @@ const TeacherCourses = () => {
       ) : loading ? (
         <div className="text-center py-4">
           <Spinner animation="border" />
-          <p className="mt-2">Loading courses...</p>
+          <p className="mt-2">Loading your courses...</p>
         </div>
       ) : (
         <div className="card shadow p-4">
           <div className="card-header d-flex align-items-center">
             <i className="fas fa-book fa-2x me-3 text-primary"></i>
-            <h2 className="mb-0">All Courses</h2>
+            <h2 className="mb-0">Your Courses</h2>
           </div>
           <div className="card-body">
             <div className="row mt-3">
@@ -66,9 +85,7 @@ const TeacherCourses = () => {
                 <div
                   key={course.course_id}
                   className="col-md-4 col-sm-6 col-12 mb-4"
-                  onClick={() =>
-                    navigate(`/teacher/courses/${course.course_id}/exams`) // Using course_id now
-                  }
+                  onClick={() => navigate(`/teacher/courses/${course.course_id}/exams`)}
                   style={{ cursor: "pointer" }}
                 >
                   <div className="card h-100 shadow">
@@ -93,7 +110,9 @@ const TeacherCourses = () => {
                 </div>
               ))}
               {courses.length === 0 && (
-                <p className="text-center text-muted">No courses available.</p>
+                <Alert variant="info" className="text-center">
+                  You haven't created any exams yet. Create an exam to see courses here.
+                </Alert>
               )}
             </div>
           </div>
