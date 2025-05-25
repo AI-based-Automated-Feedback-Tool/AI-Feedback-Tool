@@ -7,7 +7,7 @@ import { Form } from 'react-bootstrap';
 
 export default function TeacherReportContent() {
     const [course, setCourse] = useState([]);
-    const [selctedCourse, setSelectedCourse] = useState("");
+    const [selectedCourse, setSelectedCourse] = useState("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [userId, setUserId] = useState(null);
@@ -61,6 +61,8 @@ export default function TeacherReportContent() {
                         <h5 className="mb-0">Search Criteria</h5>
                     </CardHeader>
                     <CardBody>
+                        {error && <Alert variant="danger">{error}</Alert>}
+                        {loading && <Alert variant="info">Loading ...</Alert>}
                         <Row className="mb-2 mb-md-3">
                             <Col md={6}>
                                 <Form.Group>
@@ -68,7 +70,7 @@ export default function TeacherReportContent() {
                                         Course ID *
                                     </Form.Label>
                                     <Form.Select
-                                        value={selctedCourse}
+                                        value={selectedCourse}
                                         onChange={(e) => setSelectedCourse(e.target.value)}
                                     >
                                         <option value="">Select a course</option> 
