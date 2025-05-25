@@ -1,8 +1,50 @@
 import React from 'react'
-import { Container, Row, Col, CardHeader, CardBody, Card, Button, Alert } from 'react-bootstrap';
+import { useState } from 'react';
+import { useEffect } from 'react';
+import { supabase } from '../../SupabaseAuth/supabaseClient';
+import { Row, Col, CardHeader, CardBody, Card, Button, Alert } from 'react-bootstrap';
 import { Form } from 'react-bootstrap';
 
 export default function TeacherReportContent() {
+    const [course, setCourse] = useState([]);
+    const [selctedCourse, setSelectedCourse] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
+    const [userId, setUserId] = useState(null);
+
+    useEffect(() => {
+            const getUserId = async () => {
+                const { data, error } = await supabase.auth.getUser();
+                if (error) {
+                    setError("Failed to get user ID");
+                } else {
+                    setUserId(data.user.id);
+                }
+            }
+            getUserId();
+        }, []);
+
+    useEffect(() => {
+        const getCourses = async () => {
+            setLoading(true);
+            setError(null);
+            try {
+                const res = await fetch(`http://localhost:5000/api/reports/courses?userId=${userId}`);
+                const data = await res.json();
+                if (res.ok) {
+                    setCourse(data.courses);
+                } else {
+                    setError(data.message || "Failed to fetch courses");
+                }
+            } catch (err) {
+                setError(err.message || "An error occurred while fetching courses");
+            } finally {
+                setLoading(false);
+            }
+        }
+        getCourses()
+    }, [userId]);
+
   return (
     <Col 
         className="w-100 " 
