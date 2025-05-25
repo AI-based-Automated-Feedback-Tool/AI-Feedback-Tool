@@ -55,7 +55,7 @@ export default function TeacherReportContent() {
             setLoading(true)
             setError(null)
             try {
-                const res = await fetch(`http://localhost:5000/api/teacher/reports/exams?userId=${userId}`)
+                const res = await fetch(`http://localhost:5000/api/teacher/reports/exams?course_id=${selectedCourse}`)
                 const json = await res.json();
                 if (res.ok){
                     setExam(json.exams);
@@ -69,6 +69,7 @@ export default function TeacherReportContent() {
                 setLoading(false);
             }
         }
+        getExamTitles();
 
     }, [selectedCourse]);
 
@@ -88,7 +89,6 @@ export default function TeacherReportContent() {
                     </CardHeader>
                     <CardBody>
                         {error && <Alert variant="danger">{error}</Alert>}
-                        {loading && <Alert variant="info">Loading ...</Alert>}
                         <Row className="mb-2 mb-md-3">
                             <Col md={6}>
                                 <Form.Group>
@@ -99,7 +99,7 @@ export default function TeacherReportContent() {
                                         value={selectedCourse}
                                         onChange={(e) => setSelectedCourse(e.target.value)}
                                     >
-                                        <option value="">Select a course</option> 
+                                        <option value="">Select a course</option>  
                                         {course.map((c) => (
                                             <option key={c.course_id} value={c.course_id}>
                                                 {c.course_code} - {c.title}
@@ -115,12 +115,15 @@ export default function TeacherReportContent() {
                                         Exam Title *
                                     </Form.Label>
                                     <Form.Select
-                                        value={""}
-                                        onChange={""}
+                                        value={selectedExam}
+                                        onChange={(e) => setSelectedExam(e.target.value)}
                                     >
-                                        <option value="">
-                                            Select an exam
-                                        </option>
+                                        <option value="">Select an exam</option>
+                                        {exam.map((ex) => (
+                                            <option key={ex.exam_id} value={ex.exam_id}>
+                                                {ex.title}
+                                            </option>
+                                        ))}
                                     </Form.Select>
                                 </Form.Group>
                             </Col>
