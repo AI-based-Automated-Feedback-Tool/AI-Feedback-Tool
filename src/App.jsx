@@ -16,6 +16,7 @@ import CourseExamsPage from './Components/TeachersComponents/CourseExamsPage';
 import ProfilePage from './Components/TeachersComponents/ProfilePage';
 import StudentLayout from './Components/StudentsComponents/StudentLayout';
 import { UserProvider } from './Context/userContext.jsx';
+import TeacherReportContent from './Components/TeacherReport/TeacherReportContent.jsx';
 
 function App() {
   return (
@@ -44,7 +45,7 @@ function App() {
             />
             <Route path="profile" element={<ProfilePage />} />
             <Route path="students" element={""} />
-            <Route path="reports" element={""} />
+            <Route path="reports" element={<TeacherReportContent />} />
           </Route>
         </Route>
 
