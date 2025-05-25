@@ -85,7 +85,7 @@ export default function TeacherReportContent() {
                 const res = await fetch(`http://localhost:5000/api/teacher/reports/students?course_id=${selectedCourse}`)
                 const json = await res.json();
                 if (res.ok){
-                    setStudents(json.exams);
+                    setStudents(json.students);
                 }
                 else {
                     setError(json.message || "Failed to fetch students");
@@ -163,12 +163,18 @@ export default function TeacherReportContent() {
                                         Student name 
                                     </Form.Label>
                                     <Form.Select
-                                        value={""}
-                                        onChange={""}
+                                        value={selectedStudent}
+                                        onChange={(e) => setSelectedStudent(e.target.value)}
                                     >
-                                        <option value="">
-                                            Select a student
-                                        </option>
+                                        <option value="">Select a student</option>
+                                        {students.map((student) => (
+                                            <option 
+                                                key={student.user_id} 
+                                                value={student.user_id}
+                                            >
+                                                {student.name}
+                                            </option>
+                                        ))}
                                     </Form.Select>
                                 </Form.Group>
                             </Col>
