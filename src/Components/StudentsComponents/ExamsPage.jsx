@@ -14,7 +14,7 @@ const ExamsPage = () => {
       const { data, error } = await supabase
         .from("exams")
         .select("*, mcq_questions!inner(exam_id)") //join with mcq_questions table
-        .eq("course_code", courseId);
+        .eq("course_id", courseId);
 
       if (error) {
         console.error("Error loading exams:", error);
