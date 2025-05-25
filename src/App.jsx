@@ -39,7 +39,7 @@ function App() {
               element={<CreateMcqQuestionsContent />}
             />
             <Route
-              path="courses/:course_code/exams"
+              path="courses/:course_id/exams"
               element={<CourseExamsPage />}
             />
             <Route path="profile" element={<ProfilePage />} />
