@@ -68,8 +68,8 @@ export default function TeacherReportContent() {
                                         Course ID *
                                     </Form.Label>
                                     <Form.Select
-                                        value={""}
-                                        onChange={""}
+                                        value={selctedCourse}
+                                        onChange={(e) => setSelectedCourse(e.target.value)}
                                     >
                                         <option value="">Select a course</option> 
                                         {course.map((c) => (
