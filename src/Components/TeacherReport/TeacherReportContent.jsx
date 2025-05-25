@@ -18,7 +18,7 @@ export default function TeacherReportContent() {
                         <h5 className="mb-0">Search Criteria</h5>
                     </CardHeader>
                     <CardBody>
-                        <Row className="mb-3">
+                        <Row className="mb-2 mb-md-3">
                             <Col md={6}>
                                 <Form.Group>
                                     <Form.Label className="fw-bold">
@@ -52,7 +52,7 @@ export default function TeacherReportContent() {
                             </Col>
                         </Row>
 
-                        <Row>
+                        <Row className='mb-2 mb-md-3'>
                             <Col md={6}>
                                 <Form.Group>
                                     <Form.Label className="fw-bold">
@@ -73,11 +73,23 @@ export default function TeacherReportContent() {
                         <Button 
                             variant="primary" 
                             type="submit" 
-                            className='mt-3'
+                            className="mt-2 mt-md-3"
                         >
                             Generate Report
                         </Button>
                     </CardBody>
+                </Card>
+
+                <Card className="mb-4 border-0 shadow-sm">
+                    <CardBody>
+                        {/*Here shows the text which says no contents to preview */}
+                        <Alert variant="info">
+                            <p className="mb-0">
+                                No report available to preview. Please select the criteria and generate a report.
+                            </p>
+                        </Alert>
+                    </CardBody>
+
                 </Card>
 
             </CardBody>
