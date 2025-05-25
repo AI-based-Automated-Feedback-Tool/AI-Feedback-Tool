@@ -4,33 +4,36 @@ import { Container, Card, Table, Button, Spinner, Alert } from 'react-bootstrap'
 import { supabase } from '../../SupabaseAuth/supabaseClient';
 
 const CourseExamsPage = () => {
-  const { course_code } = useParams();
+  const { course_id } = useParams();
   const navigate = useNavigate();
   const [exams, setExams] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [courseTitle, setCourseTitle] = useState('');
+  const [courseData, setCourseData] = useState(null);
 
   useEffect(() => {
     const fetchCourseAndExams = async () => {
       try {
-        setLoading(true);
+        setLoading(true);        
         
-        // Fetch course title
+        if (!course_id || !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(course_id)) {
+          throw new Error('Invalid course ID');
+        }
+        
         const { data: courseData, error: courseError } = await supabase
           .from('courses')
-          .select('title')
-          .eq('course_code', course_code)
+          .select('course_id, course_code, title')
+          .eq('course_id', course_id)
           .single();
 
         if (courseError) throw courseError;
-        setCourseTitle(courseData?.title || '');
+        if (!courseData) throw new Error('Course not found');
+        setCourseData(courseData);
 
-        // Fetch exams for this course
         const { data: examsData, error: examsError } = await supabase
-        .from('exams')
-        .select('exam_id, title, duration, type')
-        .eq('course_code', course_code);
+          .from('exams')
+          .select('exam_id, title, duration, type')
+          .eq('course_id', course_id);
 
         if (examsError) throw examsError;
         setExams(examsData || []);
@@ -44,7 +47,7 @@ const CourseExamsPage = () => {
     };
 
     fetchCourseAndExams();
-  }, [course_code]);
+  }, [course_id]);
 
   const handleExamClick = (examId) => {
     navigate(`/teacher/exams/${examId}/questions`);
@@ -60,16 +63,18 @@ const CourseExamsPage = () => {
     <Container className="mt-4">
       <Card className="shadow-sm">
         <Card.Header className="bg-primary text-white d-flex justify-content-between align-items-center">
-  <h4>
-    {courseTitle ? `${course_code} - ${courseTitle}` : 'Course Exams'}
-  </h4>
-  <Button 
-    variant="light"
-    onClick={() => navigate(`/teacher/exams`)}
-  >
-    Create New Exam
-  </Button>
-</Card.Header>
+          <h4>
+            {courseData ? `${courseData.course_code} - ${courseData.title}` : 'Course Exams'}
+          </h4>
+          {courseData && (
+            <Button 
+              variant="light"
+              onClick={() => navigate(`/teacher/exams`)}
+            >
+              Create New Exam
+            </Button>
+          )}
+        </Card.Header>
         <Card.Body>
           {error && <Alert variant="danger">{error}</Alert>}
           
@@ -86,34 +91,32 @@ const CourseExamsPage = () => {
             </Alert>
           ) : (
             <Table striped bordered hover responsive>
-                <thead>
-                    <tr>
-                    <th>Title</th>
-                    <th>Type</th>
-                    <th>Duration</th>
-                    {/* Remove this column <th>Created</th> */}
-                    <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {exams.map((exam) => (
-                    <tr key={exam.exam_id}>
-                        <td>{exam.title}</td>
-                        <td>{exam.type.toUpperCase()}</td>
-                        <td>{formatDuration(exam.duration)}</td>
-                        {/* Remove this cell <td>{new Date(exam.created_at).toLocaleDateString()}</td> */}
-                        <td>
-                        <Button
-                            variant="primary"
-                            size="sm"
-                            onClick={() => handleExamClick(exam.exam_id)}
-                        >
-                            Edit Exam
-                        </Button>
-                        </td>
-                    </tr>
-                    ))}
-                </tbody>
+              <thead>
+                <tr>
+                  <th>Title</th>
+                  <th>Type</th>
+                  <th>Duration</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {exams.map((exam) => (
+                  <tr key={exam.exam_id}>
+                    <td>{exam.title}</td>
+                    <td>{exam.type.toUpperCase()}</td>
+                    <td>{formatDuration(exam.duration)}</td>
+                    <td>
+                      <Button
+                        variant="primary"
+                        size="sm"
+                        onClick={() => handleExamClick(exam.exam_id)}
+                      >
+                        Edit Exam
+                      </Button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
             </Table>
           )}
         </Card.Body>
