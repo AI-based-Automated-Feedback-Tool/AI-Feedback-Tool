@@ -126,7 +126,10 @@ export default function TeacherReportContent() {
                                         value={selectedCourse}
                                         onChange={(e) => setSelectedCourse(e.target.value)}
                                     >
-                                        <option value="">Select a course</option>  
+                                        <option value="">Select a course</option> 
+                                        {course.length === 0 && (
+                                            <option disabled>No courses available</option>
+                                        )} 
                                         {course.map((c) => (
                                             <option key={c.course_id} value={c.course_id}>
                                                 {c.course_code} - {c.title}
@@ -146,6 +149,9 @@ export default function TeacherReportContent() {
                                         onChange={(e) => setSelectedExam(e.target.value)}
                                     >
                                         <option value="">Select an exam</option>
+                                        {exam.length === 0 && (
+                                            <option disabled>No exams available</option>
+                                        )}
                                         {exam.map((ex) => (
                                             <option key={ex.exam_id} value={ex.exam_id}>
                                                 {ex.title}
@@ -167,6 +173,9 @@ export default function TeacherReportContent() {
                                         onChange={(e) => setSelectedStudent(e.target.value)}
                                     >
                                         <option value="">Select a student</option>
+                                        {students.length === 0 && (
+                                            <option disabled>No students available</option>
+                                        )}
                                         {students.map((student) => (
                                             <option 
                                                 key={student.user_id} 
