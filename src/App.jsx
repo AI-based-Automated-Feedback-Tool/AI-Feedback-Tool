@@ -35,7 +35,7 @@ function App() {
             <Route index element={<TeacherCourses />} />
             <Route path="exams" element={<ConfigureExam />} />
             <Route
-              path="exams/:examId/questions"
+              path="exams/:examId/questions/:questionType"
               element={<CreateMcqQuestionsContent />}
             />
             <Route
