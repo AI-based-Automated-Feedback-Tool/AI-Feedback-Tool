@@ -71,6 +71,7 @@ export default function TeacherReportContent() {
                                         value={""}
                                         onChange={""}
                                     >
+                                        <option value="">Select a course</option> 
                                         {course.map((c) => (
                                             <option key={c.course_id} value={c.course_id}>
                                                 {c.course_code} - {c.title}
