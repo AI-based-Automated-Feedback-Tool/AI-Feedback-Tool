@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../../SupabaseAuth/supabaseClient";
-import "@fortawesome/fontawesome-free/css/all.min.css";
 import { useParams } from "react-router-dom";
 import "../../css/Courses.css";
 import { UserContext } from "../../Context/userContext.jsx";
@@ -9,63 +8,57 @@ import { UserContext } from "../../Context/userContext.jsx";
 const Courses = () => {
   const [allCourses, setAllCourses] = useState([]);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
   const [enrolledCourses, setEnrolledCourses] = useState([]);
-
-  //my courses or all courses
   const [activeTab, setActiveTab] = useState("enrolledCourses");
 
+  const navigate = useNavigate();
   const { userId } = useParams();
   const { userData, fetchUserData } = useContext(UserContext);
 
-  //fetch user data if not already available
   useEffect(() => {
     if (!userData && userId) {
       fetchUserData(userId);
     }
   }, [userId, userData, fetchUserData]);
 
-  //fallback to "User"
   const userName = userData?.name || "User";
 
-  console.log("User ID from URL:", userId);
-  console.log("User Name from context:", userName);
-
-  //fetch courses from Supabase
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        //fetch all courses
         const { data: allCoursesData, error: allCoursesError } = await supabase
           .from("courses")
           .select("*");
+
         if (allCoursesError) {
           console.error("Error fetching all courses:", allCoursesError.message);
         } else {
           setAllCourses(allCoursesData);
         }
-         //fetch enrolled courses using studentid
-      const { data: enrolledCoursesData, error: enrolledCoursesError } =
-      await supabase
-        .from("student_courses")
-        .select("courses(*)")
-        .eq("student_id", userId)
-    if (enrolledCoursesError) {
-      console.error(
-        "Error fetching enrolled courses:",
-        enrolledCoursesError.message
-      );
-    } else {
-      setEnrolledCourses(enrolledCoursesData.map((e) => e.courses));
-    }
-  } catch (err) {
-    console.error("Unexpected error:", err);
-  } finally {
-    setLoading(false);
-  }
-};
-fetchCourses();
-}, [userId])
+
+        const { data: enrolledCoursesData, error: enrolledCoursesError } =
+          await supabase
+            .from("student_courses")
+            .select("courses(*)")
+            .eq("student_id", userId);
+
+        if (enrolledCoursesError) {
+          console.error("Error fetching enrolled courses:", enrolledCoursesError.message);
+        } else {
+          setEnrolledCourses(enrolledCoursesData.map((e) => e.courses));
+        }
+      } catch (err) {
+        console.error("Unexpected error:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchCourses();
+  }, [userId]);
+
+  const handleEnroll = async (courseId) => {
+    alert(`Enroll to course ID: ${courseId} (Supabase logic to be added)`);
+  };
 
   return (
     <div className="container mt-5">
@@ -77,28 +70,24 @@ fetchCourses();
         <>
           <h1 className="text-center mb-4">Welcome, {userName}!</h1>
           <ul className="nav nav-tabs mb-4">
-          <li className="nav-item">
+            <li className="nav-item">
               <button
-                className={`nav-link ${
-                  activeTab === "enrolledCourses" ? "active" : ""
-                }`}
+                className={`nav-link ${activeTab === "enrolledCourses" ? "active" : ""}`}
                 onClick={() => setActiveTab("enrolledCourses")}
               >
                 Enrolled Courses
               </button>
             </li>
-
             <li className="nav-item">
               <button
-                className={`nav-link ${
-                  activeTab === "allCourses" ? "active" : ""
-                }`}
+                className={`nav-link ${activeTab === "allCourses" ? "active" : ""}`}
                 onClick={() => setActiveTab("allCourses")}
               >
                 All Courses
               </button>
             </li>
           </ul>
+
           {activeTab === "enrolledCourses" && (
             <div>
               <h2>Enrolled Courses</h2>
@@ -109,9 +98,7 @@ fetchCourses();
                       key={course.course_id}
                       className="col-md-4 mb-4"
                       onClick={() =>
-                        navigate(
-                          `/dashboard/courses/${course.course_code}/exams`
-                        )
+                        navigate(`/dashboard/courses/${course.course_id}/exams`)
                       }
                       style={{ cursor: "pointer" }}
                     >
@@ -120,14 +107,10 @@ fetchCourses();
                           className="card-header"
                           style={{
                             backgroundColor: (() => {
-                              //generate a random dark color
-                              const randomDarkColor = () => {
-                                const r = Math.floor(Math.random() * 128); 
-                                const g = Math.floor(Math.random() * 128); 
-                                const b = Math.floor(Math.random() * 128);
-                                return `rgb(${r}, ${g}, ${b})`;
-                              };
-                              return randomDarkColor();
+                              const r = Math.floor(Math.random() * 128);
+                              const g = Math.floor(Math.random() * 128);
+                              const b = Math.floor(Math.random() * 128);
+                              return `rgb(${r}, ${g}, ${b})`;
                             })(),
                             color: "white",
                           }}
@@ -147,34 +130,28 @@ fetchCourses();
               )}
             </div>
           )}
+
           {activeTab === "allCourses" && (
             <div>
               <h2>All Courses</h2>
               <div className="row">
-                {allCourses.map((course, index) => (
-                  <div
-                    key={course.course_id}
-                    className="col-md-4 mb-4"
-                    onClick={() =>
-                      navigate(`/dashboard/courses/${course.course_id}/exams`)
-                    }
-                    style={{ cursor: "pointer" }}
-                  >
+                {allCourses.map((course) => (
+                  <div key={course.course_id} className="col-md-4 mb-4">
                     <div className="card h-100">
                       <div
                         className="card-header"
+                        onClick={() =>
+                          navigate(`/dashboard/courses/${course.course_id}/exams`)
+                        }
                         style={{
                           backgroundColor: (() => {
-                            //generate a random dark color
-                            const randomDarkColor = () => {
-                              const r = Math.floor(Math.random() * 128); 
-                              const g = Math.floor(Math.random() * 128); 
-                              const b = Math.floor(Math.random() * 128); 
-                              return `rgb(${r}, ${g}, ${b})`;
-                            };
-                            return randomDarkColor();
+                            const r = Math.floor(Math.random() * 128);
+                            const g = Math.floor(Math.random() * 128);
+                            const b = Math.floor(Math.random() * 128);
+                            return `rgb(${r}, ${g}, ${b})`;
                           })(),
                           color: "white",
+                          cursor: "pointer",
                         }}
                       >
                         <h5 className="mb-0">{course.title}</h5>
@@ -182,6 +159,12 @@ fetchCourses();
                       </div>
                       <div className="card-body">
                         <p className="card-text">{course.description}</p>
+                        <button
+                          className="btn btn-sm btn-outline-primary mt-2"
+                          onClick={() => handleEnroll(course.course_id)}
+                        >
+                          Enroll
+                        </button>
                       </div>
                     </div>
                   </div>
