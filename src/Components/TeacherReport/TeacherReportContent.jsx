@@ -25,11 +25,12 @@ export default function TeacherReportContent() {
         }, []);
 
     useEffect(() => {
+        if (!userId) return; 
         const getCourses = async () => {
             setLoading(true);
             setError(null);
             try {
-                const res = await fetch(`http://localhost:5000/api/reports/courses?userId=${userId}`);
+                const res = await fetch(`http://localhost:5000/api/teacher/reports/course?userId=${userId}`);
                 const data = await res.json();
                 if (res.ok) {
                     setCourse(data.courses);
@@ -70,9 +71,11 @@ export default function TeacherReportContent() {
                                         value={""}
                                         onChange={""}
                                     >
-                                        <option value="">
-                                            Select a course
-                                        </option>
+                                        {course.map((c) => (
+                                            <option key={c.course_id} value={c.course_id}>
+                                                {c.course_code} - {c.title}
+                                            </option>
+                                        ))}
                                     </Form.Select>
                                 </Form.Group>
                             </Col>
