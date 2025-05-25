@@ -11,6 +11,8 @@ export default function TeacherReportContent() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [userId, setUserId] = useState(null);
+    const [exam, setExam] = useState([]);
+    const [selectedExam, setSelectedExam] = useState("");
 
     useEffect(() => {
             const getUserId = async () => {
@@ -45,6 +47,30 @@ export default function TeacherReportContent() {
         }
         getCourses()
     }, [userId]);
+
+    useEffect(() => {
+        if (!selectedCourse)
+            return;
+        const getExamTitles = async () => {
+            setLoading(true)
+            setError(null)
+            try {
+                const res = await fetch(`http://localhost:5000/api/teacher/reports/exams?userId=${userId}`)
+                const json = await res.json();
+                if (res.ok){
+                    setExam(json.exams);
+                }
+                else {
+                    setError(json.message || "Failed to fetch exam titles");
+                }
+            } catch (err) {
+                setError(err.message || "An error occurred while fetching exam titles");
+            } finally {
+                setLoading(false);
+            }
+        }
+
+    }, [selectedCourse]);
 
   return (
     <Col 
