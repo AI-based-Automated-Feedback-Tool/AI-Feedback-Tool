@@ -86,9 +86,9 @@ const ConfigureExam = () => {
       localStorage.setItem("examConfig", JSON.stringify({
         ...exam,
         examId: response.data.examId
-      }));
+      }));      
       
-      navigate(`/teacher/exams/${response.data.examId}/questions`);
+      navigate(`/teacher/exams/${response.data.examId}/questions/${exam.type}`);
 
     } catch (err) {
       console.error("Error saving exam:", err);

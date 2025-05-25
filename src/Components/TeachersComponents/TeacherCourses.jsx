@@ -1,56 +1,57 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../../SupabaseAuth/supabaseClient";
+import { Spinner, Alert } from "react-bootstrap";
 import "../../css/Courses.css";
 
 const TeacherCourses = () => {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchCourses = async () => {
       try {
+        setLoading(true);
+        setError(null);
         
-        const {
-          data: { user },
-          error: userError,
-        } = await supabase.auth.getUser();
-
+        // Get authenticated user
+        const { data: { user }, error: userError } = await supabase.auth.getUser();
         if (userError || !user) {
-          throw new Error("Unable to fetch authenticated user");
+          throw new Error("Please login to view courses");
         }
 
-        const userId = user.id;
-
+        // Step 1: Get all exams created by this user
         const { data: exams, error: examsError } = await supabase
-          .from("exams")
-          .select("course_code")
-          .eq("user_id", userId);
+          .from('exams')
+          .select('course_id')
+          .eq('user_id', user.id)
+          .not('course_id', 'is', null); 
 
-        if (examsError) {
-          throw examsError;
-        }
+        if (examsError) throw examsError;
 
-        const uniqueCourseCodes = [...new Set(exams.map((e) => e.course_code))];
-
-        if (uniqueCourseCodes.length === 0) {
-          setCourses([]); // No courses to show
+        // Extract unique course_ids from exams
+        const courseIds = [...new Set(exams.map(exam => exam.course_id))];
+        
+        if (courseIds.length === 0) {
+          setCourses([]);
           return;
         }
 
-        const { data: courseData, error: courseError } = await supabase
-          .from("courses")
-          .select("*")
-          .in("course_code", uniqueCourseCodes);
+        // Step 2: Get course details for these course_ids
+        const { data: coursesData, error: coursesError } = await supabase
+          .from('courses')
+          .select('course_id, course_code, title, description')
+          .in('course_id', courseIds)
+          .order('title', { ascending: true });
 
-        if (courseError) {
-          throw courseError;
-        }
+        if (coursesError) throw coursesError;
 
-        setCourses(courseData);
+        setCourses(coursesData || []);
       } catch (err) {
-        console.error("Error fetching filtered courses:", err.message || err);
+        console.error("Error fetching courses:", err);
+        setError(err.message);
       } finally {
         setLoading(false);
       }
@@ -63,23 +64,28 @@ const TeacherCourses = () => {
     <div className="container mt-3">
       <h4 className="mb-4">Welcome to Teacher Dashboard</h4>
 
-      {loading ? (
-        <p>Loading courses...</p>
+      {error ? (
+        <Alert variant="danger">
+          {error}
+        </Alert>
+      ) : loading ? (
+        <div className="text-center py-4">
+          <Spinner animation="border" />
+          <p className="mt-2">Loading your courses...</p>
+        </div>
       ) : (
         <div className="card shadow p-4">
           <div className="card-header d-flex align-items-center">
             <i className="fas fa-book fa-2x me-3 text-primary"></i>
-            <h2 className="mb-0">Courses</h2>
+            <h2 className="mb-0">Your Courses</h2>
           </div>
           <div className="card-body">
             <div className="row mt-3">
-              {courses.map((course, index) => (
+              {courses.map((course) => (
                 <div
-                  key={course.id || index}
+                  key={course.course_id}
                   className="col-md-4 col-sm-6 col-12 mb-4"
-                  onClick={() =>
-                    navigate(`/teacher/courses/${course.course_code}/exams`)
-                  }
+                  onClick={() => navigate(`/teacher/courses/${course.course_id}/exams`)}
                   style={{ cursor: "pointer" }}
                 >
                   <div className="card h-100 shadow">
@@ -104,7 +110,9 @@ const TeacherCourses = () => {
                 </div>
               ))}
               {courses.length === 0 && (
-                <p className="text-center text-muted">No courses available.</p>
+                <Alert variant="info" className="text-center">
+                  You haven't created any exams yet. Create an exam to see courses here.
+                </Alert>
               )}
             </div>
           </div>
