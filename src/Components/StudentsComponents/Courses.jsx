@@ -11,9 +11,10 @@ const Courses = () => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const [enrolledCourses, setEnrolledCourses] = useState([]);
-
   //my courses or all courses
   const [activeTab, setActiveTab] = useState("enrolledCourses");
+    //state for search query
+    const [searchQuery, setSearchQuery] = useState("");
 
   const { userId } = useParams();
   const { userData, fetchUserData } = useContext(UserContext);
@@ -67,6 +68,14 @@ const Courses = () => {
 fetchCourses();
 }, [userId])
 
+ //filter courses based on search query
+ const filteredEnrolledCourses = enrolledCourses.filter((course) =>
+  course.title.toLowerCase().includes(searchQuery.toLowerCase())
+);
+const filteredAllCourses = allCourses.filter((course) =>
+  course.title.toLowerCase().includes(searchQuery.toLowerCase())
+);
+
   return (
     <div className="container mt-5">
       {loading ? (
@@ -99,18 +108,28 @@ fetchCourses();
               </button>
             </li>
           </ul>
+           {/* search bar */}
+           <div className="mb-4">
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Search courses..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
           {activeTab === "enrolledCourses" && (
             <div>
               <h2>Enrolled Courses</h2>
-              {enrolledCourses.length > 0 ? (
+              {filteredEnrolledCourses.length > 0 ? (
                 <div className="row">
-                  {enrolledCourses.map((course) => (
+                  {filteredEnrolledCourses.map((course) => (
                     <div
                       key={course.course_id}
                       className="col-md-4 mb-4"
                       onClick={() =>
                         navigate(
-                          `/dashboard/courses/${course.course_code}/exams`
+                          `/dashboard/courses/${course.course_id}/exams`
                         )
                       }
                       style={{ cursor: "pointer" }}
@@ -151,12 +170,12 @@ fetchCourses();
             <div>
               <h2>All Courses</h2>
               <div className="row">
-                {allCourses.map((course, index) => (
+                {filteredAllCourses.map((course, index) => (
                   <div
                     key={course.course_id}
                     className="col-md-4 mb-4"
                     onClick={() =>
-                      navigate(`/dashboard/courses/${course.course_code}/exams`)
+                      navigate(`/dashboard/courses/${course.course_id}/exams`)
                     }
                     style={{ cursor: "pointer" }}
                   >
