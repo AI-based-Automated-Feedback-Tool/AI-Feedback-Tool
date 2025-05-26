@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Container, Card, Table, Button, Spinner, Alert } from 'react-bootstrap';
+import { Container, Card, Table, Button, Spinner, Alert, ButtonGroup } from 'react-bootstrap';
 import { supabase } from '../../SupabaseAuth/supabaseClient';
 
 const CourseExamsPage = () => {
@@ -59,6 +59,10 @@ const CourseExamsPage = () => {
     return hours > 0 ? `${hours}h ${mins}m` : `${minutes}m`;
   };
 
+   const handleAIFeedbackClick = (examId) => {
+    navigate(`/teacher/exams/${examId}/ai-feedback`);
+  };
+
   return (
     <Container className="mt-4">
       <Card className="shadow-sm">
@@ -106,13 +110,15 @@ const CourseExamsPage = () => {
                     <td>{exam.type.toUpperCase()}</td>
                     <td>{formatDuration(exam.duration)}</td>
                     <td>
-                      <Button
-                        variant="primary"
-                        size="sm"
-                        onClick={() => handleExamClick(exam.exam_id)}
-                      >
-                        Edit Exam
-                      </Button>
+                      <ButtonGroup>                        
+                        <Button
+                          variant="info"
+                          size="sm"
+                          onClick={() => handleAIFeedbackClick(exam.exam_id)}
+                        >
+                          AI Feedback
+                        </Button>
+                      </ButtonGroup>
                     </td>
                   </tr>
                 ))}

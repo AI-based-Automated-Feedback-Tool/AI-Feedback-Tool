@@ -18,6 +18,7 @@ import StudentLayout from "./Components/StudentsComponents/StudentLayout";
 import { UserProvider } from "./Context/userContext.jsx";
 import TeacherReportContent from "./Components/TeacherReport/TeacherReportContent.jsx";
 import Result from "./Components/StudentsComponents/Result.jsx";
+import AIFeedbackPage from './Components/TeachersComponents/AIFeedbackPage';
 
 function App() {
   return (
@@ -47,6 +48,7 @@ function App() {
               <Route path="profile" element={<ProfilePage />} />
               <Route path="students" element={""} />
               <Route path="reports" element={<TeacherReportContent />} />
+              <Route path="exams/:examId/ai-feedback" element={<AIFeedbackPage />} />
             </Route>
           </Route>
 
