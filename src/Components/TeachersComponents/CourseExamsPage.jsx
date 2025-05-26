@@ -110,7 +110,14 @@ const CourseExamsPage = () => {
                     <td>{exam.type.toUpperCase()}</td>
                     <td>{formatDuration(exam.duration)}</td>
                     <td>
-                      <ButtonGroup>                        
+                      <ButtonGroup>
+                        <Button
+                          variant="primary"
+                          size="sm"
+                          onClick={() => handleExamClick(exam.exam_id)}
+                        >
+                          Edit
+                        </Button>
                         <Button
                           variant="info"
                           size="sm"
