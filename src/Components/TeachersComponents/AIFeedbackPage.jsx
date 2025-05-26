@@ -5,39 +5,71 @@ import { Container, Card, Alert, ListGroup, Badge } from 'react-bootstrap';
 const AIFeedbackPage = () => {
   const { examId } = useParams();
 
-  // Sample data structure
-  const feedbackData = {
+  // Sample AI-generated pedagogical feedback
+  const aiFeedback = {
     examOverview: {
       totalQuestions: 15,
       totalSubmissions: 87,
       averageScore: 72.5,
-      difficultyBalance: { easy: 5, medium: 7, hard: 3 }
+      difficultyBalance: {
+        easy: 5,
+        medium: 7,
+        hard: 3
+      }
     },
     keyInsights: [
       {
         title: "Question Clarity",
-        feedback: "3 questions confused many students",
-        example: "Q7: 'Explain virtual DOM' was misinterpreted"
+        feedback: "3 questions had wording that confused >30% of students (Q4, Q7, Q12)",
+        example: "Q7: 'Explain the virtual DOM' was interpreted literally by 25% of students"
       },
       {
         title: "Knowledge Gaps",
-        feedback: "State management concepts need reinforcement",
-        example: "Only 41% answered useState dependencies correctly"
+        feedback: "Students struggled most with state management (average 58% correct vs 75% overall)",
+        example: "Only 41% correctly answered the useState dependency question"
+      },
+      {
+        title: "Effective Questions",
+        feedback: "5 questions perfectly discriminated between strong and weak students",
+        example: "Q2 (React lifecycle methods) had 92% accuracy with strong correlation to final grades"
       }
     ],
     questionAnalysis: [
       {
         id: 4,
-        text: "useEffect dependency question",
-        issue: "42% missed missing dependencies",
-        commonWrongAnswers: ["Needs cleanup", "Syntax errors"],
-        suggestion: "More dependency array examples"
+        text: "What's wrong with this useEffect hook?",
+        issue: "42% missed the missing dependency array",
+        commonWrongAnswers: [
+          "30% thought it needed cleanup",
+          "28% incorrectly cited syntax errors"
+        ],
+        suggestion: "Provide more examples of dependency array usage"
+      },
+      {
+        id: 12,
+        text: "Convert this class component to hooks",
+        issue: "35% forgot to handle componentDidMount",
+        commonWrongAnswers: [
+          "40% kept class state syntax",
+          "25% misused useEffect"
+        ],
+        suggestion: "Create a step-by-step conversion guide"
       }
     ],
     teachingRecommendations: [
       {
         area: "State Management",
-        action: "Conduct useState/useReducer workshop",
+        action: "Run a dedicated workshop on useState/useReducer",
+        priority: "High"
+      },
+      {
+        area: "Component Lifecycle",
+        action: "Add visual timelines showing mount/update phases",
+        priority: "Medium"
+      },
+      {
+        area: "Performance Optimization",
+        action: "Demonstrate React.memo with before/after metrics",
         priority: "High"
       }
     ]
@@ -51,56 +83,41 @@ const AIFeedbackPage = () => {
           <span className="small">Exam ID: {examId}</span>
         </Card.Header>
         <Card.Body>
-          {/* Exam Overview */}
           <div className="mb-4">
             <h5>Exam Overview</h5>
             <p>
-              <strong>Questions:</strong> {feedbackData.examOverview.totalQuestions} | 
-              <strong>Submissions:</strong> {feedbackData.examOverview.totalSubmissions} | 
-              <strong>Avg Score:</strong> {feedbackData.examOverview.averageScore}%
+              This exam had <strong>{aiFeedback.examOverview.totalQuestions} questions</strong> 
+              completed by <strong>{aiFeedback.examOverview.totalSubmissions} students</strong>.
+              The difficulty balance was well distributed with 
+              <Badge bg="success" className="mx-1">{aiFeedback.examOverview.difficultyBalance.easy} Easy</Badge>
+              <Badge bg="warning" className="mx-1">{aiFeedback.examOverview.difficultyBalance.medium} Medium</Badge>
+              <Badge bg="danger" className="mx-1">{aiFeedback.examOverview.difficultyBalance.hard} Hard</Badge>
+              questions.
             </p>
-            <div>
-              Difficulty: 
-              <Badge bg="success" className="mx-1">
-                Easy: {feedbackData.examOverview.difficultyBalance.easy}
-              </Badge>
-              <Badge bg="warning" className="mx-1">
-                Medium: {feedbackData.examOverview.difficultyBalance.medium}
-              </Badge>
-              <Badge bg="danger" className="mx-1">
-                Hard: {feedbackData.examOverview.difficultyBalance.hard}
-              </Badge>
-            </div>
           </div>
 
-          {/* Key Insights */}
           <div className="mb-4">
             <h5>Key Insights</h5>
             <ListGroup variant="flush">
-              {feedbackData.keyInsights.map((insight, i) => (
+              {aiFeedback.keyInsights.map((insight, i) => (
                 <ListGroup.Item key={i}>
                   <strong>{insight.title}:</strong> {insight.feedback}
-                  {insight.example && (
-                    <div className="text-muted small mt-1">Example: {insight.example}</div>
-                  )}
+                  <div className="text-muted small mt-1">Example: {insight.example}</div>
                 </ListGroup.Item>
               ))}
             </ListGroup>
           </div>
 
-          {/* Question Analysis */}
           <div className="mb-4">
-            <h5>Question Analysis</h5>
+            <h5>Problematic Questions</h5>
             <ListGroup variant="flush">
-              {feedbackData.questionAnalysis.map((q, i) => (
+              {aiFeedback.questionAnalysis.map((q, i) => (
                 <ListGroup.Item key={i}>
                   <div className="fw-bold">Q{q.id}: {q.text}</div>
                   <div className="text-danger">Issue: {q.issue}</div>
-                  {q.commonWrongAnswers && (
-                    <div className="small text-muted">
-                      Common errors: {q.commonWrongAnswers.join(", ")}
-                    </div>
-                  )}
+                  <div className="small text-muted">
+                    Common misconceptions: {q.commonWrongAnswers.join("; ")}
+                  </div>
                   <div className="text-success mt-1">
                     <i className="bi bi-lightbulb"></i> Suggestion: {q.suggestion}
                   </div>
@@ -109,11 +126,10 @@ const AIFeedbackPage = () => {
             </ListGroup>
           </div>
 
-          {/* Recommendations */}
           <div>
-            <h5>Teaching Recommendations</h5>
+            <h5>Recommended Teaching Adjustments</h5>
             <ListGroup>
-              {feedbackData.teachingRecommendations.map((rec, i) => (
+              {aiFeedback.teachingRecommendations.map((rec, i) => (
                 <ListGroup.Item 
                   key={i}
                   className={rec.priority === "High" ? "list-group-item-danger" : ""}
@@ -134,7 +150,8 @@ const AIFeedbackPage = () => {
       </Card>
 
       <Alert variant="info">
-        <i className="bi bi-robot"></i> AI-generated feedback based on student response patterns
+        <i className="bi bi-robot"></i> This feedback was generated by analyzing patterns in student responses.
+        The AI identified common misconceptions and suggested targeted improvements.
       </Alert>
     </Container>
   );
