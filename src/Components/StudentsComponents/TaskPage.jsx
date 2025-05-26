@@ -4,7 +4,7 @@ import { supabase } from "../../SupabaseAuth/supabaseClient";
 import { useNavigate } from "react-router-dom";
 
 const TaskPage = () => {
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
   const { id } = useParams(); // exam_id from URL
   const [task, setTask] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -149,119 +149,133 @@ const TaskPage = () => {
 
   const currentQuestion = task.questions[questionIndex];
 
+  const handleQuestionJump = (index) => {
+    setQuestionIndex(index);
+  };
+
   return (
-    <div className="container py-4 taskConteiner">
-        {/* Button to display total number of questions */}
-        <button
-        style={{
-          position: "absolute",
-          top: "10px",
-          right: "10px",
-          padding: "10px",
-          backgroundColor: "#007bff",
-          color: "#fff",
-          border: "none",
-          borderRadius: "50%",
-          fontSize: "14px",
-          cursor: "pointer",
-        }}
-      >
-        {task.questions.length}
-      </button>
+    <div className="container-fluid py-4 taskContainer">
+      <div className="row">
+        {/*left side: Question area*/}
+        <div className="col-lg-9 col-md-8 mb-4">
+          <div className="bg-light p-4 shadow rounded h-100">
+            <h2 className="text-primary mb-3">{task.title}</h2>
+            <p>
+              <strong>Type:</strong> {task.type || "Exam"}
+            </p>
+            <hr />
 
-      <div className="bg-light p-4 shadow rounded">
-        <h2 className="text-primary mb-3">{task.title}</h2>
-        <p>
-          <strong>Type:</strong> {task.type || "Exam"}
-        </p>
+            {reviewMode ? (
+              <>
+                <h4 className="mb-3">📝 Review Your Answers</h4>
+                <ul className="list-group">
+                  {task.questions.map((q, idx) => (
+                    <li key={q.id} className="list-group-item">
+                      <strong>
+                        Q{idx + 1}: {q.question}
+                      </strong>
+                      <br />
+                      <span className="text-primary">
+                        Answer: {answers[idx] || "Not answered"}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
 
-        <hr />
+                <div className="d-flex justify-content-between mt-4">
+                  <button
+                    className="btn btn-secondary"
+                    onClick={() => setReviewMode(false)}
+                  >
+                    Go Back
+                  </button>
+                  <button className="btn btn-success" onClick={handleSubmit}>
+                    Confirm Submit
+                  </button>
+                </div>
+              </>
+            ) : (
+              <>
+                <h5>
+                  Question {questionIndex + 1} of {task.questions.length}
+                </h5>
+                <p className="mb-4">{currentQuestion.question}</p>
 
-        {reviewMode ? (
-          <div>
-            <h4 className="mb-3">📝 Review Your Answers</h4>
-            <ul className="list-group">
-              {task.questions.map((q, idx) => (
-                <li key={q.id} className="list-group-item">
-                  <strong>
-                    Q{idx + 1}: {q.question}
-                  </strong>
-                  <br />
-                  <span className="text-primary">
-                    Answer: {answers[idx] || "Not answered"}
-                  </span>
-                </li>
+                {currentQuestion.options.map((opt, idx) => (
+                  <div key={idx} className="form-check mb-2">
+                    <input
+                      type="radio"
+                      id={`q${questionIndex}_${idx}`}
+                      className="form-check-input"
+                      name={`q${questionIndex}`}
+                      value={opt}
+                      checked={answers[questionIndex] === opt}
+                      onChange={() => handleAnswerSelect(questionIndex, opt)}
+                    />
+                    <label
+                      className="form-check-label"
+                      htmlFor={`q${questionIndex}_${idx}`}
+                    >
+                      {opt}
+                    </label>
+                  </div>
+                ))}
+
+                <div className="d-flex justify-content-between mt-4">
+                  <button
+                    className="btn btn-secondary"
+                    onClick={handleBack}
+                    disabled={questionIndex === 0}
+                  >
+                    Back
+                  </button>
+
+                  {questionIndex === task.questions.length - 1 ? (
+                    <button
+                      className="btn btn-warning"
+                      onClick={() => setReviewMode(true)}
+                    >
+                      Review Answers
+                    </button>
+                  ) : (
+                    <button className="btn btn-primary" onClick={handleNext}>
+                      Next
+                    </button>
+                  )}
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+
+        {/*right side: Question navigator*/}
+        <div className="col-lg-3 col-md-4">
+          <div
+            className="bg-white p-3 shadow rounded sticky-top"
+            style={{ top: "80px", maxHeight: "80vh", overflowY: "auto" }}
+          >
+            <h6 className="text-center mb-3">Questions</h6>
+            <div className="d-flex flex-column align-items-center gap-2">
+              {task.questions.map((_, idx) => (
+                <button
+                  key={idx}
+                  className={`btn ${
+                    idx === questionIndex
+                      ? "btn-primary"
+                      : "btn-outline-secondary"
+                  } rounded-circle`}
+                  style={{ width: "40px", height: "40px", fontWeight: "bold" }}
+                  onClick={() => handleQuestionJump(idx)}
+                >
+                  {idx + 1}
+                </button>
               ))}
-            </ul>
-
-            <div className="d-flex justify-content-between mt-4">
-              <button
-                className="btn btn-secondary"
-                onClick={() => setReviewMode(false)}
-              >
-                Go Back
-              </button>
-              <button className="btn btn-success" onClick={handleSubmit}>
-                Confirm Submit
-              </button>
             </div>
           </div>
-        ) : (
-          <>
-            <h5>
-              Question {questionIndex + 1} of {task.questions.length}
-            </h5>
-            <p>{currentQuestion.question}</p>
-
-            {currentQuestion.options.map((opt, idx) => (
-              <div key={idx} className="form-check">
-                <input
-                  type="radio"
-                  id={`q${questionIndex}_${idx}`}
-                  className="form-check-input"
-                  name={`q${questionIndex}`}
-                  value={opt}
-                  checked={answers[questionIndex] === opt}
-                  onChange={() => handleAnswerSelect(questionIndex, opt)}
-                />
-                <label
-                  className="form-check-label"
-                  htmlFor={`q${questionIndex}_${idx}`}
-                >
-                  {opt}
-                </label>
-              </div>
-            ))}
-
-            <div className="d-flex justify-content-between mt-4">
-              <button
-                className="btn btn-secondary"
-                onClick={handleBack}
-                disabled={questionIndex === 0}
-              >
-                Back
-              </button>
-
-              {questionIndex === task.questions.length - 1 ? (
-                <button
-                  className="btn btn-warning"
-                  onClick={() => setReviewMode(true)}
-                >
-                  Review Answers
-                </button>
-              ) : (
-                <button className="btn btn-primary" onClick={handleNext}>
-                  Next
-                </button>
-              )}
-            </div>
-          </>
-        )}
+        </div>
       </div>
     </div>
   );
 };
 
 export default TaskPage;
-
-
