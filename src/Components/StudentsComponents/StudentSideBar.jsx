@@ -64,9 +64,9 @@ const StudentSideBar = ({ show, onHide }) => {
             <Nav.Item>
               <Link
                 className={`nav-link d-flex align-items-center ${
-                  isActive(`/results/${userId}`) ? "active" : "text-white"
+                  isActive(`/student/courses/${userId}/results`) ? "active" : "text-white"
                 }`}
-                to={`/results/${userId}`}
+                to={`/student/courses/${userId}/results`}
                 style={{ fontSize: "1.2rem" }}
               >
                 <i className="fas fa-chart-bar me-2"></i> Results
@@ -132,9 +132,9 @@ const StudentSideBar = ({ show, onHide }) => {
           <li className="nav-item mb-2">
             <Link
               className={`nav-link d-flex align-items-center ${
-                isActive(`/results/${userId}`) ? "active" : "text-white"
+                isActive(`/student/courses/${userId}/results`) ? "active" : "text-white"
               }`}
-              to={`/results/${userId}`}
+              to={`/student/courses/${userId}/results`}
               style={{ fontSize: "1.2rem" }}
             >
               <i className="fas fa-chart-bar me-2"></i> Results
