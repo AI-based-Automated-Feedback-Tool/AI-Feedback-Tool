@@ -175,7 +175,7 @@ const filteredAllCourses = allCourses.filter((course) =>
                     key={course.course_id}
                     className="col-md-4 mb-4"
                     onClick={() =>
-                      navigate(`/dashboard/courses/${course.course_code}/exams`)
+                      navigate(`/dashboard/courses/${course.course_id}/exams`)
                     }
                     style={{ cursor: "pointer" }}
                   >
