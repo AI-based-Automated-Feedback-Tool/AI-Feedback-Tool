@@ -4,7 +4,8 @@ import { supabase } from '../../SupabaseAuth/supabaseClient';
 import { Row, Col, CardHeader, CardBody, Card, Button, Alert } from 'react-bootstrap';
 import CourseDropdown from './CourseDropdown';
 import StudentDropdown from './StudentDropdown';
-import ExamDropdown from './ExamDropdown';
+import ExamDropdown from './ExamDropdown'; 
+import LoadingCard from './LoadingCard';
 
 export default function TeacherReportContent() {
     const [selectedCourse, setSelectedCourse] = useState("");
@@ -12,20 +13,31 @@ export default function TeacherReportContent() {
     const [userId, setUserId] = useState(null);
     const [selectedExam, setSelectedExam] = useState("");
     const [selectedStudent, setSelectedStudent] = useState("");
+    const [loadingUser, setLoadingUser] = useState(true);
 
     useEffect(() => {
             const getUserId = async () => {
-                await new Promise(resolve => setTimeout(resolve, 3000));
+                setLoadingUser(true);
                 const { data, error } = await supabase.auth.getUser();
                 if (error || !data?.user?.id) {
                     setError("Failed to get user ID");
                 } else {
                     setUserId(data.user.id);
                 }
+                setLoadingUser(false);
             }
             getUserId();
         }, []);
-    
+
+    // Prevent rendering anything dependent on userId until it's loaded
+    if (loadingUser) {
+         return (
+            <Col className="w-100" style={{ backgroundColor: '#f8f9fa' }}>
+                <LoadingCard />
+            </Col>
+        );
+    }
+
   return (
     <Col 
         className="w-100 " 
