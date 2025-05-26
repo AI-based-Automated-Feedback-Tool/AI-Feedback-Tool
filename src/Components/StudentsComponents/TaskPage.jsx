@@ -13,11 +13,9 @@ const TaskPage = () => {
   const [reviewMode, setReviewMode] = useState(false);
   const [alreadySubmitted, setAlreadySubmitted] = useState(false);
 
-
-
   useEffect(() => {
     const fetchExamWithQuestions = async () => {
-      console.log("🔎 Route exam ID:", id);
+      console.log("Route exam ID:", id);
 
       const {
         data: { user },
@@ -152,7 +150,25 @@ const TaskPage = () => {
   const currentQuestion = task.questions[questionIndex];
 
   return (
-    <div className="container py-4">
+    <div className="container py-4 taskConteiner">
+        {/* Button to display total number of questions */}
+        <button
+        style={{
+          position: "absolute",
+          top: "10px",
+          right: "10px",
+          padding: "10px",
+          backgroundColor: "#007bff",
+          color: "#fff",
+          border: "none",
+          borderRadius: "50%",
+          fontSize: "14px",
+          cursor: "pointer",
+        }}
+      >
+        {task.questions.length}
+      </button>
+
       <div className="bg-light p-4 shadow rounded">
         <h2 className="text-primary mb-3">{task.title}</h2>
         <p>
