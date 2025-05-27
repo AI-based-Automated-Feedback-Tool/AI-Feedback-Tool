@@ -21,7 +21,7 @@ const Courses = () => {
     fetchAllCourses,
     fetchEnrolledCourses,
     loading,
-    enrollInCourse
+    enrollInCourse,
   } = useContext(CourseContext);
 
   //fetch user data if not already available
@@ -58,7 +58,6 @@ const Courses = () => {
       enrollInCourse(userId, courseId)
         .then(() => {
           console.log("Enrollment successful!");
-
         })
         .catch((error) => {
           console.error("Enrollment failed:", error);
@@ -193,7 +192,10 @@ const Courses = () => {
                         <p className="card-text">{course.description}</p>
                         <button
                           className="btn btn-success"
-                          onClick={() => handleEnroll(course.course_id)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleEnroll(course.course_id);
+                          }}
                         >
                           Enroll to Course
                         </button>
