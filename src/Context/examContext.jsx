@@ -2,15 +2,30 @@ import React, { createContext, useState, useCallback } from "react";
 import PropTypes from "prop-types";
 import { supabase } from "../SupabaseAuth/supabaseClient";
 
+// Create a React context for managing exam data
 export const ExamContext = createContext();
 
 export const ExamProvider = ({ children }) => {
-  const [exams, setExams] = useState([]);
-  const [pendingExams, setPendingExams] = useState([]);
-  const [completedExams, setCompletedExams] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
 
+   // Full list of exams for a course (with at least 1 MCQ)
+  const [exams, setExams] = useState([]);
+
+  // Exams that the current user has NOT submitted
+  const [pendingExams, setPendingExams] = useState([]);
+
+   // Exams that the user has submitted (based on submission table)
+  const [completedExams, setCompletedExams] = useState([]);
+
+  // Tracks loading state for async operations
+  const [loading, setLoading] = useState(false);
+
+   // Tracks any error messages
+  const [error, setError] = useState(null);
+  
+   /**
+   * Fetch all exams for a course, filter them based on
+   * whether the current user has completed them.
+   */
   const fetchExams = useCallback(async (courseId) => {
     setLoading(true);
     setError(null);
@@ -43,6 +58,7 @@ export const ExamProvider = ({ children }) => {
         return;
       }
 
+       // Filter to only exams that actually have MCQ questions
       const examsWithQuestions = examData.filter(
         (exam) => exam.mcq_questions.length > 0
       );
@@ -63,6 +79,7 @@ export const ExamProvider = ({ children }) => {
 
       console.log(" Submissions found:", submissions);
 
+        // Extract completed exam IDs
       const completedExamIds = new Set(submissions.map((s) => s.exam_id));
       console.log("Completed exam IDs (Set):", [...completedExamIds]);
 
@@ -105,6 +122,7 @@ export const ExamProvider = ({ children }) => {
   );
 };
 
+// Ensure children prop is passed correctly
 ExamProvider.propTypes = {
   children: PropTypes.node.isRequired,
 };
