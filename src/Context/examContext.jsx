@@ -22,7 +22,7 @@ export const ExamProvider = ({ children }) => {
       } = await supabase.auth.getUser();
 
       const userId = user?.id;
-      console.log("🧑‍🎓 Logged-in user ID:", userId);
+      console.log(" Logged-in user ID:", userId);
 
       if (!userId) {
         setError("User not authenticated.");
@@ -37,7 +37,7 @@ export const ExamProvider = ({ children }) => {
         .eq("course_id", courseId);
 
       if (examError || !examData) {
-        console.error("❌ Error fetching exams:", examError);
+        console.error("Error fetching exams:", examError);
         setError("Failed to load exams.");
         setLoading(false);
         return;
@@ -55,16 +55,16 @@ export const ExamProvider = ({ children }) => {
         .eq("user_id", userId);
 
       if (submissionError) {
-        console.error("❌ Error fetching submissions:", submissionError);
+        console.error("Error fetching submissions:", submissionError);
         setError("Failed to load submissions.");
         setLoading(false);
         return;
       }
 
-      console.log("📝 Submissions found:", submissions);
+      console.log(" Submissions found:", submissions);
 
       const completedExamIds = new Set(submissions.map((s) => s.exam_id));
-      console.log("✅ Completed exam IDs (Set):", [...completedExamIds]);
+      console.log("Completed exam IDs (Set):", [...completedExamIds]);
 
       // 4. Split exams into pending and completed (per user)
       const pending = examsWithQuestions.filter(
@@ -74,15 +74,15 @@ export const ExamProvider = ({ children }) => {
         completedExamIds.has(exam.exam_id)
       );
 
-      console.log("🟡 Pending exams:", pending);
-      console.log("🟢 Completed exams:", completed);
+      console.log(" Pending exams:", pending);
+      console.log(" Completed exams:", completed);
 
       // 5. Set states
       setExams(examsWithQuestions);
       setPendingExams(pending);
       setCompletedExams(completed);
     } catch (err) {
-      console.error("❌ Unexpected error in fetchExams:", err);
+      console.error(" Unexpected error in fetchExams:", err);
       setError("An unexpected error occurred.");
     } finally {
       setLoading(false);
