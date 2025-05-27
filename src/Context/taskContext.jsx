@@ -8,32 +8,41 @@ import React, {
 } from "react";
 import { supabase } from "../SupabaseAuth/supabaseClient";
 
+// Create the context for exam tasks
 const TaskContext = createContext();
 
+// Provider to wrap around components that need access to exam/task state
 export const TaskProvider = ({ children }) => {
-  //to store current task or exam
+
+  // Store the full exam/task data
   const [task, setTask] = useState(null);
-  //to track loading status
+
+  // Track whether data is being loaded
   const [loading, setLoading] = useState(true);
-  //to track the current question index
+
+  // Current question index (for navigation)
   const [questionIndex, setQuestionIndex] = useState(0);
-  //to store the user's answers for the questions
+
+  // User's selected answers
   const [answers, setAnswers] = useState([]);
-  //to determine if the user is in review mode
+
+  // Whether user is reviewing their answers
   const [reviewMode, setReviewMode] = useState(false);
-  //to check if the exam has already been submitted
+
+    // Whether user has already submitted this exam
   const [alreadySubmitted, setAlreadySubmitted] = useState(false);
 
-  //to fetch exam details and questions from the database
+    // Fetch exam data and questions
   const fetchExamWithQuestions = useCallback(async (id) => {
     setLoading(true);
-    //get current authenticated user
+
     const {
       data: { user },
     } = await supabase.auth.getUser();
 
     const userId = user?.id;
-    //check if the user has already submitted the exam
+
+    // Check if this user has already submitted this exam
     const { data: existingSubmissions } = await supabase
       .from("exam_submission")
       .select("id")
@@ -42,14 +51,13 @@ export const TaskProvider = ({ children }) => {
       .limit(1);
 
     if (existingSubmissions?.length > 0) {
-      // if the exam is already submitted, update the state and stop further processing
       setAlreadySubmitted(true);
       setLoading(false);
       return;
     }
 
     try {
-      //fetch exam details from exam table
+        // Get exam details
       const { data: examData, error: examError } = await supabase
         .from("exams")
         .select("*")
@@ -57,28 +65,32 @@ export const TaskProvider = ({ children }) => {
         .single();
 
       if (examError || !examData) {
-        console.error("Exam not found");
+        console.error("Exam not found", examError);
         return;
       }
 
+       // Get associated multiple choice questions
       const { data: questionsData, error: questionsError } = await supabase
         .from("mcq_questions")
         .select("question_id, question_text, options")
-        .filter("exam_id", "eq", id);
+        .eq("exam_id", id);
 
       if (questionsError || !questionsData || questionsData.length === 0) {
-        console.error("Questions not found");
+        console.error("Questions not found", questionsError);
         return;
       }
-
+      
+       // Format the questions
       const formattedQuestions = questionsData.map((q) => ({
         id: q.question_id,
         question: q.question_text,
         options: Array.isArray(q.options) ? q.options : [],
       }));
 
+        // Set task and initialize answers with nulls
       setTask({
         exam_id: examData.exam_id,
+        course_id: examData.course_id, // ensure this is set for navigation
         ...examData,
         questions: formattedQuestions,
       });
@@ -90,30 +102,30 @@ export const TaskProvider = ({ children }) => {
     }
   }, []);
 
+   // Save selected answer for a specific question
   const handleAnswerSelect = useCallback((index, answer) => {
-    //update the user's selected answer for a specific question
     setAnswers((prevAnswers) => {
       const updated = [...prevAnswers];
       updated[index] = answer;
       return updated;
     });
   }, []);
-
+  
+    // Go to next question
   const handleNext = useCallback(() => {
-    //move to the next question, ensuring it doesn't exceed the total number of questions
     setQuestionIndex((prevIndex) =>
       Math.min(prevIndex + 1, task.questions.length - 1)
     );
   }, [task]);
 
+  // Go back to previous question
   const handleBack = useCallback(() => {
-    //move to the previous question, ensuring it doesn't go below the first question
     setQuestionIndex((prevIndex) => Math.max(prevIndex - 1, 0));
   }, []);
 
+  // Submit exam answers
   const handleSubmit = useCallback(
     async (navigate) => {
-      //submit the user's answers to the database
       const {
         data: { user },
       } = await supabase.auth.getUser();
@@ -123,31 +135,51 @@ export const TaskProvider = ({ children }) => {
         alert("User not authenticated");
         return;
       }
-      //the responses for submission
-      const responses = task.questions.map((question, index) => ({
-        user_id: userId,
-        exam_id: task.exam_id,
-        question_id: question.id,
-        selected_option: answers[index],
-      }));
-      //insert the res into the "exam_submission" table
 
-      const { error } = await supabase
+      // Prepare response payload
+      const responses = task.questions
+        .map((question, index) => {
+          const selected = answers[index];
+          if (!selected) return null;
+
+          return {
+            user_id: userId,
+            exam_id: task.exam_id,
+            question_id: question.id,
+            selected_option: selected,
+          };
+        })
+        .filter(Boolean); // remove unanswered/null
+
+      if (responses.length === 0) {
+        alert("You must answer at least one question.");
+        return;
+      }
+
+      console.log("🛠 Submitting responses:", responses);
+
+      const { data,error } = await supabase
         .from("exam_submission")
-        .insert(responses);
+        .insert(responses)
+        .select();
+
+        console.log(" Inserted exam_submission rows:", data);
 
       if (error) {
         console.error("Error saving responses:", error);
         alert("Failed to submit answers. Please try again.");
       } else {
-        console.log("Responses submitted successfully");
         alert("Answers submitted!");
-        navigate(`/student/courses/${userId}`);
+        console.log(" Responses saved. Redirecting...");
+
+        // Redirect to correct exam list page
+        navigate(`/dashboard/courses/${task.course_id}/exams`);
       }
     },
     [task, answers]
   );
 
+   // Combine context values
   const contextValue = useMemo(
     () => ({
       task,
