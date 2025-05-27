@@ -9,14 +9,34 @@ const AIFeedbackPage = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    setLoading(true);
-    setError(null);
-    // Placeholder for real fetch logic
-    setTimeout(() => {
-      setFeedbackText('Sample AI feedback will appear here...');
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const { data: questions, error: qErr } = await supabase
+        .from('mcq_questions')
+        .select('*')
+        .eq('exam_id', examId);
+      if (qErr) throw qErr;
+
+      const { data: submissions, error: sErr } = await supabase
+        .from('exam_submission')
+        .select('*')
+        .eq('exam_id', examId);
+      if (sErr) throw sErr;
+
+      // Simulate AI call
+      setFeedbackText(`Fetched ${questions.length} questions and ${submissions.length} submissions.`);
+    } catch (err) {
+      setError(err.message);
+    } finally {
       setLoading(false);
-    }, 1000);
-  }, [examId]);
+    }
+  };
+
+  fetchData();
+}, [examId]);
 
   if (loading) {
     return (
