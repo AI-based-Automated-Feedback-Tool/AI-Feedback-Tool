@@ -10,6 +10,8 @@ const Courses = () => {
   const [enrolledCourses, setEnrolledCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("enrolledCourses");
+  const [searchQuery, setSearchQuery] = useState("");
+
   const { userId } = useParams();
   const navigate = useNavigate();
   const { userData, fetchUserData } = useContext(UserContext);
@@ -23,7 +25,9 @@ const Courses = () => {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const { data: allCoursesData, error: allCoursesError } = await supabase.from("courses").select("*");
+        const { data: allCoursesData, error: allCoursesError } = await supabase
+          .from("courses")
+          .select("*");
         if (allCoursesError) {
           console.error("Error fetching all courses:", allCoursesError.message);
         } else {
@@ -79,10 +83,19 @@ const Courses = () => {
     }
   };
 
+  const filteredEnrolledCourses = enrolledCourses.filter((course) =>
+    course.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+  const filteredAllCourses = allCourses.filter((course) =>
+    course.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <div className="container mt-5">
       {loading ? (
-        <div className="text-center"><p>Loading...</p></div>
+        <div className="text-center">
+          <p>Loading...</p>
+        </div>
       ) : (
         <>
           <h1 className="text-center mb-4">Welcome, {userName}!</h1>
@@ -106,12 +119,22 @@ const Courses = () => {
             </li>
           </ul>
 
+          <div className="mb-4">
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Search courses..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+
           {activeTab === "enrolledCourses" && (
             <div>
               <h2>Enrolled Courses</h2>
-              {enrolledCourses.length > 0 ? (
+              {filteredEnrolledCourses.length > 0 ? (
                 <div className="row">
-                  {enrolledCourses.map((course) => (
+                  {filteredEnrolledCourses.map((course) => (
                     <div
                       key={course.course_id}
                       className="col-md-4 mb-4"
@@ -122,7 +145,9 @@ const Courses = () => {
                         <div
                           className="card-header"
                           style={{
-                            backgroundColor: `rgb(${Math.floor(Math.random() * 128)}, ${Math.floor(Math.random() * 128)}, ${Math.floor(Math.random() * 128)})`,
+                            backgroundColor: `rgb(${Math.floor(Math.random() * 128)}, ${Math.floor(
+                              Math.random() * 128
+                            )}, ${Math.floor(Math.random() * 128)})`,
                             color: "white",
                           }}
                         >
@@ -146,7 +171,7 @@ const Courses = () => {
             <div>
               <h2>All Courses</h2>
               <div className="row">
-                {allCourses.map((course) => (
+                {filteredAllCourses.map((course) => (
                   <div key={course.course_id} className="col-md-4 mb-4">
                     <div
                       className="card h-100"
@@ -156,7 +181,9 @@ const Courses = () => {
                       <div
                         className="card-header"
                         style={{
-                          backgroundColor: `rgb(${Math.floor(Math.random() * 128)}, ${Math.floor(Math.random() * 128)}, ${Math.floor(Math.random() * 128)})`,
+                          backgroundColor: `rgb(${Math.floor(Math.random() * 128)}, ${Math.floor(
+                            Math.random() * 128
+                          )}, ${Math.floor(Math.random() * 128)})`,
                           color: "white",
                         }}
                       >
