@@ -57,6 +57,27 @@ export const CourseProvider = ({ children }) => {
     }
   }, []);
 
+
+  // Enroll user in a course
+  const enrollInCourse = useCallback(async (userId, courseId) => {
+    setError(null);
+    try {
+      const { error } = await supabase
+        .from("student_courses")
+        .insert([{ student_id: userId, course_id: courseId }]);
+      if (error) {
+        console.error("Error enrolling in course:", error.message);
+        setError("Failed to enroll in course.");
+      } else {
+        //refresh enrolled courses after successful enrollment
+        fetchEnrolledCourses(userId);
+      }
+    } catch (err) {
+      console.error("Unexpected error:", err);
+      setError("An unexpected error occurred while enrolling in the course.");
+    }
+  }, [fetchEnrolledCourses]);
+
   //effect to reset loading state when data changes
   useEffect(() => {
     if (!loading) {
@@ -73,6 +94,7 @@ export const CourseProvider = ({ children }) => {
         fetchEnrolledCourses,
         loading,
         error,
+        enrollInCourse
       }}
     >
       {children}

@@ -10,8 +10,8 @@ const Courses = () => {
   const navigate = useNavigate();
   //my courses or all courses
   const [activeTab, setActiveTab] = useState("enrolledCourses");
-    //state for search query
-    const [searchQuery, setSearchQuery] = useState("");
+  //state for search query
+  const [searchQuery, setSearchQuery] = useState("");
 
   const { userId } = useParams();
   const { userData, fetchUserData } = useContext(UserContext);
@@ -21,6 +21,7 @@ const Courses = () => {
     fetchAllCourses,
     fetchEnrolledCourses,
     loading,
+    enrollInCourse
   } = useContext(CourseContext);
 
   //fetch user data if not already available
@@ -44,13 +45,28 @@ const Courses = () => {
   console.log("User ID from URL:", userId);
   console.log("User Name from context:", userName);
 
- //filter courses based on search query
- const filteredEnrolledCourses = enrolledCourses.filter((course) =>
-  course.title.toLowerCase().includes(searchQuery.toLowerCase())
-);
-const filteredAllCourses = allCourses.filter((course) =>
-  course.title.toLowerCase().includes(searchQuery.toLowerCase())
-);
+  //filter courses based on search query
+  const filteredEnrolledCourses = enrolledCourses.filter((course) =>
+    course.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+  const filteredAllCourses = allCourses.filter((course) =>
+    course.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const handleEnroll = (courseId) => {
+    if (userId) {
+      enrollInCourse(userId, courseId)
+        .then(() => {
+          console.log("Enrollment successful!");
+
+        })
+        .catch((error) => {
+          console.error("Enrollment failed:", error);
+        });
+    } else {
+      console.error("User ID is required to enroll in a course.");
+    }
+  };
 
   return (
     <div className="container mt-5">
@@ -62,7 +78,7 @@ const filteredAllCourses = allCourses.filter((course) =>
         <>
           <h1 className="text-center mb-4">Welcome, {userName}!</h1>
           <ul className="nav nav-tabs mb-4">
-          <li className="nav-item">
+            <li className="nav-item">
               <button
                 className={`nav-link ${
                   activeTab === "enrolledCourses" ? "active" : ""
@@ -84,8 +100,8 @@ const filteredAllCourses = allCourses.filter((course) =>
               </button>
             </li>
           </ul>
-           {/* search bar */}
-           <div className="mb-4">
+          {/* search bar */}
+          <div className="mb-4">
             <input
               type="text"
               className="form-control"
@@ -104,9 +120,7 @@ const filteredAllCourses = allCourses.filter((course) =>
                       key={course.course_id}
                       className="col-md-4 mb-4"
                       onClick={() =>
-                        navigate(
-                          `/dashboard/courses/${course.course_id}/exams`
-                        )
+                        navigate(`/dashboard/courses/${course.course_id}/exams`)
                       }
                       style={{ cursor: "pointer" }}
                     >
@@ -117,8 +131,8 @@ const filteredAllCourses = allCourses.filter((course) =>
                             backgroundColor: (() => {
                               //generate a random dark color
                               const randomDarkColor = () => {
-                                const r = Math.floor(Math.random() * 128); 
-                                const g = Math.floor(Math.random() * 128); 
+                                const r = Math.floor(Math.random() * 128);
+                                const g = Math.floor(Math.random() * 128);
                                 const b = Math.floor(Math.random() * 128);
                                 return `rgb(${r}, ${g}, ${b})`;
                               };
@@ -162,9 +176,9 @@ const filteredAllCourses = allCourses.filter((course) =>
                           backgroundColor: (() => {
                             //generate a random dark color
                             const randomDarkColor = () => {
-                              const r = Math.floor(Math.random() * 128); 
-                              const g = Math.floor(Math.random() * 128); 
-                              const b = Math.floor(Math.random() * 128); 
+                              const r = Math.floor(Math.random() * 128);
+                              const g = Math.floor(Math.random() * 128);
+                              const b = Math.floor(Math.random() * 128);
                               return `rgb(${r}, ${g}, ${b})`;
                             };
                             return randomDarkColor();
@@ -177,6 +191,12 @@ const filteredAllCourses = allCourses.filter((course) =>
                       </div>
                       <div className="card-body">
                         <p className="card-text">{course.description}</p>
+                        <button
+                          className="btn btn-success"
+                          onClick={() => handleEnroll(course.course_id)}
+                        >
+                          Enroll to Course
+                        </button>
                       </div>
                     </div>
                   </div>
