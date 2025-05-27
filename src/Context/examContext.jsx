@@ -20,7 +20,15 @@ export const ExamProvider = ({ children }) => {
       const {
         data: { user },
       } = await supabase.auth.getUser();
+
       const userId = user?.id;
+      console.log("🧑‍🎓 Logged-in user ID:", userId);
+
+      if (!userId) {
+        setError("User not authenticated.");
+        setLoading(false);
+        return;
+      }
 
       // 2. Fetch all exams and related questions
       const { data: examData, error: examError } = await supabase
@@ -29,6 +37,7 @@ export const ExamProvider = ({ children }) => {
         .eq("course_id", courseId);
 
       if (examError || !examData) {
+        console.error("❌ Error fetching exams:", examError);
         setError("Failed to load exams.");
         setLoading(false);
         return;
@@ -37,6 +46,7 @@ export const ExamProvider = ({ children }) => {
       const examsWithQuestions = examData.filter(
         (exam) => exam.mcq_questions.length > 0
       );
+      console.log("📄 Exams with questions:", examsWithQuestions);
 
       // 3. Fetch user's submitted exam IDs
       const { data: submissions, error: submissionError } = await supabase
@@ -45,12 +55,16 @@ export const ExamProvider = ({ children }) => {
         .eq("user_id", userId);
 
       if (submissionError) {
+        console.error("❌ Error fetching submissions:", submissionError);
         setError("Failed to load submissions.");
         setLoading(false);
         return;
       }
 
+      console.log("📝 Submissions found:", submissions);
+
       const completedExamIds = new Set(submissions.map((s) => s.exam_id));
+      console.log("✅ Completed exam IDs (Set):", [...completedExamIds]);
 
       // 4. Split exams into pending and completed (per user)
       const pending = examsWithQuestions.filter(
@@ -60,12 +74,15 @@ export const ExamProvider = ({ children }) => {
         completedExamIds.has(exam.exam_id)
       );
 
+      console.log("🟡 Pending exams:", pending);
+      console.log("🟢 Completed exams:", completed);
+
       // 5. Set states
       setExams(examsWithQuestions);
       setPendingExams(pending);
       setCompletedExams(completed);
     } catch (err) {
-      console.error("Unexpected error:", err);
+      console.error("❌ Unexpected error in fetchExams:", err);
       setError("An unexpected error occurred.");
     } finally {
       setLoading(false);
@@ -88,7 +105,6 @@ export const ExamProvider = ({ children }) => {
   );
 };
 
-// Prop validation
 ExamProvider.propTypes = {
   children: PropTypes.node.isRequired,
 };
