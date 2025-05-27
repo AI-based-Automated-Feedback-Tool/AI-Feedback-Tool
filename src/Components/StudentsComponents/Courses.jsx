@@ -114,9 +114,9 @@ const Courses = () => {
               <h2>Enrolled Courses</h2>
               {filteredEnrolledCourses.length > 0 ? (
                 <div className="row">
-                  {filteredEnrolledCourses.map((course) => (
+                  {filteredEnrolledCourses.map((course, index) => (
                     <div
-                      key={course.course_id}
+                      key={`${course.course_id}-${index}`}
                       className="col-md-4 mb-4"
                       onClick={() =>
                         navigate(`/dashboard/courses/${course.course_id}/exams`)
