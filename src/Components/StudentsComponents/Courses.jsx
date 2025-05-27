@@ -66,11 +66,11 @@ const Courses = () => {
       console.error("User ID is required to enroll in a course.");
     }
   };
-  
-//donot show the exam content for non enrolled course
+
+  //donot show the exam content for non enrolled course
   const allCoursesClick = () => {
     alert("You are not enrolled in this course.");
-  }
+  };
   return (
     <div className="container mt-5">
       {loading ? (
@@ -167,8 +167,7 @@ const Courses = () => {
                   <div
                     key={course.course_id}
                     className="col-md-4 mb-4"
-                    onClick={allCoursesClick
-                    }
+                    onClick={allCoursesClick}
                     style={{ cursor: "pointer" }}
                   >
                     <div className="card h-100">
@@ -193,15 +192,33 @@ const Courses = () => {
                       </div>
                       <div className="card-body">
                         <p className="card-text">{course.description}</p>
-                        <button
-                          className="btn btn-success"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleEnroll(course.course_id);
-                          }}
-                        >
-                          Enroll to Course
-                        </button>
+                        {enrolledCourses.some(
+                          (enrolledCourse) =>
+                            enrolledCourse.course_id === course.course_id
+                        ) ? (
+                          <button
+                            className="btn btn-secondary"
+                            disabled
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              alert(
+                                "You have already enrolled in this course."
+                              );
+                            }}
+                          >
+                            Already Enrolled
+                          </button>
+                        ) : (
+                          <button
+                            className="btn btn-success"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleEnroll(course.course_id);
+                            }}
+                          >
+                            Enroll to Course
+                          </button>
+                        )}
                       </div>
                     </div>
                   </div>
