@@ -96,6 +96,39 @@ export default function TeacherReportContent() {
                 </Card>
 
                 <Card className="mb-4 border-0 shadow-sm">
+                    <CardHeader className="bg-white">
+                        <h5 >
+                            📊 Overall Exam Report 
+                        </h5>
+                    </CardHeader>
+                    <CardBody>
+                        <Row className="mb-4">
+                            {[
+                                {
+                                    title: "Total Students Attempted",
+                                    value: "48 / 55",
+                                },
+                                {
+                                    title: "Average Score",
+                                    value: "72%",
+                                },
+                                {
+                                    title: "Highest Score",
+                                    value: "98%",
+                                }
+                            ].map((stat, index) => (
+                                <Col md={4} key={index}>
+                                    <Card className="text-center border-0 shadow-sm">
+                                        <CardBody>
+                                            <p className="text-muted mb-1">{stat.title}</p>
+                                            <h3 className="fw-bold text-primary">{stat.value}</h3>
+                                        </CardBody>
+                                    </Card>
+                                </Col>
+                            ))}
+                        </Row>
+                    </CardBody>
+
                     <CardBody>
                         {/*Here shows the text which says no contents to preview */}
                         <Alert variant="info">
@@ -104,7 +137,6 @@ export default function TeacherReportContent() {
                             </p>
                         </Alert>
                     </CardBody>
-
                 </Card>
 
             </CardBody>
