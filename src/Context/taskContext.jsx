@@ -144,7 +144,7 @@ export const TaskProvider = ({ children }) => {
         
 
       // Redirect user to course page or exam list
-      navigate(`/dashboard/exams/${task.course_id}`);
+      navigate(`/dashboard/courses/${task.course_id}/exams`);
 
       }
     },
