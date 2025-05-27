@@ -39,9 +39,15 @@ const AIFeedbackPage = () => {
           Submissions: ${JSON.stringify(submissions, null, 2)}
 
           Instructions:
-          1. Give an overview of class performance.
-          2. Highlight the 3 most missed questions.
-          3. Offer teaching suggestions to improve student understanding.
+          1. Give students score for each question as a percentage.
+          example: "Question 1: 75% correct"
+          2. Identify the 3 most missed questions and explain why students struggled with them.
+          example: "Question 2: Many students struggled with this question because it required understanding of advanced concepts."
+          3. Provide teaching suggestions to improve student understanding.
+          example: "Consider reviewing the topic of advanced concepts in the next class."
+          4. Provide a summary of overall student performance.
+          example: "Overall, students performed well on the exam with an average score of 85%. However, there were significant challenges with questions 2 and 5."
+                   
           `;
         // Call your backend route that connects to Cohere
         const response = await fetch('http://localhost:5000/api/cohere/generate', {
