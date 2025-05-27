@@ -1,23 +1,28 @@
 import React, { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { supabase } from "../../SupabaseAuth/supabaseClient";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import { useParams } from "react-router-dom";
 import "../../css/Courses.css";
 import { UserContext } from "../../Context/userContext.jsx";
+import { CourseContext } from "../../Context/courseContext.jsx";
 
 const Courses = () => {
-  const [allCourses, setAllCourses] = useState([]);
-  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-  const [enrolledCourses, setEnrolledCourses] = useState([]);
   //my courses or all courses
   const [activeTab, setActiveTab] = useState("enrolledCourses");
-    //state for search query
-    const [searchQuery, setSearchQuery] = useState("");
+  //state for search query
+  const [searchQuery, setSearchQuery] = useState("");
 
   const { userId } = useParams();
   const { userData, fetchUserData } = useContext(UserContext);
+  const {
+    allCourses,
+    enrolledCourses,
+    fetchAllCourses,
+    fetchEnrolledCourses,
+    loading,
+    enrollInCourse,
+  } = useContext(CourseContext);
 
   //fetch user data if not already available
   useEffect(() => {
@@ -26,56 +31,46 @@ const Courses = () => {
     }
   }, [userId, userData, fetchUserData]);
 
+  //fetch courses using context
+  useEffect(() => {
+    if (userId) {
+      fetchAllCourses();
+      fetchEnrolledCourses(userId);
+    }
+  }, [userId, fetchAllCourses, fetchEnrolledCourses]);
+
   //fallback to "User"
   const userName = userData?.name || "User";
 
   console.log("User ID from URL:", userId);
   console.log("User Name from context:", userName);
 
-  //fetch courses from Supabase
-  useEffect(() => {
-    const fetchCourses = async () => {
-      try {
-        //fetch all courses
-        const { data: allCoursesData, error: allCoursesError } = await supabase
-          .from("courses")
-          .select("*");
-        if (allCoursesError) {
-          console.error("Error fetching all courses:", allCoursesError.message);
-        } else {
-          setAllCourses(allCoursesData);
-        }
-         //fetch enrolled courses using studentid
-      const { data: enrolledCoursesData, error: enrolledCoursesError } =
-      await supabase
-        .from("student_courses")
-        .select("courses(*)")
-        .eq("student_id", userId)
-    if (enrolledCoursesError) {
-      console.error(
-        "Error fetching enrolled courses:",
-        enrolledCoursesError.message
-      );
+  //filter courses based on search query
+  const filteredEnrolledCourses = enrolledCourses.filter((course) =>
+    course.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+  const filteredAllCourses = allCourses.filter((course) =>
+    course.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const handleEnroll = (courseId) => {
+    if (userId) {
+      enrollInCourse(userId, courseId)
+        .then(() => {
+          console.log("Enrollment successful!");
+        })
+        .catch((error) => {
+          console.error("Enrollment failed:", error);
+        });
     } else {
-      setEnrolledCourses(enrolledCoursesData.map((e) => e.courses));
+      console.error("User ID is required to enroll in a course.");
     }
-  } catch (err) {
-    console.error("Unexpected error:", err);
-  } finally {
-    setLoading(false);
-  }
-};
-fetchCourses();
-}, [userId])
+  };
 
- //filter courses based on search query
- const filteredEnrolledCourses = enrolledCourses.filter((course) =>
-  course.title.toLowerCase().includes(searchQuery.toLowerCase())
-);
-const filteredAllCourses = allCourses.filter((course) =>
-  course.title.toLowerCase().includes(searchQuery.toLowerCase())
-);
-
+  //donot show the exam content for non enrolled course
+  const allCoursesClick = () => {
+    alert("You need to enroll to display course content.");
+  };
   return (
     <div className="container mt-5">
       {loading ? (
@@ -86,7 +81,7 @@ const filteredAllCourses = allCourses.filter((course) =>
         <>
           <h1 className="text-center mb-4">Welcome, {userName}!</h1>
           <ul className="nav nav-tabs mb-4">
-          <li className="nav-item">
+            <li className="nav-item">
               <button
                 className={`nav-link ${
                   activeTab === "enrolledCourses" ? "active" : ""
@@ -108,8 +103,8 @@ const filteredAllCourses = allCourses.filter((course) =>
               </button>
             </li>
           </ul>
-           {/* search bar */}
-           <div className="mb-4">
+          {/* search bar */}
+          <div className="mb-4">
             <input
               type="text"
               className="form-control"
@@ -123,14 +118,12 @@ const filteredAllCourses = allCourses.filter((course) =>
               <h2>Enrolled Courses</h2>
               {filteredEnrolledCourses.length > 0 ? (
                 <div className="row">
-                  {filteredEnrolledCourses.map((course) => (
+                  {filteredEnrolledCourses.map((course, index) => (
                     <div
-                      key={course.course_id}
+                      key={`${course.course_id}-${index}`}
                       className="col-md-4 mb-4"
                       onClick={() =>
-                        navigate(
-                          `/dashboard/courses/${course.course_id}/exams`
-                        )
+                        navigate(`/student/courses/${course.userId}/${course.course_id}/exams`)
                       }
                       style={{ cursor: "pointer" }}
                     >
@@ -141,8 +134,8 @@ const filteredAllCourses = allCourses.filter((course) =>
                             backgroundColor: (() => {
                               //generate a random dark color
                               const randomDarkColor = () => {
-                                const r = Math.floor(Math.random() * 128); 
-                                const g = Math.floor(Math.random() * 128); 
+                                const r = Math.floor(Math.random() * 128);
+                                const g = Math.floor(Math.random() * 128);
                                 const b = Math.floor(Math.random() * 128);
                                 return `rgb(${r}, ${g}, ${b})`;
                               };
@@ -174,9 +167,7 @@ const filteredAllCourses = allCourses.filter((course) =>
                   <div
                     key={course.course_id}
                     className="col-md-4 mb-4"
-                    onClick={() =>
-                      navigate(`/dashboard/courses/${course.course_id}/exams`)
-                    }
+                    onClick={allCoursesClick}
                     style={{ cursor: "pointer" }}
                   >
                     <div className="card h-100">
@@ -186,9 +177,9 @@ const filteredAllCourses = allCourses.filter((course) =>
                           backgroundColor: (() => {
                             //generate a random dark color
                             const randomDarkColor = () => {
-                              const r = Math.floor(Math.random() * 128); 
-                              const g = Math.floor(Math.random() * 128); 
-                              const b = Math.floor(Math.random() * 128); 
+                              const r = Math.floor(Math.random() * 128);
+                              const g = Math.floor(Math.random() * 128);
+                              const b = Math.floor(Math.random() * 128);
                               return `rgb(${r}, ${g}, ${b})`;
                             };
                             return randomDarkColor();
@@ -201,6 +192,33 @@ const filteredAllCourses = allCourses.filter((course) =>
                       </div>
                       <div className="card-body">
                         <p className="card-text">{course.description}</p>
+                        {enrolledCourses.some(
+                          (enrolledCourse) =>
+                            enrolledCourse.course_id === course.course_id
+                        ) ? (
+                          <button
+                            className="btn btn-secondary"
+                            disabled
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              alert(
+                                "You have already enrolled in this course."
+                              );
+                            }}
+                          >
+                            Already Enrolled
+                          </button>
+                        ) : (
+                          <button
+                            className="btn btn-success"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleEnroll(course.course_id);
+                            }}
+                          >
+                            Enroll to Course
+                          </button>
+                        )}
                       </div>
                     </div>
                   </div>

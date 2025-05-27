@@ -32,7 +32,7 @@ const StudentLayout = () => {
       <StudentSideBar show={showSidebar} onHide={() => setShowSidebar(false)} />
 
       {/* Main content area */}
-      <div className="container mt-2">
+      <div className="main-content flex-grow-1 p-3">
         <Outlet />
       </div>
     </div>

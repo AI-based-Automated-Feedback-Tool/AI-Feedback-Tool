@@ -19,19 +19,24 @@ import { UserProvider } from "./Context/userContext.jsx";
 import TeacherReportContent from "./Components/TeacherReport/TeacherReportContent.jsx";
 import Result from "./Components/StudentsComponents/Result.jsx";
 import AIFeedbackPage from './Components/TeachersComponents/AIFeedbackPage';
+import { CourseProvider } from "./Context/courseContext.jsx";
+import { ExamProvider } from "./Context/examContext.jsx";
+import { TaskProvider } from "./Context/taskContext.jsx";
 
 function App() {
   return (
     <UserProvider>
+      <CourseProvider>
+        <ExamProvider>
+        <TaskProvider>
+
       <Router>
         <Routes>
+          {/*Login and registration and main page route */}
           <Route path="/" element={<MainPage />} />
           <Route path="/logIn" element={<LogInPage />} />
           <Route path="/register" element={<SignInPage />} />
-          <Route path="/dashboard" element={<ProtectedRoute />}>
-            <Route path="task/:id" element={<TaskPage />} />
-            <Route path="courses/:courseId/exams" element={<ExamsPage />} />
-          </Route>
+          
           <Route path="/configure-exam" element={<ConfigureExam />} />
           <Route path="/teacher" element={<ProtectedRoute />}>
             <Route element={<TeacherLayout />}>
@@ -53,17 +58,25 @@ function App() {
           </Route>
 
           {/*students route */}
+          <Route path="/dashboard" element={<ProtectedRoute />}>
+            <Route path="task/:id" element={<TaskPage />} />
+          </Route>
 
           <Route path="/student/courses/:userId" element={<ProtectedRoute />}>
             <Route element={<StudentLayout />}>
               <Route index element={<Courses />} />
               <Route path="profile" element={<Profile />} />
               <Route path="results" element={<Result />} />
+              <Route path=":courseId/exams" element={<ExamsPage />} />
             </Route>
           </Route>
 
         </Routes>
       </Router>
+      
+      </TaskProvider>
+      </ExamProvider>
+      </CourseProvider>
     </UserProvider>
   );
 }

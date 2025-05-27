@@ -19,7 +19,6 @@ const StudentSideBar = ({ show, onHide }) => {
     setUserId(storedUserId);
   }, [setUserId]);
 
-
   return (
     <>
       {/*for mobile*/}
@@ -97,11 +96,12 @@ const StudentSideBar = ({ show, onHide }) => {
 
       {/*for desktop*/}
       <nav
-        className="d-none d-lg-flex flex-column vh-100 p-3"
+        className="d-none d-lg-flex flex-column vh-100 p-3 fixed-sidebar"
         style={{
           width: "250px",
           background: "linear-gradient(135deg, #6a11cb, #2575fc)",
           color: "white",
+          overflowY: "auto"
         }}
       >
         {/*logo */}

@@ -2,3 +2,33 @@
     background-color: white !important;
     color: blue !important;
   }
+
+  .fixed-sidebar {
+    position: fixed; 
+    top: 0;
+    left: 0;
+    height: 100vh;
+    z-index: 1040; 
+    overflow-y: auto;
+  }
+  
+  .fixed-sidebar .nav-link.active {
+    background-color: rgba(255, 255, 255, 0.2); 
+    border-radius: 5px;
+  }
+  
+  .fixed-sidebar .nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.1); 
+  }
+
+  /*ensure the main content is pushed to the right of the sidebar */
+.main-content {
+  margin-left: 250px;
+}
+
+@media (max-width: 992px) {
+  /*for smaller screens, remove the margin when the sidebar is hidden */
+  .main-content {
+    margin-left: 0;
+  }
+}
