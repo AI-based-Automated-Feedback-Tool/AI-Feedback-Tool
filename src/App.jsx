@@ -32,13 +32,11 @@ function App() {
 
       <Router>
         <Routes>
+          {/*Login and registration and main page route */}
           <Route path="/" element={<MainPage />} />
           <Route path="/logIn" element={<LogInPage />} />
           <Route path="/register" element={<SignInPage />} />
-          <Route path="/dashboard" element={<ProtectedRoute />}>
-            <Route path="task/:id" element={<TaskPage />} />
-            <Route path="courses/:courseId/exams" element={<ExamsPage />} />
-          </Route>
+          
           <Route path="/configure-exam" element={<ConfigureExam />} />
           <Route path="/teacher" element={<ProtectedRoute />}>
             <Route element={<TeacherLayout />}>
@@ -60,11 +58,16 @@ function App() {
           </Route>
 
           {/*students route */}
+          <Route path="/dashboard" element={<ProtectedRoute />}>
+            <Route path="task/:id" element={<TaskPage />} />
+          </Route>
+
           <Route path="/student/courses/:userId" element={<ProtectedRoute />}>
             <Route element={<StudentLayout />}>
               <Route index element={<Courses />} />
               <Route path="profile" element={<Profile />} />
               <Route path="results" element={<Result />} />
+              <Route path=":courseId/exams" element={<ExamsPage />} />
             </Route>
           </Route>
 
