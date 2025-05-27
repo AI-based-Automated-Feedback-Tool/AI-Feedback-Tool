@@ -18,16 +18,17 @@ const TaskPage = () => {
     handleSubmit,
     setQuestionIndex,
   } = useTask();
-
+  //get task id from url
   const { id } = useParams();
   const navigate = useNavigate();
 
+  //fetch the exam and its questions when the component mounts or the ID changes
   useEffect(() => {
     fetchExamWithQuestions(id);
   }, [id, fetchExamWithQuestions]);
 
   if (loading) return <div className="container mt-4">⏳ Loading task...</div>;
-
+  //display a message if the exam has already been submitted
   if (alreadySubmitted) {
     return (
       <div className="container mt-4 text-danger">
@@ -35,16 +36,17 @@ const TaskPage = () => {
       </div>
     );
   }
-
+  //handle cases where the task or its questions are not found
   if (!task || !task.questions || task.questions.length === 0)
     return (
       <div className="container mt-4 text-danger">
         Task or questions not found.
       </div>
     );
-
+    
+  //get the current question based on the question index
   const currentQuestion = task.questions[questionIndex];
-
+  //function to jump to a specific question
   const handleQuestionJump = (index) => {
     setQuestionIndex(index);
   };
