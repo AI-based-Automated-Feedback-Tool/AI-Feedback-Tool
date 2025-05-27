@@ -1,38 +1,69 @@
-import React, { createContext, useState, useEffect, useCallback } from "react";
+import React, { createContext, useState, useCallback } from "react";
 import PropTypes from "prop-types";
 import { supabase } from "../SupabaseAuth/supabaseClient";
 
 export const ExamContext = createContext();
 
 export const ExamProvider = ({ children }) => {
-  //to store list of exams
   const [exams, setExams] = useState([]);
-  //to track loading
+  const [pendingExams, setPendingExams] = useState([]);
+  const [completedExams, setCompletedExams] = useState([]);
   const [loading, setLoading] = useState(false);
-  //to store error
   const [error, setError] = useState(null);
 
-  //to fetch exams based on course id
   const fetchExams = useCallback(async (courseId) => {
     setLoading(true);
     setError(null);
+
     try {
-      //fetch exam and related mcq questions
-      const { data, error } = await supabase
+      // 1. Get current user ID
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      const userId = user?.id;
+
+      // 2. Fetch all exams and related questions
+      const { data: examData, error: examError } = await supabase
         .from("exams")
         .select("*, mcq_questions!inner(exam_id)")
         .eq("course_id", courseId);
 
-      if (error) {
-        console.error("Error loading exams:", error);
+      if (examError || !examData) {
         setError("Failed to load exams.");
-      } else {
-        const examsWithQuestions = data.filter(
-          (exam) => exam.mcq_questions.length > 0
-        );
-        //update exam state
-        setExams(examsWithQuestions);
+        setLoading(false);
+        return;
       }
+
+      const examsWithQuestions = examData.filter(
+        (exam) => exam.mcq_questions.length > 0
+      );
+
+      // 3. Fetch user's submitted exam IDs
+      const { data: submissions, error: submissionError } = await supabase
+        .from("exam_submission")
+        .select("exam_id")
+        .eq("user_id", userId);
+
+      if (submissionError) {
+        setError("Failed to load submissions.");
+        setLoading(false);
+        return;
+      }
+
+      const completedExamIds = new Set(submissions.map((s) => s.exam_id));
+
+      // 4. Split exams into pending and completed (per user)
+      const pending = examsWithQuestions.filter(
+        (exam) => !completedExamIds.has(exam.exam_id)
+      );
+      const completed = examsWithQuestions.filter((exam) =>
+        completedExamIds.has(exam.exam_id)
+      );
+
+      // 5. Set states
+      setExams(examsWithQuestions);
+      setPendingExams(pending);
+      setCompletedExams(completed);
     } catch (err) {
       console.error("Unexpected error:", err);
       setError("An unexpected error occurred.");
@@ -40,10 +71,6 @@ export const ExamProvider = ({ children }) => {
       setLoading(false);
     }
   }, []);
-  //filter exam to get only pending exam
-  const pendingExams = exams.filter((e) => !e.completed);
-  //filter exam to get completed exam
-  const completedExams = exams.filter((e) => e.completed);
 
   return (
     <ExamContext.Provider
@@ -61,7 +88,7 @@ export const ExamProvider = ({ children }) => {
   );
 };
 
-//define prop type for examprovider component
+// Prop validation
 ExamProvider.propTypes = {
   children: PropTypes.node.isRequired,
 };
