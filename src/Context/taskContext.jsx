@@ -141,21 +141,10 @@ export const TaskProvider = ({ children }) => {
         alert("Failed to submit answers. Please try again.");
       } else {
 
-        // Mark the exam as completed
-      const { error: updateError } = await supabase
-        .from("exams")
-        .update({ completed: true })
-        .eq("exam_id", task.exam_id);
-
-      if (updateError) {
-        console.error("Failed to mark exam as completed:", updateError);
-      }
-
-      console.log("Responses submitted and exam marked completed.");
-      alert("Answers submitted!");
+        
 
       // Redirect user to course page or exam list
-      navigate(`/student/courses/${userId}`);
+      navigate(`/dashboard/exams/${task.course_id}`);
 
       }
     },
