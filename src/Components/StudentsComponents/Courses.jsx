@@ -66,7 +66,11 @@ const Courses = () => {
       console.error("User ID is required to enroll in a course.");
     }
   };
-
+  
+//donot show the exam content for non enrolled course
+  const allCoursesClick = () => {
+    alert("You are not enrolled in this course.");
+  }
   return (
     <div className="container mt-5">
       {loading ? (
@@ -163,8 +167,7 @@ const Courses = () => {
                   <div
                     key={course.course_id}
                     className="col-md-4 mb-4"
-                    onClick={() =>
-                      navigate(`/dashboard/courses/${course.course_id}/exams`)
+                    onClick={allCoursesClick
                     }
                     style={{ cursor: "pointer" }}
                   >
