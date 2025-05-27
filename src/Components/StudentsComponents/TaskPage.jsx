@@ -1,134 +1,30 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { supabase } from "../../SupabaseAuth/supabaseClient";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { useTask } from "../../Context/taskContext";
 
 const TaskPage = () => {
+  const {
+    task,
+    loading,
+    questionIndex,
+    answers,
+    reviewMode,
+    alreadySubmitted,
+    setReviewMode,
+    fetchExamWithQuestions,
+    handleAnswerSelect,
+    handleNext,
+    handleBack,
+    handleSubmit,
+    setQuestionIndex,
+  } = useTask();
+
+  const { id } = useParams();
   const navigate = useNavigate();
-  const { id } = useParams(); // exam_id from URL
-  const [task, setTask] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [questionIndex, setQuestionIndex] = useState(0);
-  const [answers, setAnswers] = useState([]);
-  const [reviewMode, setReviewMode] = useState(false);
-  const [alreadySubmitted, setAlreadySubmitted] = useState(false);
 
   useEffect(() => {
-    const fetchExamWithQuestions = async () => {
-      console.log("Route exam ID:", id);
-
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-
-      const userId = user?.id;
-
-      //check if already submitted
-      const { data: existingSubmissions } = await supabase
-        //updated table name
-        .from("exam_submission")
-        .select("id")
-        .eq("exam_id", id)
-        .eq("user_id", userId)
-        .limit(1);
-
-      if (existingSubmissions?.length > 0) {
-        setAlreadySubmitted(true);
-        setLoading(false);
-        return;
-      }
-
-      try {
-        const { data: examData, error: examError } = await supabase
-          .from("exams")
-          .select("*")
-          .eq("exam_id", id)
-          .single();
-
-        if (examError || !examData) {
-          console.error("Exam not found");
-          return;
-        }
-
-        const { data: questionsData, error: questionsError } = await supabase
-          .from("mcq_questions")
-          .select("question_id, question_text, options")
-          .filter("exam_id", "eq", id);
-
-        if (questionsError || !questionsData || questionsData.length === 0) {
-          console.error("Questions not found");
-          return;
-        }
-
-        const formattedQuestions = questionsData.map((q) => ({
-          id: q.question_id,
-          question: q.question_text,
-          options: Array.isArray(q.options) ? q.options : [],
-        }));
-
-        setTask({
-          exam_id: examData.exam_id,
-          ...examData,
-          questions: formattedQuestions,
-        });
-        setAnswers(new Array(formattedQuestions.length).fill(null));
-      } catch (error) {
-        console.error("Unexpected error:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchExamWithQuestions();
-  }, [id]);
-
-  const handleAnswerSelect = (index, answer) => {
-    const updated = [...answers];
-    updated[index] = answer;
-    setAnswers(updated);
-  };
-
-  const handleNext = () => {
-    if (questionIndex < task.questions.length - 1) {
-      setQuestionIndex(questionIndex + 1);
-    }
-  };
-
-  const handleBack = () => {
-    if (questionIndex > 0) {
-      setQuestionIndex(questionIndex - 1);
-    }
-  };
-
-  const handleSubmit = async () => {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    const userId = user?.id;
-    if (!userId) {
-      alert("User not authenticated");
-      return;
-    }
-
-    const responses = task.questions.map((question, index) => ({
-      user_id: userId,
-      exam_id: task.exam_id,
-      question_id: question.id,
-      selected_option: answers[index],
-    }));
-
-    const { error } = await supabase.from("exam_submission").insert(responses);
-
-    if (error) {
-      console.error("Error saving responses:", error);
-      alert("Failed to submit answers. Please try again.");
-    } else {
-      console.log("Responses submitted successfully");
-      alert("Answers submitted!");
-      navigate(`/student/courses/${userId}`);
-    }
-  };
+    fetchExamWithQuestions(id);
+  }, [id, fetchExamWithQuestions]);
 
   if (loading) return <div className="container mt-4">⏳ Loading task...</div>;
 
@@ -189,7 +85,10 @@ const TaskPage = () => {
                   >
                     Go Back
                   </button>
-                  <button className="btn btn-success" onClick={handleSubmit}>
+                  <button
+                    className="btn btn-success"
+                    onClick={() => handleSubmit(navigate)}
+                  >
                     Confirm Submit
                   </button>
                 </div>

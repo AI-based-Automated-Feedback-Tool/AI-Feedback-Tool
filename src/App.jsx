@@ -21,13 +21,15 @@ import Result from "./Components/StudentsComponents/Result.jsx";
 import AIFeedbackPage from './Components/TeachersComponents/AIFeedbackPage';
 import { CourseProvider } from "./Context/courseContext.jsx";
 import { ExamProvider } from "./Context/examContext.jsx";
+import { TaskProvider } from "./Context/taskContext.jsx";
 
 function App() {
   return (
     <UserProvider>
       <CourseProvider>
         <ExamProvider>
-          
+        <TaskProvider>
+
       <Router>
         <Routes>
           <Route path="/" element={<MainPage />} />
@@ -68,6 +70,8 @@ function App() {
 
         </Routes>
       </Router>
+      
+      </TaskProvider>
       </ExamProvider>
       </CourseProvider>
     </UserProvider>
