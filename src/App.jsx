@@ -19,10 +19,17 @@ import { UserProvider } from "./Context/userContext.jsx";
 import TeacherReportContent from "./Components/TeacherReport/TeacherReportContent.jsx";
 import Result from "./Components/StudentsComponents/Result.jsx";
 import AIFeedbackPage from './Components/TeachersComponents/AIFeedbackPage';
+import { CourseProvider } from "./Context/courseContext.jsx";
+import { ExamProvider } from "./Context/examContext.jsx";
+import { TaskProvider } from "./Context/taskContext.jsx";
 
 function App() {
   return (
     <UserProvider>
+      <CourseProvider>
+        <ExamProvider>
+        <TaskProvider>
+
       <Router>
         <Routes>
           <Route path="/" element={<MainPage />} />
@@ -53,7 +60,6 @@ function App() {
           </Route>
 
           {/*students route */}
-
           <Route path="/student/courses/:userId" element={<ProtectedRoute />}>
             <Route element={<StudentLayout />}>
               <Route index element={<Courses />} />
@@ -64,6 +70,10 @@ function App() {
 
         </Routes>
       </Router>
+      
+      </TaskProvider>
+      </ExamProvider>
+      </CourseProvider>
     </UserProvider>
   );
 }

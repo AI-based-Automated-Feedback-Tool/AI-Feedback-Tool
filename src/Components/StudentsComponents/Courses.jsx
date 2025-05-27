@@ -1,16 +1,13 @@
 import React, { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { supabase } from "../../SupabaseAuth/supabaseClient";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import { useParams } from "react-router-dom";
 import "../../css/Courses.css";
 import { UserContext } from "../../Context/userContext.jsx";
+import { CourseContext } from "../../Context/courseContext.jsx";
 
 const Courses = () => {
-  const [allCourses, setAllCourses] = useState([]);
-  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-  const [enrolledCourses, setEnrolledCourses] = useState([]);
   //my courses or all courses
   const [activeTab, setActiveTab] = useState("enrolledCourses");
     //state for search query
@@ -18,6 +15,13 @@ const Courses = () => {
 
   const { userId } = useParams();
   const { userData, fetchUserData } = useContext(UserContext);
+  const {
+    allCourses,
+    enrolledCourses,
+    fetchAllCourses,
+    fetchEnrolledCourses,
+    loading,
+  } = useContext(CourseContext);
 
   //fetch user data if not already available
   useEffect(() => {
@@ -26,47 +30,19 @@ const Courses = () => {
     }
   }, [userId, userData, fetchUserData]);
 
+  //fetch courses using context
+  useEffect(() => {
+    if (userId) {
+      fetchAllCourses();
+      fetchEnrolledCourses(userId);
+    }
+  }, [userId, fetchAllCourses, fetchEnrolledCourses]);
+
   //fallback to "User"
   const userName = userData?.name || "User";
 
   console.log("User ID from URL:", userId);
   console.log("User Name from context:", userName);
-
-  //fetch courses from Supabase
-  useEffect(() => {
-    const fetchCourses = async () => {
-      try {
-        //fetch all courses
-        const { data: allCoursesData, error: allCoursesError } = await supabase
-          .from("courses")
-          .select("*");
-        if (allCoursesError) {
-          console.error("Error fetching all courses:", allCoursesError.message);
-        } else {
-          setAllCourses(allCoursesData);
-        }
-         //fetch enrolled courses using studentid
-      const { data: enrolledCoursesData, error: enrolledCoursesError } =
-      await supabase
-        .from("student_courses")
-        .select("courses(*)")
-        .eq("student_id", userId)
-    if (enrolledCoursesError) {
-      console.error(
-        "Error fetching enrolled courses:",
-        enrolledCoursesError.message
-      );
-    } else {
-      setEnrolledCourses(enrolledCoursesData.map((e) => e.courses));
-    }
-  } catch (err) {
-    console.error("Unexpected error:", err);
-  } finally {
-    setLoading(false);
-  }
-};
-fetchCourses();
-}, [userId])
 
  //filter courses based on search query
  const filteredEnrolledCourses = enrolledCourses.filter((course) =>
