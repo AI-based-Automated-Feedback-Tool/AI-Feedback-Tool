@@ -69,7 +69,7 @@ const Courses = () => {
 
   //donot show the exam content for non enrolled course
   const allCoursesClick = () => {
-    alert("You are not enrolled in this course.");
+    alert("You need to enroll to display course content.");
   };
   return (
     <div className="container mt-5">
