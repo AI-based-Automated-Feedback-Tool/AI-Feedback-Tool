@@ -1,39 +1,25 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { supabase } from "../../SupabaseAuth/supabaseClient";
+import { ExamContext } from "../../Context/examContext";
 import AssignmentCard from "./AssignmentCard";
 
 const ExamsPage = () => {
+  //extract course id
   const { courseId } = useParams();
-  const [exams, setExams] = useState([]);
   const navigate = useNavigate();
+  //destructure from exam contexr
+  const { pendingExams, completedExams, fetchExams, loading, error } =
+    useContext(ExamContext);
 
+  //fetch exam whenever course id changes
   useEffect(() => {
-    const fetchExams = async () => {
-      //fetch exams with associated MCQ questions
-      const { data, error } = await supabase
-        .from("exams")
-        .select("*, mcq_questions!inner(exam_id)") //join with mcq_questions table
-        .eq("course_id", courseId);
-
-      if (error) {
-        console.error("Error loading exams:", error);
-      } else {
-        //filter exams that have associated MCQ questions
-        const examsWithQuestions = data.filter(
-          (exam) => exam.mcq_questions.length > 0
-        );
-        setExams(examsWithQuestions);
-      }
-    };
-
-    fetchExams();
-  }, [courseId]);
-
-  const pending = exams.filter((e) => !e.completed);
-  const completed = exams.filter((e) => e.completed);
-
+    fetchExams(courseId);
+  }, [courseId, fetchExams]);
+  //navigate ton task page
   const handleStart = (id) => navigate(`/dashboard/task/${id}`);
+
+  if (loading) return <p>Loading exams...</p>;
+  if (error) return <p>{error}</p>;
 
   return (
     <div className="container py-4">
@@ -41,7 +27,7 @@ const ExamsPage = () => {
 
       <h5 className="mt-4 text-primary">Pending Exams</h5>
       <div className="row">
-        {pending.map((exam) => (
+        {pendingExams.map((exam) => (
           <div className="col-md-4" key={exam.exam_id}>
             <AssignmentCard
               title={exam.title}
@@ -56,7 +42,7 @@ const ExamsPage = () => {
 
       <h5 className="mt-5 text-success">Completed Exams</h5>
       <div className="row">
-        {completed.map((exam) => (
+        {completedExams.map((exam) => (
           <div className="col-md-4" key={exam.exam_id}>
             <AssignmentCard
               title={exam.title}

@@ -20,11 +20,14 @@ import TeacherReportContent from "./Components/TeacherReport/TeacherReportConten
 import Result from "./Components/StudentsComponents/Result.jsx";
 import AIFeedbackPage from './Components/TeachersComponents/AIFeedbackPage';
 import { CourseProvider } from "./Context/courseContext.jsx";
+import { ExamProvider } from "./Context/examContext.jsx";
 
 function App() {
   return (
     <UserProvider>
       <CourseProvider>
+        <ExamProvider>
+          
       <Router>
         <Routes>
           <Route path="/" element={<MainPage />} />
@@ -65,6 +68,7 @@ function App() {
 
         </Routes>
       </Router>
+      </ExamProvider>
       </CourseProvider>
     </UserProvider>
   );
