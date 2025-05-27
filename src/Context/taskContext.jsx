@@ -8,16 +8,31 @@ import React, {
 } from "react";
 import { supabase } from "../SupabaseAuth/supabaseClient";
 
+// Create the context for exam tasks
 const TaskContext = createContext();
 
+// Provider to wrap around components that need access to exam/task state
 export const TaskProvider = ({ children }) => {
+
+  // Store the full exam/task data
   const [task, setTask] = useState(null);
+
+  // Track whether data is being loaded
   const [loading, setLoading] = useState(true);
+
+  // Current question index (for navigation)
   const [questionIndex, setQuestionIndex] = useState(0);
+
+  // User's selected answers
   const [answers, setAnswers] = useState([]);
+
+  // Whether user is reviewing their answers
   const [reviewMode, setReviewMode] = useState(false);
+
+    // Whether user has already submitted this exam
   const [alreadySubmitted, setAlreadySubmitted] = useState(false);
 
+    // Fetch exam data and questions
   const fetchExamWithQuestions = useCallback(async (id) => {
     setLoading(true);
 
@@ -27,6 +42,7 @@ export const TaskProvider = ({ children }) => {
 
     const userId = user?.id;
 
+    // Check if this user has already submitted this exam
     const { data: existingSubmissions } = await supabase
       .from("exam_submission")
       .select("id")
@@ -41,6 +57,7 @@ export const TaskProvider = ({ children }) => {
     }
 
     try {
+        // Get exam details
       const { data: examData, error: examError } = await supabase
         .from("exams")
         .select("*")
@@ -52,6 +69,7 @@ export const TaskProvider = ({ children }) => {
         return;
       }
 
+       // Get associated multiple choice questions
       const { data: questionsData, error: questionsError } = await supabase
         .from("mcq_questions")
         .select("question_id, question_text, options")
@@ -61,13 +79,15 @@ export const TaskProvider = ({ children }) => {
         console.error("Questions not found", questionsError);
         return;
       }
-
+      
+       // Format the questions
       const formattedQuestions = questionsData.map((q) => ({
         id: q.question_id,
         question: q.question_text,
         options: Array.isArray(q.options) ? q.options : [],
       }));
 
+        // Set task and initialize answers with nulls
       setTask({
         exam_id: examData.exam_id,
         course_id: examData.course_id, // ensure this is set for navigation
@@ -82,6 +102,7 @@ export const TaskProvider = ({ children }) => {
     }
   }, []);
 
+   // Save selected answer for a specific question
   const handleAnswerSelect = useCallback((index, answer) => {
     setAnswers((prevAnswers) => {
       const updated = [...prevAnswers];
@@ -89,17 +110,20 @@ export const TaskProvider = ({ children }) => {
       return updated;
     });
   }, []);
-
+  
+    // Go to next question
   const handleNext = useCallback(() => {
     setQuestionIndex((prevIndex) =>
       Math.min(prevIndex + 1, task.questions.length - 1)
     );
   }, [task]);
 
+  // Go back to previous question
   const handleBack = useCallback(() => {
     setQuestionIndex((prevIndex) => Math.max(prevIndex - 1, 0));
   }, []);
 
+  // Submit exam answers
   const handleSubmit = useCallback(
     async (navigate) => {
       const {
@@ -155,6 +179,7 @@ export const TaskProvider = ({ children }) => {
     [task, answers]
   );
 
+   // Combine context values
   const contextValue = useMemo(
     () => ({
       task,
