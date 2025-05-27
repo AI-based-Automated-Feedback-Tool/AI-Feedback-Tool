@@ -118,7 +118,7 @@ export default function TeacherReportContent() {
                                 }
                             ].map((stat, index) => (
                                 <Col md={4} key={index}>
-                                    <Card className="text-center border-0 shadow-sm">
+                                    <Card className="text-center border-0 shadow-sm bg-light">
                                         <CardBody>
                                             <p className="text-muted mb-1">{stat.title}</p>
                                             <h3 className="fw-bold text-primary">{stat.value}</h3>
