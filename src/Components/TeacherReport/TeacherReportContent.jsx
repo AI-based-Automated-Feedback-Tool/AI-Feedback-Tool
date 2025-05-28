@@ -7,6 +7,7 @@ import StudentDropdown from './StudentDropdown';
 import ExamDropdown from './ExamDropdown'; 
 import LoadingCard from './LoadingCard';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
+import robot from '../../assets/robot.png'
 
 export default function TeacherReportContent() {
     const [selectedCourse, setSelectedCourse] = useState("");
@@ -150,7 +151,7 @@ export default function TeacherReportContent() {
                         margin: '2rem auto'
                     }} />
                     <CardBody>
-                        <h6 className="mb-3">📈 Score Distribution</h6>
+                        <h5 className="mb-4">📈 Score Distribution</h5>
                         <ResponsiveContainer width="100%" height={300}>
                             <BarChart data={scoreDistributionData}>
                                 <CartesianGrid strokeDasharray="3 3" />
@@ -171,7 +172,7 @@ export default function TeacherReportContent() {
                         margin: '2rem auto'
                     }} />
                     <CardBody>
-                        <h6>Performance Analysis</h6>
+                        <h5 className='mb-4'>Performance Analysis</h5>
                         <Row>
                             <Col md={6}>
                                 <Card className="text-center border-0 shadow-sm bg-light">
@@ -190,6 +191,41 @@ export default function TeacherReportContent() {
                                 </Card>
                             </Col>
                         </Row>
+                    </CardBody>
+                    <hr style={{
+                        border: 'none',
+                        height: '2px',
+                        width: '95%',
+                        backgroundColor: '#dee2e6',
+                        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                        borderRadius: '4px',
+                        margin: '2rem auto'
+                    }} />
+                    <CardBody>                                               
+                    <CardBody>
+                        <Row className="mb-3 justify-content-center">
+                            <Col 
+                                xs={6} sm={6} md={3}
+                                className="text-center text-sm-start"
+                            >                
+                                <img 
+                                    src={robot} 
+                                    alt="AI Analysis" 
+                                    style={{ 
+                                        maxWidth: '100%', 
+                                        height: 'auto'
+                                    }} 
+                                />
+                            </Col>
+                            <Col md={9}>
+                                <h5 className='mb-4'>AI Insights</h5>
+                                <p className="text-muted">
+                                    Based on the score distribution, it appears that the majority of students scored between <strong>61–70</strong>. This suggests a strong central tendency, with room for improvement in higher ranges. Consider reviewing topics around the 70–80 mark to boost top-tier performance.
+                                </p>        
+                            </Col>
+                        </Row>
+                    </CardBody>
+                    
                     </CardBody>
                     <CardBody>
                         {/*Here shows the text which says no contents to preview */}
