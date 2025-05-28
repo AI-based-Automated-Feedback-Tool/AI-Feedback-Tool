@@ -1,7 +1,6 @@
 import React, {
   createContext,
   useContext,
-  useEffect,
   useState,
   useMemo,
   useCallback,
@@ -173,7 +172,7 @@ export const TaskProvider = ({ children }) => {
         console.log(" Responses saved. Redirecting...");
 
         // Redirect to correct exam list page
-        navigate(`/dashboard/courses/${task.course_id}/exams`);
+        navigate(`/student/courses/${task.userId}/${task.course_id}/exams`);
       }
     },
     [task, answers]
