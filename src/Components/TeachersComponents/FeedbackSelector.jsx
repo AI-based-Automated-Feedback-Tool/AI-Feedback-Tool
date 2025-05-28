@@ -38,7 +38,18 @@ const FeedbackSelector = () => {
     fetchExamTypes();
   }, [selectedCourse]);
 
-  
+  useEffect(() => {
+    const fetchExams = async () => {
+      if (!selectedCourse || !selectedType) return;
+      const { data, error } = await supabase
+        .from('exams')
+        .select('*')
+        .eq('course_id', selectedCourse)
+        .eq('type', selectedType);
+      if (!error) setExams(data);
+    };
+    fetchExams();
+  }, [selectedCourse, selectedType]);
 
   const handleSelectExam = (examId) => {
     const exam = exams.find((e) => e.id === examId);
@@ -84,7 +95,7 @@ const FeedbackSelector = () => {
           </Form.Group>
         )}
 
-        
+        {exams.length > 0 && (
           <Form.Group className="mb-3">
             <Form.Label>Exam</Form.Label>
             <Form.Select onChange={(e) => handleSelectExam(e.target.value)}>
@@ -96,7 +107,7 @@ const FeedbackSelector = () => {
               ))}
             </Form.Select>
           </Form.Group>
-       
+        )}
       </Form>
     </Container>
   );
