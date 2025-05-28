@@ -5,6 +5,8 @@ import { supabase } from '../../SupabaseAuth/supabaseClient';
 const FeedbackSelector = () => {
   const [courses, setCourses] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState('');
+  const [examTypes, setExamTypes] = useState([]);
+  const [selectedType, setSelectedType] = useState('');
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -15,6 +17,8 @@ const FeedbackSelector = () => {
     };
     fetchCourses();
   }, []);
+
+ 
 
   if (loading) {
     return (
@@ -40,6 +44,20 @@ const FeedbackSelector = () => {
             ))}
           </Form.Select>
         </Form.Group>
+
+        
+          <Form.Group className="mb-3">
+            <Form.Label>Exam Type</Form.Label>
+            <Form.Select onChange={(e) => setSelectedType(e.target.value)}>
+              <option value="">-- Select Type --</option>
+              {examTypes.map((type) => (
+                <option key={type} value={type}>
+                  {type}
+                </option>
+              ))}
+            </Form.Select>
+          </Form.Group>
+        
       </Form>
     </Container>
   );
