@@ -17,6 +17,8 @@ const ExamsPage = () => {
   }, [courseId, fetchExams]);
   //navigate ton task page
   const handleStart = (id) => navigate(`/dashboard/task/${id}`);
+  //navigate to review page for completed exams
+  const handleReview = () => navigate(`/`);
 
   if (loading) return <p>Loading exams...</p>;
   if (error) return <p>{error}</p>;
@@ -49,6 +51,7 @@ const ExamsPage = () => {
               type={exam.type}
               due={exam.duration}
               status="completed"
+              onReview={() => handleReview(exam.exam_id)}
             />
           </div>
         ))}
