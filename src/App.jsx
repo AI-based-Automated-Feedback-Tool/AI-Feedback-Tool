@@ -70,7 +70,7 @@ function App() {
               <Route path="profile" element={<Profile />} />
               <Route path="results" element={<Result />} />
               <Route path=":courseId/exams" element={<ExamsPage />} />
-              <Route path="review" element={<ReviewProvider><Review /></ReviewProvider>} />
+              <Route path=":courseId/exams/reviews" element={<ReviewProvider><Review /></ReviewProvider>} />
 
             </Route>
           </Route>

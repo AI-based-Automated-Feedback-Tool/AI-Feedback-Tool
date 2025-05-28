@@ -123,7 +123,7 @@ const Courses = () => {
                       key={`${course.course_id}-${index}`}
                       className="col-md-4 mb-4"
                       onClick={() =>
-                        navigate(`/student/courses/${course.userId}/${course.course_id}/exams`)
+                        navigate(`/student/courses/${userId}/${course.course_id}/exams`)
                       }
                       style={{ cursor: "pointer" }}
                     >
