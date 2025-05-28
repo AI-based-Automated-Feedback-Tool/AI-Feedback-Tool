@@ -16,7 +16,8 @@ export default function SidebarTeacher({ show, onHide }) {
     { path: "/teacher/exams", icon: <FaBook />, label: "Configure Exam" },
     { path: "/teacher/students", icon: <FaUsers />, label: "Students" },
     { path: "/teacher/reports", icon: <FaChartBar />, label: "Reports" },
-    { path: "/teacher/profile", icon: <FaUser />, label: "Profile" }
+    { path: "/teacher/profile", icon: <FaUser />, label: "Profile" },
+    { path: "/teacher/ai-feedback", icon: <FaChartBar />, label: "AI Feedback" }
   ];
 
   return (

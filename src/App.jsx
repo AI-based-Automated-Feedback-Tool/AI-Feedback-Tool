@@ -24,6 +24,7 @@ import { ExamProvider } from "./Context/examContext.jsx";
 import { TaskProvider } from "./Context/taskContext.jsx";
 import Review from "./Components/StudentsComponents/Review.jsx";
 import { ReviewProvider } from "./Context/reviewContext.jsx";
+import FeedbackSelector from './Components/TeachersComponents/FeedbackSelector';
 
 function App() {
   return (
@@ -56,6 +57,8 @@ function App() {
               <Route path="students" element={""} />
               <Route path="reports" element={<TeacherReportContent />} />
               <Route path="exams/:examId/ai-feedback" element={<AIFeedbackPage />} />
+              <Route path="ai-feedback" element={<FeedbackSelector />} />
+
             </Route>
           </Route>
 
