@@ -12,7 +12,6 @@ const TaskContext = createContext();
 
 // Provider to wrap around components that need access to exam/task state
 export const TaskProvider = ({ children }) => {
-
   // Store the full exam/task data
   const [task, setTask] = useState(null);
 
@@ -28,10 +27,10 @@ export const TaskProvider = ({ children }) => {
   // Whether user is reviewing their answers
   const [reviewMode, setReviewMode] = useState(false);
 
-    // Whether user has already submitted this exam
+  // Whether user has already submitted this exam
   const [alreadySubmitted, setAlreadySubmitted] = useState(false);
 
-    // Fetch exam data and questions
+  // Fetch exam data and questions
   const fetchExamWithQuestions = useCallback(async (id) => {
     setLoading(true);
 
@@ -56,7 +55,7 @@ export const TaskProvider = ({ children }) => {
     }
 
     try {
-        // Get exam details
+      // Get exam details
       const { data: examData, error: examError } = await supabase
         .from("exams")
         .select("*")
@@ -68,7 +67,7 @@ export const TaskProvider = ({ children }) => {
         return;
       }
 
-       // Get associated multiple choice questions
+      // Get associated multiple choice questions
       const { data: questionsData, error: questionsError } = await supabase
         .from("mcq_questions")
         .select("question_id, question_text, options")
@@ -78,18 +77,18 @@ export const TaskProvider = ({ children }) => {
         console.error("Questions not found", questionsError);
         return;
       }
-      
-       // Format the questions
+
+      // Format the questions
       const formattedQuestions = questionsData.map((q) => ({
         id: q.question_id,
         question: q.question_text,
         options: Array.isArray(q.options) ? q.options : [],
       }));
 
-        // Set task and initialize answers with nulls
+      // Set task and initialize answers with nulls
       setTask({
         exam_id: examData.exam_id,
-        course_id: examData.course_id, // ensure this is set for navigation
+        course_id: examData.course_id,
         ...examData,
         questions: formattedQuestions,
       });
@@ -101,7 +100,7 @@ export const TaskProvider = ({ children }) => {
     }
   }, []);
 
-   // Save selected answer for a specific question
+  // Save selected answer for a specific question
   const handleAnswerSelect = useCallback((index, answer) => {
     setAnswers((prevAnswers) => {
       const updated = [...prevAnswers];
@@ -109,8 +108,8 @@ export const TaskProvider = ({ children }) => {
       return updated;
     });
   }, []);
-  
-    // Go to next question
+
+  // Go to next question
   const handleNext = useCallback(() => {
     setQuestionIndex((prevIndex) =>
       Math.min(prevIndex + 1, task.questions.length - 1)
@@ -122,7 +121,7 @@ export const TaskProvider = ({ children }) => {
     setQuestionIndex((prevIndex) => Math.max(prevIndex - 1, 0));
   }, []);
 
-  // Submit exam answers
+  //submit exam answers
   const handleSubmit = useCallback(
     async (navigate) => {
       const {
@@ -135,50 +134,85 @@ export const TaskProvider = ({ children }) => {
         return;
       }
 
-      // Prepare response payload
-      const responses = task.questions
+      //payload for exam_submissions
+      const submissionPayload = {
+        submitted_at: new Date().toISOString(),
+        student_id: userId,
+        exam_id: task.exam_id,
+        total_score: 0,
+        time_taken: null,
+        focus_loss_count: null,
+        feedback_summery: null,
+      };
+
+      console.log("Submitting exam payload:", submissionPayload);
+
+      //insert into exam_submissions
+      const { data: submissionData, error: submissionError } = await supabase
+        .from("exam_submissions")
+        .insert([submissionPayload])
+        .select();
+
+      if (submissionError) {
+        console.error("Error saving exam submission:", submissionError);
+        alert("Failed to submit exam. Please try again.");
+        return;
+      }
+
+      console.log("Inserted exam_submission rows:", submissionData);
+
+      //payload for exam_submissions_answers
+      const answersPayload = task.questions
         .map((question, index) => {
-          const selected = answers[index];
-          if (!selected) return null;
+          const selectedAnswer = answers[index];
+          if (!selectedAnswer) return null;
+
+          //if the selected answer is correct
+         const isCorrect = question.correct_answer === selectedAnswer;
 
           return {
-            user_id: userId,
-            exam_id: task.exam_id,
+            score: isCorrect ? 1 : 0,
+            ai_feedback: null,
             question_id: question.id,
-            selected_option: selected,
+            submission_id: submissionData[0].id,
           };
         })
-        .filter(Boolean); // remove unanswered/null
+        .filter(Boolean); //remove unanswered/null answers
 
-      if (responses.length === 0) {
+      if (answersPayload.length === 0) {
         alert("You must answer at least one question.");
         return;
       }
 
-      console.log("🛠 Submitting responses:", responses);
+      console.log("Submitting answers payload:", answersPayload);
 
-      const { data,error } = await supabase
-        .from("exam_submission")
-        .insert(responses)
+      //insert into exam_submissions_answers
+      const { data: answersData, error: answersError } = await supabase
+        .from("exam_submissions_answers")
+        .insert(answersPayload)
         .select();
 
-        console.log(" Inserted exam_submission rows:", data);
-
-      if (error) {
-        console.error("Error saving responses:", error);
-        alert("Failed to submit answers. Please try again.");
-      } else {
-        alert("Answers submitted!");
-        console.log(" Responses saved. Redirecting...");
-
-        // Redirect to correct exam list page
-        navigate(`/student/courses/${task.userId}/${task.course_id}/exams`);
+      if (answersError) {
+        console.error(
+          "Error saving responses to exam_submissions_answers:",
+          answersError
+        );
+        alert("Failed to save answers. Please try again.");
+        return;
       }
+
+      console.log("Inserted exam_submissions_answers rows:", answersData);
+
+      alert("Answers submitted successfully!");
+      console.log("Responses saved. Redirecting...");
+
+      //redirect to correct exam list page
+      navigate(`/student/courses/${task.userId}/${task.course_id}/exams`);
     },
     [task, answers]
   );
 
-   // Combine context values
+  //combine context values
   const contextValue = useMemo(
     () => ({
       task,
