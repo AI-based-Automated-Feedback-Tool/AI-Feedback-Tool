@@ -1,10 +1,46 @@
-import React from 'react';
-import { Container } from 'react-bootstrap';
+import React, { useEffect, useState } from 'react';
+import { Container, Form, Spinner } from 'react-bootstrap';
+import { supabase } from '../../SupabaseAuth/supabaseClient';
 
 const FeedbackSelector = () => {
+  const [courses, setCourses] = useState([]);
+  const [selectedCourse, setSelectedCourse] = useState('');
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchCourses = async () => {
+      const { data, error } = await supabase.from('courses').select('*');
+      if (!error) setCourses(data);
+      setLoading(false);
+    };
+    fetchCourses();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="text-center my-5">
+        <Spinner animation="border" />
+        <p>Loading courses...</p>
+      </div>
+    );
+  }
+
   return (
     <Container className="my-4">
       <h3>Select Exam for AI Feedback</h3>
+      <Form>
+        <Form.Group className="mb-3">
+          <Form.Label>Course</Form.Label>
+          <Form.Select onChange={(e) => setSelectedCourse(e.target.value)}>
+            <option value="">-- Select a Course --</option>
+            {courses.map((course) => (
+              <option key={course.id} value={course.course_id}>
+                {course.title}
+              </option>
+            ))}
+          </Form.Select>
+        </Form.Group>
+      </Form>
     </Container>
   );
 };
