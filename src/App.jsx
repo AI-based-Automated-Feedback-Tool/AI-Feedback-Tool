@@ -22,6 +22,8 @@ import AIFeedbackPage from './Components/TeachersComponents/AIFeedbackPage';
 import { CourseProvider } from "./Context/courseContext.jsx";
 import { ExamProvider } from "./Context/examContext.jsx";
 import { TaskProvider } from "./Context/taskContext.jsx";
+import Review from "./Components/StudentsComponents/Review.jsx";
+import { ReviewProvider } from "./Context/reviewContext.jsx";
 
 function App() {
   return (
@@ -68,6 +70,8 @@ function App() {
               <Route path="profile" element={<Profile />} />
               <Route path="results" element={<Result />} />
               <Route path=":courseId/exams" element={<ExamsPage />} />
+              <Route path="review" element={<ReviewProvider><Review /></ReviewProvider>} />
+
             </Route>
           </Route>
 
