@@ -66,9 +66,9 @@ export const ExamProvider = ({ children }) => {
 
       // 3. Fetch user's submitted exam IDs
       const { data: submissions, error: submissionError } = await supabase
-        .from("exam_submission")
+        .from("exam_submissions")
         .select("exam_id")
-        .eq("user_id", userId);
+        .eq("student_id", userId);
 
       if (submissionError) {
         console.error("Error fetching submissions:", submissionError);
