@@ -115,7 +115,7 @@ export default function TeacherReportContent() {
                         </h5>
                     </CardHeader>
                     <CardBody>
-                        <Row className="mb-4">
+                        <Row className="mb-4 mt-4">
                             {[
                                 {
                                     title: "Total Students Attempted",
@@ -148,7 +148,7 @@ export default function TeacherReportContent() {
                         backgroundColor: '#dee2e6',
                         boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
                         borderRadius: '4px',
-                        margin: '2rem auto'
+                        margin: '1rem auto'
                     }} />
                     <CardBody>
                         <h5 className="mb-4">📈 Score Distribution</h5>
@@ -169,10 +169,10 @@ export default function TeacherReportContent() {
                         backgroundColor: '#dee2e6',
                         boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
                         borderRadius: '4px',
-                        margin: '2rem auto'
+                        margin: '1rem auto'
                     }} />
                     <CardBody>
-                        <h5 className='mb-4'>Performance Analysis</h5>
+                        <h5 className='mb-4'>📉 Performance Analysis</h5>
                         <Row>
                             <Col md={6}>
                                 <Card className="text-center border-0 shadow-sm bg-light">
@@ -199,7 +199,7 @@ export default function TeacherReportContent() {
                         backgroundColor: '#dee2e6',
                         boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
                         borderRadius: '4px',
-                        margin: '2rem auto'
+                        margin: '1rem auto'
                     }} />
                     <CardBody>                                               
                     <CardBody>
@@ -222,6 +222,53 @@ export default function TeacherReportContent() {
                                 <p className="text-muted">
                                     Based on the score distribution, it appears that the majority of students scored between <strong>61–70</strong>. This suggests a strong central tendency, with room for improvement in higher ranges. Consider reviewing topics around the 70–80 mark to boost top-tier performance.
                                 </p>        
+                            </Col>
+                        </Row>
+                    </CardBody>
+                    <hr style={{
+                        border: 'none',
+                        height: '2px',
+                        width: '95%',
+                        backgroundColor: '#dee2e6',
+                        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                        borderRadius: '4px',
+                        margin: '1rem auto'
+                    }} />
+                    <CardBody>
+                        <Row>
+                            <Col md={6}>
+                                <Card className="text-center border-0 shadow-sm bg-light">
+                                    <CardHeader>
+                                        <h5>
+                                            Common challenges
+                                        </h5>                                        
+                                    </CardHeader>
+                                    <CardBody className='text-start'>
+                                        <ul className="text-muted">
+                                            <li>Time management during the exam</li>
+                                            <li>Misunderstanding of key concepts</li>
+                                            <li>Low retention of previously covered topics</li>
+                                            <li>Technical issues or distractions</li>
+                                        </ul>
+                                    </CardBody>
+                                </Card>
+                            </Col>
+                            <Col md={6}>
+                                <Card className="text-center border-0 shadow-sm bg-light">
+                                    <CardHeader>
+                                        <h5>
+                                            Recomendations
+                                        </h5>
+                                        </CardHeader>
+                                    <CardBody className='text-start'>
+                                        <ul className="text-muted">
+                                            <li>Introduce regular revision quizzes</li>
+                                            <li>Encourage collaborative learning sessions</li>
+                                            <li>Break down complex topics into smaller parts</li>
+                                            <li>Provide time management strategies</li>
+                                        </ul>
+                                    </CardBody>
+                                </Card>
                             </Col>
                         </Row>
                     </CardBody>
