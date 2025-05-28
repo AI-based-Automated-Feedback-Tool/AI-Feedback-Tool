@@ -26,8 +26,8 @@ const Review = () => {
             </tr>
           </thead>
           <tbody>
-            {reviewData.map((review) => (
-              <tr key={review.id}>
+            {reviewData.map((review, index) => (
+              <tr key={review.id || review.exam_id || index}>
                 <td>{review.exam_id}</td>
                 <td>{review.total_score}</td>
                 <td>{review.time_taken}</td>
