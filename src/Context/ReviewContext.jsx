@@ -29,19 +29,34 @@ export const ReviewProvider = ({ children }) => {
   };
 
   //to fetch review data for a specific student ID
-  const fetchReviewData = async (studentId) => {
+  const fetchSubmissionId = async (studentId) => {
     try {
       const { data, error } = await supabase
-        .from("exam_submissions")
-        .select(
-          "exam_id, total_score, time_taken, focus_loss_count, feedback_summery"
-        )
-        .eq("student_id", studentId);
+        .from("exam_submissions_answers")
+        .select("submission_id")
+        .eq("submission_id", studentId) 
+        .limit(1);
 
       if (error) {
         throw error;
       }
+      return data.length > 0 ? data[0].submission_id : null;
+    } catch (error) {
+      console.error("Error fetching submission ID:", error);
+      return null;
+    }
+  };
 
+  const fetchReviewData = async (submissionId) => {
+    try {
+      const { data, error } = await supabase
+        .from("exam_submissions_answers")
+        .select("*")
+        .eq("submission_id", submissionId);
+
+      if (error) {
+        throw error;
+      }
       setReviewData(data);
       setLoading(false);
     } catch (error) {
@@ -49,19 +64,28 @@ export const ReviewProvider = ({ children }) => {
       setLoading(false);
     }
   };
+
   //hook to fetch data when the component mounts
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       const studentId = await fetchStudentId();
       if (studentId) {
-        await fetchReviewData(studentId);
+        //fetch submission ID dynamically
+        const submissionId = await fetchSubmissionId(studentId); 
+        if (submissionId) {
+           //pass the fetched submission ID
+          await fetchReviewData(submissionId);
+        } else {
+          console.error("No submission ID found.");
+          setLoading(false);
+        }
       } else {
         console.error("No student ID found.");
         setLoading(false);
       }
     };
-
+  
     fetchData();
   }, []);
 

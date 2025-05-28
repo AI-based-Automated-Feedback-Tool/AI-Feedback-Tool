@@ -6,40 +6,74 @@ const Review = () => {
   const { reviewData, loading } = useContext(ReviewContext);
 
   if (loading) {
-    return <p>Loading...</p>;
+    return (
+      <div className="text-center mt-5">
+        <div className="spinner-border text-primary" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div>
-      <h1>Student Review</h1>
-      {reviewData.length === 0 ? (
-        <p>No reviews available.</p>
-      ) : (
-        <table>
-          <thead>
-            <tr>
-              <th>Exam ID</th>
-              <th>Total Score</th>
-              <th>Time Taken</th>
-              <th>Focus Loss Count</th>
-              <th>Feedback Summary</th>
-            </tr>
-          </thead>
-          <tbody>
-            {reviewData.map((review, index) => (
-              <tr key={review.id || review.exam_id || index}>
-                <td>{review.exam_id}</td>
-                <td>{review.total_score}</td>
-                <td>{review.time_taken}</td>
-                <td>{review.focus_loss_count}</td>
-                <td>{review.feedback_summery}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
-    </div>
-  );
+    <div className="container mt-5">
+    <h1 className="text-center mb-4">Exam Review</h1>
+    {reviewData.length === 0 ? (
+      <div className="alert alert-warning text-center" role="alert">
+        No reviews available.
+      </div>
+    ) : (
+      <div>
+        {reviewData.map((review, index) => (
+          <form key={review.id || review.exam_id || index} className="border p-4 mb-4 rounded shadow-sm">
+            <div className="mb-3">
+              <label className="form-label">ID</label>
+              <input type="text" className="form-control" value={review.id} readOnly />
+            </div>
+            <div className="mb-3">
+              <label className="form-label">Score</label>
+              <input type="text" className="form-control" value={review.score} readOnly />
+            </div>
+            <div className="mb-3">
+              <label className="form-label">AI Feedback</label>
+              <textarea className="form-control" value={review.ai_feedback} readOnly />
+            </div>
+            <div className="mb-3">
+              <label className="form-label">Question ID</label>
+              <input type="text" className="form-control" value={review.question_id} readOnly />
+            </div>
+            <div className="mb-3">
+              <label className="form-label">Submission ID</label>
+              <input type="text" className="form-control" value={review.submission_id} readOnly />
+            </div>
+            <div className="mb-3">
+              <label className="form-label">Exam ID</label>
+              <input type="text" className="form-control" value={review.exam_id} readOnly />
+            </div>
+            <div className="mb-3">
+              <label className="form-label">Total Score</label>
+              <input type="text" className="form-control" value={review.total_score} readOnly />
+            </div>
+            <div className="mb-3">
+              <label className="form-label">Time Taken</label>
+              <input type="text" className="form-control" value={review.time_taken} readOnly />
+            </div>
+            <div className="mb-3">
+              <label className="form-label">Focus Loss Count</label>
+              <input type="text" className="form-control" value={review.focus_loss_count} readOnly />
+            </div>
+            <div className="mb-3">
+              <label className="form-label">Feedback Summary</label>
+              <textarea className="form-control" value={review.feedback_summery} readOnly />
+            </div>
+          </form>
+        ))}
+      </div>
+    )}
+  </div>
+);
 };
+
+
 
 export default Review;
