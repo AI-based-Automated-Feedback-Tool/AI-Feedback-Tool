@@ -6,6 +6,7 @@ import CourseDropdown from './CourseDropdown';
 import StudentDropdown from './StudentDropdown';
 import ExamDropdown from './ExamDropdown'; 
 import LoadingCard from './LoadingCard';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 
 export default function TeacherReportContent() {
     const [selectedCourse, setSelectedCourse] = useState("");
@@ -37,6 +38,17 @@ export default function TeacherReportContent() {
             </Col>
         );
     }
+
+    //placeholder score deatils
+    const scoreDistributionData = [
+        { scoreRange: '0-40', students: 8 },
+        { scoreRange: '41-50', students: 22 },
+        { scoreRange: '51-60', students: 45 },
+        { scoreRange: '61-70', students: 70 },
+        { scoreRange: '71-80', students: 50 },
+        { scoreRange: '81-90', students: 18 },
+        { scoreRange: '91-100', students: 4 },
+    ];
 
   return (
     <Col 
@@ -127,6 +139,18 @@ export default function TeacherReportContent() {
                                 </Col>
                             ))}
                         </Row>
+                    </CardBody>
+                    <CardBody>
+                        <h6 className="mb-3">📈 Score Distribution</h6>
+                        <ResponsiveContainer width="100%" height={300}>
+                            <BarChart data={scoreDistributionData}>
+                                <CartesianGrid strokeDasharray="3 3" />
+                                <XAxis dataKey="scoreRange" label={{ value: 'Score Range', position: 'insideBottom', offset: -5 }} />
+                                <YAxis />
+                                <Tooltip />
+                                <Bar dataKey="students" fill="#0d6efd" radius={[4, 4, 0, 0]} />
+                            </BarChart>
+                        </ResponsiveContainer>
                     </CardBody>
 
                     <CardBody>
