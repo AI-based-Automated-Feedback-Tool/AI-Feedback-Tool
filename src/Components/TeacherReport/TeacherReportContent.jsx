@@ -140,6 +140,15 @@ export default function TeacherReportContent() {
                             ))}
                         </Row>
                     </CardBody>
+                    <hr style={{
+                        border: 'none',
+                        height: '2px',
+                        width: '95%',
+                        backgroundColor: '#dee2e6',
+                        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                        borderRadius: '4px',
+                        margin: '2rem auto'
+                    }} />
                     <CardBody>
                         <h6 className="mb-3">📈 Score Distribution</h6>
                         <ResponsiveContainer width="100%" height={300}>
@@ -152,7 +161,36 @@ export default function TeacherReportContent() {
                             </BarChart>
                         </ResponsiveContainer>
                     </CardBody>
-
+                    <hr style={{
+                        border: 'none',
+                        height: '2px',
+                        width: '95%',
+                        backgroundColor: '#dee2e6',
+                        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                        borderRadius: '4px',
+                        margin: '2rem auto'
+                    }} />
+                    <CardBody>
+                        <h6>Performance Analysis</h6>
+                        <Row>
+                            <Col md={6}>
+                                <Card className="text-center border-0 shadow-sm bg-light">
+                                    <CardBody>
+                                        <p className="text-muted mb-1">Average time taken</p>
+                                        <h3 className="fw-bold text-primary">45 min</h3>
+                                    </CardBody>
+                                </Card>
+                            </Col>
+                            <Col md={6}>
+                                <Card className="text-center border-0 shadow-sm bg-light">
+                                    <CardBody>
+                                        <p className="text-muted mb-1">Average focus loss per student</p>
+                                        <h3 className="fw-bold text-primary">1.9</h3>
+                                    </CardBody>
+                                </Card>
+                            </Col>
+                        </Row>
+                    </CardBody>
                     <CardBody>
                         {/*Here shows the text which says no contents to preview */}
                         <Alert variant="info">
