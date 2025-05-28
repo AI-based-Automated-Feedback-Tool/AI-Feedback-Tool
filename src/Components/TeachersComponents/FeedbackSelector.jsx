@@ -7,6 +7,8 @@ const FeedbackSelector = () => {
   const [selectedCourse, setSelectedCourse] = useState('');
   const [examTypes, setExamTypes] = useState([]);
   const [selectedType, setSelectedType] = useState('');
+  const [exams, setExams] = useState([]);
+  const [selectedExam, setSelectedExam] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -35,6 +37,13 @@ const FeedbackSelector = () => {
     };
     fetchExamTypes();
   }, [selectedCourse]);
+
+  
+
+  const handleSelectExam = (examId) => {
+    const exam = exams.find((e) => e.id === examId);
+    setSelectedExam(exam);
+  };
 
   if (loading) {
     return (
@@ -74,6 +83,20 @@ const FeedbackSelector = () => {
             </Form.Select>
           </Form.Group>
         )}
+
+        
+          <Form.Group className="mb-3">
+            <Form.Label>Exam</Form.Label>
+            <Form.Select onChange={(e) => handleSelectExam(e.target.value)}>
+              <option value="">-- Select Exam --</option>
+              {exams.map((exam) => (
+                <option key={exam.id} value={exam.id}>
+                  {exam.title}
+                </option>
+              ))}
+            </Form.Select>
+          </Form.Group>
+       
       </Form>
     </Container>
   );
