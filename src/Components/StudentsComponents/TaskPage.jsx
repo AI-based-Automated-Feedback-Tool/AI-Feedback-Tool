@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState} from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useTask } from "../../Context/taskContext";
 
@@ -21,11 +21,48 @@ const TaskPage = () => {
   //get task id from url
   const { id } = useParams();
   const navigate = useNavigate();
+  //to track remaining time for the task
+  const [timeLeft, setTimeLeft] = useState(null);
 
   //fetch the exam and its questions when the component mounts or the ID changes
   useEffect(() => {
     fetchExamWithQuestions(id);
   }, [id, fetchExamWithQuestions]);
+
+   //initialize the timer when the task data is loaded
+   useEffect(() => {
+    if (task && task.duration) {
+      setTimeLeft(task.duration * 60); //convert duration from min to sec
+    }
+  }, [task]);
+
+  //countdown timer logic to decrement time every second
+  useEffect(() => {
+    if (timeLeft === null || alreadySubmitted || loading) return;
+
+    const timer = setInterval(() => {
+      setTimeLeft((prev) => {
+        if (prev <= 1) {
+          // Stop the timer when time runs out
+          clearInterval(timer); 
+          // Auto-submit the task
+          handleSubmit(navigate); 
+          return 0;
+        }
+        return prev - 1; //decrement the remaining time
+      });
+    }, 1000);
+    //cleanup the timer when the component unmounts or dependencies change
+    return () => clearInterval(timer);
+  }, [timeLeft, alreadySubmitted, loading, handleSubmit, navigate]);
+
+  //Helper function to format time in MM:SS format
+  const formatTime = (seconds) => {
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
+    return `${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
+  };
+
 
   if (loading) return <div className="container mt-4">⏳ Loading task...</div>;
   //display a message if the exam has already been submitted
@@ -61,6 +98,12 @@ const TaskPage = () => {
             <p>
               <strong>Type:</strong> {task.type || "Exam"}
             </p>
+            {/* Display remaining time */}
+            {timeLeft !== null && (
+              <div className="alert alert-info text-center">
+                Time Remaining: <strong>{formatTime(timeLeft)}</strong>
+              </div>
+            )}
             <hr />
 
             {reviewMode ? (
