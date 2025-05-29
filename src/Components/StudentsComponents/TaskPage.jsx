@@ -1,6 +1,7 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState} from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useTask } from "../../Context/taskContext";
+import { TimerProvider, useTimer } from "../../Context/TimerContext";
 
 const TaskPage = () => {
   const {
@@ -18,6 +19,9 @@ const TaskPage = () => {
     handleSubmit,
     setQuestionIndex,
   } = useTask();
+  //access timer values
+  const { timeLeft, formatTime } = useTimer(); 
+  
   //get task id from url
   const { id } = useParams();
   const navigate = useNavigate();
@@ -61,6 +65,12 @@ const TaskPage = () => {
             <p>
               <strong>Type:</strong> {task.type || "Exam"}
             </p>
+            {/* Display remaining time */}
+            {timeLeft !== null && (
+              <div className="alert alert-info text-center">
+                Time Remaining: <strong>{formatTime(timeLeft)}</strong>
+              </div>
+            )}
             <hr />
 
             {reviewMode ? (
@@ -179,4 +189,22 @@ const TaskPage = () => {
   );
 };
 
-export default TaskPage;
+// Wrap TaskPage with TimerProvider
+const TaskPageWithTimer = () => {
+  const { task, alreadySubmitted, loading, handleSubmit } = useTask();
+  const navigate = useNavigate();
+
+  return (
+    <TimerProvider
+      task={task}
+      alreadySubmitted={alreadySubmitted}
+      loading={loading}
+      handleSubmit={handleSubmit}
+      navigate={navigate}
+    >
+      <TaskPage />
+    </TimerProvider>
+  );
+};
+
+export default TaskPageWithTimer;

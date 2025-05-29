@@ -6,6 +6,7 @@ import React, {
   useCallback,
 } from "react";
 import { supabase } from "../SupabaseAuth/supabaseClient";
+import { TimerContext } from "./TimerContext.jsx";
 
 // Create the context for exam tasks
 const TaskContext = createContext();
@@ -29,6 +30,8 @@ export const TaskProvider = ({ children }) => {
 
   // Whether user has already submitted this exam
   const [alreadySubmitted, setAlreadySubmitted] = useState(false);
+  //access timeLeft from TimerContext
+  const { timeLeft } = useContext(TimerContext);
 
   // Fetch exam data and questions
   const fetchExamWithQuestions = useCallback(async (id) => {
@@ -134,13 +137,17 @@ export const TaskProvider = ({ children }) => {
         return;
       }
 
+      //calculate time taken for the exam
+      const totalDurationInSeconds = task.duration * 60; //duration to seconds
+      const timeTaken = totalDurationInSeconds - timeLeft; //subtract remaining time from total duration
+
       //payload for exam_submissions
       const submissionPayload = {
         submitted_at: new Date().toISOString(),
         student_id: userId,
         exam_id: task.exam_id,
         total_score: 0,
-        time_taken: null,
+        time_taken: timeTaken,
         focus_loss_count: null,
         feedback_summery: null,
       };
@@ -168,7 +175,7 @@ export const TaskProvider = ({ children }) => {
           if (!selectedAnswer) return null;
 
           //if the selected answer is correct
-         const isCorrect = question.correct_answer === selectedAnswer;
+          const isCorrect = question.correct_answer === selectedAnswer;
 
           return {
             score: isCorrect ? 1 : 0,
@@ -209,7 +216,7 @@ export const TaskProvider = ({ children }) => {
       //redirect to correct exam list page
       navigate(`/student/courses/${task.userId}/${task.course_id}/exams`);
     },
-    [task, answers]
+    [task, answers, timeLeft]
   );
 
   //combine context values
