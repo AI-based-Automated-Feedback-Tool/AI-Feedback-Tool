@@ -25,7 +25,7 @@ const AIFeedbackPage = () => {
 
         // Fetch submissions
         const { data: submissions, error: submissionsError } = await supabase
-          .from('exam_submission')
+          .from('exam_submissions')
           .select('*')
           .eq('exam_id', examId);
 
