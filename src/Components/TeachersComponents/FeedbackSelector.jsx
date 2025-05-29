@@ -1,114 +1,205 @@
-import React, { useEffect, useState } from 'react';
-import { Container, Form, Spinner } from 'react-bootstrap';
-import { supabase } from '../../SupabaseAuth/supabaseClient';
+import React, { useEffect, useState } from "react";
+import { Container, Card, Form, Row, Col, Button, Spinner, Alert } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
+import { supabase } from "../../SupabaseAuth/supabaseClient";
 
 const FeedbackSelector = () => {
+  const navigate = useNavigate();
   const [courses, setCourses] = useState([]);
-  const [selectedCourse, setSelectedCourse] = useState('');
-  const [examTypes, setExamTypes] = useState([]);
-  const [selectedType, setSelectedType] = useState('');
+  const [examTypes] = useState(["mcq", "code", "essay"]);
   const [exams, setExams] = useState([]);
-  const [selectedExam, setSelectedExam] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [selectedCourse, setSelectedCourse] = useState("");
+  const [selectedType, setSelectedType] = useState("");
+  const [selectedExam, setSelectedExam] = useState("");
+  const [examDetails, setExamDetails] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
+  // Fetch courses
   useEffect(() => {
     const fetchCourses = async () => {
-      const { data, error } = await supabase.from('courses').select('*');
-      if (!error) setCourses(data);
-      setLoading(false);
+      setLoading(true);
+      try {
+        const { data, error } = await supabase
+          .from("courses")
+          .select("course_id, title, course_code")
+          .order("created_at", { ascending: false });
+        if (error) throw error;
+        setCourses(data || []);
+      } catch (err) {
+        console.error("Error fetching courses:", err);
+        setError("Failed to load courses.");
+      } finally {
+        setLoading(false);
+      }
     };
     fetchCourses();
   }, []);
 
-  useEffect(() => {
-    const fetchExamTypes = async () => {
-      if (!selectedCourse) return;
-      const { data, error } = await supabase
-        .from('exams')
-        .select('type')
-        .eq('course_id', selectedCourse);
-
-      if (!error && data.length > 0) {
-        const types = Array.from(new Set(data.map((exam) => exam.type)));
-        setExamTypes(types);
-      } else {
-        setExamTypes([]);
-      }
-    };
-    fetchExamTypes();
-  }, [selectedCourse]);
-
+  // Fetch exams when course or type changes
   useEffect(() => {
     const fetchExams = async () => {
       if (!selectedCourse || !selectedType) return;
-      const { data, error } = await supabase
-        .from('exams')
-        .select('*')
-        .eq('course_id', selectedCourse)
-        .eq('type', selectedType);
-      if (!error) setExams(data);
+      setLoading(true);
+      try {
+        const { data, error } = await supabase
+          .from("exams")
+          .select("exam_id, title")
+          .eq("course_id", selectedCourse)
+          .eq("type", selectedType)          
+        if (error) throw error;
+        setExams(data || []);
+      } catch (err) {
+        console.error("Error fetching exams:", err);
+        setError("Failed to load exams.");
+      } finally {
+        setLoading(false);
+      }
     };
     fetchExams();
   }, [selectedCourse, selectedType]);
 
-  const handleSelectExam = (examId) => {
-    const exam = exams.find((e) => e.id === examId);
-    setSelectedExam(exam);
-  };
+  // Fetch selected exam details
+  useEffect(() => {
+    const fetchExamDetails = async () => {
+      if (!selectedExam) return;
+      setLoading(true);
+      try {
+        const { data, error } = await supabase
+          .from("exams")
+          .select("*")
+          .eq("exam_id", selectedExam)
+          .single();
+        if (error) throw error;
+        setExamDetails(data);
+      } catch (err) {
+        console.error("Error fetching exam details:", err);
+        setError("Failed to load exam details.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchExamDetails();
+  }, [selectedExam]);
 
-  if (loading) {
-    return (
-      <div className="text-center my-5">
-        <Spinner animation="border" />
-        <p>Loading courses...</p>
-      </div>
-    );
-  }
+  const handleProceed = () => {
+    navigate('/teacher/ai-feedback?exam_id=${selectedExam}');
+  };
 
   return (
     <Container className="my-4">
-      <h3>Select Exam for AI Feedback</h3>
-      <Form>
-        <Form.Group className="mb-3">
-          <Form.Label>Course</Form.Label>
-          <Form.Select onChange={(e) => setSelectedCourse(e.target.value)}>
-            <option value="">-- Select a Course --</option>
-            {courses.map((course) => (
-              <option key={course.id} value={course.course_id}>
-                {course.title}
-              </option>
-            ))}
-          </Form.Select>
-        </Form.Group>
+      <Card>
+        <Card.Header className="bg-primary text-white">
+          <h4>🤖 AI Feedback - Select Exam</h4>
+        </Card.Header>
+        <Card.Body>
+          {error && <Alert variant="danger">{error}</Alert>}
 
-        {examTypes.length > 0 && (
-          <Form.Group className="mb-3">
-            <Form.Label>Exam Type</Form.Label>
-            <Form.Select onChange={(e) => setSelectedType(e.target.value)}>
-              <option value="">-- Select Type --</option>
-              {examTypes.map((type) => (
-                <option key={type} value={type}>
-                  {type}
-                </option>
-              ))}
-            </Form.Select>
-          </Form.Group>
-        )}
+          <Form>
+            <Card className="mb-4 border-0 shadow-sm">
+              <Card.Header className="bg-light">
+                <h5 className="mb-0">Filter Exams</h5>
+              </Card.Header>
+              <Card.Body>
+                <Row className="mb-3">
+                  <Col md={6}>
+                    <Form.Group>
+                      <Form.Label className="fw-bold">Select Course</Form.Label>
+                      <Form.Select
+                        value={selectedCourse}
+                        onChange={(e) => {
+                          setSelectedCourse(e.target.value);
+                          setSelectedExam("");
+                          setExamDetails(null);
+                        }}
+                      >
+                        <option value="">-- Choose a Course --</option>
+                        {courses.map((course) => (
+                          <option key={course.course_id} value={course.course_id}>
+                            {course.course_code} - {course.title}
+                          </option>
+                        ))}
+                      </Form.Select>
+                    </Form.Group>
+                  </Col>
+                  <Col md={6}>
+                    <Form.Group>
+                      <Form.Label className="fw-bold">Select Exam Type</Form.Label>
+                      <Form.Select
+                        value={selectedType}
+                        onChange={(e) => {
+                          setSelectedType(e.target.value);
+                          setSelectedExam("");
+                          setExamDetails(null);
+                        }}
+                      >
+                        <option value="">-- Choose Exam Type --</option>
+                        {examTypes.map((type) => (
+                          <option key={type} value={type}>
+                            {type.toUpperCase()}
+                          </option>
+                        ))}
+                      </Form.Select>
+                    </Form.Group>
+                  </Col>
+                </Row>
 
-        {exams.length > 0 && (
-          <Form.Group className="mb-3">
-            <Form.Label>Exam</Form.Label>
-            <Form.Select onChange={(e) => handleSelectExam(e.target.value)}>
-              <option value="">-- Select Exam --</option>
-              {exams.map((exam) => (
-                <option key={exam.id} value={exam.id}>
-                  {exam.title}
-                </option>
-              ))}
-            </Form.Select>
-          </Form.Group>
-        )}
-      </Form>
+                <Row>
+                  <Col md={12}>
+                    <Form.Group>
+                      <Form.Label className="fw-bold">Select Exam</Form.Label>
+                      <Form.Select
+                        value={selectedExam}
+                        onChange={(e) => setSelectedExam(e.target.value)}
+                        disabled={!exams.length}
+                      >
+                        <option value="">-- Choose an Exam --</option>
+                        {exams.map((exam) => (
+                          <option key={exam.exam_id} value={exam.exam_id}>
+                            {exam.title}
+                          </option>
+                        ))}
+                      </Form.Select>
+                    </Form.Group>
+                  </Col>
+                </Row>
+              </Card.Body>
+            </Card>
+
+            {loading && (
+              <div className="text-center mb-4">
+                <Spinner animation="border" variant="primary" />
+              </div>
+            )}
+
+            {examDetails && (
+              <Card className="mb-4 border-0 shadow-sm">
+                <Card.Header className="bg-light">
+                  <h5 className="mb-0">Exam Details</h5>
+                </Card.Header>
+                <Card.Body>
+                  <p><strong>Title:</strong> {examDetails.title}</p>
+                  <p><strong>Duration:</strong> {examDetails.duration} mins</p>
+                  <p><strong>Questions:</strong> {examDetails.question_count}</p>
+                  <p><strong>Type:</strong> {examDetails.type.toUpperCase()}</p>
+                  <p><strong>Instructions:</strong> {examDetails.instructions || "N/A"}</p>
+                </Card.Body>
+              </Card>
+            )}
+
+            <div className="d-flex justify-content-end">
+              <Button
+                variant="primary"
+                size="lg"
+                onClick={handleProceed}
+                disabled={!selectedExam || loading}
+              >
+                Proceed to AI Feedback
+              </Button>
+            </div>
+          </Form>
+        </Card.Body>
+      </Card>
     </Container>
   );
 };
