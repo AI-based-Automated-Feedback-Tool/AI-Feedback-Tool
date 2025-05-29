@@ -172,7 +172,20 @@ const FeedbackSelector = () => {
               </div>
             )}
 
-            
+            {examDetails && (
+              <Card className="mb-4 border-0 shadow-sm">
+                <Card.Header className="bg-light">
+                  <h5 className="mb-0">Exam Details</h5>
+                </Card.Header>
+                <Card.Body>
+                  <p><strong>Title:</strong> {examDetails.title}</p>
+                  <p><strong>Duration:</strong> {examDetails.duration} mins</p>
+                  <p><strong>Questions:</strong> {examDetails.question_count}</p>
+                  <p><strong>Type:</strong> {examDetails.type.toUpperCase()}</p>
+                  <p><strong>Instructions:</strong> {examDetails.instructions || "N/A"}</p>
+                </Card.Body>
+              </Card>
+            )}
 
             <div className="d-flex justify-content-end">
               <Button
