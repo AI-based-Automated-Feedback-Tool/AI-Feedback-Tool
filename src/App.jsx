@@ -25,9 +25,11 @@ import { TaskProvider } from "./Context/taskContext.jsx";
 import Review from "./Components/StudentsComponents/Review.jsx";
 import { ReviewProvider } from "./Context/reviewContext.jsx";
 import FeedbackSelector from './Components/TeachersComponents/FeedbackSelector';
+import { TimerProvider } from "./Context/TimerContext.jsx";
 
 function App() {
   return (
+    <TimerProvider>
     <UserProvider>
       <CourseProvider>
         <ExamProvider>
@@ -85,6 +87,7 @@ function App() {
       </ExamProvider>
       </CourseProvider>
     </UserProvider>
+    </TimerProvider>
   );
 }
 

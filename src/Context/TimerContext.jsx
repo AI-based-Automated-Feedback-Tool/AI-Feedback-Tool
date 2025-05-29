@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 
-const TimerContext = createContext();
+export const TimerContext = createContext();
 
 export const TimerProvider = ({ task, alreadySubmitted, loading, handleSubmit, navigate, children }) => {
   const [timeLeft, setTimeLeft] = useState(null);
