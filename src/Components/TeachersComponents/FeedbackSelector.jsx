@@ -82,8 +82,8 @@ const FeedbackSelector = () => {
     fetchExamDetails();
   }, [selectedExam]);
 
-  const handleProceed = () => {
-    navigate('/teacher/ai-feedback?exam_id=${selectedExam}');
+  const handleAIFeedbackClick = () => {
+    navigate(`/teacher/exams/${selectedExam}/ai-feedback`);
   };
 
   return (
@@ -191,11 +191,11 @@ const FeedbackSelector = () => {
               <Button
                 variant="primary"
                 size="lg"
-                onClick={handleProceed}
+                onClick={handleAIFeedbackClick}
                 disabled={!selectedExam || loading}
-              >
+                >
                 Proceed to AI Feedback
-              </Button>
+                </Button>
             </div>
           </Form>
         </Card.Body>
