@@ -8,6 +8,7 @@ const AIFeedbackPage = () => {
   const [feedbackText, setFeedbackText] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [examTitle, setExamTitle] = useState('');
 
   useEffect(() => {
     const generateFeedback = async () => {
@@ -30,6 +31,17 @@ const AIFeedbackPage = () => {
           .eq('exam_id', examId);
 
         if (submissionsError) throw new Error('Failed to fetch submissions');
+
+        // Fetch exam title
+        const { data: examData, error: examError } = await supabase
+          .from('exams')
+          .select('title')
+          .eq('exam_id', examId)
+          .single();
+
+        if (examError) throw new Error('Failed to fetch exam title');
+        setExamTitle(examData?.title || 'Unknown Exam');
+
 
         // Construct prompt for AI
         const prompt = `
@@ -90,7 +102,7 @@ const AIFeedbackPage = () => {
       <Card className="shadow-sm mb-4">
         <Card.Header className="bg-primary text-white">
           <h4>AI-Generated Teaching Feedback</h4>
-          <span className="small">Exam ID: {examId}</span>
+          <span className="small">Exam Name: {examTitle}</span>
         </Card.Header>
         <Card.Body>
           <pre style={{ whiteSpace: 'pre-wrap', fontFamily: 'inherit' }}>
