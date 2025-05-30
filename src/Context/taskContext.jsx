@@ -37,8 +37,8 @@ export const TaskProvider = ({ children }) => {
 
     if (existingSubmissions?.length > 0) {
       setAlreadySubmitted(true);
-      setLoading(false);
-      return;
+    } else {
+      setAlreadySubmitted(false);
     }
 
     try {
