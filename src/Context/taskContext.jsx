@@ -190,6 +190,7 @@ export const TaskProvider = ({ children }) => {
             score: isCorrect ? 1 : 0,
             ai_feedback: null,
             question_id: question.id,
+            selected_option: selectedAnswer,
             submission_id: submissionData[0].id,
           };
         })
