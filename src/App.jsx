@@ -25,6 +25,7 @@ import { TaskProvider } from "./Context/taskContext.jsx";
 import Review from "./Components/StudentsComponents/Review.jsx";
 import { ReviewProvider } from "./Context/reviewContext.jsx";
 import FeedbackSelector from './Components/TeachersComponents/FeedbackSelector';
+import PromptSelector from './Components/TeachersComponents/PromptSelector';
 import { TimerProvider } from "./Context/TimerContext.jsx";
 
 function App() {
@@ -40,27 +41,21 @@ function App() {
           {/*Login and registration and main page route */}
           <Route path="/" element={<MainPage />} />
           <Route path="/logIn" element={<LogInPage />} />
-          <Route path="/register" element={<SignInPage />} />
-          
+          <Route path="/register" element={<SignInPage />} />          
           <Route path="/configure-exam" element={<ConfigureExam />} />
+          {/*Teachers route */}
           <Route path="/teacher" element={<ProtectedRoute />}>
             <Route element={<TeacherLayout />}>
               <Route index element={<TeacherCourses />} />
-              <Route path="exams" element={<ConfigureExam />} />
-              <Route
-                path="exams/:examId/questions/:questionType"
-                element={<CreateMcqQuestionsContent />}
-              />
-              <Route
-                path="courses/:course_id/exams"
-                element={<CourseExamsPage />}
-              />
-              <Route path="profile" element={<ProfilePage />} />
-              <Route path="students" element={""} />
-              <Route path="reports" element={<TeacherReportContent />} />
-              <Route path="exams/:examId/ai-feedback" element={<AIFeedbackPage />} />
-              <Route path="ai-feedback" element={<FeedbackSelector />} />
-
+                <Route path="exams" element={<ConfigureExam />} />
+                <Route path="exams/:examId/ai-feedback" element={<AIFeedbackPage />} />
+                <Route path="ai-feedback" element={<FeedbackSelector />} />
+                <Route path="exams/:examId/prompt-selector" element={<PromptSelector />} />
+                <Route path="exams/:examId/questions/:questionType" element={<CreateMcqQuestionsContent />} />
+                <Route path="courses/:course_id/exams" element={<CourseExamsPage />} />
+                <Route path="profile" element={<ProfilePage />} />
+                <Route path="students" element={""} />
+                <Route path="reports" element={<TeacherReportContent />} />    
             </Route>
           </Route>
 
