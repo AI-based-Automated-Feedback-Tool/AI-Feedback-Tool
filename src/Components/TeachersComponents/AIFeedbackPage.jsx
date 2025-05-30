@@ -129,4 +129,20 @@ Give your response ONLY as a valid JSON object with the exact keys above.
   );
 };
 
+// Reusable section component
+const Section = ({ title, items = [], text = '' }) => (
+  <div className="mb-4">
+    <h5 className="text-secondary">{title}</h5>
+    {items.length > 0 ? (
+      <ul>
+        {items.map((item, index) => (
+          <li key={index}>{item}</li>
+        ))}
+      </ul>
+    ) : (
+      <p>{text}</p>
+    )}
+  </div>
+);
+
 export default AIFeedbackPage;
