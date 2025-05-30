@@ -141,6 +141,10 @@ export const TaskProvider = ({ children }) => {
       const totalDurationInSeconds = task.duration * 60; //duration to seconds
       const timeTaken = totalDurationInSeconds - timeLeft; //subtract remaining time from total duration
 
+      //  Calculate total score
+      let totalScore = 0;
+      
+
       //payload for exam_submissions
       const submissionPayload = {
         submitted_at: new Date().toISOString(),
