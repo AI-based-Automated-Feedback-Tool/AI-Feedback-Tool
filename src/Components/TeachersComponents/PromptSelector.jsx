@@ -2,7 +2,33 @@ import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Container, Card, Form, Button } from 'react-bootstrap';
 
+const predefinedPrompts = [
+  {
+    label: 'Standard Feedback',
+    prompt: `You are an educational AI assistant. Analyze the following exam data and generate structured teaching feedback in JSON format with these sections:
 
+    {
+    "keyStrengths": [],
+    "mostMissedQuestions": [],
+    "teachingSuggestions": [],
+    "overallSummary": "",
+    "nextSteps": []
+    }
+
+    Questions: [QUESTIONS]
+    Submissions: [SUBMISSIONS]
+
+    Give your response ONLY as a valid JSON object with the exact keys above.`
+  },
+  {
+    label: 'Simple Summary Only',
+    prompt: `Analyze the exam data and summarize student performance in plain text. Focus only on general insights without listing specific questions.`
+  },
+  {
+    label: 'Suggestions Focused',
+    prompt: `Review the exam results and provide only improvement suggestions for the teacher. Skip the overall summary.`
+  }
+];
 
 const PromptSelector = () => {
   const { examId } = useParams();
