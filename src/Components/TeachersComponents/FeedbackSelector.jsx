@@ -83,7 +83,7 @@ const FeedbackSelector = () => {
   }, [selectedExam]);
 
   const handleAIFeedbackClick = () => {
-    navigate(`/teacher/exams/${selectedExam}/ai-feedback`);
+    navigate(`/teacher/exams/${selectedExam}/prompt-selector`);
   };
 
   return (
