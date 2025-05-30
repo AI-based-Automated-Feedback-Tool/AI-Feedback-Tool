@@ -8,47 +8,31 @@ import React, {
 import { supabase } from "../SupabaseAuth/supabaseClient";
 import { TimerContext } from "./TimerContext.jsx";
 
-// Create the context for exam tasks
 const TaskContext = createContext();
 
-// Provider to wrap around components that need access to exam/task state
 export const TaskProvider = ({ children }) => {
-  // Store the full exam/task data
   const [task, setTask] = useState(null);
-
-  // Track whether data is being loaded
   const [loading, setLoading] = useState(true);
-
-  // Current question index (for navigation)
   const [questionIndex, setQuestionIndex] = useState(0);
-
-  // User's selected answers
   const [answers, setAnswers] = useState([]);
-
-  // Whether user is reviewing their answers
   const [reviewMode, setReviewMode] = useState(false);
-
-  // Whether user has already submitted this exam
   const [alreadySubmitted, setAlreadySubmitted] = useState(false);
-  //access timeLeft from TimerContext
+  const [userScore, setUserScore] = useState(null); // NEW
+
   const { timeLeft } = useContext(TimerContext);
 
-  // Fetch exam data and questions
   const fetchExamWithQuestions = useCallback(async (id) => {
     setLoading(true);
-
     const {
       data: { user },
     } = await supabase.auth.getUser();
-
     const userId = user?.id;
 
-    // Check if this user has already submitted this exam
     const { data: existingSubmissions } = await supabase
-      .from("exam_submission")
+      .from("exam_submissions")
       .select("id")
       .eq("exam_id", id)
-      .eq("user_id", userId)
+      .eq("student_id", userId)
       .limit(1);
 
     if (existingSubmissions?.length > 0) {
@@ -58,7 +42,6 @@ export const TaskProvider = ({ children }) => {
     }
 
     try {
-      // Get exam details
       const { data: examData, error: examError } = await supabase
         .from("exams")
         .select("*")
@@ -70,10 +53,9 @@ export const TaskProvider = ({ children }) => {
         return;
       }
 
-      // Get associated multiple choice questions
       const { data: questionsData, error: questionsError } = await supabase
         .from("mcq_questions")
-        .select("question_id, question_text, options, correct_answer")
+        .select("question_id, question_text, options, answers") // UPDATED
         .eq("exam_id", id);
 
       if (questionsError || !questionsData || questionsData.length === 0) {
@@ -81,14 +63,13 @@ export const TaskProvider = ({ children }) => {
         return;
       }
 
-      // Format the questions
       const formattedQuestions = questionsData.map((q) => ({
         id: q.question_id,
         question: q.question_text,
         options: Array.isArray(q.options) ? q.options : [],
+        correctAnswers: q.answers, // NEW
       }));
 
-      // Set task and initialize answers with nulls
       setTask({
         exam_id: examData.exam_id,
         course_id: examData.course_id,
@@ -103,7 +84,6 @@ export const TaskProvider = ({ children }) => {
     }
   }, []);
 
-  // Save selected answer for a specific question
   const handleAnswerSelect = useCallback((index, answer) => {
     setAnswers((prevAnswers) => {
       const updated = [...prevAnswers];
@@ -112,19 +92,16 @@ export const TaskProvider = ({ children }) => {
     });
   }, []);
 
-  // Go to next question
   const handleNext = useCallback(() => {
     setQuestionIndex((prevIndex) =>
       Math.min(prevIndex + 1, task.questions.length - 1)
     );
   }, [task]);
 
-  // Go back to previous question
   const handleBack = useCallback(() => {
     setQuestionIndex((prevIndex) => Math.max(prevIndex - 1, 0));
   }, []);
 
-  //submit exam answers
   const handleSubmit = useCallback(
     async (navigate) => {
       const {
@@ -137,33 +114,19 @@ export const TaskProvider = ({ children }) => {
         return;
       }
 
-      //calculate time taken for the exam
-      const totalDurationInSeconds = task.duration * 60; //duration to seconds
-      const timeTaken = totalDurationInSeconds - timeLeft; //subtract remaining time from total duration
+      const totalDurationInSeconds = task.duration * 60;
+      const timeTaken = totalDurationInSeconds - timeLeft;
 
-      //  Calculate total score
-      let totalScore = 0;
-      task.questions.forEach((question, index) => {
-        if (answers[index] && answers[index] === question.correct_answer) {
-          totalScore += 1;
-        }
-      });
-      console.log("Total score calculated:", totalScore);
-
-      //payload for exam_submissions
       const submissionPayload = {
         submitted_at: new Date().toISOString(),
         student_id: userId,
         exam_id: task.exam_id,
-        total_score: totalScore,
+        total_score: 0, // initially 0, updated later
         time_taken: timeTaken,
         focus_loss_count: null,
         feedback_summery: null,
       };
 
-      console.log("Submitting exam payload:", submissionPayload);
-
-      //insert into exam_submissions
       const { data: submissionData, error: submissionError } = await supabase
         .from("exam_submissions")
         .insert([submissionPayload])
@@ -175,63 +138,56 @@ export const TaskProvider = ({ children }) => {
         return;
       }
 
-      console.log("Inserted exam_submission rows:", submissionData);
+      const submissionId = submissionData[0].id;
 
-      //payload for exam_submissions_answers
+      let totalScore = 0;
       const answersPayload = task.questions
         .map((question, index) => {
           const selectedAnswer = answers[index];
           if (!selectedAnswer) return null;
 
-          //if the selected answer is correct
-          const isCorrect = question.correct_answer === selectedAnswer;
+          const isCorrect = question.correctAnswers?.includes(selectedAnswer);
+
+          if (isCorrect) totalScore += 1;
 
           return {
             score: isCorrect ? 1 : 0,
             ai_feedback: null,
             question_id: question.id,
-            selected_option: selectedAnswer,
-            submission_id: submissionData[0].id,
+            submission_id: submissionId,
           };
         })
-        .filter(Boolean); //remove unanswered/null answers
+        .filter(Boolean);
 
       if (answersPayload.length === 0) {
         alert("You must answer at least one question.");
         return;
       }
 
-      console.log("Submitting answers payload:", answersPayload);
-
-      //insert into exam_submissions_answers
       const { data: answersData, error: answersError } = await supabase
         .from("exam_submissions_answers")
         .insert(answersPayload)
         .select();
 
       if (answersError) {
-        console.error(
-          "Error saving responses to exam_submissions_answers:",
-          answersError
-        );
+        console.error("Error saving responses:", answersError);
         alert("Failed to save answers. Please try again.");
         return;
       }
 
-      console.log("Inserted exam_submissions_answers rows:", answersData);
+      // Update total_score in exam_submissions
+      await supabase
+        .from("exam_submissions")
+        .update({ total_score: totalScore })
+        .eq("id", submissionId);
 
-      alert("Answers submitted successfully!");
-      alert(`You scored ${totalScore} out of ${task.questions.length}`);
-
-      console.log("Responses saved. Redirecting...");
-
-      //redirect to correct exam list page
-      navigate(`/student/courses/${task.userId}/${task.course_id}/exams`);
+      setUserScore(totalScore);
+      alert(`Exam submitted! Your score is ${totalScore}.`);
+      navigate(`/student/courses/${userId}/${task.course_id}/exams`);
     },
     [task, answers, timeLeft]
   );
 
-  //combine context values
   const contextValue = useMemo(
     () => ({
       task,
@@ -240,6 +196,7 @@ export const TaskProvider = ({ children }) => {
       answers,
       reviewMode,
       alreadySubmitted,
+      userScore,
       setReviewMode,
       fetchExamWithQuestions,
       handleAnswerSelect,
@@ -255,6 +212,7 @@ export const TaskProvider = ({ children }) => {
       answers,
       reviewMode,
       alreadySubmitted,
+      userScore,
       fetchExamWithQuestions,
       handleAnswerSelect,
       handleNext,
