@@ -155,7 +155,7 @@ export const TaskProvider = ({ children }) => {
         submitted_at: new Date().toISOString(),
         student_id: userId,
         exam_id: task.exam_id,
-        total_score: 0,
+        total_score: totalScore,
         time_taken: timeTaken,
         focus_loss_count: null,
         feedback_summery: null,
