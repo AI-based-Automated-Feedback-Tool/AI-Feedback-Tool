@@ -5,10 +5,10 @@ import { supabase } from '../../SupabaseAuth/supabaseClient';
 
 const AIFeedbackPage = () => {
   const { examId } = useParams();
-  const [feedbackText, setFeedbackText] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [examTitle, setExamTitle] = useState('');
+  const [feedback, setFeedback] = useState(null);
 
   useEffect(() => {
     const generateFeedback = async () => {
@@ -40,28 +40,28 @@ const AIFeedbackPage = () => {
           .single();
 
         if (examError) throw new Error('Failed to fetch exam title');
-        setExamTitle(examData?.title || 'Unknown Exam');
-
-
-        // Construct prompt for AI
+        setExamTitle(examData?.title || 'Unknown Exam');  
+        
+        
+        // Construct prompt for structured feedback
         const prompt = `
-          Analyze the following exam data and provide feedback for the teacher.
+You are an educational AI assistant. Analyze the following exam data and generate structured teaching feedback in JSON format with these sections:
 
-          Questions: ${JSON.stringify(questions, null, 2)}
-          Submissions: ${JSON.stringify(submissions, null, 2)}
+{
+  "keyStrengths": [],
+  "mostMissedQuestions": [],
+  "teachingSuggestions": [],
+  "overallSummary": "",
+  "nextSteps": []
+}
 
-          Instructions:
-          1. Give students score for each question as a percentage.
-          example: "Question 1: 75% correct"
-          2. Identify the 3 most missed questions and explain why students struggled with them.
-          example: "Question 2: Many students struggled with this question because it required understanding of advanced concepts."
-          3. Provide teaching suggestions to improve student understanding.
-          example: "Consider reviewing the topic of advanced concepts in the next class."
-          4. Provide a summary of overall student performance.
-          example: "Overall, students performed well on the exam with an average score of 85%. However, there were significant challenges with questions 2 and 5."
-                   
-          `;
-        // Call your backend route that connects to Cohere
+Questions: ${JSON.stringify(questions, null, 2)}
+Submissions: ${JSON.stringify(submissions, null, 2)}
+
+Give your response ONLY as a valid JSON object with the exact keys above.
+        `;
+
+        // Call backend API
         const response = await fetch('http://localhost:5000/api/cohere/generate', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -71,7 +71,8 @@ const AIFeedbackPage = () => {
         if (!response.ok) throw new Error('Cohere API call failed');
 
         const data = await response.json();
-        setFeedbackText(data.result?.trim() || 'No feedback generated.');
+        const parsed = JSON.parse(data.result);
+        setFeedback(parsed);
       } catch (err) {
         setError(err.message);
       } finally {
