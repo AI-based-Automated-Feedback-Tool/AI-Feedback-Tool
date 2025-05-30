@@ -148,6 +148,7 @@ export const TaskProvider = ({ children }) => {
           totalScore += 1;
         }
       });
+      console.log("Total score calculated:", totalScore);
 
       //payload for exam_submissions
       const submissionPayload = {
