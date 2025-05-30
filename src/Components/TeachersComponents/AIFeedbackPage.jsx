@@ -1,20 +1,47 @@
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useState, useEffect, useRef } from 'react';
+import { useParams, useLocation } from 'react-router-dom';
 import { Container, Card, Alert, Spinner } from 'react-bootstrap';
 import { supabase } from '../../SupabaseAuth/supabaseClient';
 
+// Define default prompts outside the component
+const defaultPrompts = [
+  {
+    label: 'Standard Feedback',
+    prompt: `You are an educational AI assistant...` // your default prompt here
+  }
+];
+
 const AIFeedbackPage = () => {
   const { examId } = useParams();
+  const location = useLocation();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [examTitle, setExamTitle] = useState('');
   const [feedback, setFeedback] = useState(null);
+  const hasFetched = useRef(false); // Add this ref to track if we've already fetched
 
   useEffect(() => {
+    // Only run this effect if we haven't fetched yet
+    if (hasFetched.current) return;
+    hasFetched.current = true;
+
     const generateFeedback = async () => {
       try {
         setLoading(true);
         setError(null);
+
+        // Get the prompt from location state or use default
+        const customPrompt = location.state?.prompt || defaultPrompts[0].prompt;
+
+        // Fetch exam data
+        const { data: examData, error: examError } = await supabase
+          .from('exams')
+          .select('title')
+          .eq('exam_id', examId)
+          .single();
+
+        if (examError) throw new Error('Failed to fetch exam title');
+        setExamTitle(examData?.title || 'Unknown Exam');
 
         // Fetch questions
         const { data: questions, error: questionsError } = await supabase
@@ -32,47 +59,37 @@ const AIFeedbackPage = () => {
 
         if (submissionsError) throw new Error('Failed to fetch submissions');
 
-        // Fetch exam title
-        const { data: examData, error: examError } = await supabase
-          .from('exams')
-          .select('title')
-          .eq('exam_id', examId)
-          .single();
+        // Prepare prompt with actual data
+        const promptWithData = customPrompt
+          .replace('[QUESTIONS]', JSON.stringify(questions))
+          .replace('[SUBMISSIONS]', JSON.stringify(submissions));
 
-        if (examError) throw new Error('Failed to fetch exam title');
-        setExamTitle(examData?.title || 'Unknown Exam');  
-        
-        
-        // Construct prompt for structured feedback
-        const prompt = `
-You are an educational AI assistant. Analyze the following exam data and generate structured teaching feedback in JSON format with these sections:
-
-{
-  "keyStrengths": [],
-  "mostMissedQuestions": [],
-  "teachingSuggestions": [],
-  "overallSummary": "",
-  "nextSteps": []
-}
-
-Questions: ${JSON.stringify(questions, null, 2)}
-Submissions: ${JSON.stringify(submissions, null, 2)}
-
-Give your response ONLY as a valid JSON object with the exact keys above.
-        `;
-
-        // Call backend API
+        // Call AI API - only once
         const response = await fetch('http://localhost:5000/api/cohere/generate', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ prompt })
+          body: JSON.stringify({ prompt: promptWithData })
         });
 
-        if (!response.ok) throw new Error('Cohere API call failed');
+        if (!response.ok) throw new Error('AI API call failed');
 
         const data = await response.json();
-        const parsed = JSON.parse(data.result);
-        setFeedback(parsed);
+        let parsedFeedback;
+        
+        try {
+          parsedFeedback = JSON.parse(data.result);
+        } catch {
+          // If not JSON, treat as plain text
+          parsedFeedback = {
+            overallSummary: data.result,
+            keyStrengths: [],
+            mostMissedQuestions: [],
+            teachingSuggestions: [],
+            nextSteps: []
+          };
+        }
+        
+        setFeedback(parsedFeedback);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -81,7 +98,7 @@ Give your response ONLY as a valid JSON object with the exact keys above.
     };
 
     generateFeedback();
-  }, [examId]);
+  }, [examId, location.state]);
 
   if (loading) return (
     <div className="text-center my-5">
@@ -108,10 +125,18 @@ Give your response ONLY as a valid JSON object with the exact keys above.
         <Card.Body>
           {feedback ? (
             <>
-              <Section title="📊 Overall Summary" text={feedback.overallSummary} />
-              <Section title="✅ Key Strengths" items={feedback.keyStrengths} />
-              <Section title="⚠️ Most Missed Questions" items={feedback.mostMissedQuestions} />
-              <Section title="💡 Teaching Suggestions" items={feedback.teachingSuggestions} />              
+              {feedback.overallSummary && (
+                <Section title="📊 Overall Summary" text={feedback.overallSummary} />
+              )}
+              {feedback.keyStrengths?.length > 0 && (
+                <Section title="✅ Key Strengths" items={feedback.keyStrengths} />
+              )}
+              {feedback.mostMissedQuestions?.length > 0 && (
+                <Section title="⚠️ Most Missed Questions" items={feedback.mostMissedQuestions} />
+              )}
+              {feedback.teachingSuggestions?.length > 0 && (
+                <Section title="💡 Teaching Suggestions" items={feedback.teachingSuggestions} />
+              )}
               {feedback.nextSteps?.length > 0 && (
                 <Section title="🚀 Actionable Next Steps" items={feedback.nextSteps} />
               )}
@@ -123,13 +148,12 @@ Give your response ONLY as a valid JSON object with the exact keys above.
       </Card>
 
       <Alert variant="info">
-        <i className="bi bi-robot"></i> Feedback is generated by AI analysis of exam data using Cohere.
+        <i className="bi bi-robot"></i> Feedback generated using custom AI analysis.
       </Alert>
     </Container>
   );
 };
 
-// Reusable section component
 const Section = ({ title, items = [], text = '' }) => (
   <div className="mb-4">
     <h5 className="text-secondary">{title}</h5>
