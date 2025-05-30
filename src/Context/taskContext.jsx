@@ -221,6 +221,8 @@ export const TaskProvider = ({ children }) => {
       console.log("Inserted exam_submissions_answers rows:", answersData);
 
       alert("Answers submitted successfully!");
+      alert(`You scored ${totalScore} out of ${task.questions.length}`);
+
       console.log("Responses saved. Redirecting...");
 
       //redirect to correct exam list page
