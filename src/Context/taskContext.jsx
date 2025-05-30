@@ -143,7 +143,11 @@ export const TaskProvider = ({ children }) => {
 
       //  Calculate total score
       let totalScore = 0;
-      
+      task.questions.forEach((question, index) => {
+        if (answers[index] && answers[index] === question.correct_answer) {
+          totalScore += 1;
+        }
+      });
 
       //payload for exam_submissions
       const submissionPayload = {
