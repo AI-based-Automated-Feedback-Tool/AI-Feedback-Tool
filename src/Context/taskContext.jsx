@@ -73,7 +73,7 @@ export const TaskProvider = ({ children }) => {
       // Get associated multiple choice questions
       const { data: questionsData, error: questionsError } = await supabase
         .from("mcq_questions")
-        .select("question_id, question_text, options")
+        .select("question_id, question_text, options, correct_answer")
         .eq("exam_id", id);
 
       if (questionsError || !questionsData || questionsData.length === 0) {
