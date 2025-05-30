@@ -106,9 +106,19 @@ Give your response ONLY as a valid JSON object with the exact keys above.
           <span className="small">Exam Name: {examTitle}</span>
         </Card.Header>
         <Card.Body>
-          <pre style={{ whiteSpace: 'pre-wrap', fontFamily: 'inherit' }}>
-            {feedbackText}
-          </pre>
+          {feedback ? (
+            <>
+              <Section title="📊 Overall Summary" text={feedback.overallSummary} />
+              <Section title="✅ Key Strengths" items={feedback.keyStrengths} />
+              <Section title="⚠️ Most Missed Questions" items={feedback.mostMissedQuestions} />
+              <Section title="💡 Teaching Suggestions" items={feedback.teachingSuggestions} />              
+              {feedback.nextSteps?.length > 0 && (
+                <Section title="🚀 Actionable Next Steps" items={feedback.nextSteps} />
+              )}
+            </>
+          ) : (
+            <p>No feedback generated.</p>
+          )}
         </Card.Body>
       </Card>
 
