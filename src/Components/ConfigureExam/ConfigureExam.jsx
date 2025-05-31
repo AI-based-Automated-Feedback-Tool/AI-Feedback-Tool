@@ -87,8 +87,9 @@ const ConfigureExam = () => {
         ...exam,
         examId: response.data.examId
       }));      
-      
-      navigate(`/teacher/exams/${response.data.examId}/questions/${exam.type}`);
+      // Redirect to question configuration page with exam type ecxam id and with question count
+      navigate(`/teacher/exams/${response.data.examId}/questions/${exam.type}?question_count=${exam.question_count}`);
+
 
     } catch (err) {
       console.error("Error saving exam:", err);
