@@ -42,11 +42,18 @@ export default function CreateMcqQuestionsContent() {
         }        
     }
 
+    const isDisabled = () =>{
+        if (questions.length >= parseInt(question_count)) {
+            return true
+        }
+        return false
+    }
+
   return (
     <>               
             {/* Main content area */}
             <Col className="w-100">
-                <McqQuestionForm onSave={addQuestion} warning={warning}/>
+                <McqQuestionForm onSave={addQuestion} warning={warning} disabled={isDisabled()}/>
                 {questions.length > 0 && (
                     <Card className="mt-4">
                         <CardHeader className='bg-primary text-white '>

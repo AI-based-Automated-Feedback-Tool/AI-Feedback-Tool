@@ -3,7 +3,7 @@ import { Form, Button, Container, Row, Col, Card, Alert } from "react-bootstrap"
 import { useState } from 'react';
 import { Table } from 'react-bootstrap';
 
-export default function McqQuestionForm({onSave, warning}) {
+export default function McqQuestionForm({onSave, warning, disabled}) {
     const [questionText, setQuestionText] = useState("");
     const [answerOptions, setAnswerOptions] = useState(["","","",""])
     const [correctAnswers, setCorrectAnswers] = useState([]);
@@ -164,7 +164,7 @@ export default function McqQuestionForm({onSave, warning}) {
 
                 {/* Submit Button */}
                 <div className="d-flex justify-content-end" onClick={handleAddQuestion}>
-                    <Button variant="primary" >
+                    <Button variant="primary" disabled={disabled}>
                         ➕ Save Question
                     </Button>
                 </div>          
