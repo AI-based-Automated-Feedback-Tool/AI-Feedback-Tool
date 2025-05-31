@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { saveMcqQuestion } from "./mcqQuestionService";
 import { supabase } from "../../SupabaseAuth/supabaseClient"; 
 
-export const useMcqQuestion = (examId) => {
+export const useMcqQuestion = (examId, question_count) => {
     // State to manage sidebar visibility
     const [userId, setUserId] = useState(null);
     const [questions, setQuestions] = useState([]);
@@ -10,6 +10,7 @@ export const useMcqQuestion = (examId) => {
     const [editQuestionIndex, setEditQuestionIndex] = useState(null);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [warning, setWarning] = useState(null)
 
 
     useEffect(() => {
@@ -26,8 +27,22 @@ export const useMcqQuestion = (examId) => {
 
     // Add question from child form
     const addQuestion = (newQuestion) => {
-        setQuestions(prev => [...prev, newQuestion]);
+        if (questions.length >= parseInt(question_count)) {
+            setWarning(`You can only add ${question_count} questions.`);
+            return false;
+        }
+        const newQuestionsList = [...questions, newQuestion]
+        setQuestions(newQuestionsList);
+        
+        // Show warning if limit reached now
+        if (newQuestionsList.length === parseInt(question_count)) {
+            setWarning(`You have reached the limit of ${question_count} questions.`);
+        } else {
+            setWarning(null);
+        }
+        return true;
     };
+
     // Delete question
     const deleteQuestion = (index) => {
         const updated = [...questions];
@@ -92,6 +107,7 @@ export const useMcqQuestion = (examId) => {
         clearQuestions,
         error,
         loading,
-        userId
+        userId,
+        warning
     }
 }
