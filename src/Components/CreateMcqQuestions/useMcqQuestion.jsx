@@ -48,6 +48,9 @@ export const useMcqQuestion = (examId, question_count) => {
         const updated = [...questions];
         updated.splice(index, 1);
         setQuestions(updated);
+
+        //clear warning message
+        updated.length < parseInt(question_count) && setWarning(null)
     };
     // Edit question
     const editQuestion = (index) => {
