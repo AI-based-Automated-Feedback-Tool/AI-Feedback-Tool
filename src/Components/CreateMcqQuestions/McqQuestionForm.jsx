@@ -1,9 +1,9 @@
 import React from 'react'
-import { Form, Button, Container, Row, Col, Card } from "react-bootstrap";
+import { Form, Button, Container, Row, Col, Card, Alert } from "react-bootstrap";
 import { useState } from 'react';
 import { Table } from 'react-bootstrap';
 
-export default function McqQuestionForm({onSave}) {
+export default function McqQuestionForm({onSave, warning, disabled}) {
     const [questionText, setQuestionText] = useState("");
     const [answerOptions, setAnswerOptions] = useState(["","","",""])
     const [correctAnswers, setCorrectAnswers] = useState([]);
@@ -59,15 +59,17 @@ export default function McqQuestionForm({onSave}) {
                 correctAnswers: correctAnswers,
                 points: points
             }
-            onSave( newQuestion);
+            const success = onSave( newQuestion);
 
             // Reset form fields
-            setQuestionText("");
-            setAnswerOptions(["", "", "", ""]);
-            setCorrectAnswers([]);
-            setNumOfAnswers(1);
-            setPoints("");
-            setErrors({});
+            if(success){
+                setQuestionText("");
+                setAnswerOptions(["", "", "", ""]);
+                setCorrectAnswers([]);
+                setNumOfAnswers(1);
+                setPoints("");
+                setErrors({});
+            }   
         }
     }
     
@@ -79,6 +81,8 @@ export default function McqQuestionForm({onSave}) {
         </Card.Header>
         <Card.Body>
             <Form>
+                {warning && <Alert variant="warning">{warning}</Alert>}
+                {console.log (warning)}
                 {/* Question */}
                 <Form.Group className="mb-3">
                     <Form.Label className="fw-bold">Question *</Form.Label>
@@ -160,7 +164,7 @@ export default function McqQuestionForm({onSave}) {
 
                 {/* Submit Button */}
                 <div className="d-flex justify-content-end" onClick={handleAddQuestion}>
-                    <Button variant="primary" >
+                    <Button variant="primary" disabled={disabled}>
                         ➕ Save Question
                     </Button>
                 </div>          
