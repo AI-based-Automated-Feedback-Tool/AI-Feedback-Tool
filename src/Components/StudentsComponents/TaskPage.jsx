@@ -1,7 +1,8 @@
-import React, { useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useTask } from "../../Context/taskContext";
 import { TimerProvider, useTimer } from "../../Context/TimerContext";
+import PopUp from "./PopUp.jsx";
 
 const TaskPage = () => {
   const {
@@ -18,10 +19,13 @@ const TaskPage = () => {
     handleBack,
     handleSubmit,
     setQuestionIndex,
+    showPopup,
+    popupMessage,
+    setShowPopup,
   } = useTask();
   //access timer values
-  const { timeLeft, formatTime } = useTimer(); 
-  
+  const { timeLeft, formatTime } = useTimer();
+
   //get task id from url
   const { id } = useParams();
   const navigate = useNavigate();
@@ -47,7 +51,7 @@ const TaskPage = () => {
         Task or questions not found.
       </div>
     );
-    
+
   //get the current question based on the question index
   const currentQuestion = task.questions[questionIndex];
   //function to jump to a specific question
@@ -103,6 +107,11 @@ const TaskPage = () => {
                   >
                     Confirm Submit
                   </button>
+                  <PopUp
+                    message={popupMessage}
+                    isVisible={showPopup}
+                    onClose={() => setShowPopup(false)}
+                  />
                 </div>
               </>
             ) : (
@@ -166,7 +175,7 @@ const TaskPage = () => {
             style={{ top: "80px", maxHeight: "80vh", overflowY: "auto" }}
           >
             <h6 className="text-center mb-3">Questions</h6>
-            <div className="d-flex flex-column align-items-center gap-2">
+            <div className="d-flex flex-row flex-wrap justify-content-center gap-2">
               {task.questions.map((_, idx) => (
                 <button
                   key={idx}
