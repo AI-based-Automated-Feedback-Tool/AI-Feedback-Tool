@@ -39,4 +39,19 @@ export const getStudents = async (selectedCourse) => {
     }
 }
 
+//API service to fetch exam submissions
+export const getExamSubmissions = async (selectedExam) => {    
+    if (!selectedExam) {
+        throw new Error("Exam selection is required");
+    }        
+    const res = await fetch(`http://localhost:5000/api/teacher/reports/exam_submission?examId=${selectedExam}`)
+    const json = await res.json();
+    if (res.ok){
+        return json.examSubmissions;
+    }
+    else {
+        throw new Error(json.message || "Failed to fetch exam submissions");
+    }
+}
+
             
