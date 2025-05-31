@@ -175,7 +175,7 @@ const TaskPage = () => {
             style={{ top: "80px", maxHeight: "80vh", overflowY: "auto" }}
           >
             <h6 className="text-center mb-3">Questions</h6>
-            <div className="d-flex flex-column align-items-center gap-2">
+            <div className="d-flex flex-row flex-wrap justify-content-center gap-2">
               {task.questions.map((_, idx) => (
                 <button
                   key={idx}
