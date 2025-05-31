@@ -6,10 +6,14 @@ import QuestionTable from './QuestionTable';
 import EditQuestion from './EditQuestion';
 import {useMcqQuestion} from './useMcqQuestion';
 import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 export default function CreateMcqQuestionsContent() {
     
-    const {examId, question_count} = useParams();
+    const {examId} = useParams();
+    const location = useLocation();                   
+    const query = new URLSearchParams(location.search);
+    const question_count = query.get('question_count');
     const navigate = useNavigate();
 
     const {
@@ -25,8 +29,9 @@ export default function CreateMcqQuestionsContent() {
         clearQuestions,
         error,
         loading,
-        userId
-    } = useMcqQuestion(examId);
+        userId,
+        warning
+    } = useMcqQuestion(examId, question_count);
 
     const handleSaveQuestions = async () => {
         await saveAllQuestions();
@@ -41,7 +46,7 @@ export default function CreateMcqQuestionsContent() {
     <>               
             {/* Main content area */}
             <Col className="w-100">
-                <McqQuestionForm onSave={addQuestion}/>
+                <McqQuestionForm onSave={addQuestion} warning={warning}/>
                 {questions.length > 0 && (
                     <Card className="mt-4">
                         <CardHeader className='bg-primary text-white '>
