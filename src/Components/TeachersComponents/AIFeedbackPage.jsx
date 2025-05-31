@@ -20,8 +20,7 @@ const AIFeedbackPage = () => {
   const [feedback, setFeedback] = useState(null);
   const hasFetched = useRef(false); // Add this ref to track if we've already fetched
 
-  useEffect(() => {
-    // Only run this effect if we haven't fetched yet
+    useEffect(() => {
     if (hasFetched.current) return;
     hasFetched.current = true;
 
@@ -30,10 +29,9 @@ const AIFeedbackPage = () => {
         setLoading(true);
         setError(null);
 
-        // Get the prompt from location state or use default
         const customPrompt = location.state?.prompt || defaultPrompts[0].prompt;
 
-        // Fetch exam data
+        // Fetch exam title
         const { data: examData, error: examError } = await supabase
           .from('exams')
           .select('title')
@@ -59,12 +57,24 @@ const AIFeedbackPage = () => {
 
         if (submissionsError) throw new Error('Failed to fetch submissions');
 
-        // Prepare prompt with actual data
+        // Extract submission IDs for fetching answer-level data
+        const submissionIds = submissions.map(sub => sub.id);
+
+        // Fetch answers per submission
+        const { data: answers, error: answersError } = await supabase
+          .from('exam_submissions_answers')
+          .select('*')
+          .in('submission_id', submissionIds);
+
+        if (answersError) throw new Error('Failed to fetch submission answers');
+
+        // Build enhanced prompt
         const promptWithData = customPrompt
           .replace('[QUESTIONS]', JSON.stringify(questions))
-          .replace('[SUBMISSIONS]', JSON.stringify(submissions));
+          .replace('[SUBMISSIONS]', JSON.stringify(submissions))
+          .replace('[ANSWERS]', JSON.stringify(answers));
 
-        // Call AI API - only once
+        // Call AI API
         const response = await fetch('http://localhost:5000/api/cohere/generate', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -75,7 +85,7 @@ const AIFeedbackPage = () => {
 
         const data = await response.json();
         let parsedFeedback;
-        
+
         try {
           parsedFeedback = JSON.parse(data.result);
         } catch {
@@ -88,7 +98,7 @@ const AIFeedbackPage = () => {
             nextSteps: []
           };
         }
-        
+
         setFeedback(parsedFeedback);
       } catch (err) {
         setError(err.message);
