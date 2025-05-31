@@ -13,15 +13,18 @@ const TaskContext = createContext();
 
 export const TaskProvider = ({ children }) => {
   // State variables
-  const [task, setTask] = useState(null);                     // Holds the current exam data
-  const [loading, setLoading] = useState(true);               // Tracks if the exam is being fetched
-  const [questionIndex, setQuestionIndex] = useState(0);      // Index of the currently displayed question
-  const [answers, setAnswers] = useState([]);                 // Array holding selected answers
-  const [reviewMode, setReviewMode] = useState(false);        // Indicates if in "review your answers" state
+  const [task, setTask] = useState(null); // Holds the current exam data
+  const [loading, setLoading] = useState(true); // Tracks if the exam is being fetched
+  const [questionIndex, setQuestionIndex] = useState(0); // Index of the currently displayed question
+  const [answers, setAnswers] = useState([]); // Array holding selected answers
+  const [reviewMode, setReviewMode] = useState(false); // Indicates if in "review your answers" state
   const [alreadySubmitted, setAlreadySubmitted] = useState(false); // Tracks if the student already submitted this exam
-  const [userScore, setUserScore] = useState(null);           // Score after submitting the exam
+  const [userScore, setUserScore] = useState(null); // Score after submitting the exam
 
-  const { timeLeft } = useContext(TimerContext);              // Remaining time from timer context
+  const { timeLeft } = useContext(TimerContext); // Remaining time from timer context
+  //state for pop up after submit
+  const [showPopup, setShowPopup] = useState(false);
+  const [popupMessage, setPopupMessage] = useState("");
 
   // Fetch the exam details and its related questions
   const fetchExamWithQuestions = useCallback(async (id) => {
@@ -188,17 +191,22 @@ export const TaskProvider = ({ children }) => {
         return;
       }
 
-      // Update total score in the exam_submissions table
+      //update total score in the exam_submissions table
       await supabase
         .from("exam_submissions")
         .update({ total_score: totalScore })
         .eq("id", submissionId);
 
       setUserScore(totalScore);
-      alert(`Exam submitted! Your score is ${totalScore}.`);
+      setPopupMessage(`Exam submitted! Your score is ${totalScore}.`);
+      //show the popup
+      setShowPopup(true); 
 
-      // Redirect back to the exam list for the course
-      navigate(`/student/courses/${userId}/${task.course_id}/exams`);
+      //delay navigation by 3 seconds
+      setTimeout(() => {
+        // Redirect back to the exam list for the course
+        navigate(`/student/courses/${userId}/${task.course_id}/exams`);
+      }, 3000);
     },
     [task, answers, timeLeft]
   );
@@ -220,6 +228,8 @@ export const TaskProvider = ({ children }) => {
       handleBack,
       handleSubmit,
       setQuestionIndex,
+      showPopup,
+      popupMessage,
     }),
     [
       task,
@@ -234,13 +244,14 @@ export const TaskProvider = ({ children }) => {
       handleNext,
       handleBack,
       handleSubmit,
+      showPopup,
+      popupMessage,
+      setShowPopup,
     ]
   );
 
   return (
-    <TaskContext.Provider value={contextValue}>
-      {children}
-    </TaskContext.Provider>
+    <TaskContext.Provider value={contextValue}>{children}</TaskContext.Provider>
   );
 };
 
