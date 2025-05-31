@@ -54,4 +54,19 @@ export const getExamSubmissions = async (selectedExam) => {
     }
 }
 
+//API service to fetch mcq questions
+export const getMcqQuestions = async (selectedExam) => {    
+    if (!selectedExam) {
+        throw new Error("Exam selection is required");
+    }        
+    const res = await fetch(`http://localhost:5000/api/teacher/reports/mcq?examId=${selectedExam}`)
+    const json = await res.json();
+    if (res.ok){
+        return json.mcqQuestions;
+    }
+    else {
+        throw new Error(json.message || "Failed to fetch mcq questions");
+    }
+}
+
             
