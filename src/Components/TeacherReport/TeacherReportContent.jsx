@@ -8,6 +8,7 @@ import ExamDropdown from './ExamDropdown';
 import LoadingCard from './LoadingCard';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 import robot from '../../assets/robot.png'
+import useFetchExamSubmissions from './hooks/useFetchExamSubmissions';
 
 export default function TeacherReportContent() {
     const [selectedCourse, setSelectedCourse] = useState("");
@@ -16,6 +17,13 @@ export default function TeacherReportContent() {
     const [selectedExam, setSelectedExam] = useState("");
     const [selectedStudent, setSelectedStudent] = useState("");
     const [loadingUser, setLoadingUser] = useState(true);
+
+    const [loadingReport, setLoadingReport] = useState(false)
+    const [reportData, setReportData] = useState(false)
+    const [reportError, setReportError] = useState()
+
+    const { examSubmissions, loading } = useFetchExamSubmissions(selectedExam, setReportError);
+
 
     useEffect(() => {
             const getUserId = async () => {
@@ -31,14 +39,7 @@ export default function TeacherReportContent() {
             getUserId();
         }, []);
 
-    // Prevent rendering anything dependent on userId until it's loaded
-    if (loadingUser) {
-         return (
-            <Col className="w-100" style={{ backgroundColor: '#f8f9fa' }}>
-                <LoadingCard />
-            </Col>
-        );
-    }
+    
 
     //placeholder score deatils
     const scoreDistributionData = [
@@ -51,11 +52,49 @@ export default function TeacherReportContent() {
         { scoreRange: '91-100', students: 4 },
     ];
 
+    // Reset report on course or exam change
+    useEffect(() => {
+        setReportData(false);
+        setReportError(null);
+    }, [selectedCourse, selectedExam]);
+
+    // Show report when data is fetched
+    useEffect(() => {
+        if (!loading && selectedExam) {
+            setReportData(true);
+            setLoadingReport(false);
+        }
+    }, [loading, selectedExam]);
+
+    const generateReport = async () =>{
+        if(!selectedCourse || !selectedExam) {
+            setError('Please select both course and exam')
+            return
+        }
+
+        setLoadingReport(true)
+        setError(null)
+    }
+
+    //report content
+    const noOfStudentsDoneExam = examSubmissions.length;
+    const scores = examSubmissions.map((submission) => submission.total_score)
+    let totalScore = 0;
+    for(let i=0; i<scores.length; i++){
+        totalScore = totalScore+scores[i]
+    }
+    const avgScore = noOfStudentsDoneExam > 0 ? (totalScore / noOfStudentsDoneExam).toFixed(2) : 0;
+    const highestScore = scores.length > 0 ? Math.max(...scores) : 0;
   return (
     <Col 
         className="w-100 " 
         style={{ backgroundColor: '#f8f9fa' }}
     >
+        {
+            loadingUser ? (
+        <LoadingCard />
+      ) :(
+        <>
         <Card className="mt-4">
             <CardHeader className='bg-primary text-white '>
                 <h4>📋 Teacher Report</h4>
@@ -102,6 +141,8 @@ export default function TeacherReportContent() {
                             variant="primary" 
                             type="submit" 
                             className="mt-2 mt-md-3"
+                            onClick={generateReport}
+                            disabled={loadingReport}
                         >
                             Generate Report
                         </Button>
@@ -114,31 +155,35 @@ export default function TeacherReportContent() {
                             📊 Overall Exam Report 
                         </h5>
                     </CardHeader>
-                    <CardBody>
+                    {reportData ? (
+                        <>
+                        <CardBody>
                         <Row className="mb-4 mt-4">
-                            {[
-                                {
-                                    title: "Total Students Attempted",
-                                    value: "48 / 55",
-                                },
-                                {
-                                    title: "Average Score",
-                                    value: "72%",
-                                },
-                                {
-                                    title: "Highest Score",
-                                    value: "98%",
-                                }
-                            ].map((stat, index) => (
-                                <Col md={4} key={index}>
-                                    <Card className="text-center border-0 shadow-sm bg-light">
-                                        <CardBody>
-                                            <p className="text-muted mb-1">{stat.title}</p>
-                                            <h3 className="fw-bold text-primary">{stat.value}</h3>
-                                        </CardBody>
-                                    </Card>
+                            <Col md={4}>
+                                <Card className="text-center border-0 shadow-sm bg-light">
+                                    <CardBody>
+                                        <p className="text-muted mb-1">Total Students Attempted</p>
+                                        <h3 className="fw-bold text-primary">{noOfStudentsDoneExam}</h3>
+                                    </CardBody>
+                                </Card>
                                 </Col>
-                            ))}
+                                <Col md={4}>
+                                <Card className="text-center border-0 shadow-sm bg-light">
+                                    <CardBody>
+                                        <p className="text-muted mb-1">Average Score</p>
+                                        <h3 className="fw-bold text-primary">{avgScore}</h3>
+                                    </CardBody>
+                                </Card>
+                            </Col> 
+                            <Col md={4}>
+                                <Card className="text-center border-0 shadow-sm bg-light">
+                                    <CardBody>
+                                        <p className="text-muted mb-1">Highest Score</p>
+                                        <h3 className="fw-bold text-primary">{highestScore}</h3>
+                                    </CardBody>
+                                </Card>
+                            </Col> 
+                                                        
                         </Row>
                     </CardBody>
                     <hr style={{
@@ -274,6 +319,7 @@ export default function TeacherReportContent() {
                     </CardBody>
                     
                     </CardBody>
+                    </>):
                     <CardBody>
                         {/*Here shows the text which says no contents to preview */}
                         <Alert variant="info">
@@ -282,10 +328,11 @@ export default function TeacherReportContent() {
                             </p>
                         </Alert>
                     </CardBody>
+                    }
                 </Card>
-
             </CardBody>
         </Card>
+        </>)}
     </Col>
   )
 }
