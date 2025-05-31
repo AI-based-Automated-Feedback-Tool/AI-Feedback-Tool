@@ -23,6 +23,7 @@ export default function TeacherReportContent() {
     const [reportError, setReportError] = useState()
 
     const { examSubmissions, loading } = useFetchExamSubmissions(selectedExam, setReportError);
+    const [reportRequested, setReportRequested] = useState(false);
 
 
     useEffect(() => {
@@ -56,15 +57,16 @@ export default function TeacherReportContent() {
     useEffect(() => {
         setReportData(false);
         setReportError(null);
+        setReportRequested(false);
     }, [selectedCourse, selectedExam]);
 
     // Show report when data is fetched
     useEffect(() => {
-        if (!loading && selectedExam) {
+        if (!loading && selectedExam && reportRequested) {
             setReportData(true);
             setLoadingReport(false);
         }
-    }, [loading, selectedExam]);
+    }, [loading, selectedExam, reportRequested]);
 
     const generateReport = async () =>{
         if(!selectedCourse || !selectedExam) {
@@ -74,6 +76,7 @@ export default function TeacherReportContent() {
 
         setLoadingReport(true)
         setError(null)
+        setReportRequested(true)
     }
 
     //report content
