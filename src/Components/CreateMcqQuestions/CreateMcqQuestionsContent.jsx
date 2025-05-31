@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 
 export default function CreateMcqQuestionsContent() {
     
-    const {examId} = useParams();//grab examid from url
+    const {examId, question_count} = useParams();
     const navigate = useNavigate();
 
     const {
