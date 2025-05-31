@@ -28,19 +28,19 @@ export const ReviewProvider = ({ children }) => {
     }
   };
 
-  //to fetch review data for a specific student ID
-  const fetchSubmissionId = async (studentId) => {
+   //to fetch submission ID for a specific student ID
+   const fetchSubmissionId = async (studentId) => {
     try {
       const { data, error } = await supabase
-        .from("exam_submissions_answers")
-        .select("submission_id")
-        .eq("submission_id", studentId) 
+        .from("exam_submissions") 
+        .select("id")
+        .eq("student_id", studentId)
         .limit(1);
 
       if (error) {
         throw error;
       }
-      return data.length > 0 ? data[0].submission_id : null;
+      return data.length > 0 ? data[0].id : null; //return the submission ID
     } catch (error) {
       console.error("Error fetching submission ID:", error);
       return null;
