@@ -113,6 +113,13 @@ export default function TeacherReportContent() {
     const avgTime = totalTime / noOfStudentsDoneExam;
     const avgTimeInMinutes = (avgTime / 60).toFixed(2); 
 
+    //average focus loss
+    const focusLoss = examSubmissions.map((submission) => submission.focus_loss_count);
+    let totalFocusLoss = 0;
+    for(let i=0; i<focusLoss.length; i++){
+        totalFocusLoss += focusLoss[i]
+    }
+    const avgFocusLoss = (totalFocusLoss / noOfStudentsDoneExam).toFixed(2);
 
   return (
     <Col 
@@ -261,7 +268,9 @@ export default function TeacherReportContent() {
                                             <Card className="text-center border-0 shadow-sm bg-light">
                                                 <CardBody>
                                                     <p className="text-muted mb-1">Average focus loss per student</p>
-                                                    <h3 className="fw-bold text-primary">1.9</h3>
+                                                    <h3 className="fw-bold text-primary">
+                                                        {avgFocusLoss}
+                                                    </h3>
                                                 </CardBody>
                                             </Card>
                                         </Col>
