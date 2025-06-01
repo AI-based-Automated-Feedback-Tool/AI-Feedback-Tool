@@ -42,19 +42,6 @@ export default function TeacherReportContent() {
             getUserId();
         }, []);
 
-    
-
-    //placeholder score deatils
-    const scoreDistributionData = [
-        { scoreRange: '0-40', students: 8 },
-        { scoreRange: '41-50', students: 22 },
-        { scoreRange: '51-60', students: 45 },
-        { scoreRange: '61-70', students: 70 },
-        { scoreRange: '71-80', students: 50 },
-        { scoreRange: '81-90', students: 18 },
-        { scoreRange: '91-100', students: 4 },
-    ];
-
     // Reset report on course or exam change
     useEffect(() => {
         setReportData(false);
@@ -97,6 +84,26 @@ export default function TeacherReportContent() {
     for(let i=0; i<iniScore.length; i++){
         iniTotalScore += iniScore[i]
     }
+
+    //Grapgh data 
+    const noOfContainers = 7;
+    const containerSize = Math.ceil(iniTotalScore/noOfContainers) //round up to the next whole number
+    const scoreContainers = new Array(7).fill(0)
+    scores.forEach(score =>{
+        let containerIndex = Math.min(Math.floor(score/containerSize) , noOfContainers-1)
+        scoreContainers[containerIndex]++
+    })
+
+    //score distribution data
+    const scoreDistributionData = scoreContainers.map((count, index) => {
+        const start = index*containerSize
+        const end = (index === noOfContainers-1) ? iniTotalScore : (start + containerSize -1)
+        return {
+            scoreRange: `${start} - ${end}`,
+            students: count
+        }
+    })
+
 
   return (
     <Col 
