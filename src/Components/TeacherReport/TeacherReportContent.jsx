@@ -104,6 +104,15 @@ export default function TeacherReportContent() {
         }
     })
 
+    //average time taken
+    const time = examSubmissions.map((submission) => submission.time_taken);
+    let totalTime = 0;
+    for(let i=0; i<time.length; i++){
+        totalTime += time[i]
+    }
+    const avgTime = totalTime / noOfStudentsDoneExam;
+    const avgTimeInMinutes = (avgTime / 60).toFixed(2); 
+
 
   return (
     <Col 
@@ -242,7 +251,9 @@ export default function TeacherReportContent() {
                                             <Card className="text-center border-0 shadow-sm bg-light">
                                                 <CardBody>
                                                     <p className="text-muted mb-1">Average time taken</p>
-                                                    <h3 className="fw-bold text-primary">45 min</h3>
+                                                    <h3 className="fw-bold text-primary">     
+                                                        {avgTimeInMinutes} min
+                                                    </h3>
                                                 </CardBody>
                                             </Card>
                                         </Col>
