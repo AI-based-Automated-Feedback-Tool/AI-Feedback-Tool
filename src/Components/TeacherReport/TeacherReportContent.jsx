@@ -9,6 +9,7 @@ import LoadingCard from './LoadingCard';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 import robot from '../../assets/robot.png'
 import useFetchExamSubmissions from './hooks/useFetchExamSubmissions';
+import useFetchMcqQuestions from './hooks/useFetchMcqQuestions';
 
 export default function TeacherReportContent() {
     const [selectedCourse, setSelectedCourse] = useState("");
@@ -25,6 +26,7 @@ export default function TeacherReportContent() {
     const { examSubmissions, loading } = useFetchExamSubmissions(selectedExam, setReportError);
     const [reportRequested, setReportRequested] = useState(false);
 
+    const {mcqQuestions, loadingMcq} = useFetchMcqQuestions(selectedExam, setReportError)
 
     useEffect(() => {
             const getUserId = async () => {
@@ -88,6 +90,13 @@ export default function TeacherReportContent() {
     }
     const avgScore = noOfStudentsDoneExam > 0 ? (totalScore / noOfStudentsDoneExam).toFixed(2) : 0;
     const highestScore = scores.length > 0 ? Math.max(...scores) : 0;
+
+    //calculate total score assigned by teacher when creating the exam
+    const iniScore = mcqQuestions.map((q) => q.points)
+    let iniTotalScore = 0
+    for(let i=0; i<iniScore.length; i++){
+        iniTotalScore += iniScore[i]
+    }
 
   return (
     <Col 

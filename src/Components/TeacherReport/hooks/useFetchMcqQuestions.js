@@ -1,27 +1,27 @@
 import { useState, useEffect } from "react";
 import { getMcqQuestions } from "../service/teacherReportsService";
 
-const useFetchExamSubmissions = (selectedExam, setGlobalError) => {
+const useFetchMcqQuestions = (selectedExam, setGlobalError) => {
     const [mcqQuestions, setMcqQuestions] = useState([]);
-    const [loading, setLoading] = useState(false);
+    const [loadingMcq, setLoadingMcq] = useState(false);
 
     useEffect(() => {
         if (!selectedExam) {
             setMcqQuestions([]);
-            setLoading(false);
+            setLoadingMcq(false);
         return;
         }
-        setLoading(true);
+        setLoadingMcq(true);
 
         getMcqQuestions(selectedExam)
             .then(data => {
                 setMcqQuestions(data);
             })
             .catch(error => {
-                setGlobalError(error.message || "Failed to fetch exam submissions");
+                setGlobalError(error.message || "Failed to fetch mcq questions");
             })
-            .finally(() => setLoading(false));
+            .finally(() => setLoadingMcq(false));
     }, [selectedExam]);
-    return { mcqQuestions, loading };
+    return { mcqQuestions, loadingMcq };
 }
-export default useFetchExamSubmissions;
+export default useFetchMcqQuestions;
