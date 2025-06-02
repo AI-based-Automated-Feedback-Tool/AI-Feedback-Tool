@@ -35,6 +35,8 @@ const ExamsPage = () => {
               title={exam.title}
               type={exam.type}
               due={exam.duration}
+              startTime={exam.start_time}
+              endTime={exam.end_time}
               status="pending"
               onStart={() => handleStart(exam.exam_id)}
             />

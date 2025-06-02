@@ -31,7 +31,7 @@ export const ExamProvider = ({ children }) => {
     setError(null);
 
     try {
-      // 1. Get current user ID
+      //Get current user ID
       const {
         data: { user },
       } = await supabase.auth.getUser();
@@ -45,7 +45,7 @@ export const ExamProvider = ({ children }) => {
         return;
       }
 
-      // 2. Fetch all exams and related questions
+      //Fetch all exams and related questions
       const { data: examData, error: examError } = await supabase
         .from("exams")
         .select("*, mcq_questions!inner(exam_id)")
@@ -58,13 +58,13 @@ export const ExamProvider = ({ children }) => {
         return;
       }
 
-       // Filter to only exams that actually have MCQ questions
+       //Filter to only exams that actually have MCQ questions
       const examsWithQuestions = examData.filter(
         (exam) => exam.mcq_questions.length > 0
       );
       console.log("📄 Exams with questions:", examsWithQuestions);
 
-      // 3. Fetch user's submitted exam IDs
+      //Fetch user's submitted exam IDs
       const { data: submissions, error: submissionError } = await supabase
         .from("exam_submissions")
         .select("exam_id")
@@ -79,11 +79,11 @@ export const ExamProvider = ({ children }) => {
 
       console.log(" Submissions found:", submissions);
 
-        // Extract completed exam IDs
+        //Extract completed exam IDs
       const completedExamIds = new Set(submissions.map((s) => s.exam_id));
       console.log("Completed exam IDs (Set):", [...completedExamIds]);
 
-      // 4. Split exams into pending and completed (per user)
+      //Split exams into pending and completed (per user)
       const pending = examsWithQuestions.filter(
         (exam) => !completedExamIds.has(exam.exam_id)
       );
@@ -94,7 +94,7 @@ export const ExamProvider = ({ children }) => {
       console.log(" Pending exams:", pending);
       console.log(" Completed exams:", completed);
 
-      // 5. Set states
+      //Set states
       setExams(examsWithQuestions);
       setPendingExams(pending);
       setCompletedExams(completed);
