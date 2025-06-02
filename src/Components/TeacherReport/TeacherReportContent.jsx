@@ -11,6 +11,7 @@ import useFetchMcqQuestions from './hooks/useFetchMcqQuestions';
 import ScoreDistributionChart from './components/ScoreDistributionChart';
 import ReportStatsCards from './components/ReportStatsCards';
 import PerformanceAnalysisCards from './components/PerformanceAnalysisCards';
+import QuestionAccuracyChart from './components/QuestionAccuracyChart';
 
 export default function TeacherReportContent() {
     const [selectedCourse, setSelectedCourse] = useState("");
@@ -230,7 +231,7 @@ export default function TeacherReportContent() {
                                     borderRadius: '4px',
                                     margin: '1rem auto'
                                 }} />
-                                                                             
+                                <QuestionAccuracyChart />                                             
                                                  
                             </>
                         ):
