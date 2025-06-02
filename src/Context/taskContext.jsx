@@ -4,6 +4,7 @@ import React, {
   useState,
   useMemo,
   useCallback,
+  useEffect,
 } from "react";
 import { supabase } from "../SupabaseAuth/supabaseClient";
 import { TimerContext } from "./TimerContext.jsx";
@@ -20,11 +21,30 @@ export const TaskProvider = ({ children }) => {
   const [reviewMode, setReviewMode] = useState(false); // Indicates if in "review your answers" state
   const [alreadySubmitted, setAlreadySubmitted] = useState(false); // Tracks if the student already submitted this exam
   const [userScore, setUserScore] = useState(null); // Score after submitting the exam
+  const [focusLossCount, setFocusLossCount] = useState(0); // Count of focus losses during the exam
 
   const { timeLeft } = useContext(TimerContext); // Remaining time from timer context
   //state for pop up after submit
   const [showPopup, setShowPopup] = useState(false);
   const [popupMessage, setPopupMessage] = useState("");
+
+  //  FOCUS TRACKING EFFECT
+  useEffect(() => {
+    const handleFocus = () => console.log("Tab focused");
+    const handleBlur = () => {
+      console.log("Tab lost focus");
+      setFocusLossCount((prev) => prev + 1);
+    };
+
+    window.addEventListener("focus", handleFocus);
+    window.addEventListener("blur", handleBlur);
+
+    return () => {
+      window.removeEventListener("focus", handleFocus);
+      window.removeEventListener("blur", handleBlur);
+    };
+  }, []);
+
 
   // Fetch the exam details and its related questions
   const fetchExamWithQuestions = useCallback(async (id) => {
@@ -137,7 +157,7 @@ export const TaskProvider = ({ children }) => {
         exam_id: task.exam_id,
         total_score: 0, // Placeholder
         time_taken: timeTaken,
-        focus_loss_count: null,
+         focus_loss_count: focusLossCount, // Count of focus losses
         feedback_summery: null,
       };
 
@@ -230,6 +250,7 @@ export const TaskProvider = ({ children }) => {
       setQuestionIndex,
       showPopup,
       popupMessage,
+      focusLossCount,
     }),
     [
       task,
