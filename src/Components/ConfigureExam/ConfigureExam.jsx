@@ -13,7 +13,9 @@ const ConfigureExam = () => {
         type: "mcq",
         duration: "",
         question_count: "",
-        ai_assessment_guide: ""
+        ai_assessment_guide: "",
+        start_time: "",
+        end_time: ""
     });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -54,10 +56,24 @@ const ConfigureExam = () => {
         setExam({ ...exam, [e.target.name]: e.target.value });
     };
 
+    const handleDateTimeChange = (e) => {
+        // Convert local datetime to ISO string for Supabase
+        const date = new Date(e.target.value);
+        const isoString = date.toISOString();
+        setExam({ ...exam, [e.target.name]: isoString });
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
         setError(null);
+
+        // Validate end time is after start time
+        if (new Date(exam.end_time) <= new Date(exam.start_time)) {
+            setError("End time must be after start time");
+            setLoading(false);
+            return;
+        }
 
         try {
             const { data: { session }, error: sessionError } = await supabase.auth.getSession();
@@ -89,7 +105,6 @@ const ConfigureExam = () => {
                 examId: response.data.examId
             }));
             
-            // Redirect to question configuration page with exam type, exam id and question count
             navigate(`/teacher/exams/${response.data.examId}/questions/${exam.type}?question_count=${exam.question_count}`);
 
         } catch (err) {
@@ -98,6 +113,16 @@ const ConfigureExam = () => {
         } finally {
             setLoading(false);
         }
+    };
+
+    // Helper function to format datetime for input field
+    const formatDateTimeForInput = (isoString) => {
+        if (!isoString) return "";
+        const date = new Date(isoString);
+        // Adjust for timezone offset
+        const timezoneOffset = date.getTimezoneOffset() * 60000;
+        const localDate = new Date(date.getTime() - timezoneOffset);
+        return localDate.toISOString().slice(0, 16);
     };
 
     return (
@@ -166,7 +191,7 @@ const ConfigureExam = () => {
                                 </Row>
                             </Card.Body>
                         </Card>
-
+                        
                         {/* Exam Rules Section */}
                         <Card className="mb-4 border-0 shadow-sm">
                             <Card.Header className="bg-light">
