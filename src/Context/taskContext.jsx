@@ -28,6 +28,24 @@ export const TaskProvider = ({ children }) => {
   const [showPopup, setShowPopup] = useState(false);
   const [popupMessage, setPopupMessage] = useState("");
 
+  //  FOCUS TRACKING EFFECT
+  useEffect(() => {
+    const handleFocus = () => console.log("Tab focused");
+    const handleBlur = () => {
+      console.log("Tab lost focus");
+      setFocusLossCount((prev) => prev + 1);
+    };
+
+    window.addEventListener("focus", handleFocus);
+    window.addEventListener("blur", handleBlur);
+
+    return () => {
+      window.removeEventListener("focus", handleFocus);
+      window.removeEventListener("blur", handleBlur);
+    };
+  }, []);
+
+
   // Fetch the exam details and its related questions
   const fetchExamWithQuestions = useCallback(async (id) => {
     setLoading(true);
