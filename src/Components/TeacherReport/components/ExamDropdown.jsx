@@ -1,6 +1,6 @@
 import React from 'react';
 import { Form } from 'react-bootstrap';
-import useFetchExams from './hooks/useFetchExams'
+import useFetchExams from '../hooks/useFetchExams'
 
 const ExamDropdown = ({ selectedCourse, selectedExam, setSelectedExam, setError }) => {
     const { exams, loading } = useFetchExams(selectedCourse, setError);
