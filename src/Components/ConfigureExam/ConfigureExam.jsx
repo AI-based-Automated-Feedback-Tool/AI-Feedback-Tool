@@ -189,6 +189,34 @@ const ConfigureExam = () => {
                                         </Form.Group>
                                     </Col>
                                 </Row>
+
+                                {/* New Date/Time Fields */}
+                                <Row className="mb-3">
+                                    <Col md={6}>
+                                        <Form.Group>
+                                            <Form.Label className="fw-bold">Start Time *</Form.Label>
+                                            <Form.Control
+                                                type="datetime-local"
+                                                name="start_time"
+                                                onChange={handleDateTimeChange}
+                                                value={formatDateTimeForInput(exam.start_time)}
+                                                required
+                                            />
+                                        </Form.Group>
+                                    </Col>
+                                    <Col md={6}>
+                                        <Form.Group>
+                                            <Form.Label className="fw-bold">End Time *</Form.Label>
+                                            <Form.Control
+                                                type="datetime-local"
+                                                name="end_time"
+                                                onChange={handleDateTimeChange}
+                                                value={formatDateTimeForInput(exam.end_time)}
+                                                required
+                                            />
+                                        </Form.Group>
+                                    </Col>
+                                </Row>
                             </Card.Body>
                         </Card>
                         
