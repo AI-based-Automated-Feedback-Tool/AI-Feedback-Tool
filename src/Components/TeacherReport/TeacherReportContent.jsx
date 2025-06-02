@@ -2,14 +2,15 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 import { supabase } from '../../SupabaseAuth/supabaseClient';
 import { Row, Col, CardHeader, CardBody, Card, Button, Alert } from 'react-bootstrap';
-import CourseDropdown from './CourseDropdown';
-import StudentDropdown from './StudentDropdown';
-import ExamDropdown from './ExamDropdown'; 
-import LoadingCard from './LoadingCard';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
-import robot from '../../assets/robot.png'
+import CourseDropdown from './components/CourseDropdown';
+import StudentDropdown from './components/StudentDropdown';
+import ExamDropdown from './components/ExamDropdown'; 
+import LoadingCard from './components/LoadingCard';
 import useFetchExamSubmissions from './hooks/useFetchExamSubmissions';
 import useFetchMcqQuestions from './hooks/useFetchMcqQuestions';
+import ScoreDistributionChart from './components/ScoreDistributionChart';
+import ReportStatsCards from './components/ReportStatsCards';
+import PerformanceAnalysisCards from './components/PerformanceAnalysisCards';
 
 export default function TeacherReportContent() {
     const [selectedCourse, setSelectedCourse] = useState("");
@@ -192,35 +193,11 @@ export default function TeacherReportContent() {
                         </CardHeader>
                         {reportData ? (
                             <>
-                                <CardBody>
-                                    <Row className="mb-4 mt-4">
-                                        <Col md={4}>
-                                            <Card className="text-center border-0 shadow-sm bg-light">
-                                                <CardBody>
-                                                    <p className="text-muted mb-1">Total Students Attempted</p>
-                                                    <h3 className="fw-bold text-primary">{noOfStudentsDoneExam}</h3>
-                                                </CardBody>
-                                            </Card>
-                                        </Col>
-                                        <Col md={4}>
-                                            <Card className="text-center border-0 shadow-sm bg-light">
-                                                <CardBody>
-                                                    <p className="text-muted mb-1">Average Score</p>
-                                                    <h3 className="fw-bold text-primary">{avgScore}</h3>
-                                                </CardBody>
-                                            </Card>
-                                        </Col> 
-                                        <Col md={4}>
-                                            <Card className="text-center border-0 shadow-sm bg-light">
-                                                <CardBody>
-                                                    <p className="text-muted mb-1">Highest Score</p>
-                                                    <h3 className="fw-bold text-primary">{highestScore}</h3>
-                                                </CardBody>
-                                            </Card>
-                                        </Col> 
-                                                        
-                                    </Row>
-                                </CardBody>
+                                <ReportStatsCards 
+                                    noOfStudentsDoneExam={noOfStudentsDoneExam}
+                                    avgScore={avgScore}
+                                    highestScore={highestScore}
+                                />
                                 <hr style={{
                                     border: 'none',
                                     height: '2px',
@@ -230,18 +207,7 @@ export default function TeacherReportContent() {
                                     borderRadius: '4px',
                                     margin: '1rem auto'
                                 }} />
-                                <CardBody>
-                                    <h5 className="mb-4">📈 Score Distribution</h5>
-                                    <ResponsiveContainer width="100%" height={300}>
-                                        <BarChart data={scoreDistributionData}>
-                                            <CartesianGrid strokeDasharray="3 3" />
-                                            <XAxis dataKey="scoreRange" label={{ value: 'Score Range', position: 'insideBottom', offset: -5 }} />
-                                            <YAxis />
-                                            <Tooltip />
-                                            <Bar dataKey="students" fill="#0d6efd" radius={[4, 4, 0, 0]} />
-                                        </BarChart>
-                                    </ResponsiveContainer>
-                                </CardBody>
+                                <ScoreDistributionChart scoreDistributionData={scoreDistributionData} />
                                 <hr style={{
                                     border: 'none',
                                     height: '2px',
@@ -251,31 +217,10 @@ export default function TeacherReportContent() {
                                     borderRadius: '4px',
                                     margin: '1rem auto'
                                 }} />
-                                <CardBody>
-                                    <h5 className='mb-4'>📉 Performance Analysis</h5>
-                                    <Row>
-                                        <Col md={6}>
-                                            <Card className="text-center border-0 shadow-sm bg-light">
-                                                <CardBody>
-                                                    <p className="text-muted mb-1">Average time taken</p>
-                                                    <h3 className="fw-bold text-primary">     
-                                                        {avgTimeInMinutes} min
-                                                    </h3>
-                                                </CardBody>
-                                            </Card>
-                                        </Col>
-                                        <Col md={6}>
-                                            <Card className="text-center border-0 shadow-sm bg-light">
-                                                <CardBody>
-                                                    <p className="text-muted mb-1">Average focus loss per student</p>
-                                                    <h3 className="fw-bold text-primary">
-                                                        {avgFocusLoss}
-                                                    </h3>
-                                                </CardBody>
-                                            </Card>
-                                        </Col>
-                                    </Row>
-                                </CardBody>
+                                <PerformanceAnalysisCards 
+                                    avgTimeInMinutes={avgTimeInMinutes} 
+                                    avgFocusLoss={avgFocusLoss}
+                                />
                                 <hr style={{
                                     border: 'none',
                                     height: '2px',
@@ -286,76 +231,7 @@ export default function TeacherReportContent() {
                                     margin: '1rem auto'
                                 }} />
                                                                              
-                                <CardBody>
-                                    <Row className="mb-3 justify-content-center">
-                                        <Col 
-                                            xs={6} sm={6} md={3}
-                                            className="text-center text-sm-start"
-                                        >                
-                                            <img 
-                                                src={robot} 
-                                                alt="AI Analysis" 
-                                                style={{ 
-                                                    maxWidth: '100%', 
-                                                    height: 'auto'
-                                                }} 
-                                            />
-                                        </Col>
-                                        <Col md={9}>
-                                            <h5 className='mb-4'>AI Insights</h5>
-                                            <p className="text-muted">
-                                                Based on the score distribution, it appears that the majority of students scored between <strong>61–70</strong>. This suggests a strong central tendency, with room for improvement in higher ranges. Consider reviewing topics around the 70–80 mark to boost top-tier performance.
-                                            </p>        
-                                        </Col>
-                                    </Row>
-                                </CardBody>
-                                <hr style={{
-                                    border: 'none',
-                                    height: '2px',
-                                    width: '95%',
-                                    backgroundColor: '#dee2e6',
-                                    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-                                    borderRadius: '4px',
-                                    margin: '1rem auto'
-                                }} />
-                                <CardBody>
-                                    <Row>
-                                        <Col md={6}>
-                                            <Card className="text-center border-0 shadow-sm bg-light">
-                                                <CardHeader>
-                                                    <h5>
-                                                        Common challenges
-                                                    </h5>                                        
-                                                </CardHeader>
-                                                <CardBody className='text-start'>
-                                                    <ul className="text-muted">
-                                                        <li>Time management during the exam</li>
-                                                        <li>Misunderstanding of key concepts</li>
-                                                        <li>Low retention of previously covered topics</li>
-                                                        <li>Technical issues or distractions</li>
-                                                    </ul>
-                                                </CardBody>
-                                            </Card>
-                                        </Col>
-                                        <Col md={6}>
-                                            <Card className="text-center border-0 shadow-sm bg-light">
-                                                <CardHeader>
-                                                    <h5>
-                                                        Recomendations
-                                                    </h5>
-                                                </CardHeader>
-                                                <CardBody className='text-start'>
-                                                    <ul className="text-muted">
-                                                        <li>Introduce regular revision quizzes</li>
-                                                        <li>Encourage collaborative learning sessions</li>
-                                                        <li>Break down complex topics into smaller parts</li>
-                                                        <li>Provide time management strategies</li>
-                                                    </ul>
-                                                </CardBody>
-                                            </Card>
-                                        </Col>
-                                    </Row>
-                                </CardBody>                   
+                                                 
                             </>
                         ):
                         <CardBody>
