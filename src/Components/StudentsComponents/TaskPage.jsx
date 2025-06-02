@@ -5,6 +5,8 @@ import { TimerProvider, useTimer } from "../../Context/TimerContext";
 import PopUp from "./PopUp.jsx";
 
 const TaskPage = () => {
+
+  const [showTabWarning, setShowTabWarning] = useState(false);
   const {
     task,
     loading,
