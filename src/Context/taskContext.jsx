@@ -157,7 +157,7 @@ export const TaskProvider = ({ children }) => {
         exam_id: task.exam_id,
         total_score: 0, // Placeholder
         time_taken: timeTaken,
-        focus_loss_count: null,
+        focus_loss_count: focusLossCount, // Count of focus losses
         feedback_summery: null,
       };
 
@@ -250,6 +250,7 @@ export const TaskProvider = ({ children }) => {
       setQuestionIndex,
       showPopup,
       popupMessage,
+      focusLossCount,
     }),
     [
       task,
