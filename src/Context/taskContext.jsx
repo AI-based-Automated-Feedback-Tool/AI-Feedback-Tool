@@ -249,6 +249,7 @@ export const TaskProvider = ({ children }) => {
       handleSubmit,
       setQuestionIndex,
       showPopup,
+      setShowPopup,
       popupMessage,
       focusLossCount,
     }),
