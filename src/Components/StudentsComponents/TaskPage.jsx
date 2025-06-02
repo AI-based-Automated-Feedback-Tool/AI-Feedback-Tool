@@ -37,6 +37,22 @@ const TaskPage = () => {
     fetchExamWithQuestions(id);
   }, [id, fetchExamWithQuestions]);
 
+   // Add visibilitychange listener to detect tab switches
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        setShowTabWarning(true);
+        setTimeout(() => setShowTabWarning(false), 3000);
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, []);
+
   if (loading) return <div className="container mt-4">⏳ Loading task...</div>;
   //display a message if the exam has already been submitted
   if (alreadySubmitted) {
