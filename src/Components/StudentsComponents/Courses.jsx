@@ -68,9 +68,18 @@ const Courses = () => {
   };
 
   //donot show the exam content for non enrolled course
-  const allCoursesClick = () => {
-    alert("You need to enroll to display course content.");
+  const allCoursesClick = (courseId) => {
+    const isEnrolled = enrolledCourses.some(
+      (enrolledCourse) => enrolledCourse.course_id === courseId
+    );
+  
+    if (isEnrolled) {
+      alert("You can view the content in enrolled courses.");
+    } else {
+      alert("You need to enroll to display course content.");
+    }
   };
+
   return (
     <div className="container mt-5">
       {loading ? (
@@ -167,7 +176,7 @@ const Courses = () => {
                   <div
                     key={course.course_id}
                     className="col-md-4 mb-4"
-                    onClick={allCoursesClick}
+                    onClick={() => allCoursesClick(course.course_id)}
                     style={{ cursor: "pointer" }}
                   >
                     <div className="card h-100">
