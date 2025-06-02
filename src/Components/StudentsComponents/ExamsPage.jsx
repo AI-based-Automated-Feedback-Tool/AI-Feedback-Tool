@@ -15,8 +15,20 @@ const ExamsPage = () => {
   useEffect(() => {
     fetchExams(courseId);
   }, [courseId, fetchExams]);
-  //navigate ton task page
-  const handleStart = (id) => navigate(`/dashboard/task/${id}`);
+  
+  //navigate to task page only if current time >= start_time
+  const handleStart = (exam) => {
+    const currentTime = new Date();
+    const startTime = new Date(exam.start_time);
+
+    //ensure both times are compared correctly
+    if (currentTime.getTime() >= startTime.getTime()) {
+      navigate(`/dashboard/task/${exam.exam_id}`);
+    } else {
+      alert("You cannot start this exam yet. Please wait until the start time.");
+    }
+  };
+
   //navigate to review page for completed exams
   const handleReview = (examId) => navigate(`/student/courses/${userId}/${courseId}/exams/reviews`);
 
@@ -38,7 +50,7 @@ const ExamsPage = () => {
               startTime={exam.start_time}
               endTime={exam.end_time}
               status="pending"
-              onStart={() => handleStart(exam.exam_id)}
+              onStart={() => handleStart(exam)}
             />
           </div>
         ))}
