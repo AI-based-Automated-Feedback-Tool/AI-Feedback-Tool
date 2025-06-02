@@ -4,6 +4,7 @@ import React, {
   useState,
   useMemo,
   useCallback,
+  useEffect,
 } from "react";
 import { supabase } from "../SupabaseAuth/supabaseClient";
 import { TimerContext } from "./TimerContext.jsx";
@@ -20,6 +21,7 @@ export const TaskProvider = ({ children }) => {
   const [reviewMode, setReviewMode] = useState(false); // Indicates if in "review your answers" state
   const [alreadySubmitted, setAlreadySubmitted] = useState(false); // Tracks if the student already submitted this exam
   const [userScore, setUserScore] = useState(null); // Score after submitting the exam
+  const [focusLossCount, setFocusLossCount] = useState(0); // Count of focus losses during the exam
 
   const { timeLeft } = useContext(TimerContext); // Remaining time from timer context
   //state for pop up after submit
