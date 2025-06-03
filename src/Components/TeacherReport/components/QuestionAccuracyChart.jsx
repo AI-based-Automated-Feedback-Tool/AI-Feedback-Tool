@@ -1,13 +1,7 @@
 import { BarChart,Bar,XAxis,YAxis,Tooltip,Legend,ResponsiveContainer,CartesianGrid } from 'recharts';
 import { Row, Col, CardHeader, CardBody, Card, Button, Alert } from 'react-bootstrap';
 
-export default function QuestionAccuracyChart() {
-    const questionStats = [
-        { id: 'Question 1', full: 'Solve 5*5', correct: 75, incorrect: 25 },
-        { id: 'Question 2', full: 'Solve 2*4*7', correct: 50, incorrect: 50 },
-        { id: 'Question 3', full: 'Solve given equations', correct: 90, incorrect: 10 },
-        { id: 'Question 4', full: 'Solve 7*6', correct: 30, incorrect: 70 },
-    ];
+export default function QuestionAccuracyChart({questionStats}) {
 
     return (
         <CardBody>
