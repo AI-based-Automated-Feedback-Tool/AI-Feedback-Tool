@@ -144,6 +144,7 @@ const FeedbackSelector = () => {
                           setSelectedExam("");
                           setExamDetails(null);
                         }}
+                        disabled={loading || courses.length === 0}
                       >
                         <option value="">-- Choose a Course --</option>
                         {courses.map((course) => (
@@ -152,6 +153,9 @@ const FeedbackSelector = () => {
                           </option>
                         ))}
                       </Form.Select>
+                      {courses.length === 0 && !loading && (
+                        <Form.Text className="text-muted">No courses available</Form.Text>
+                      )}
                     </Form.Group>
                   </Col>
                   <Col md={6}>
