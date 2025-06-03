@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getExamSubmissions } from "../service/teacherReportsService";
+import { getSubmittedAnswers } from "../service/teacherReportsService";
 
 const useFetchSubmittedExamAnswers = (submissionId, setGlobalError) => {
     const [submittedAnswers, setSubmittedAnswers] = useState([]);
@@ -14,7 +14,7 @@ const useFetchSubmittedExamAnswers = (submissionId, setGlobalError) => {
         setLoadingAnswers(true);
 
         submissionId.forEach(id => {
-            getExamSubmissions(id)
+            getSubmittedAnswers(id)
                 .then(data => {
                 setSubmittedAnswers(prevAnswers => [...prevAnswers, ...data]);
             })
