@@ -17,117 +17,116 @@ const Review = () => {
   return (
     <div className="container mt-5">
       <h1 className="text-center mb-4">Exam Review</h1>
+
       {reviewData.length === 0 ? (
         <div className="alert alert-warning text-center" role="alert">
           No reviews available.
         </div>
       ) : (
-        <div>
-          {reviewData.map((review, index) => (
-            <form
-              key={review.id || review.exam_id || index}
-              className="border p-4 mb-4 rounded shadow-sm"
-            >
-              <div className="mb-3">
-                <label className="form-label">ID</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  value={review.id || ""}
-                  readOnly
-                />
-              </div>
+        reviewData.map((review, index) => (
+          <form
+            key={review.id || review.exam_id || index}
+            className="border p-4 mb-4 rounded shadow-sm"
+          >
+            <div className="mb-3">
+              <label className="form-label">ID</label>
+              <input
+                type="text"
+                className="form-control"
+                value={review.id || ""}
+                readOnly
+              />
+            </div>
+            <div className="mb-3">
+              <label className="form-label">Score</label>
+              <input
+                type="text"
+                className="form-control"
+                value={review.score || ""}
+                readOnly
+              />
+            </div>
+            <div className="mb-3">
+              <label className="form-label">AI Feedback</label>
+              <textarea
+                className="form-control"
+                value={review.ai_feedback || ""}
+                readOnly
+              />
+            </div>
+            <div className="mb-3">
+              <label className="form-label">Question ID</label>
+              <input
+                type="text"
+                className="form-control"
+                value={review.question_id || ""}
+                readOnly
+              />
+            </div>
+            <div className="mb-3">
+              <label className="form-label">Submission ID</label>
+              <input
+                type="text"
+                className="form-control"
+                value={review.submission_id || ""}
+                readOnly
+              />
+            </div>
+            <div className="mb-3">
+              <label className="form-label">Exam ID</label>
+              <input
+                type="text"
+                className="form-control"
+                value={review.exam_id || ""}
+                readOnly
+              />
+            </div>
 
-              <div className="mb-3">
-                <label className="form-label">Score</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  value={review.score || ""}
-                  readOnly
-                />
-              </div>
+            <div className="mb-3">
+              <label className="form-label">Total Score</label>
+              <input
+                type="text"
+                className="form-control"
+                value={review.total_score ?? ""}
+                readOnly
+              />
+            </div>
 
-              <div className="mb-3">
-                <label className="form-label">AI Feedback</label>
-                <textarea
-                  className="form-control"
-                  value={review.ai_feedback || ""}
-                  readOnly
-                />
-              </div>
+            <div className="mb-3">
+              <label className="form-label">Time Taken (seconds)</label>
+              <input
+                type="text"
+                className="form-control"
+                value={review.time_taken ?? ""}
+                readOnly
+              />
+            </div>
 
-              <div className="mb-3">
-                <label className="form-label">Question ID</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  value={review.question_id || ""}
-                  readOnly
-                />
-              </div>
+            <div className="mb-3">
+              <label className="form-label">Focus Loss Count</label>
+              <input
+                type="text"
+                className="form-control"
+                value={review.focus_loss_count ?? ""}
+                readOnly
+              />
+            </div>
 
-              <div className="mb-3">
-                <label className="form-label">Submission ID</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  value={review.submission_id || ""}
-                  readOnly
-                />
-              </div>
-
-              <div className="mb-3">
-                <label className="form-label">Exam ID</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  value={review.exam_id || ""}
-                  readOnly
-                />
-              </div>
-
-              <div className="mb-3">
-                <label className="form-label">Total Score</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  value={review.total_score || ""}
-                  readOnly
-                />
-              </div>
-
-              <div className="mb-3">
-                <label className="form-label">Time Taken</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  value={review.time_taken || ""}
-                  readOnly
-                />
-              </div>
-
-              <div className="mb-3">
-                <label className="form-label">Focus Loss Count</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  value={review.focus_loss_count || ""}
-                  readOnly
-                />
-              </div>
-
-              <div className="mb-3">
-                <label className="form-label">Feedback Summary</label>
-                <textarea
-                  className="form-control"
-                  value={review.feedback_summary || ""}
-                  readOnly
-                />
-              </div>
-            </form>
-          ))}
-        </div>
+            <div className="mb-3">
+              <label className="form-label">Feedback Summary</label>
+              <textarea
+                className="form-control"
+                value={
+                  typeof review.feedback_summary === "object"
+                    ? JSON.stringify(review.feedback_summary, null, 2)
+                    : review.feedback_summary || ""
+                }
+                rows={3}
+                readOnly
+              />
+            </div>
+          </form>
+        ))
       )}
     </div>
   );
