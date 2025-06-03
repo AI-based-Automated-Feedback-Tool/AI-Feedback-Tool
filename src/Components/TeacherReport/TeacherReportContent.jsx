@@ -11,6 +11,8 @@ import useFetchMcqQuestions from './hooks/useFetchMcqQuestions';
 import ScoreDistributionChart from './components/ScoreDistributionChart';
 import ReportStatsCards from './components/ReportStatsCards';
 import PerformanceAnalysisCards from './components/PerformanceAnalysisCards';
+import QuestionAccuracyChart from './components/QuestionAccuracyChart';
+import useFetchSubmittedExamAnswers from './hooks/useFetchSubmittedExamAnswers';
 
 export default function TeacherReportContent() {
     const [selectedCourse, setSelectedCourse] = useState("");
@@ -28,6 +30,8 @@ export default function TeacherReportContent() {
     const [reportRequested, setReportRequested] = useState(false);
 
     const {mcqQuestions, loadingMcq} = useFetchMcqQuestions(selectedExam, setReportError)
+    const [submissionId, setSubmissionId] = useState([]);
+    const {submittedAnswers, loadingAnswers} = useFetchSubmittedExamAnswers(submissionId, setReportError);
 
     useEffect(() => {
             const getUserId = async () => {
@@ -122,9 +126,58 @@ export default function TeacherReportContent() {
     }
     const avgFocusLoss = (totalFocusLoss / noOfStudentsDoneExam).toFixed(2);
 
+    // submission ids according to exam
+    useEffect(() => {
+        if (!examSubmissions || examSubmissions.length === 0) {
+            setSubmissionId([]);
+            return;
+        }
+        // Extract submission IDs from the exam submissions
+        const submissionIdDetails = examSubmissions.map((submission) => submission.id);
+        setSubmissionId(submissionIdDetails);
+    }, [examSubmissions])
+
+    // take submitted answers to get question id and is it correct or wrong
+    const filteredSubmittedAnswers = submittedAnswers.map((answer) => {
+        return {
+            questionId: answer.question_id,
+            isCorrect: answer.is_correct
+        };
+    });
+
+    // Group answers by question ID 
+    console.log("Exam Submissions:", examSubmissions);
+    console.log("Filtered Submitted Answers:", filteredSubmittedAnswers);
+    const questionStats = mcqQuestions.map((question, index) => {
+        let correct = 0;
+        let incorrect = 0;
+        filteredSubmittedAnswers.forEach((answer) => {
+            if (answer.questionId === question.question_id) {
+                if (answer.isCorrect === true) {
+                    correct++;
+                } else {
+                    incorrect++;
+                }
+            }
+        })
+        return {
+            questionId: question.question_id,
+            id: `Question ${index + 1}`,
+            full: question.question_text,
+            correct: noOfStudentsDoneExam > 0 
+                ? parseFloat(((correct / noOfStudentsDoneExam) * 100).toFixed(2)) 
+                : 0, 
+            incorrect: noOfStudentsDoneExam > 0 
+                ? parseFloat(((incorrect / noOfStudentsDoneExam) * 100).toFixed(2)) 
+                : 0
+        };
+    })
+
+    console.log("Question Stats:", questionStats);
+
   return (
-    <Col 
-        className="w-100 " 
+    <Col
+        className="w-100 "
         style={{ backgroundColor: '#f8f9fa' }}
     >
         {loadingUser ? (
@@ -191,7 +244,18 @@ export default function TeacherReportContent() {
                                 📊 Overall Exam Report 
                             </h5>
                         </CardHeader>
-                        {reportData ? (
+                        {reportError ? (
+                            <CardBody>
+                                <Alert variant="danger">{reportError}</Alert>
+                            </CardBody>
+                        ) : reportData ? (
+                            noOfStudentsDoneExam === 0 ? (
+                                <CardBody>
+                                    <Alert variant="info">
+                                        No students have completed this exam yet.
+                                    </Alert>
+                                </CardBody>
+                            ) : (
                             <>
                                 <ReportStatsCards 
                                     noOfStudentsDoneExam={noOfStudentsDoneExam}
@@ -230,10 +294,11 @@ export default function TeacherReportContent() {
                                     borderRadius: '4px',
                                     margin: '1rem auto'
                                 }} />
-                                                                             
-                                                 
+                                <QuestionAccuracyChart questionStats={questionStats} />
+
                             </>
-                        ):
+                            )
+                        ):(
                         <CardBody>
                             {/*Here shows the text which says no contents to preview */}
                             <Alert variant="info">
@@ -242,7 +307,8 @@ export default function TeacherReportContent() {
                                 </p>
                             </Alert>
                         </CardBody>
-                    }
+                        )}
+                    
                     </Card>
                 </CardBody>
             </Card>
