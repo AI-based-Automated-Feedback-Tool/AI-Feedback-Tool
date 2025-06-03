@@ -69,4 +69,19 @@ export const getMcqQuestions = async (selectedExam) => {
     }
 }
 
+//API service to fetch submitted answer details
+export const getSubmittedAnswers = async (submissionId) => {    
+    if (!submissionId) {
+        throw new Error("Submission ID is required");
+    }        
+    const res = await fetch(`http://localhost:5000/api/teacher/reports/submitted_answers?submissionId=${submissionId}`)
+    const json = await res.json();
+    if (res.ok){
+        return json.submittedAnswers;
+    }
+    else {
+        throw new Error(json.message || "Failed to fetch submitted answers");
+    }
+}
+
             
