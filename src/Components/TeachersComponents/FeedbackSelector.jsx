@@ -69,11 +69,16 @@ const FeedbackSelector = () => {
       if (!selectedCourse || !selectedType) return;
       setLoading(true);
       try {
+        // Get authenticated user to filter by user_id
+        const { data: { user } } = await supabase.auth.getUser();
+        
         const { data, error } = await supabase
           .from("exams")
           .select("exam_id, title")
           .eq("course_id", selectedCourse)
           .eq("type", selectedType)
+          .eq("user_id", user.id); // Only show exams created by this user
+          
         if (error) throw error;
         setExams(data || []);
       } catch (err) {
