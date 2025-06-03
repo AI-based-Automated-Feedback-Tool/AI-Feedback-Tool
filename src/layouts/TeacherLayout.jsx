@@ -18,7 +18,7 @@ const TeacherLayout = () => {
     <Col
       xs={12}
       md="auto"  
-      lg={2}    
+      lg={2.5}    
       className="sidebar-col"
     >
       <SidebarTeacher show={showSidebar} onHide={toggleSidebar} />
@@ -27,7 +27,7 @@ const TeacherLayout = () => {
     <Col
       xs={12}
       md
-      lg={10}
+      lg={9.5}
       className="p-2"
       style={{
         backgroundColor: "#f8f9fa",
