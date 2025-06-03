@@ -42,7 +42,7 @@ export const ReviewProvider = ({ children }) => {
     }
   };
 
-  // Fetch review data with JOIN from exam_submissions
+  // Fetch individual answer records from exam_submissions_answers
   const fetchReviewData = async (submissionId) => {
     try {
       const { data, error } = await supabase
@@ -77,7 +77,7 @@ export const ReviewProvider = ({ children }) => {
     }
   };
 
-  // Initial fetch
+   // Fetch combined review: answers + metadata from submissions
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
