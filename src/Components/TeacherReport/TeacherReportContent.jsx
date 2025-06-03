@@ -133,7 +133,7 @@ export default function TeacherReportContent() {
             return;
         }
         // Extract submission IDs from the exam submissions
-        const submissionIdDetails = examSubmissions.map((submission) => submission.submission_id);
+        const submissionIdDetails = examSubmissions.map((submission) => submission.id);
         setSubmissionId(submissionIdDetails);
     }, [examSubmissions])
 
@@ -146,6 +146,8 @@ export default function TeacherReportContent() {
     });
 
     // Group answers by question ID 
+    console.log("Exam Submissions:", examSubmissions);
+    console.log("Filtered Submitted Answers:", filteredSubmittedAnswers);
     const questionStats = mcqQuestions.map((question, index) => {
         let correct = 0;
         let incorrect = 0;
@@ -162,10 +164,16 @@ export default function TeacherReportContent() {
             questionId: question.question_id,
             id: `Question ${index + 1}`,
             full: question.question_text,
-            correct: (correct / noOfStudentsDoneExam * 100).toFixed(2), 
-            incorrect: (incorrect / noOfStudentsDoneExam * 100).toFixed(2) 
+            correct: noOfStudentsDoneExam > 0 
+                ? parseFloat(((correct / noOfStudentsDoneExam) * 100).toFixed(2)) 
+                : 0, 
+            incorrect: noOfStudentsDoneExam > 0 
+                ? parseFloat(((incorrect / noOfStudentsDoneExam) * 100).toFixed(2)) 
+                : 0
         };
     })
+
+    console.log("Question Stats:", questionStats);
 
   return (
     <Col
