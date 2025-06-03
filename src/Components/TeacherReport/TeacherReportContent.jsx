@@ -244,7 +244,11 @@ export default function TeacherReportContent() {
                                 📊 Overall Exam Report 
                             </h5>
                         </CardHeader>
-                        {reportData ? (
+                        {reportError ? (
+                            <CardBody>
+                                <Alert variant="danger">{reportError}</Alert>
+                            </CardBody>
+                        ) : reportData ? (
                             <>
                                 <ReportStatsCards 
                                     noOfStudentsDoneExam={noOfStudentsDoneExam}
@@ -295,7 +299,8 @@ export default function TeacherReportContent() {
                                 </p>
                             </Alert>
                         </CardBody>
-                    }
+                        }
+                    
                     </Card>
                 </CardBody>
             </Card>
