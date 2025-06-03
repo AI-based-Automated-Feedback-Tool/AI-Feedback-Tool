@@ -249,6 +249,13 @@ export default function TeacherReportContent() {
                                 <Alert variant="danger">{reportError}</Alert>
                             </CardBody>
                         ) : reportData ? (
+                            noOfStudentsDoneExam === 0 ? (
+                                <CardBody>
+                                    <Alert variant="info">
+                                        No students have completed this exam yet.
+                                    </Alert>
+                                </CardBody>
+                            ) : (
                             <>
                                 <ReportStatsCards 
                                     noOfStudentsDoneExam={noOfStudentsDoneExam}
@@ -290,7 +297,8 @@ export default function TeacherReportContent() {
                                 <QuestionAccuracyChart questionStats={questionStats} />
 
                             </>
-                        ):
+                            )
+                        ):(
                         <CardBody>
                             {/*Here shows the text which says no contents to preview */}
                             <Alert variant="info">
@@ -299,7 +307,7 @@ export default function TeacherReportContent() {
                                 </p>
                             </Alert>
                         </CardBody>
-                        }
+                        )}
                     
                     </Card>
                 </CardBody>
