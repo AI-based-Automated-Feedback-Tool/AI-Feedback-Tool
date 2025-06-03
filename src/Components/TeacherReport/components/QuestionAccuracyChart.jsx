@@ -6,7 +6,7 @@ export default function QuestionAccuracyChart({questionStats}) {
     return (
         <CardBody>
             <h5 className="mb-4">📊 Question Accuracy Breakdown</h5>
-            <ResponsiveContainer width="100%" height={300}>
+            <ResponsiveContainer width="100%" height={questionStats.length * 60}>
                 <BarChart
                     layout="vertical"
                     data={questionStats}
