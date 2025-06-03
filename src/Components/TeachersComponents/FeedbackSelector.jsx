@@ -15,20 +15,47 @@ const FeedbackSelector = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Fetch courses
+  // Fetch courses created by the logged-in user
   useEffect(() => {
     const fetchCourses = async () => {
       setLoading(true);
       try {
-        const { data, error } = await supabase
-          .from("courses")
-          .select("course_id, title, course_code")
-          .order("created_at", { ascending: false });
-        if (error) throw error;
-        setCourses(data || []);
+        // Get authenticated user
+        const { data: { user }, error: userError } = await supabase.auth.getUser();
+        if (userError || !user) {
+          throw new Error("Please login to view courses");
+        }
+
+        // Step 1: Get all exams created by this user
+        const { data: exams, error: examsError } = await supabase
+          .from('exams')
+          .select('course_id')
+          .eq('user_id', user.id)
+          .not('course_id', 'is', null);
+
+        if (examsError) throw examsError;
+
+        // Extract unique course_ids from exams
+        const courseIds = [...new Set(exams.map(exam => exam.course_id))];
+        
+        if (courseIds.length === 0) {
+          setCourses([]);
+          return;
+        }
+
+        // Step 2: Get course details for these course_ids
+        const { data: coursesData, error: coursesError } = await supabase
+          .from('courses')
+          .select('course_id, title, course_code')
+          .in('course_id', courseIds)
+          .order('created_at', { ascending: false });
+
+        if (coursesError) throw coursesError;
+
+        setCourses(coursesData || []);
       } catch (err) {
         console.error("Error fetching courses:", err);
-        setError("Failed to load courses.");
+        setError(err.message);
       } finally {
         setLoading(false);
       }
@@ -42,11 +69,16 @@ const FeedbackSelector = () => {
       if (!selectedCourse || !selectedType) return;
       setLoading(true);
       try {
+        // Get authenticated user to filter by user_id
+        const { data: { user } } = await supabase.auth.getUser();
+        
         const { data, error } = await supabase
           .from("exams")
           .select("exam_id, title")
           .eq("course_id", selectedCourse)
-          .eq("type", selectedType)          
+          .eq("type", selectedType)
+          .eq("user_id", user.id); // Only show exams created by this user
+          
         if (error) throw error;
         setExams(data || []);
       } catch (err) {
@@ -112,6 +144,7 @@ const FeedbackSelector = () => {
                           setSelectedExam("");
                           setExamDetails(null);
                         }}
+                        disabled={loading || courses.length === 0}
                       >
                         <option value="">-- Choose a Course --</option>
                         {courses.map((course) => (
@@ -120,6 +153,9 @@ const FeedbackSelector = () => {
                           </option>
                         ))}
                       </Form.Select>
+                      {courses.length === 0 && !loading && (
+                        <Form.Text className="text-muted">No courses available</Form.Text>
+                      )}
                     </Form.Group>
                   </Col>
                   <Col md={6}>
@@ -193,9 +229,9 @@ const FeedbackSelector = () => {
                 size="lg"
                 onClick={handleAIFeedbackClick}
                 disabled={!selectedExam || loading}
-                >
+              >
                 Proceed to AI Feedback
-                </Button>
+              </Button>
             </div>
           </Form>
         </Card.Body>
