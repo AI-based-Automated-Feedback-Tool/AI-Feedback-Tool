@@ -6,23 +6,19 @@ import { supabase } from "../SupabaseAuth/supabaseClient";
 export const ExamContext = createContext();
 
 export const ExamProvider = ({ children }) => {
-
-   // Full list of exams for a course (with at least 1 MCQ)
+  // Full list of exams for a course (with at least 1 MCQ)
   const [exams, setExams] = useState([]);
-
   // Exams that the current user has NOT submitted
   const [pendingExams, setPendingExams] = useState([]);
-
-   // Exams that the user has submitted (based on submission table)
+  // Exams that the user has submitted (based on submission table)
   const [completedExams, setCompletedExams] = useState([]);
-
   // Tracks loading state for async operations
   const [loading, setLoading] = useState(false);
-
-   // Tracks any error messages
+  // Tracks any error messages
   const [error, setError] = useState(null);
-  
-   /**
+
+
+  /**
    * Fetch all exams for a course, filter them based on
    * whether the current user has completed them.
    */
@@ -44,7 +40,6 @@ export const ExamProvider = ({ children }) => {
         setLoading(false);
         return;
       }
-
       //Fetch all exams and related questions
       const { data: examData, error: examError } = await supabase
         .from("exams")
@@ -58,7 +53,7 @@ export const ExamProvider = ({ children }) => {
         return;
       }
 
-       //Filter to only exams that actually have MCQ questions
+      //Filter to only exams that actually have MCQ questions
       const examsWithQuestions = examData.filter(
         (exam) => exam.mcq_questions.length > 0
       );
@@ -79,7 +74,7 @@ export const ExamProvider = ({ children }) => {
 
       console.log(" Submissions found:", submissions);
 
-        //Extract completed exam IDs
+      //Extract completed exam IDs
       const completedExamIds = new Set(submissions.map((s) => s.exam_id));
       console.log("Completed exam IDs (Set):", [...completedExamIds]);
 

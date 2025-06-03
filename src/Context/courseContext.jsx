@@ -57,7 +57,6 @@ export const CourseProvider = ({ children }) => {
     }
   }, []);
 
-
   // Enroll user in a course
   const enrollInCourse = useCallback(async (userId, courseId) => {
     setError(null);
