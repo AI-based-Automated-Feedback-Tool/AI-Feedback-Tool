@@ -48,8 +48,13 @@ export const ReviewProvider = ({ children }) => {
       const { data, error } = await supabase
         .from("exam_submissions_answers")
         .select(`
-          *,
+           id,
+           question_id,
+           submission_id,
+           score,
+           ai_feedback,
           exam_submissions (
+            exam_id,
             total_score,
             time_taken,
             focus_loss_count,
@@ -63,6 +68,7 @@ export const ReviewProvider = ({ children }) => {
       // Merge nested exam_submissions fields into each review record
       const combinedData = data.map((item) => ({
         ...item,
+        exam_id: item.exam_submissions?.exam_id ?? null,
         total_score: item.exam_submissions?.total_score ?? null,
         time_taken: item.exam_submissions?.time_taken ?? null,
         focus_loss_count: item.exam_submissions?.focus_loss_count ?? null,
