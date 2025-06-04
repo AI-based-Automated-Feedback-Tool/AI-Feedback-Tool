@@ -13,7 +13,12 @@ const AssignmentCard = ({ title,type,due, onStart, onReview, status, startTime,
         <p className="card-text text-muted">📅 Duration: {due}</p>
         <p className="card-text text-muted">⏰ Start: {formattedStart}</p>
         <p className="card-text text-muted">⏳ End: {formattedEnd}</p>
-        {status === "pending" && (
+        {status === "open" && (
+          <button className="btn btn-primary mt-auto" onClick={onStart}>
+            Start
+          </button>
+        )}
+          {status === "closed" && (
           <button className="btn btn-primary mt-auto" onClick={onStart}>
             Start
           </button>
