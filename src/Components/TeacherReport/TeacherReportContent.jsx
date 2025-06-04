@@ -13,6 +13,7 @@ import ReportStatsCards from './components/ReportStatsCards';
 import PerformanceAnalysisCards from './components/PerformanceAnalysisCards';
 import QuestionAccuracyChart from './components/QuestionAccuracyChart';
 import useFetchSubmittedExamAnswers from './hooks/useFetchSubmittedExamAnswers';
+import useReportCalculations from './hooks/useReportCalculations';
 
 export default function TeacherReportContent() {
     const [selectedCourse, setSelectedCourse] = useState("");
@@ -32,6 +33,8 @@ export default function TeacherReportContent() {
     const {mcqQuestions, loadingMcq} = useFetchMcqQuestions(selectedExam, setReportError)
     const [submissionId, setSubmissionId] = useState([]);
     const {submittedAnswers, loadingAnswers} = useFetchSubmittedExamAnswers(submissionId, setReportError);
+
+    const { scores, avgScore, highestScore, iniTotalScore, noOfStudentsDoneExam } = useReportCalculations(examSubmissions, mcqQuestions);
 
     useEffect(() => {
             const getUserId = async () => {
@@ -71,23 +74,6 @@ export default function TeacherReportContent() {
         setLoadingReport(true)
         setError(null)
         setReportRequested(true)
-    }
-
-    //report content
-    const noOfStudentsDoneExam = examSubmissions.length;
-    const scores = examSubmissions.map((submission) => submission.total_score)
-    let totalScore = 0;
-    for(let i=0; i<scores.length; i++){
-        totalScore = totalScore+scores[i]
-    }
-    const avgScore = noOfStudentsDoneExam > 0 ? (totalScore / noOfStudentsDoneExam).toFixed(2) : 0;
-    const highestScore = scores.length > 0 ? Math.max(...scores) : 0;
-
-    //calculate total score assigned by teacher when creating the exam
-    const iniScore = mcqQuestions.map((q) => q.points)
-    let iniTotalScore = 0
-    for(let i=0; i<iniScore.length; i++){
-        iniTotalScore += iniScore[i]
     }
 
     //Grapgh data 
