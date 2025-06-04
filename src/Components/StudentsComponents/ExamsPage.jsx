@@ -24,6 +24,21 @@ const ExamsPage = () => {
       fetchEnrolledCourses(userId);
     }
   }, [userId, fetchEnrolledCourses]);
+
+  //fun to determine the status of an exam
+  const getExamStatus = (exam) => {
+    const currentTime = new Date();
+    const startTime = new Date(exam.start_time);
+    const endTime = new Date(exam.end_time);
+
+    if (currentTime > endTime) {
+      return "closed"; //exam has ended
+    } else if (currentTime >= startTime && !exam.isTaken) {
+      return "open"; //exam is ongoing or ready to be taken
+    }
+    return "pending"; //exam is scheduled but not yet started
+  };
+
   //navigate to task page only if current time >= start_time
   const handleStart = (exam) => {
     const currentTime = new Date();
@@ -79,6 +94,24 @@ const ExamsPage = () => {
             />
           </div>
         ))}
+      </div>
+
+      <h5 className="mt-5 text-danger">Closed Exams</h5>
+      <div className="row">
+        {pendingExams
+          .filter((exam) => getExamStatus(exam) === "closed")
+          .map((exam) => (
+            <div className="col-md-4" key={exam.exam_id}>
+              <AssignmentCard
+                title={exam.title}
+                type={exam.type}
+                due={exam.duration}
+                startTime={exam.start_time}
+                endTime={exam.end_time}
+                status="closed"
+              />
+            </div>
+          ))}
       </div>
 
       <h5 className="mt-5 text-success">Completed Exams</h5>
