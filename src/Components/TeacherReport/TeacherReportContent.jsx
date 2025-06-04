@@ -34,7 +34,7 @@ export default function TeacherReportContent() {
     const [submissionId, setSubmissionId] = useState([]);
     const {submittedAnswers, loadingAnswers} = useFetchSubmittedExamAnswers(submissionId, setReportError);
 
-    const { scores, avgScore, highestScore, iniTotalScore, noOfStudentsDoneExam } = useReportCalculations(examSubmissions, mcqQuestions);
+    const { scores, avgScore, highestScore, iniTotalScore, noOfStudentsDoneExam, avgTimeInMinutes, avgFocusLoss } = useReportCalculations(examSubmissions, mcqQuestions);
 
     useEffect(() => {
             const getUserId = async () => {
@@ -94,23 +94,6 @@ export default function TeacherReportContent() {
             students: count
         }
     })
-
-    //average time taken
-    const time = examSubmissions.map((submission) => submission.time_taken);
-    let totalTime = 0;
-    for(let i=0; i<time.length; i++){
-        totalTime += time[i]
-    }
-    const avgTime = totalTime / noOfStudentsDoneExam;
-    const avgTimeInMinutes = (avgTime / 60).toFixed(2); 
-
-    //average focus loss
-    const focusLoss = examSubmissions.map((submission) => submission.focus_loss_count);
-    let totalFocusLoss = 0;
-    for(let i=0; i<focusLoss.length; i++){
-        totalFocusLoss += focusLoss[i]
-    }
-    const avgFocusLoss = (totalFocusLoss / noOfStudentsDoneExam).toFixed(2);
 
     // submission ids according to exam
     useEffect(() => {
