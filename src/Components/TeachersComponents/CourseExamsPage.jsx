@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Container, Card, Table, Button, Spinner, Alert, ButtonGroup } from 'react-bootstrap';
+import { Container, Card, Table, Button, Spinner, Alert } from 'react-bootstrap';
 import { supabase } from '../../SupabaseAuth/supabaseClient';
 
 const CourseExamsPage = () => {
@@ -32,8 +32,9 @@ const CourseExamsPage = () => {
 
         const { data: examsData, error: examsError } = await supabase
           .from('exams')
-          .select('exam_id, title, duration, type')
-          .eq('course_id', course_id);
+          .select('exam_id, title, duration, type, question_count, end_time')
+          .eq('course_id', course_id)
+          .order('end_time', { ascending: true }); // Order by due date
 
         if (examsError) throw examsError;
         setExams(examsData || []);
@@ -59,7 +60,17 @@ const CourseExamsPage = () => {
     return hours > 0 ? `${hours}h ${mins}m` : `${minutes}m`;
   };
 
-  
+  const formatDate = (dateString) => {
+    if (!dateString) return 'N/A';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  };
 
   return (
     <Container className="mt-4">
@@ -98,17 +109,18 @@ const CourseExamsPage = () => {
                   <th>Title</th>
                   <th>Type</th>
                   <th>Duration</th>
+                  <th>Questions</th>
+                  <th>Due Date</th>
                 </tr>
               </thead>
               <tbody>
                 {exams.map((exam) => (
-                  <tr key={exam.exam_id}>
+                  <tr key={exam.exam_id} style={{ cursor: 'pointer' }} onClick={() => navigate(`/teacher/exams/${exam.exam_id}/questions`)}>
                     <td>{exam.title}</td>
                     <td>{exam.type.toUpperCase()}</td>
                     <td>{formatDuration(exam.duration)}</td>
-                    <td className="text-center">
-                      
-                    </td>
+                    <td>{exam.question_count || 'N/A'}</td>
+                    <td>{formatDate(exam.end_time)}</td>
                   </tr>
                 ))}
               </tbody>
