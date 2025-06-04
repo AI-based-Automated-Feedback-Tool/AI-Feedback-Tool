@@ -50,10 +50,6 @@ const CourseExamsPage = () => {
     fetchCourseAndExams();
   }, [course_id]);
 
-  const handleExamClick = (examId) => {
-    navigate(`/teacher/exams/${examId}/questions`);
-  };
-
   const formatDuration = (minutes) => {
     const hours = Math.floor(minutes / 60);
     const mins = minutes % 60;
