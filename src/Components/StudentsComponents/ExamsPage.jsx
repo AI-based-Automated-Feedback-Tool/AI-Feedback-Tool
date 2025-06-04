@@ -79,23 +79,27 @@ const ExamsPage = () => {
     <div className="container py-4">
       <h3> 🧪 Exams for Course: {courseTitle}</h3>
 
-      <h5 className="mt-4 text-primary">Pending Exams</h5>
-      <div className="row">
-        {pendingExams.map((exam) => (
-          <div className="col-md-4" key={exam.exam_id}>
-            <AssignmentCard
-              title={exam.title}
-              type={exam.type}
-              due={exam.duration}
-              startTime={exam.start_time}
-              endTime={exam.end_time}
-              status="pending"
-              onStart={() => handleStart(exam)}
-            />
+      {pendingExams.length > 0 && (
+        <>
+          <h5 className="mt-4 text-primary">Pending Exams</h5>
+          <div className="row">
+            {pendingExams.map((exam) => (
+              <div className="col-md-4" key={exam.exam_id}>
+                <AssignmentCard
+                  title={exam.title}
+                  type={exam.type}
+                  due={exam.duration}
+                  startTime={exam.start_time}
+                  endTime={exam.end_time}
+                  status="pending"
+                  onStart={() => handleStart(exam)}
+                />
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
-      
+        </>
+      )}
+
       {pendingExams.some((exam) => getExamStatus(exam) === "closed") && (
         <>
           <h5 className="mt-5 text-danger">Closed Exams</h5>
