@@ -121,23 +121,33 @@ const ExamsPage = () => {
           </div>
         </>
       )}
-
-      <h5 className="mt-5 text-success">Completed Exams</h5>
-      <div className="row">
-        {completedExams.map((exam) => (
-          <div className="col-md-4" key={exam.exam_id}>
-            <AssignmentCard
-              title={exam.title}
-              type={exam.type}
-              due={exam.duration}
-              startTime={exam.start_time}
-              endTime={exam.end_time}
-              status="completed"
-              onReview={() => handleReview(exam.exam_id)}
-            />
+      {completedExams.length > 0 && (
+        <>
+          <h5 className="mt-5 text-success">Completed Exams</h5>
+          <div className="row">
+            {completedExams.map((exam) => (
+              <div className="col-md-4" key={exam.exam_id}>
+                <AssignmentCard
+                  title={exam.title}
+                  type={exam.type}
+                  due={exam.duration}
+                  startTime={exam.start_time}
+                  endTime={exam.end_time}
+                  status="completed"
+                  onReview={() => handleReview(exam.exam_id)}
+                />
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
+        </>
+      )}
+
+    {/*fallback message when no exams are available */}
+    {pendingExams.length === 0 &&
+      !pendingExams.some((exam) => getExamStatus(exam) === "closed") &&
+      completedExams.length === 0 && (
+        <p className="mt-5 text-center text-muted">No exam is added.</p>
+      )}
     </div>
   );
 };
