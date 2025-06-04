@@ -59,9 +59,7 @@ const CourseExamsPage = () => {
     return hours > 0 ? `${hours}h ${mins}m` : `${minutes}m`;
   };
 
-  const handleAIFeedbackClick = (examId) => {
-    navigate(`/teacher/exams/${examId}/ai-feedback`);
-  };
+  
 
   return (
     <Container className="mt-4">
@@ -100,7 +98,6 @@ const CourseExamsPage = () => {
                   <th>Title</th>
                   <th>Type</th>
                   <th>Duration</th>
-                  <th className="text-center">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -110,15 +107,7 @@ const CourseExamsPage = () => {
                     <td>{exam.type.toUpperCase()}</td>
                     <td>{formatDuration(exam.duration)}</td>
                     <td className="text-center">
-                      <ButtonGroup>                        
-                        <Button
-                          variant="info"
-                          size="sm"
-                          onClick={() => handleAIFeedbackClick(exam.exam_id)}
-                        >
-                          AI Feedback
-                        </Button>
-                      </ButtonGroup>
+                      
                     </td>
                   </tr>
                 ))}
