@@ -95,24 +95,28 @@ const ExamsPage = () => {
           </div>
         ))}
       </div>
-
-      <h5 className="mt-5 text-danger">Closed Exams</h5>
-      <div className="row">
-        {pendingExams
-          .filter((exam) => getExamStatus(exam) === "closed")
-          .map((exam) => (
-            <div className="col-md-4" key={exam.exam_id}>
-              <AssignmentCard
-                title={exam.title}
-                type={exam.type}
-                due={exam.duration}
-                startTime={exam.start_time}
-                endTime={exam.end_time}
-                status="closed"
-              />
-            </div>
-          ))}
-      </div>
+      
+      {pendingExams.some((exam) => getExamStatus(exam) === "closed") && (
+        <>
+          <h5 className="mt-5 text-danger">Closed Exams</h5>
+          <div className="row">
+            {pendingExams
+              .filter((exam) => getExamStatus(exam) === "closed")
+              .map((exam) => (
+                <div className="col-md-4" key={exam.exam_id}>
+                  <AssignmentCard
+                    title={exam.title}
+                    type={exam.type}
+                    due={exam.duration}
+                    startTime={exam.start_time}
+                    endTime={exam.end_time}
+                    status="closed"
+                  />
+                </div>
+              ))}
+          </div>
+        </>
+      )}
 
       <h5 className="mt-5 text-success">Completed Exams</h5>
       <div className="row">
