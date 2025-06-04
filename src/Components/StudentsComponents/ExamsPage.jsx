@@ -45,13 +45,13 @@ const ExamsPage = () => {
     const startTime = new Date(exam.start_time);
     const endTime = new Date(exam.end_time);
 
-    //ensure both times are compared correctly
     if (currentTime >= startTime && currentTime <= endTime) {
       navigate(`/dashboard/task/${exam.exam_id}`);
     } else if (currentTime > endTime) {
       alert("The exam has ended.");
     } else {
       alert("Exam hasn't started yet.");
+      console.log("Exam hasn't started yet.");
     }
   };
 
@@ -117,6 +117,7 @@ const ExamsPage = () => {
                   startTime={exam.start_time}
                   endTime={exam.end_time}
                   status="closed"
+                  onStart={() => handleStart(exam)}
                 />
               </div>
             ))}

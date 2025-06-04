@@ -19,7 +19,7 @@ const AssignmentCard = ({ title,type,due, onStart, onReview, status, startTime,
           </button>
         )}
           {status === "closed" && (
-          <button className="btn btn-primary mt-auto" onClick={onStart}>
+          <button className="btn btn-danger mt-auto" onClick={onStart}>
             Closed
           </button>
         )}
