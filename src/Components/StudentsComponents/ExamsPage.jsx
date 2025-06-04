@@ -24,6 +24,21 @@ const ExamsPage = () => {
       fetchEnrolledCourses(userId);
     }
   }, [userId, fetchEnrolledCourses]);
+
+  //fun to determine the status of an exam
+  const getExamStatus = (exam) => {
+    const currentTime = new Date();
+    const startTime = new Date(exam.start_time);
+    const endTime = new Date(exam.end_time);
+
+    if (currentTime > endTime) {
+      return "closed"; //exam has ended
+    } else if (currentTime >= startTime && !exam.isTaken) {
+      return "open"; //exam is ongoing or ready to be taken
+    }
+    return "pending"; //exam is scheduled but not yet started
+  };
+
   //navigate to task page only if current time >= start_time
   const handleStart = (exam) => {
     const currentTime = new Date();
@@ -64,39 +79,75 @@ const ExamsPage = () => {
     <div className="container py-4">
       <h3> 🧪 Exams for Course: {courseTitle}</h3>
 
-      <h5 className="mt-4 text-primary">Pending Exams</h5>
-      <div className="row">
-        {pendingExams.map((exam) => (
-          <div className="col-md-4" key={exam.exam_id}>
-            <AssignmentCard
-              title={exam.title}
-              type={exam.type}
-              due={exam.duration}
-              startTime={exam.start_time}
-              endTime={exam.end_time}
-              status="pending"
-              onStart={() => handleStart(exam)}
-            />
+      {pendingExams.length > 0 && (
+        <>
+          <h5 className="mt-4 text-primary">Pending Exams</h5>
+          <div className="row">
+            {pendingExams.map((exam) => (
+              <div className="col-md-4" key={exam.exam_id}>
+                <AssignmentCard
+                  title={exam.title}
+                  type={exam.type}
+                  due={exam.duration}
+                  startTime={exam.start_time}
+                  endTime={exam.end_time}
+                  status="pending"
+                  onStart={() => handleStart(exam)}
+                />
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
+        </>
+      )}
 
-      <h5 className="mt-5 text-success">Completed Exams</h5>
-      <div className="row">
-        {completedExams.map((exam) => (
-          <div className="col-md-4" key={exam.exam_id}>
-            <AssignmentCard
-              title={exam.title}
-              type={exam.type}
-              due={exam.duration}
-              startTime={exam.start_time}
-              endTime={exam.end_time}
-              status="completed"
-              onReview={() => handleReview(exam.exam_id)}
-            />
+      {pendingExams.some((exam) => getExamStatus(exam) === "closed") && (
+        <>
+          <h5 className="mt-5 text-danger">Closed Exams</h5>
+          <div className="row">
+            {pendingExams
+              .filter((exam) => getExamStatus(exam) === "closed")
+              .map((exam) => (
+                <div className="col-md-4" key={exam.exam_id}>
+                  <AssignmentCard
+                    title={exam.title}
+                    type={exam.type}
+                    due={exam.duration}
+                    startTime={exam.start_time}
+                    endTime={exam.end_time}
+                    status="closed"
+                  />
+                </div>
+              ))}
           </div>
-        ))}
-      </div>
+        </>
+      )}
+      {completedExams.length > 0 && (
+        <>
+          <h5 className="mt-5 text-success">Completed Exams</h5>
+          <div className="row">
+            {completedExams.map((exam) => (
+              <div className="col-md-4" key={exam.exam_id}>
+                <AssignmentCard
+                  title={exam.title}
+                  type={exam.type}
+                  due={exam.duration}
+                  startTime={exam.start_time}
+                  endTime={exam.end_time}
+                  status="completed"
+                  onReview={() => handleReview(exam.exam_id)}
+                />
+              </div>
+            ))}
+          </div>
+        </>
+      )}
+
+    {/*fallback message when no exams are available */}
+    {pendingExams.length === 0 &&
+      !pendingExams.some((exam) => getExamStatus(exam) === "closed") &&
+      completedExams.length === 0 && (
+        <p className="mt-5 text-center text-muted">No exam is added.</p>
+      )}
     </div>
   );
 };

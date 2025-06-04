@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { ReviewContext } from "../../Context/reviewContext";
 
 const Review = () => {
-   // Consume review data and loading state from context
+  // Consume review data and loading state from context
   const { reviewData, loading } = useContext(ReviewContext);
 
   // Show loading spinner while data is being fetched
@@ -18,9 +18,9 @@ const Review = () => {
 
   return (
     <div className="container mt-5">
-      <h1 className="text-center mb-4">Exam Review</h1>
+      <h1 className="text-center mb-4 text-primary">Exam Review</h1>
 
-     {/* Display message if no review data is available */}
+      {/* Display message if no review data is available */}
       {reviewData.length === 0 ? (
         <div className="alert alert-warning text-center" role="alert">
           No reviews available.
@@ -29,11 +29,13 @@ const Review = () => {
         reviewData.map((review, index) => (
           <form
             key={review.id || review.exam_id || index}
-            className="border p-4 mb-4 rounded shadow-sm"
+            className="border p-4 mb-4 rounded shadow-md bg-ligh"
           >
-             {/* Answer ID */}
+            <h5 className="text-secondary mb-3">Review Details</h5>
+
+            {/* Answer ID */}
             <div className="mb-3">
-              <label className="form-label">ID</label>
+              <label className="form-label fw-bold">ID</label>
               <input
                 type="text"
                 className="form-control"
@@ -41,9 +43,9 @@ const Review = () => {
                 readOnly
               />
             </div>
-             {/* Score for the specific answer */}
+            {/* Score for the specific answer */}
             <div className="mb-3">
-              <label className="form-label">Score</label>
+              <label className="form-label fw-bold">Score</label>
               <input
                 type="text"
                 className="form-control"
@@ -51,9 +53,9 @@ const Review = () => {
                 readOnly
               />
             </div>
-             {/*  */}
+            {/*  */}
             <div className="mb-3">
-              <label className="form-label">AI Feedback</label>
+              <label className="form-label fw-bold">AI Feedback</label>
               <textarea
                 className="form-control"
                 value={review.ai_feedback || ""}
@@ -62,7 +64,7 @@ const Review = () => {
             </div>
             {/* Question ID (linked to exam_submissions table) */}
             <div className="mb-3">
-              <label className="form-label">Question ID</label>
+              <label className="form-label fw-bold">Question ID</label>
               <input
                 type="text"
                 className="form-control"
@@ -72,7 +74,7 @@ const Review = () => {
             </div>
             {/* Submission ID (linked to exam_submissions table) */}
             <div className="mb-3">
-              <label className="form-label">Submission ID</label>
+              <label className="form-label fw-bold">Submission ID</label>
               <input
                 type="text"
                 className="form-control"
@@ -80,9 +82,9 @@ const Review = () => {
                 readOnly
               />
             </div>
-             {/* Exam ID from entire exam submission */}
+            {/* Exam ID from entire exam submission */}
             <div className="mb-3">
-              <label className="form-label">Exam ID</label>
+              <label className="form-label fw-bold">Exam ID</label>
               <input
                 type="text"
                 className="form-control"
@@ -94,17 +96,17 @@ const Review = () => {
             {/* Total score for the entire exam submission */}
 
             <div className="mb-3">
-              <label className="form-label">Total Score</label>
+              <label className="form-label fw-bold">Total Score</label>
               <input
                 type="text"
                 className="form-control"
                 value={review.total_score ?? ""}
                 readOnly
-              />   
+              />
             </div>
-              {/* Total time taken for exam */}
+            {/* Total time taken for exam */}
             <div className="mb-3">
-              <label className="form-label">Time Taken (seconds)</label>
+              <label className="form-label fw-bold">Time Taken (seconds)</label>
               <input
                 type="text"
                 className="form-control"
@@ -116,7 +118,7 @@ const Review = () => {
             {/* Focus loss count during exam */}
 
             <div className="mb-3">
-              <label className="form-label">Focus Loss Count</label>
+              <label className="form-label fw-bold">Focus Loss Count</label>
               <input
                 type="text"
                 className="form-control"
@@ -128,7 +130,7 @@ const Review = () => {
             {/* Feedback summary for the entire exam submission */}
 
             <div className="mb-3">
-              <label className="form-label">Feedback Summary</label>
+              <label className="form-label fw-bold">Feedback Summary</label>
               <textarea
                 className="form-control"
                 value={
