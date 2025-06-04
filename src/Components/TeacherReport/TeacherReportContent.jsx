@@ -14,6 +14,7 @@ import PerformanceAnalysisCards from './components/PerformanceAnalysisCards';
 import QuestionAccuracyChart from './components/QuestionAccuracyChart';
 import useFetchSubmittedExamAnswers from './hooks/useFetchSubmittedExamAnswers';
 import useReportCalculations from './hooks/useReportCalculations';
+import calculateScoreDistribution from './utils/calculateScoreDistribution';
 
 export default function TeacherReportContent() {
     const [selectedCourse, setSelectedCourse] = useState("");
@@ -35,6 +36,8 @@ export default function TeacherReportContent() {
     const {submittedAnswers, loadingAnswers} = useFetchSubmittedExamAnswers(submissionId, setReportError);
 
     const { scores, avgScore, highestScore, iniTotalScore, noOfStudentsDoneExam, avgTimeInMinutes, avgFocusLoss } = useReportCalculations(examSubmissions, mcqQuestions);
+
+    const scoreDistributionData = calculateScoreDistribution(scores, iniTotalScore);
 
     useEffect(() => {
             const getUserId = async () => {
@@ -75,25 +78,6 @@ export default function TeacherReportContent() {
         setError(null)
         setReportRequested(true)
     }
-
-    //Grapgh data 
-    const noOfContainers = 7;
-    const containerSize = Math.ceil(iniTotalScore/noOfContainers) //round up to the next whole number
-    const scoreContainers = new Array(7).fill(0)
-    scores.forEach(score =>{
-        let containerIndex = Math.min(Math.floor(score/containerSize) , noOfContainers-1)
-        scoreContainers[containerIndex]++
-    })
-
-    //score distribution data
-    const scoreDistributionData = scoreContainers.map((count, index) => {
-        const start = index*containerSize
-        const end = (index === noOfContainers-1) ? iniTotalScore : (start + containerSize -1)
-        return {
-            scoreRange: `${start} - ${end}`,
-            students: count
-        }
-    })
 
     // submission ids according to exam
     useEffect(() => {
