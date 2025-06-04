@@ -16,6 +16,7 @@ import useFetchSubmittedExamAnswers from './hooks/useFetchSubmittedExamAnswers';
 import useReportCalculations from './hooks/useReportCalculations';
 import calculateScoreDistribution from './utils/calculateScoreDistribution';
 import calculateQuestionStats from './utils/calculateQuestionStats';
+import StyledDivider from './components/StyledDivider';
 
 export default function TeacherReportContent() {
     const [selectedCourse, setSelectedCourse] = useState("");
@@ -180,38 +181,14 @@ export default function TeacherReportContent() {
                                     avgScore={avgScore}
                                     highestScore={highestScore}
                                 />
-                                <hr style={{
-                                    border: 'none',
-                                    height: '2px',
-                                    width: '95%',
-                                    backgroundColor: '#dee2e6',
-                                    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-                                    borderRadius: '4px',
-                                    margin: '1rem auto'
-                                }} />
+                                <StyledDivider />
                                 <ScoreDistributionChart scoreDistributionData={scoreDistributionData} />
-                                <hr style={{
-                                    border: 'none',
-                                    height: '2px',
-                                    width: '95%',
-                                    backgroundColor: '#dee2e6',
-                                    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-                                    borderRadius: '4px',
-                                    margin: '1rem auto'
-                                }} />
+                                <StyledDivider />
                                 <PerformanceAnalysisCards 
                                     avgTimeInMinutes={avgTimeInMinutes} 
                                     avgFocusLoss={avgFocusLoss}
                                 />
-                                <hr style={{
-                                    border: 'none',
-                                    height: '2px',
-                                    width: '95%',
-                                    backgroundColor: '#dee2e6',
-                                    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-                                    borderRadius: '4px',
-                                    margin: '1rem auto'
-                                }} />
+                                <StyledDivider />
                                 <QuestionAccuracyChart questionStats={questionStats} />
 
                             </>
