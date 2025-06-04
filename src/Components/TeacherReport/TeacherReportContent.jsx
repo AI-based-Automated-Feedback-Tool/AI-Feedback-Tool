@@ -142,7 +142,6 @@ export default function TeacherReportContent() {
                                         setError={setError}
                                     />
                                 </Col>
-
                             </Row>
 
                             <Button 
@@ -156,54 +155,67 @@ export default function TeacherReportContent() {
                             </Button>
                         </CardBody>
                     </Card>
-
+                    
+                    {/* Report Section */}
                     <Card className="mb-4 border-0 shadow-sm">
-                        <CardHeader className="bg-white">
-                            <h5 >
-                                📊 Overall Exam Report 
-                            </h5>
-                        </CardHeader>
-                        {reportError ? (
+                        {!reportRequested || !reportData ? (
                             <CardBody>
-                                <Alert variant="danger">{reportError}</Alert>
+                                <Alert variant="info">
+                                    <p className="mb-0">
+                                        No report available to preview. Please select the criteria and generate a report.
+                                    </p>
+                                </Alert>
                             </CardBody>
-                        ) : reportData ? (
-                            noOfStudentsDoneExam === 0 ? (
+                        ) : (selectedCourse && selectedExam && selectedStudent) ? (
+                            <>
+                                <CardHeader className="bg-white">
+                                    <h5>📊 Student Report</h5>
+                                </CardHeader>
+                                {/*  Insert student-specific report */}
                                 <CardBody>
                                     <Alert variant="info">
-                                        No students have completed this exam yet.
+                                        Student-specific report will go here.
                                     </Alert>
                                 </CardBody>
-                            ) : (
-                            <>
-                                <ReportStatsCards 
-                                    noOfStudentsDoneExam={noOfStudentsDoneExam}
-                                    avgScore={avgScore}
-                                    highestScore={highestScore}
-                                />
-                                <StyledDivider />
-                                <ScoreDistributionChart scoreDistributionData={scoreDistributionData} />
-                                <StyledDivider />
-                                <PerformanceAnalysisCards 
-                                    avgTimeInMinutes={avgTimeInMinutes} 
-                                    avgFocusLoss={avgFocusLoss}
-                                />
-                                <StyledDivider />
-                                <QuestionAccuracyChart questionStats={questionStats} />
-
                             </>
-                            )
-                        ):(
-                        <CardBody>
-                            {/*Here shows the text which says no contents to preview */}
-                            <Alert variant="info">
-                                <p className="mb-0">
-                                    No report available to preview. Please select the criteria and generate a report.
-                                </p>
-                            </Alert>
-                        </CardBody>
-                        )}
-                    
+                        ): (selectedCourse && selectedExam) ? (
+                            <>
+                                <CardHeader className="bg-white">
+                                    <h5>
+                                        📊 Overall Exam Report
+                                    </h5>
+                                </CardHeader>
+                                {reportError ? (
+                                    <CardBody>
+                                        <Alert variant="danger">{reportError}</Alert>
+                                    </CardBody>
+                                ) : noOfStudentsDoneExam === 0 ? (
+                                    <CardBody>
+                                        <Alert variant="info">
+                                            No students have completed this exam yet.
+                                        </Alert>
+                                    </CardBody>
+                                ) : (
+                                    <>
+                                        <ReportStatsCards 
+                                            noOfStudentsDoneExam={noOfStudentsDoneExam}
+                                            avgScore={avgScore}
+                                            highestScore={highestScore}
+                                        />
+                                        <StyledDivider />
+                                        <ScoreDistributionChart scoreDistributionData={scoreDistributionData} />
+                                        <StyledDivider />
+                                        <PerformanceAnalysisCards 
+                                            avgTimeInMinutes={avgTimeInMinutes} 
+                                            avgFocusLoss={avgFocusLoss}
+                                        />
+                                        <StyledDivider />
+                                        <QuestionAccuracyChart questionStats={questionStats} />
+                                    </>
+                                )}
+                            </>
+                        ):null
+                        }
                     </Card>
                 </CardBody>
             </Card>
