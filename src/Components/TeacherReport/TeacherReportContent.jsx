@@ -15,6 +15,7 @@ import QuestionAccuracyChart from './components/QuestionAccuracyChart';
 import useFetchSubmittedExamAnswers from './hooks/useFetchSubmittedExamAnswers';
 import useReportCalculations from './hooks/useReportCalculations';
 import calculateScoreDistribution from './utils/calculateScoreDistribution';
+import calculateQuestionStats from './utils/calculateQuestionStats';
 
 export default function TeacherReportContent() {
     const [selectedCourse, setSelectedCourse] = useState("");
@@ -38,6 +39,7 @@ export default function TeacherReportContent() {
     const { scores, avgScore, highestScore, iniTotalScore, noOfStudentsDoneExam, avgTimeInMinutes, avgFocusLoss } = useReportCalculations(examSubmissions, mcqQuestions);
 
     const scoreDistributionData = calculateScoreDistribution(scores, iniTotalScore);
+    const questionStats = calculateQuestionStats(submittedAnswers, mcqQuestions, noOfStudentsDoneExam);
 
     useEffect(() => {
             const getUserId = async () => {
@@ -90,43 +92,6 @@ export default function TeacherReportContent() {
         setSubmissionId(submissionIdDetails);
     }, [examSubmissions])
 
-    // take submitted answers to get question id and is it correct or wrong
-    const filteredSubmittedAnswers = submittedAnswers.map((answer) => {
-        return {
-            questionId: answer.question_id,
-            isCorrect: answer.is_correct
-        };
-    });
-
-    // Group answers by question ID 
-    console.log("Exam Submissions:", examSubmissions);
-    console.log("Filtered Submitted Answers:", filteredSubmittedAnswers);
-    const questionStats = mcqQuestions.map((question, index) => {
-        let correct = 0;
-        let incorrect = 0;
-        filteredSubmittedAnswers.forEach((answer) => {
-            if (answer.questionId === question.question_id) {
-                if (answer.isCorrect === true) {
-                    correct++;
-                } else {
-                    incorrect++;
-                }
-            }
-        })
-        return {
-            questionId: question.question_id,
-            id: `Question ${index + 1}`,
-            full: question.question_text,
-            correct: noOfStudentsDoneExam > 0 
-                ? parseFloat(((correct / noOfStudentsDoneExam) * 100).toFixed(2)) 
-                : 0, 
-            incorrect: noOfStudentsDoneExam > 0 
-                ? parseFloat(((incorrect / noOfStudentsDoneExam) * 100).toFixed(2)) 
-                : 0
-        };
-    })
-
-    console.log("Question Stats:", questionStats);
 
   return (
     <Col
