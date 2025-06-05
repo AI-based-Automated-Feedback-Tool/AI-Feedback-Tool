@@ -216,17 +216,19 @@ if (answersPayload.length === 0) {
   return;
 }
 
-    // Step 3: Insert answers into exam_submissions_answers table
-    const { data: answersData, error: answersError } = await supabase
-      .from("exam_submissions_answers")
-      .insert(answersPayload)
-      .select();
+   // Step 3: Insert answers into exam_submissions_answers table
+const { data: answersData, error: answersError } = await supabase
+  .from("exam_submissions_answers")
+  .insert(answersPayload)
+  .select();
 
-    if (answersError) {
-      console.error("❌ Error saving answers:", answersError);
-      alert("Failed to save answers. Please try again.");
-      return;
-    }
+if (answersError) {
+  console.error("❌ Error saving answers:", answersError);
+  alert("Failed to save answers: " + answersError.message);
+  return;
+}
+
+console.log("✅ Saved answers to DB:", answersData);
 
     // Step 4: Update total_score in exam_submissions table
     await supabase
