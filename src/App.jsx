@@ -9,7 +9,7 @@ import TeacherLayout from "./layouts/TeacherLayout";
 import TaskPage from "./Components/StudentsComponents/TaskPage";
 import Courses from "./Components/StudentsComponents/Courses";
 import TeacherCourses from "./Components/TeachersComponents/TeacherCourses";
-import CreateMcqQuestionsContent from "./Components/CreateMcqQuestions/CreateMcqQuestionsContent";
+import CreateMcqQuestionsContent from "./Components/CreateQuestions/CreateMcqQuestions/CreateMcqQuestionsContent.jsx";
 import ExamsPage from "./Components/StudentsComponents/ExamsPage";
 import Profile from "./Components/Profile";
 import CourseExamsPage from "./Components/TeachersComponents/CourseExamsPage";
@@ -27,6 +27,7 @@ import { ReviewProvider } from "./Context/reviewContext.jsx";
 import FeedbackSelector from './Components/TeachersComponents/FeedbackSelector';
 import PromptSelector from './Components/TeachersComponents/PromptSelector';
 import { TimerProvider } from "./Context/TimerContext.jsx";
+import CreateQuestions from "./Components/CreateQuestions/CreateQuestions.jsx";
 
 function App() {
   return (
@@ -51,7 +52,7 @@ function App() {
                 <Route path="exams/:examId/ai-feedback" element={<AIFeedbackPage />} />
                 <Route path="ai-feedback" element={<FeedbackSelector />} />
                 <Route path="exams/:examId/prompt-selector" element={<PromptSelector />} />
-                <Route path="exams/:examId/questions/:questionType" element={<CreateMcqQuestionsContent />} />
+                <Route path="exams/:examId/questions/:questionType" element={<CreateQuestions />} />
                 <Route path="courses/:course_id/exams" element={<CourseExamsPage />} />
                 <Route path="profile" element={<ProfilePage />} />
                 <Route path="students" element={""} />
