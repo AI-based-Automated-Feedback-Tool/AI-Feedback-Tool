@@ -168,7 +168,7 @@ export const TaskProvider = ({ children }) => {
       .select();
 
     if (submissionError) {
-      console.error("❌ Error saving exam submission:", submissionError);
+      console.error(" Error saving exam submission:", submissionError);
       alert("Failed to submit exam. Please try again.");
       return;
     }
@@ -184,7 +184,7 @@ const answersPayload = task.questions
 
     // Only skip if truly unanswered (null or undefined)
     if (selectedAnswer === null || selectedAnswer === undefined) {
-      console.warn(`⛔ Question ${index + 1} unanswered`);
+      console.warn(` Question ${index + 1} unanswered`);
       return null;
     }
 
@@ -203,13 +203,13 @@ const answersPayload = task.questions
       ai_feedback: null                     // Placeholder
     };
 
-    console.log(`✅ Prepared answer for Q${index + 1}:`, payload);
+    console.log(`Prepared answer for Q${index + 1}:`, payload);
     return payload;
   })
   .filter((entry) => entry !== null); // Remove skipped entries
 
-console.log("📦 Final answersPayload:", answersPayload);
-console.log("🏁 Total score to update:", totalScore);
+console.log(" Final answersPayload:", answersPayload);
+console.log(" Total score to update:", totalScore);
 
 if (answersPayload.length === 0) {
   alert("You must answer at least one question.");
@@ -223,12 +223,12 @@ const { data: answersData, error: answersError } = await supabase
   .select();
 
 if (answersError) {
-  console.error("❌ Error saving answers:", answersError);
+  console.error(" Error saving answers:", answersError);
   alert("Failed to save answers: " + answersError.message);
   return;
 }
 
-console.log("✅ Saved answers to DB:", answersData);
+console.log(" Saved answers to DB:", answersData);
 
     // Step 4: Update total_score in exam_submissions table
     await supabase
@@ -238,7 +238,7 @@ console.log("✅ Saved answers to DB:", answersData);
 
     // Step 5: Show score popup and navigate back to dashboard
     setUserScore(totalScore);
-    setPopupMessage(`✅ Exam submitted! Your score is ${totalScore}.`);
+    setPopupMessage(` Exam submitted! Your score is ${totalScore}.`);
     setShowPopup(true); 
 
     // Wait 3 seconds, then navigate back
