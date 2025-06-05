@@ -1,5 +1,5 @@
 // Import necessary modules from React and Supabase client
-import React, { createContext, useState } from "react";
+import React, { createContext, useState, useEffect } from "react";
 import { supabase } from "../SupabaseAuth/supabaseClient";
 
 // Create a context for user-related data and actions
@@ -7,7 +7,10 @@ export const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
   //to store the current user's ID
-  const [userId, setUserId] = useState(null);
+  const [userId, setUserId] = useState(() => {
+    // Initialize userId from localStorage if available
+    return localStorage.getItem("userId") || null;
+  });
   //o store the current user data
   const [userData, setUserData] = useState(null);
 
@@ -38,6 +41,15 @@ export const UserProvider = ({ children }) => {
       return null;
     }
   };
+
+   //effect to persist userId in localStorage whenever it changes
+   useEffect(() => {
+    if (userId) {
+      localStorage.setItem("userId", userId);
+    } else {
+      localStorage.removeItem("userId");
+    }
+  }, [userId]);
 
   //provide the user-related state and actions to child components
   return (
