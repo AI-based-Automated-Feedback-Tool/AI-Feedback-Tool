@@ -8,12 +8,8 @@ import {useMcqQuestion} from './useMcqQuestion';
 import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 
-export default function CreateMcqQuestionsContent() {
+export default function CreateMcqQuestionsContent({examId, question_count}) {
     
-    const {examId} = useParams();
-    const location = useLocation();                   
-    const query = new URLSearchParams(location.search);
-    const question_count = query.get('question_count');
     const navigate = useNavigate();
 
     const {

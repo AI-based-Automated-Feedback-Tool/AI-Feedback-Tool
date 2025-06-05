@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { saveMcqQuestion } from "./mcqQuestionService";
-import { supabase } from "../../SupabaseAuth/supabaseClient"; 
+import { supabase } from "../../../SupabaseAuth/supabaseClient"; 
 
 export const useMcqQuestion = (examId, question_count) => {
     // State to manage sidebar visibility

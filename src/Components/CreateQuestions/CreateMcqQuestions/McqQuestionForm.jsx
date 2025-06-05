@@ -82,7 +82,6 @@ export default function McqQuestionForm({onSave, warning, disabled}) {
         <Card.Body>
             <Form>
                 {warning && <Alert variant="warning">{warning}</Alert>}
-                {console.log (warning)}
                 {/* Question */}
                 <Form.Group className="mb-3">
                     <Form.Label className="fw-bold">Question *</Form.Label>
