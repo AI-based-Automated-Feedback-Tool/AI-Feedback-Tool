@@ -134,120 +134,102 @@ export const TaskProvider = ({ children }) => {
   }, []);
 
   // Submit all answers to the backend
- const handleSubmit = useCallback(
-  async (navigate) => {
-    // Get current user ID
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    const userId = user?.id;
+  const handleSubmit = useCallback(
+    async (navigate) => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      const userId = user?.id;
 
-    if (!userId) {
-      alert("User not authenticated");
-      return;
-    }
+      if (!userId) {
+        alert("User not authenticated");
+        return;
+      }
 
-    // Calculate time taken
-    const totalDurationInSeconds = task.duration * 60;
-    const timeTaken = totalDurationInSeconds - timeLeft;
+      // Calculate total exam duration and time taken
+      const totalDurationInSeconds = task.duration * 60;
+      const timeTaken = totalDurationInSeconds - timeLeft;
 
-    // Step 1: Insert into exam_submissions table
-    const submissionPayload = {
-      submitted_at: new Date().toISOString(),
-      student_id: userId,
-      exam_id: task.exam_id,
-      total_score: 0, // Placeholder — will be updated after scoring
-      time_taken: timeTaken,
-      focus_loss_count: focusLossCount,
-      feedback_summery: null,
-    };
+      // Initial submission row to exam_submissions table
+      const submissionPayload = {
+        submitted_at: new Date().toISOString(),
+        student_id: userId,
+        exam_id: task.exam_id,
+        total_score: 0, // Placeholder
+        time_taken: timeTaken,
+         focus_loss_count: focusLossCount, // Count of focus losses
+        feedback_summery: null,
+      };
 
-    const { data: submissionData, error: submissionError } = await supabase
-      .from("exam_submissions")
-      .insert([submissionPayload])
-      .select();
+      const { data: submissionData, error: submissionError } = await supabase
+        .from("exam_submissions")
+        .insert([submissionPayload])
+        .select();
 
-    if (submissionError) {
-      console.error(" Error saving exam submission:", submissionError);
-      alert("Failed to submit exam. Please try again.");
-      return;
-    }
+      if (submissionError) {
+        console.error("Error saving exam submission:", submissionError);
+        alert("Failed to submit exam. Please try again.");
+        return;
+      }
 
-    const submissionId = submissionData[0].id;
+      const submissionId = submissionData[0].id;
 
-    // Step 2: Score answers and prepare payload for exam_submissions_answers table
-let totalScore = 0;
+      let totalScore = 0;
 
-const answersPayload = task.questions
-  .map((question, index) => {
-    const selectedAnswer = answers[index];
+      // Prepare answers payload
+      const answersPayload = task.questions
+        .map((question, index) => {
+          const selectedAnswer = answers[index];
+          if (!selectedAnswer) return null;
 
-    // Only skip if truly unanswered (null or undefined)
-    if (selectedAnswer === null || selectedAnswer === undefined) {
-      console.warn(` Question ${index + 1} unanswered`);
-      return null;
-    }
+          const isCorrect = question.correctAnswers?.includes(selectedAnswer);
+          if (isCorrect) totalScore += 1;
 
-    const correctAnswers = question.correctAnswers || [];
+          return {
+            score: isCorrect ? 1 : 0,
+            ai_feedback: null,
+            question_id: question.id,
+            submission_id: submissionId,
+          };
+        })
+        .filter(Boolean); // Remove unanswered
 
-    // Check if selected answer is correct
-    const isCorrect = correctAnswers.includes(selectedAnswer);
-    if (isCorrect) totalScore += 1;
+      if (answersPayload.length === 0) {
+        alert("You must answer at least one question.");
+        return;
+      }
 
-    const payload = {
-      question_id: question.id,             // FK to mcq_questions
-      submission_id: submissionId,          // FK to exam_submissions
-      student_answer: selectedAnswer,       // Student's selected answer
-      is_correct: isCorrect,                // Boolean true/false
-      score: isCorrect ? 1 : 0,             // 1 for correct, 0 for wrong
-      ai_feedback: null                     // Placeholder
-    };
+      // Save all selected answers to exam_submissions_answers table
+      const { data: answersData, error: answersError } = await supabase
+        .from("exam_submissions_answers")
+        .insert(answersPayload)
+        .select();
 
-    console.log(`Prepared answer for Q${index + 1}:`, payload);
-    return payload;
-  })
-  .filter((entry) => entry !== null); // Remove skipped entries
+      if (answersError) {
+        console.error("Error saving responses:", answersError);
+        alert("Failed to save answers. Please try again.");
+        return;
+      }
 
-console.log(" Final answersPayload:", answersPayload);
-console.log(" Total score to update:", totalScore);
+      //update total score in the exam_submissions table
+      await supabase
+        .from("exam_submissions")
+        .update({ total_score: totalScore })
+        .eq("id", submissionId);
 
-if (answersPayload.length === 0) {
-  alert("You must answer at least one question.");
-  return;
-}
+      setUserScore(totalScore);
+      setPopupMessage(`Exam submitted! Your score is ${totalScore}.`);
+      //show the popup
+      setShowPopup(true); 
 
-   // Step 3: Insert answers into exam_submissions_answers table
-const { data: answersData, error: answersError } = await supabase
-  .from("exam_submissions_answers")
-  .insert(answersPayload)
-  .select();
-
-if (answersError) {
-  console.error(" Error saving answers:", answersError);
-  alert("Failed to save answers: " + answersError.message);
-  return;
-}
-
-console.log(" Saved answers to DB:", answersData);
-
-    // Step 4: Update total_score in exam_submissions table
-    await supabase
-      .from("exam_submissions")
-      .update({ total_score: totalScore })
-      .eq("id", submissionId);
-
-    // Step 5: Show score popup and navigate back to dashboard
-    setUserScore(totalScore);
-    setPopupMessage(` Exam submitted! Your score is ${totalScore}.`);
-    setShowPopup(true); 
-
-    // Wait 3 seconds, then navigate back
-    setTimeout(() => {
-      navigate(`/student/courses/${userId}/${task.course_id}/exams`);
-    }, 3000);
-  },
-  [task, answers, timeLeft]
-);
+      //delay navigation by 3 seconds
+      setTimeout(() => {
+        // Redirect back to the exam list for the course
+        navigate(`/student/courses/${userId}/${task.course_id}/exams`);
+      }, 3000);
+    },
+    [task, answers, timeLeft]
+  );
 
   // Memoize and provide all values to child components
   const contextValue = useMemo(
