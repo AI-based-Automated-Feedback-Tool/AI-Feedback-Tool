@@ -2,6 +2,7 @@ import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import CreateMcqQuestionsContent from './CreateMcqQuestions/CreateMcqQuestionsContent';
+import CreateCodeQuestionsContent from './CreateCodeQuestions/CreateCodeQuestionsContent';
 
 export default function CreateQuestions() {
     
@@ -15,8 +16,8 @@ export default function CreateQuestions() {
   return (
     <>
         { questionType === "mcq" ? (
-            <CreateMcqQuestionsContent examId = {examId} question_count = {question_count} />) /*: (questionType === "code") ? 
-                (<CreateCodeQuestionsContent examId = {examId} question_count = {question_count} />) : (questionType === "essay") ? 
+            <CreateMcqQuestionsContent examId = {examId} question_count = {question_count} />) : (questionType === "code") ? 
+                (<CreateCodeQuestionsContent examId = {examId} question_count = {question_count} />) /*: (questionType === "essay") ? 
                     (<CreateEssayQuestionsContent examId = {examId} question_count = {question_count} />) */: null
         }
     </>  
