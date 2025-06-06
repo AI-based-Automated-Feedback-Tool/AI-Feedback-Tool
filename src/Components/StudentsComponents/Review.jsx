@@ -56,7 +56,6 @@ const Review = () => {
               <p><strong>Model Answer (Basic):</strong> {entry.model_answer_basic || "N/A"}</p>
               <p><strong>Model Answer (Advanced):</strong> {entry.model_answer_advance || "N/A"}</p>
               <p><strong>AI Feedback:</strong> {entry.ai_feedback || "N/A"}</p>
-              <p><strong>Reflection Notes:</strong> {entry.reflection_notes || "N/A"}</p>
             </div>
           </div>
         );
