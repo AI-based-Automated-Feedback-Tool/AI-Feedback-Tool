@@ -3,9 +3,12 @@ import { useParams } from "react-router-dom";
 import { useReview } from "../../Context/ReviewContext";
 
 const Review = () => {
+  //extracting submission id from url parameter
   const { submissionId } = useParams();
+  //destructuring review related data and functions from the review context
   const { reviewData, fetchReviewData, loading, error } = useReview();
 
+  //fetch review data when submission id changes
   useEffect(() => {
     if (submissionId) {
       fetchReviewData(submissionId);
@@ -16,6 +19,7 @@ const Review = () => {
   if (error) return <p className="text-red-500">Error: {error}</p>;
   if (!reviewData) return <p>No review data found.</p>;
 
+  //render review data
   return (
     <div className="p-4 space-y-6">
       <h2 className="text-2xl font-bold">Exam Review</h2>
