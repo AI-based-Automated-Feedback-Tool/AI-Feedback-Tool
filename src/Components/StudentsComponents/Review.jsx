@@ -33,17 +33,17 @@ const Review = () => {
               {q.options.map((opt, i) => (
                 <li
                   key={i}
-                  className={`p-2 rounded ${
+                  className={`list-group-item ${
                     entry.student_answer?.includes(opt)
                       ? entry.is_correct
-                        ? "bg-green-100"
-                        : "bg-red-100"
+                        ? "list-group-item-success"
+                          : "list-group-item-danger"
                       : ""
                   }`}
                 >
                   {opt}
                   {q.answers.includes(opt) && (
-                    <span className="ml-2 text-green-600 font-semibold">(Correct)</span>
+                    <span className="badge bg-success ms-2">(Correct)</span>
                   )}
                 </li>
               ))}
