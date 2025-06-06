@@ -34,12 +34,41 @@ Answers: [ANSWERS]
 Return ONLY valid JSON with these exact keys.`
   },
   {
-    label: 'Simple Summary Only',
-    prompt: `Analyze the exam data and summarize student performance in plain text. Focus only on general insights without listing specific questions.`
+    label: 'Quick Insights',
+    prompt: `Provide concise exam feedback in this JSON format:
+{
+  "overallSummary": "One paragraph summary",
+  "keyStrengths": ["2-3 strengths max"],
+  "mostMissedQuestions": ["2-3 weak areas"],
+  "teachingSuggestions": ["2 quick recommendations"],
+  "nextSteps": ["1-2 action items"]
+}`
   },
   {
-    label: 'Suggestions Focused',
-    prompt: `Review the exam results and provide only improvement suggestions for the teacher. Skip the overall summary.`
+    label: 'Detailed Report',
+    prompt: `Create comprehensive feedback in this structure:
+{
+  "overallSummary": "Detailed performance analysis (3-4 sentences)",
+  "keyStrengths": [
+    "3-5 mastered concepts with question examples",
+    "Performance patterns observed"
+  ],
+  "mostMissedQuestions": [
+    "Top 5 difficult questions",
+    "Detailed misconception analysis for each",
+    "Prerequisite knowledge gaps"
+  ],
+  "teachingSuggestions": [
+    "Differentiated instruction strategies",
+    "Reteaching methods for each weak area",
+    "Recommended practice activities"
+  ],
+  "nextSteps": [
+    "Short-term remediation plan",
+    "Long-term instructional adjustments",
+    "Suggested resources"
+  ]
+}`
   }
 ];
 
