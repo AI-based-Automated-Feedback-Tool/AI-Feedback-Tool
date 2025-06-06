@@ -94,11 +94,12 @@ const PromptSelector = () => {
     <Container className="mt-4">
       <Card className="shadow-sm">
         <Card.Header className="bg-primary text-white">
-          <h4>Select or Customize AI Prompt</h4>
+          <h4>Select Feedback Type</h4>
+          <p className="mb-0">Choose how detailed you want the analysis</p>
         </Card.Header>
         <Card.Body>
           <Form.Group className="mb-3">
-            <Form.Label>Choose a prompt template</Form.Label>
+            <Form.Label>Feedback Style</Form.Label>
             <Form.Select
               value={selectedLabel}
               onChange={(e) => handlePromptChange(e.target.value)}
@@ -110,18 +111,17 @@ const PromptSelector = () => {
           </Form.Group>
 
           <Form.Group className="mb-3">
-            <Form.Label>Edit Prompt (optional)</Form.Label>
-            <Form.Control
-              as="textarea"
-              rows={10}
-              value={selectedPrompt}
-              onChange={(e) => setSelectedPrompt(e.target.value)}
-            />
+            <Form.Label>Preview</Form.Label>
+            <Card body className="bg-light">
+              <pre style={{whiteSpace: 'pre-wrap'}}>{selectedPrompt}</pre>
+            </Card>
           </Form.Group>
 
-          <Button variant="success" onClick={handleSubmit}>
-            Generate AI Feedback
+          <div className="d-grid">
+            <Button variant="primary" onClick={handleSubmit}>
+              Generate Feedback
             </Button>
+          </div>
         </Card.Body>
       </Card>
     </Container>
