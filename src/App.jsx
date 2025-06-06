@@ -23,7 +23,7 @@ import { CourseProvider } from "./Context/courseContext.jsx";
 import { ExamProvider } from "./Context/examContext.jsx";
 import { TaskProvider } from "./Context/taskContext.jsx";
 import Review from "./Components/StudentsComponents/Review.jsx";
-import { ReviewProvider } from "./Context/reviewContext.jsx";
+import { ReviewProvider } from "./Context/ReviewContext.jsx";
 import FeedbackSelector from './Components/TeachersComponents/FeedbackSelector';
 import PromptSelector from './Components/TeachersComponents/PromptSelector';
 import { TimerProvider } from "./Context/TimerContext.jsx";
@@ -71,7 +71,7 @@ function App() {
               <Route path="profile" element={<Profile />} />
               <Route path="results" element={<Result />} />
               <Route path=":courseId/exams" element={<ExamsPage />} />
-              <Route path=":courseId/exams/reviews" element={<ReviewProvider><Review /></ReviewProvider>} />
+              <Route path=":courseId/exams/reviews/:submissionId" element={<ReviewProvider><Review /></ReviewProvider>} />
 
             </Route>
           </Route>

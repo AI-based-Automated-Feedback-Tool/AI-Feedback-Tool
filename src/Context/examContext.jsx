@@ -16,7 +16,8 @@ export const ExamProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   // Tracks any error messages
   const [error, setError] = useState(null);
-
+  //tracksubmission IDs
+  const [submissionIds, setSubmissionIds] = useState([]); // Add this state
 
   /**
    * Fetch all exams for a course, filter them based on
@@ -62,7 +63,7 @@ export const ExamProvider = ({ children }) => {
       //Fetch user's submitted exam IDs
       const { data: submissions, error: submissionError } = await supabase
         .from("exam_submissions")
-        .select("exam_id")
+        .select("exam_id, id")
         .eq("student_id", userId);
 
       if (submissionError) {
@@ -76,6 +77,12 @@ export const ExamProvider = ({ children }) => {
 
       //Extract completed exam IDs
       const completedExamIds = new Set(submissions.map((s) => s.exam_id));
+
+      const examIdToSubmissionId = {};
+      submissions.forEach((s) => {
+        examIdToSubmissionId[s.exam_id] = s.id;
+      });
+      setSubmissionIds(examIdToSubmissionId);
       console.log("Completed exam IDs (Set):", [...completedExamIds]);
 
       //Split exams into pending and completed (per user)
@@ -110,6 +117,7 @@ export const ExamProvider = ({ children }) => {
         fetchExams,
         loading,
         error,
+        submissionIds,
       }}
     >
       {children}

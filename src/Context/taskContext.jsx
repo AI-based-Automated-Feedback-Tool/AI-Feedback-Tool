@@ -186,10 +186,14 @@ export const TaskProvider = ({ children }) => {
           if (isCorrect) totalScore += 1;
 
           return {
+            student_answer: [selectedAnswer],
+            is_correct: isCorrect,
             score: isCorrect ? 1 : 0,
-            ai_feedback: null,
+            ai_feedback: "Pending AI feedback generation",
             question_id: question.id,
             submission_id: submissionId,
+            model_answer_basic: question.correctAnswers?.[0] ?? "N/A",
+            model_answer_advanced: "To be added later"
           };
         })
         .filter(Boolean); // Remove unanswered
