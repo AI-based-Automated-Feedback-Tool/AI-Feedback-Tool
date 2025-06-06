@@ -9,8 +9,14 @@ const ExamsPage = () => {
   const { courseId, userId } = useParams();
   const navigate = useNavigate();
   //destructure from exam context
-  const { pendingExams, completedExams, fetchExams, loading, error } =
-    useContext(ExamContext);
+  const {
+    pendingExams,
+    completedExams,
+    fetchExams,
+    loading,
+    error,
+    submissionIds,
+  } = useContext(ExamContext);
   //destructure course context to get course title
   const { enrolledCourses, fetchEnrolledCourses } = useContext(CourseContext);
 
@@ -56,8 +62,21 @@ const ExamsPage = () => {
   };
 
   //navigate to review page for completed exams
-  const handleReview = (examId) =>
-    navigate(`/student/courses/${userId}/${courseId}/exams/reviews`);
+  const handleReview = (examId) => {
+    console.log("submissionIds:", submissionIds);
+    console.log("examId:", examId);
+
+    const submissionId = submissionIds[examId];
+
+    if (submissionId) {
+      navigate(
+        `/student/courses/${userId}/${courseId}/exams/reviews/${submissionId}`
+      );
+    } else {
+      alert("Submission ID not found for this exam.");
+      console.log("Submission ID not found for examId:", examId);
+    }
+  };
 
   if (loading) return <p>Loading exams...</p>;
   if (error) return <p>{error}</p>;

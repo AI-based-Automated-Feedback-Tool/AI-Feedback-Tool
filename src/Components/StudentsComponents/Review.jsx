@@ -1,150 +1,62 @@
-import React, { useContext } from "react";
-import { ReviewContext } from "../../Context/reviewContext";
+import React, { useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { useReview } from "../../Context/ReviewContext";
 
 const Review = () => {
-  // Consume review data and loading state from context
-  const { reviewData, loading } = useContext(ReviewContext);
+  const { submissionId } = useParams();
+  const { reviewData, fetchReviewData, loading, error } = useReview();
 
-  // Show loading spinner while data is being fetched
-  if (loading) {
-    return (
-      <div className="text-center mt-5">
-        <div className="spinner-border text-primary" role="status">
-          <span className="visually-hidden">Loading...</span>
-        </div>
-      </div>
-    );
-  }
+  useEffect(() => {
+    if (submissionId) {
+      fetchReviewData(submissionId);
+    }
+  }, [fetchReviewData, submissionId]);
+
+  if (loading) return <p>Loading review...</p>;
+  if (error) return <p className="text-red-500">Error: {error}</p>;
+  if (!reviewData) return <p>No review data found.</p>;
 
   return (
-    <div className="container mt-5">
-      <h1 className="text-center mb-4 text-primary">Exam Review</h1>
+    <div className="p-4 space-y-6">
+      <h2 className="text-2xl font-bold">Exam Review</h2>
+      {reviewData.map((entry, index) => {
+        const q = entry.mcq_questions;
+        return (
+          <div key={entry.id} className="p-4 border rounded-lg shadow">
+            <h3 className="text-lg font-semibold">{index + 1}. {q.question_text}</h3>
 
-      {/* Display message if no review data is available */}
-      {reviewData.length === 0 ? (
-        <div className="alert alert-warning text-center" role="alert">
-          No reviews available.
-        </div>
-      ) : (
-        reviewData.map((review, index) => (
-          <form
-            key={review.id || review.exam_id || index}
-            className="border p-4 mb-4 rounded shadow-md bg-ligh"
-          >
-            <h5 className="text-secondary mb-3">Review Details</h5>
+            <ul className="my-2 space-y-1">
+              {q.options.map((opt, i) => (
+                <li
+                  key={i}
+                  className={`p-2 rounded ${
+                    entry.student_answer?.includes(opt)
+                      ? entry.is_correct
+                        ? "bg-green-100"
+                        : "bg-red-100"
+                      : ""
+                  }`}
+                >
+                  {opt}
+                  {q.answers.includes(opt) && (
+                    <span className="ml-2 text-green-600 font-semibold">(Correct)</span>
+                  )}
+                </li>
+              ))}
+            </ul>
 
-            {/* Answer ID */}
-            <div className="mb-3">
-              <label className="form-label fw-bold">ID</label>
-              <input
-                type="text"
-                className="form-control"
-                value={review.id || ""}
-                readOnly
-              />
+            <div className="mt-2 space-y-1">
+              <p><strong>Your Answer:</strong> {entry.student_answer?.join(", ")}</p>
+              <p><strong>Correct:</strong> {entry.is_correct ? "Yes" : "No"}</p>
+              <p><strong>Score:</strong> {entry.score}</p>
+              <p><strong>Model Answer (Basic):</strong> {entry.model_answer_basic || "N/A"}</p>
+              <p><strong>Model Answer (Advanced):</strong> {entry.model_answer_advance || "N/A"}</p>
+              <p><strong>AI Feedback:</strong> {entry.ai_feedback || "N/A"}</p>
+              <p><strong>Reflection Notes:</strong> {entry.reflection_notes || "N/A"}</p>
             </div>
-            {/* Score for the specific answer */}
-            <div className="mb-3">
-              <label className="form-label fw-bold">Score</label>
-              <input
-                type="text"
-                className="form-control"
-                value={review.score || ""}
-                readOnly
-              />
-            </div>
-            {/*  */}
-            <div className="mb-3">
-              <label className="form-label fw-bold">AI Feedback</label>
-              <textarea
-                className="form-control"
-                value={review.ai_feedback || ""}
-                readOnly
-              />
-            </div>
-            {/* Question ID (linked to exam_submissions table) */}
-            <div className="mb-3">
-              <label className="form-label fw-bold">Question ID</label>
-              <input
-                type="text"
-                className="form-control"
-                value={review.question_id || ""}
-                readOnly
-              />
-            </div>
-            {/* Submission ID (linked to exam_submissions table) */}
-            <div className="mb-3">
-              <label className="form-label fw-bold">Submission ID</label>
-              <input
-                type="text"
-                className="form-control"
-                value={review.submission_id || ""}
-                readOnly
-              />
-            </div>
-            {/* Exam ID from entire exam submission */}
-            <div className="mb-3">
-              <label className="form-label fw-bold">Exam ID</label>
-              <input
-                type="text"
-                className="form-control"
-                value={review.exam_id || ""}
-                readOnly
-              />
-            </div>
-
-            {/* Total score for the entire exam submission */}
-
-            <div className="mb-3">
-              <label className="form-label fw-bold">Total Score</label>
-              <input
-                type="text"
-                className="form-control"
-                value={review.total_score ?? ""}
-                readOnly
-              />
-            </div>
-            {/* Total time taken for exam */}
-            <div className="mb-3">
-              <label className="form-label fw-bold">Time Taken (seconds)</label>
-              <input
-                type="text"
-                className="form-control"
-                value={review.time_taken ?? ""}
-                readOnly
-              />
-            </div>
-
-            {/* Focus loss count during exam */}
-
-            <div className="mb-3">
-              <label className="form-label fw-bold">Focus Loss Count</label>
-              <input
-                type="text"
-                className="form-control"
-                value={review.focus_loss_count ?? ""}
-                readOnly
-              />
-            </div>
-
-            {/* Feedback summary for the entire exam submission */}
-
-            <div className="mb-3">
-              <label className="form-label fw-bold">Feedback Summary</label>
-              <textarea
-                className="form-control"
-                value={
-                  typeof review.feedback_summary === "object"
-                    ? JSON.stringify(review.feedback_summary, null, 2)
-                    : review.feedback_summary || ""
-                }
-                rows={3}
-                readOnly
-              />
-            </div>
-          </form>
-        ))
-      )}
+          </div>
+        );
+      })}
     </div>
   );
 };
