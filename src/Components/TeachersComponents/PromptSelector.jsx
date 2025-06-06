@@ -4,29 +4,71 @@ import { Container, Card, Form, Button } from 'react-bootstrap';
 
 const predefinedPrompts = [
   {
-    label: 'Standard Feedback',
-    prompt: `You are an educational AI assistant. Analyze the following exam data and generate structured teaching feedback in JSON format with these sections:
+    label: 'Standard Analysis',
+    prompt: `Analyze these exam results and provide feedback in this exact JSON structure:
+    
+{
+  "overallSummary": "Brief 2-3 sentence summary of class performance",
+  "keyStrengths": [
+    "List 3-5 concepts students mastered well",
+    "Include specific question numbers as evidence"
+  ],
+  "mostMissedQuestions": [
+    "Top 3-5 questions students struggled with",
+    "Briefly explain the misconceptions"
+  ],
+  "teachingSuggestions": [
+    "2-3 specific reteaching strategies",
+    "Activity ideas to reinforce weak areas"
+  ],
+  "nextSteps": [
+    "Immediate actions for the teacher",
+    "Follow-up assessment ideas"
+  ]
+}
 
-    {
-    "keyStrengths": [],
-    "mostMissedQuestions": [],
-    "teachingSuggestions": [],
-    "overallSummary": "",
-    "nextSteps": []
-    }
+Questions: [QUESTIONS]
+Submissions: [SUBMISSIONS]
+Answers: [ANSWERS]
 
-    Questions: [QUESTIONS]
-    Submissions: [SUBMISSIONS]
-
-    Give your response ONLY as a valid JSON object with the exact keys above.`
+Return ONLY valid JSON with these exact keys.`
   },
   {
-    label: 'Simple Summary Only',
-    prompt: `Analyze the exam data and summarize student performance in plain text. Focus only on general insights without listing specific questions.`
+    label: 'Quick Insights',
+    prompt: `Provide concise exam feedback in this JSON format:
+{
+  "overallSummary": "One paragraph summary",
+  "keyStrengths": ["2-3 strengths max"],
+  "mostMissedQuestions": ["2-3 weak areas"],
+  "teachingSuggestions": ["2 quick recommendations"],
+  "nextSteps": ["1-2 action items"]
+}`
   },
   {
-    label: 'Suggestions Focused',
-    prompt: `Review the exam results and provide only improvement suggestions for the teacher. Skip the overall summary.`
+    label: 'Detailed Report',
+    prompt: `Create comprehensive feedback in this structure:
+{
+  "overallSummary": "Detailed performance analysis (3-4 sentences)",
+  "keyStrengths": [
+    "3-5 mastered concepts with question examples",
+    "Performance patterns observed"
+  ],
+  "mostMissedQuestions": [
+    "Top 5 difficult questions",
+    "Detailed misconception analysis for each",
+    "Prerequisite knowledge gaps"
+  ],
+  "teachingSuggestions": [
+    "Differentiated instruction strategies",
+    "Reteaching methods for each weak area",
+    "Recommended practice activities"
+  ],
+  "nextSteps": [
+    "Short-term remediation plan",
+    "Long-term instructional adjustments",
+    "Suggested resources"
+  ]
+}`
   }
 ];
 
@@ -52,11 +94,12 @@ const PromptSelector = () => {
     <Container className="mt-4">
       <Card className="shadow-sm">
         <Card.Header className="bg-primary text-white">
-          <h4>Select or Customize AI Prompt</h4>
+          <h4>Select Feedback Type</h4>
+          <p className="mb-0">Choose how detailed you want the analysis</p>
         </Card.Header>
         <Card.Body>
           <Form.Group className="mb-3">
-            <Form.Label>Choose a prompt template</Form.Label>
+            <Form.Label>Feedback Style</Form.Label>
             <Form.Select
               value={selectedLabel}
               onChange={(e) => handlePromptChange(e.target.value)}
@@ -68,18 +111,17 @@ const PromptSelector = () => {
           </Form.Group>
 
           <Form.Group className="mb-3">
-            <Form.Label>Edit Prompt (optional)</Form.Label>
-            <Form.Control
-              as="textarea"
-              rows={10}
-              value={selectedPrompt}
-              onChange={(e) => setSelectedPrompt(e.target.value)}
-            />
+            <Form.Label>Preview</Form.Label>
+            <Card body className="bg-light">
+              <pre style={{whiteSpace: 'pre-wrap'}}>{selectedPrompt}</pre>
+            </Card>
           </Form.Group>
 
-          <Button variant="success" onClick={handleSubmit}>
-            Generate AI Feedback
-          </Button>
+          <div className="d-grid">
+            <Button variant="primary" onClick={handleSubmit}>
+              Generate Feedback
+            </Button>
+          </div>
         </Card.Body>
       </Card>
     </Container>
