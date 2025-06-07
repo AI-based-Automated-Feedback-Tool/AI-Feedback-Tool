@@ -80,30 +80,41 @@ const AIFeedbackPage = () => {
                 // Call AI API to generate feedback              ;
 
                 const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
-                    const response = await fetch(`${apiUrl}/api/ai/generate`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
-                        prompt: promptWithData,
-                        provider: location.state?.aiProvider || 'cohere'
-                    })
-                    });
+                const response = await fetch(`${apiUrl}/api/ai/generate`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    prompt: promptWithData,
+                    provider: location.state?.aiProvider || 'cohere'
+                })
+                });
 
-                // Process API response
+                if (!response.ok) {
+                // Try to extract error message from response body
+                let errorMsg = `API error: ${response.status} ${response.statusText}`;
+                try {
+                    const errorData = await response.json();
+                    if (errorData?.error) errorMsg = `API error: ${errorData.error}`;
+                } catch {
+                    // ignore JSON parse errors here
+                }
+                throw new Error(errorMsg);
+                }
+
                 const data = await response.json();
                 let parsedFeedback;
 
                 try {
-                    parsedFeedback = JSON.parse(data.result);
+                parsedFeedback = JSON.parse(data.result);
                 } catch {
                     // Fallback for non-JSON responses
-                    parsedFeedback = {
-                        overallSummary: data.result,
-                        keyStrengths: [],
-                        mostMissedQuestions: [],
-                        teachingSuggestions: [],
-                        nextSteps: []
-                    };
+                parsedFeedback = {
+                    overallSummary: data.result,
+                    keyStrengths: [],
+                    mostMissedQuestions: [],
+                    teachingSuggestions: [],
+                    nextSteps: []
+                };
                 }
 
                 setFeedback(parsedFeedback);
@@ -112,7 +123,7 @@ const AIFeedbackPage = () => {
             } finally {
                 setLoading(false);
             }
-        };
+            };
 
         generateFeedback();
     }, [examId, location.state]);
