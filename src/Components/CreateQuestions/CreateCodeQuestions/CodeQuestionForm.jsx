@@ -10,6 +10,7 @@ export default function CodeQuestionForm({setError, onAddQuestion}) {
     const [questionDescription, setQuestionDescription] = useState("");
     const [functionSignature, setFunctionSignature] = useState("");
     const [wrapperCode, setWrapperCode] = useState("");
+    const [points, setPoints] = useState(1);
 
     const addTestCase = () => {
         setTestCases([...testCases,{input: "", output: ""}])
@@ -46,7 +47,8 @@ export default function CodeQuestionForm({setError, onAddQuestion}) {
             functionSignature: functionSignature,
             wrapperCode: wrapperCode,
             testCases: testCases,
-            language: selectedLanguage
+            language: selectedLanguage,
+            points: points
         }
         onAddQuestion(newQuestion);
     }
@@ -135,6 +137,18 @@ export default function CodeQuestionForm({setError, onAddQuestion}) {
                                 </option>
                             ))}
                         </Form.Select>
+                </Form.Group>
+
+                <Form.Group className="mb-3">
+                    <Form.Label className="fw-bold">Number of points *</Form.Label>
+                        <Form.Control
+                            type="number"
+                            min="1"
+                            placeholder="Enter points for this question"
+                            value={points}
+                            onChange={(e) => setPoints(Number(e.target.value))}
+                            required
+                        />
                 </Form.Group>
 
                 {/* Submit Button */}
