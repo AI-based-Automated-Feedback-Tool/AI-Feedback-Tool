@@ -1,8 +1,10 @@
 import React from 'react'
 import { Form, Button, Container, Row, Col, Card, Alert } from "react-bootstrap";
+import useFetchLanguages from "./hooks/useFetchLanguages";
 
-export default function CodeQuestionForm() {
+export default function CodeQuestionForm({setError, selectedLanguage, setSelectedLanguage}) {
     const [testCases, setTestCases] = React.useState([{ input: "", output: "" }]);
+    const {languages, loading} = useFetchLanguages(setError);
 
     const addTestCase = () => {
         setTestCases([...testCases,{input: "", output: ""}])
@@ -66,12 +68,16 @@ export default function CodeQuestionForm() {
 
                 <Form.Group className="mb-3">
                     <Form.Label className="fw-bold">Programming Language *</Form.Label>
-                    <Form.Select>
-                        <option value="1">JavaScript</option>
-                        <option value="2">Python</option>
-                        <option value="3">Java</option>
-                        <option value="4">C++</option>
-                    </Form.Select>
+                        <Form.Select
+                            value={selectedLanguage}
+                            onChange={(e) => setSelectedLanguage(e.target.value)}
+                        >
+                            {languages.map((language) => (
+                                <option key={language.id} value={language}>
+                                    {language.language_name}
+                                </option>
+                            ))}
+                        </Form.Select>
                 </Form.Group>
 
                 {/* Submit Button */}
