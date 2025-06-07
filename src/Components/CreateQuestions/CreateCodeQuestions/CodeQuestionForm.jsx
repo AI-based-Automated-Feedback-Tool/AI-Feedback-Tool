@@ -1,10 +1,15 @@
 import React from 'react'
 import { Form, Button, Container, Row, Col, Card, Alert } from "react-bootstrap";
 import useFetchLanguages from "./hooks/useFetchLanguages";
+import { useState } from 'react';
 
-export default function CodeQuestionForm({setError, selectedLanguage, setSelectedLanguage}) {
-    const [testCases, setTestCases] = React.useState([{ input: "", output: "" }]);
+export default function CodeQuestionForm({setError}) {
+    const [testCases, setTestCases] = useState([{ input: "", output: "" }]);
     const {languages, loading} = useFetchLanguages(setError);
+    const [selectedLanguage, setSelectedLanguage] = useState("");
+    const [questionDescription, setQuestionDescription] = useState("");
+    const [functionSignature, setFunctionSignature] = useState("");
+    const [wrapperCode, setWrapperCode] = useState("");
 
     const addTestCase = () => {
         setTestCases([...testCases,{input: "", output: ""}])
@@ -22,6 +27,8 @@ export default function CodeQuestionForm({setError, selectedLanguage, setSelecte
                         as="textarea" 
                         rows={2} className="fs-6"
                         placeholder='Enter your question here...'
+                        value={questionDescription}
+                        onChange={(e) => setQuestionDescription(e.target.value)}
                     />
                 </Form.Group>
 
@@ -31,6 +38,8 @@ export default function CodeQuestionForm({setError, selectedLanguage, setSelecte
                         as="textarea" 
                         rows={2} className="fs-6"
                         placeholder='Enter the function signature here...'
+                        value={functionSignature}
+                        onChange={(e) => setFunctionSignature(e.target.value)}  
                     />
                 </Form.Group>
 
@@ -40,6 +49,8 @@ export default function CodeQuestionForm({setError, selectedLanguage, setSelecte
                         as="textarea" 
                         rows={2} className="fs-6"
                         placeholder='Enter the wrapper code here...'
+                        value={wrapperCode}
+                        onChange={(e) => setWrapperCode(e.target.value)}
                     />
                 </Form.Group>
 
@@ -51,12 +62,22 @@ export default function CodeQuestionForm({setError, selectedLanguage, setSelecte
                                 <Form.Control 
                                     placeholder='Input'
                                     value={testCase.input}
+                                    onChange={(e) => {
+                                        const newTestCase = [...testCases];
+                                        newTestCase[index].input = e.target.value
+                                        setTestCases(newTestCase)
+                                    } }
                                 />
                             </Col>
                             <Col>
                                 <Form.Control
                                     placeholder='Output'
                                     value={testCase.output}
+                                    onChange={(e) => {
+                                        const newTestCase = [...testCases];
+                                        newTestCase[index].output = e.target.value
+                                        setTestCases(newTestCase)
+                                    } }
                                 />
                             </Col>
                             <Col xs="auto">
@@ -73,7 +94,7 @@ export default function CodeQuestionForm({setError, selectedLanguage, setSelecte
                             onChange={(e) => setSelectedLanguage(e.target.value)}
                         >
                             {languages.map((language) => (
-                                <option key={language.id} value={language}>
+                                <option key={language.id} value={language.id}>
                                     {language.language_name}
                                 </option>
                             ))}
