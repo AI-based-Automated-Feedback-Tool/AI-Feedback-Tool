@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Container, Card, Form, Button } from 'react-bootstrap';
+import { Container, Card, Form, Button, Row, Col } from 'react-bootstrap';
 
 const predefinedPrompts = [
   {
@@ -103,21 +103,43 @@ const PromptSelector = () => {
     <Container className="mt-4">
       <Card className="shadow-sm">
         <Card.Header className="bg-primary text-white">
-          <h4>Select Feedback Type</h4>
-          <p className="mb-0">Choose how detailed you want the analysis</p>
+          <h4>AI Feedback Generator</h4>
         </Card.Header>
         <Card.Body>
-          <Form.Group className="mb-3">
+          <Row className="mb-3">
+            <Col md={6}>
+              <Form.Group>
+                <Form.Label>AI Feedback Provider</Form.Label>
+                <Form.Select
+                  value={selectedProvider}
+                  onChange={(e) => setSelectedProvider(e.target.value)}
+                >
+                  {aiProviders.map((provider) => (
+                    <option key={provider.id} value={provider.id}>
+                      {provider.name}
+                    </option>
+                  ))}
+                </Form.Select>
+              </Form.Group>
+            </Col>
+            <Col md={6}>
+              <Form.Group>
                 <Form.Label>Feedback Style</Form.Label>
                 <Form.Select
                   value={selectedLabel}
-              onChange={(e) => handlePromptChange(e.target.value)}
+                  onChange={(e) => {
+                    const prompt = predefinedPrompts.find(p => p.label === e.target.value).prompt;
+                    setSelectedLabel(e.target.value);
+                    setSelectedPrompt(prompt);
+                  }}
                 >
                   {predefinedPrompts.map((p, idx) => (
                     <option key={idx} value={p.label}>{p.label}</option>
                   ))}
                 </Form.Select>
               </Form.Group>
+            </Col>
+          </Row>
 
           <Form.Group className="mb-3">
             <Form.Label>Preview</Form.Label>
