@@ -3,7 +3,7 @@ import { Form, Button, Container, Row, Col, Card, Alert } from "react-bootstrap"
 import useFetchLanguages from "./hooks/useFetchLanguages";
 import { useState } from 'react';
 
-export default function CodeQuestionForm({setError}) {
+export default function CodeQuestionForm({setError, onAddQuestion}) {
     const [testCases, setTestCases] = useState([{ input: "", output: "" }]);
     const {languages, loading} = useFetchLanguages(setError);
     const [selectedLanguage, setSelectedLanguage] = useState("");
@@ -41,6 +41,14 @@ export default function CodeQuestionForm({setError}) {
             setError("Please select a programming language.");
             return;
         }
+        const newQuestion = {
+            question: questionDescription,
+            functionSignature: functionSignature,
+            wrapperCode: wrapperCode,
+            testCases: testCases,
+            language: selectedLanguage
+        }
+        onAddQuestion(newQuestion);
     }
   return (
     <Card>
