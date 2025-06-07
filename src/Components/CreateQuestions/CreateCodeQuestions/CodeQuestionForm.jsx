@@ -3,7 +3,7 @@ import { Form, Button, Container, Row, Col, Card, Alert } from "react-bootstrap"
 
 export default function CodeQuestionForm() {
     const [testCases, setTestCases] = React.useState([{ input: "", output: "" }]);
-    
+
     const addTestCase = () => {
         setTestCases([...testCases,{input: "", output: ""}])
     }
@@ -73,6 +73,13 @@ export default function CodeQuestionForm() {
                         <option value="4">C++</option>
                     </Form.Select>
                 </Form.Group>
+
+                {/* Submit Button */}
+                <div className="d-flex justify-content-end" >
+                    <Button variant="primary" >
+                        ➕ Save Question
+                    </Button>
+                </div>
 
             </Form>
         </Card.Body>
