@@ -72,15 +72,24 @@ Return ONLY valid JSON with these exact keys.`
   }
 ];
 
+const aiProviders = [
+  { id: 'cohere', name: 'Cohere AI', model: 'command' },  
+  { id: 'openrouter', name: 'OpenRouter AI', model: 'openrouter-chat' }
+];
+
 const PromptSelector = () => {
   const { examId } = useParams();
   const navigate = useNavigate();
   const [selectedPrompt, setSelectedPrompt] = useState(predefinedPrompts[0].prompt);
   const [selectedLabel, setSelectedLabel] = useState(predefinedPrompts[0].label);
+  const [selectedProvider, setSelectedProvider] = useState(aiProviders[0].id);
 
   const handleSubmit = () => {
     navigate(`/teacher/exams/${examId}/ai-feedback`, {
-      state: { prompt: selectedPrompt }
+      state: { 
+        prompt: selectedPrompt,
+        aiProvider: selectedProvider
+      }
     });
   };
 
@@ -99,16 +108,16 @@ const PromptSelector = () => {
         </Card.Header>
         <Card.Body>
           <Form.Group className="mb-3">
-            <Form.Label>Feedback Style</Form.Label>
-            <Form.Select
-              value={selectedLabel}
+                <Form.Label>Feedback Style</Form.Label>
+                <Form.Select
+                  value={selectedLabel}
               onChange={(e) => handlePromptChange(e.target.value)}
-            >
-              {predefinedPrompts.map((p, idx) => (
-                <option key={idx} value={p.label}>{p.label}</option>
-              ))}
-            </Form.Select>
-          </Form.Group>
+                >
+                  {predefinedPrompts.map((p, idx) => (
+                    <option key={idx} value={p.label}>{p.label}</option>
+                  ))}
+                </Form.Select>
+              </Form.Group>
 
           <Form.Group className="mb-3">
             <Form.Label>Preview</Form.Label>
