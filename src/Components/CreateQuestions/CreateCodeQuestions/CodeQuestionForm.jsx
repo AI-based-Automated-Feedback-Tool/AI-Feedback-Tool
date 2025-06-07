@@ -14,6 +14,34 @@ export default function CodeQuestionForm({setError}) {
     const addTestCase = () => {
         setTestCases([...testCases,{input: "", output: ""}])
     }
+
+    const handleAddQuestion = () => {
+        // Validate and submit the question
+        if (!questionDescription.trim()) {
+            setError("Question description is required.");
+            return;
+        }
+        if (!functionSignature.trim()) {
+            setError("Function signature is required.");
+            return;
+        }
+        if (!wrapperCode.trim()) {
+            setError("Wrapper code is required.");
+            return;
+        }
+        if (testCases.length === 0){
+            setError("At least one test case is required.");
+            return;
+        }
+        if (testCases.some(testCase => !testCase.input.trim() || !testCase.output.trim())) {
+            setError("All test cases must have both input and output.");
+            return;
+        }
+        if (!selectedLanguage) {
+            setError("Please select a programming language.");
+            return;
+        }
+    }
   return (
     <Card>
         <Card.Header className='bg-primary text-white'>
@@ -102,7 +130,7 @@ export default function CodeQuestionForm({setError}) {
                 </Form.Group>
 
                 {/* Submit Button */}
-                <div className="d-flex justify-content-end" >
+                <div className="d-flex justify-content-end" onClick={handleAddQuestion} >
                     <Button variant="primary" >
                         ➕ Save Question
                     </Button>
