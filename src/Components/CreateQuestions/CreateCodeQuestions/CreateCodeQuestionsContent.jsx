@@ -1,6 +1,7 @@
 import { Container, Row, Col, CardHeader, CardBody, Card, Button, Alert, Form } from 'react-bootstrap';
 import { useState } from 'react';
 import CodeQuestionForm from './CodeQuestionForm';
+import CodeQuestionTable from './components/CodeQuestionTable';
 
 
 export default function CreateCodeQuestionsContent() {
@@ -19,6 +20,7 @@ export default function CreateCodeQuestionsContent() {
           onAddQuestion={handleAddQuestion}
         />
         {error && <Alert variant="danger">{error}</Alert>}
+        <CodeQuestionTable questions={questions} />
     </Col>
   )
 }
