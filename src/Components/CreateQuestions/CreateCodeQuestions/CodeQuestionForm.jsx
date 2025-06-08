@@ -6,7 +6,7 @@ import { useState } from 'react';
 export default function CodeQuestionForm({setError, onAddQuestion}) {
     const [testCases, setTestCases] = useState([{ input: "", output: "" }]);
     const {languages, loading} = useFetchLanguages(setError);
-    const [selectedLanguage, setSelectedLanguage] = useState("");
+    const [selectedLanguage, setSelectedLanguage] = useState(null);
     const [questionDescription, setQuestionDescription] = useState("");
     const [functionSignature, setFunctionSignature] = useState("");
     const [wrapperCode, setWrapperCode] = useState("");
@@ -128,8 +128,11 @@ export default function CodeQuestionForm({setError, onAddQuestion}) {
                 <Form.Group className="mb-3">
                     <Form.Label className="fw-bold">Programming Language *</Form.Label>
                         <Form.Select
-                            value={selectedLanguage}
-                            onChange={(e) => setSelectedLanguage(e.target.value)}
+                            value={selectedLanguage?.id || ""}
+                            onChange={(e) => {
+                                const selectedLang = languages.find(lang => String(lang.id) === e.target.value);
+                                setSelectedLanguage(selectedLang);
+                            }}
                         >
                             {languages.map((language) => (
                                 <option key={language.id} value={language.id}>

@@ -13,6 +13,7 @@ export default function CodeQuestionTable({questions}) {
             <th className='text-center'>Test cases</th>
             <th className="text-center">Programming language</th>
             <th className="text-center">Points</th>
+            <th className="text-center">Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -40,7 +41,7 @@ export default function CodeQuestionTable({questions}) {
       </tbody>
     </Table>
             </td>
-            <td>{q.language}</td>
+            <td>{q.language.language_name}</td>
             <td>{q.points}</td>
             <td>
                 <div className="d-flex flex-wrap gap-2 justify-content-center">
