@@ -1,7 +1,7 @@
 import React from 'react'
 import { Table, Button } from 'react-bootstrap';
 
-export default function CodeQuestionTable({questions, onDelete}) {
+export default function CodeQuestionTable({questions, onDelete, onEdit}) {
   return (
     <Table striped bordered hover responsive className="mt-4">
       <thead>
@@ -57,6 +57,7 @@ export default function CodeQuestionTable({questions, onDelete}) {
                         variant="warning" 
                         size="sm" 
                         className="flex-grow-1 flex-md-grow-0"
+                        onClick={() => onEdit(idx)}
                     >
                         Edit
                     </Button>
