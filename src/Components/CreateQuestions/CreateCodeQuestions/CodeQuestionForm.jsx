@@ -167,8 +167,12 @@ export default function CodeQuestionForm({setError, onAddQuestion}) {
                 </Form.Group>
 
                 {/* Submit Button */}
-                <div className="d-flex justify-content-end" onClick={handleAddQuestion} >
-                    <Button variant="primary" >
+                <div className="d-flex justify-content-end" >
+                    <Button 
+                        variant="primary" 
+                        onClick={handleAddQuestion} 
+                        disabled= {loading}
+                    >
                         ➕ Save Question
                     </Button>
                 </div>
