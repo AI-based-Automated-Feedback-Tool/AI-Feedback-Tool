@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useParams, useLocation } from 'react-router-dom';
+import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { Container, Card, Alert, Spinner } from 'react-bootstrap';
 import { supabase } from '../../SupabaseAuth/supabaseClient';
 
@@ -7,13 +7,14 @@ import { supabase } from '../../SupabaseAuth/supabaseClient';
 const defaultPrompts = [
   {
     label: 'Standard Feedback',
-    prompt: `You are an educational AI assistant...` // Default prompt template
+    prompt: `You are an educational AI assistant...`
   }
 ];
 
 const AIFeedbackPage = () => {
   const { examId } = useParams();
   const location = useLocation();
+  const navigate = useNavigate();
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -168,9 +169,24 @@ const AIFeedbackPage = () => {
   return (
     <Container className="mt-4">
       <Card className="shadow-sm mb-4">
-        <Card.Header className="bg-primary text-white">
-          <h4>AI-Generated Teaching Feedback</h4>
-          <span className="small">Exam Name: {examTitle}</span>
+        <Card.Header className="bg-primary text-white d-flex justify-content-between align-items-center">
+          <div>
+            <h4 className="mb-0">AI-Generated Teaching Feedback</h4>
+            <span className="small">Exam Name: {examTitle}</span>
+          </div>
+          <button
+            className="btn btn-light btn-sm"
+            onClick={() =>
+              navigate(`/teacher/exams/${examId}/prompt-selector`, {
+                state: {
+                  prompt: location.state?.prompt || '',
+                  aiProvider: location.state?.aiProvider || 'cohere'
+                }
+              })
+            }
+          >
+            🔄 Modify Prompt & Regenerate
+          </button>
         </Card.Header>
         <Card.Body>
           {feedback ? (
