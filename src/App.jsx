@@ -26,17 +26,14 @@ import Review from "./Components/StudentsComponents/Review.jsx";
 import { ReviewProvider } from "./Context/ReviewContext.jsx";
 import FeedbackSelector from './Components/TeachersComponents/FeedbackSelector';
 import PromptSelector from './Components/TeachersComponents/PromptSelector';
-import { TimerProvider } from "./Context/TimerContext.jsx";
 import CreateQuestions from "./Components/CreateQuestions/CreateQuestions.jsx";
 
 function App() {
   return (
-    <TimerProvider>
     <UserProvider>
       <CourseProvider>
         <ExamProvider>
         <TaskProvider>
-
       <Router>
         <Routes>
           {/*Login and registration and main page route */}
@@ -59,12 +56,10 @@ function App() {
                 <Route path="reports" element={<TeacherReportContent />} />    
             </Route>
           </Route>
-
           {/*students route */}
           <Route path="/dashboard" element={<ProtectedRoute />}>
             <Route path="task/:id" element={<TaskPage />} />
           </Route>
-
           <Route path="/student/courses/:userId" element={<ProtectedRoute />}>
             <Route element={<StudentLayout />}>
               <Route index element={<Courses />} />
@@ -72,18 +67,15 @@ function App() {
               <Route path="results" element={<Result />} />
               <Route path=":courseId/exams" element={<ExamsPage />} />
               <Route path=":courseId/exams/reviews/:submissionId" element={<ReviewProvider><Review /></ReviewProvider>} />
-
             </Route>
           </Route>
-
         </Routes>
       </Router>
-      
       </TaskProvider>
       </ExamProvider>
       </CourseProvider>
     </UserProvider>
-    </TimerProvider>
+ 
   );
 }
 

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useTask } from "../../Context/taskContext";
-import { TimerProvider, useTimer } from "../../Context/TimerContext";
 import PopUp from "./PopUp.jsx";
 
 const TaskPage = () => {
@@ -24,9 +23,9 @@ const TaskPage = () => {
     showPopup,
     popupMessage,
     setShowPopup,
+    formatTime,
+    timeLeft
   } = useTask();
-  //access timer values
-  const { timeLeft, formatTime } = useTimer();
 
   //get task id from url
   const { id } = useParams();
@@ -45,7 +44,6 @@ const TaskPage = () => {
         setTimeout(() => setShowTabWarning(false), 3000);
       }
     };
-
     document.addEventListener("visibilitychange", handleVisibilityChange);
 
     return () => {
@@ -247,22 +245,6 @@ const TaskPage = () => {
   );
 };
 
-// Wrap TaskPage with TimerProvider
-const TaskPageWithTimer = () => {
-  const { task, alreadySubmitted, loading, handleSubmit } = useTask();
-  const navigate = useNavigate();
 
-  return (
-    <TimerProvider
-      task={task}
-      alreadySubmitted={alreadySubmitted}
-      loading={loading}
-      handleSubmit={handleSubmit}
-      navigate={navigate}
-    >
-      <TaskPage />
-    </TimerProvider>
-  );
-};
 
-export default TaskPageWithTimer;
+export default TaskPage;
