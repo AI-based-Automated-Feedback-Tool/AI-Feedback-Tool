@@ -15,12 +15,14 @@ export default function CreateCodeQuestionsContent() {
 
   return (
     <Col className="w-100">
-        <CodeQuestionForm 
-          setError={setError}
-          onAddQuestion={handleAddQuestion}
-        />
-        {error && <Alert variant="danger">{error}</Alert>}
-        <CodeQuestionTable questions={questions} />
+      <CodeQuestionForm 
+            setError={setError}
+            onAddQuestion={handleAddQuestion}
+      />
+      {error && <Alert variant="danger">{error}</Alert>}
+      {questions.length > 0 && (
+        <CodeQuestionTable questions={questions} />        
+      )}
     </Col>
   )
 }
