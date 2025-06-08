@@ -12,6 +12,13 @@ export default function CreateCodeQuestionsContent() {
   const handleAddQuestion = (newQuestion) => {
     setQuestions([...questions, newQuestion]);
   };
+  
+  // Function to handle deleting a question
+  const handleDeleteQuestion = (index) => {
+    const updatedQuestions = [...questions]
+    updatedQuestions.splice(index, 1);
+    setQuestions(updatedQuestions);
+  }
 
   return (
     <Col className="w-100">
@@ -21,7 +28,10 @@ export default function CreateCodeQuestionsContent() {
       />
       {error && <Alert variant="danger">{error}</Alert>}
       {questions.length > 0 && (
-        <CodeQuestionTable questions={questions} />        
+        <CodeQuestionTable 
+          questions={questions} 
+          onDelete={handleDeleteQuestion}
+        />        
       )}
     </Col>
   )
