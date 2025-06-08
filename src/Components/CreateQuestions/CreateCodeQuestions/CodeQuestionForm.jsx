@@ -42,6 +42,10 @@ export default function CodeQuestionForm({setError, onAddQuestion}) {
             setError("Please select a programming language.");
             return;
         }
+
+        //Clear error if everything is valid
+        setError(null);
+        
         const newQuestion = {
             question: questionDescription,
             functionSignature: functionSignature,
