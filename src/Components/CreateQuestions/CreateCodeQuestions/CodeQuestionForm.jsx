@@ -45,7 +45,7 @@ export default function CodeQuestionForm({setError, onAddQuestion}) {
 
         //Clear error if everything is valid
         setError(null);
-        
+
         const newQuestion = {
             question: questionDescription,
             functionSignature: functionSignature,
@@ -55,6 +55,14 @@ export default function CodeQuestionForm({setError, onAddQuestion}) {
             points: points
         }
         onAddQuestion(newQuestion);
+
+        // Reset form fields
+        setQuestionDescription("");
+        setFunctionSignature("");
+        setWrapperCode("");
+        setTestCases([{ input: "", output: "" }]);
+        setSelectedLanguage(null);
+        setPoints(1);
     }
   return (
     <Card>
