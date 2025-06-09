@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { useReview } from "../../Context/ReviewContext";
+import { useReview } from "../../Context/reviewContext";
 
 const Review = () => {
   //extracting submission id from url parameter
