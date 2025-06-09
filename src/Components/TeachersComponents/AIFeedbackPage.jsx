@@ -2,6 +2,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { Container, Card, Alert, Spinner } from 'react-bootstrap';
 import { supabase } from '../../SupabaseAuth/supabaseClient';
+import { downloadAsTextFile } from '../../utils/downloadTextUtils';
+import { Button } from 'react-bootstrap';
+
 
 // Default prompt templates for AI feedback generation
 const defaultPrompts = [
@@ -174,19 +177,31 @@ const AIFeedbackPage = () => {
             <h4 className="mb-0">AI-Generated Teaching Feedback</h4>
             <span className="small">Exam Name: {examTitle}</span>
           </div>
-          <button
-            className="btn btn-light btn-sm"
-            onClick={() =>
-              navigate(`/teacher/exams/${examId}/prompt-selector`, {
-                state: {
-                  prompt: location.state?.prompt || '',
-                  aiProvider: location.state?.aiProvider || 'cohere'
-                }
-              })
-            }
-          >
-            🔄 Modify Prompt & Regenerate
-          </button>
+
+          <div className="d-flex gap-2">
+            <Button
+              variant="light"
+              size="sm"
+              onClick={() =>
+                navigate(`/teacher/exams/${examId}/prompt-selector`, {
+                  state: {
+                    prompt: location.state?.prompt || '',
+                    aiProvider: location.state?.aiProvider || 'cohere'
+                  }
+                })
+              }
+            >
+              🔄 Modify Prompt
+            </Button>
+
+            <Button
+              variant="light"
+              size="sm"
+              onClick={() => downloadAsTextFile(feedback)}
+            >
+              📄 Download .TXT
+            </Button>            
+          </div>
         </Card.Header>
         <Card.Body>
           {feedback ? (
