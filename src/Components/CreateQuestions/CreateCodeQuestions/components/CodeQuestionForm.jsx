@@ -1,6 +1,6 @@
 import React from 'react'
 import { Form, Button, Container, Row, Col, Card, Alert } from "react-bootstrap";
-import useFetchLanguages from "./hooks/useFetchLanguages";
+import useFetchLanguages from "../hooks/useFetchLanguages";
 import { useState } from 'react';
 
 export default function CodeQuestionForm({setError, onAddQuestion}) {

@@ -1,6 +1,6 @@
 import { Container, Row, Col, CardHeader, CardBody, Card, Button, Alert, Form } from 'react-bootstrap';
 import { useState } from 'react';
-import CodeQuestionForm from './CodeQuestionForm';
+import CodeQuestionForm from './components/CodeQuestionForm'
 import CodeQuestionTable from './components/CodeQuestionTable';
 import EditCodeQuestion from './components/EditCodeQuestion';
 
@@ -37,6 +37,8 @@ export default function CreateCodeQuestionsContent() {
     setShowEditQuestion(false);
     setEditQuestionIndex(null);}
 
+  // Function to handle submitting all questions
+
   return (
     <Col className="w-100">
       <CodeQuestionForm 
@@ -59,6 +61,19 @@ export default function CreateCodeQuestionsContent() {
               handleSaveChanges={handleSaveChanges}
             />
           )}
+          {/* Submit Button */}
+          <div className="d-flex justify-content-end" >
+            <Button variant="primary" onClick={handleSubmitQuestions} disabled={""}>
+              {loading ? (
+                <>
+                  <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                    Saving Questions...
+                  </>
+              ) : (
+                "➕ Save All Questions"
+              )}                              
+            </Button>
+          </div> 
         </>
       )}
     </Col>
