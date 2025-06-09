@@ -1,16 +1,30 @@
 import React from 'react'
 import { Modal, Form, Button  } from 'react-bootstrap'
 import { useState } from 'react';
+import useFetchLanguages from '../hooks/useFetchLanguages';
+import { useEffect } from 'react';
 
 export default function EditCodeQuestion({show, handleClose, questionDetails}) {
-  const [questiontext, setQuestionText] = useState(questionDetails.question);  
-  const [functionSignature, setFunctionSignature] = useState(questionDetails.functionSignature);
-  const [wrapperCode, setWrapperCode] = useState(questionDetails.wrapperCode);
-  const [testCases, setTestCases] = useState(questionDetails.testCases);
-  const [language, setLanguage] = useState(questionDetails.language);
-  const [points, setPoints] = useState(questionDetails.points);
-  const [errors, setErrors] = useState({});
-    
+    const [questiontext, setQuestionText] = useState("");  
+    const [functionSignature, setFunctionSignature] = useState("");
+    const [wrapperCode, setWrapperCode] = useState("");
+    const [testCases, setTestCases] = useState([]);
+    const [language, setLanguage] = useState({});
+    const [points, setPoints] = useState(0);
+    const [errors, setErrors] = useState({});
+    const {languages, loading} = useFetchLanguages(setErrors);
+
+    useEffect(() => {
+    if (questionDetails) {
+      setQuestionText(questionDetails.question);
+      setFunctionSignature(questionDetails.functionSignature);
+      setWrapperCode(questionDetails.wrapperCode);
+      setTestCases(questionDetails.testCases);
+      setLanguage(questionDetails.language);
+      setPoints(questionDetails.points);
+    }
+  }, [questionDetails]);
+
     return (
     <Modal show={show} onHide={handleClose} size="lg">
         <Modal.Header closeButton>
@@ -73,11 +87,19 @@ export default function EditCodeQuestion({show, handleClose, questionDetails}) {
 
             <Form.Group className="mb-3">
                 <Form.Label>Programming language</Form.Label>
-                <Form.Control
-                    type="text"
-                    value={language.language_name}
-                    onChange={(e) => setLanguage(e.target.value)}
-                />
+                <Form.Select
+                    value={language.id}
+                    onChange={(e) => {
+                        const selectedLang = languages.find(lang => String(lang.id) === e.target.value);
+                        setLanguage(selectedLang);
+                    }}
+                >
+                    {languages.map((language) => (
+                        <option key={language.id} value={language.id}>
+                            {language.language_name}
+                        </option>
+                    ))}
+                </Form.Select>
                 {errors.language && <div className="text-danger small">{errors.language}</div>}
             </Form.Group>
 
