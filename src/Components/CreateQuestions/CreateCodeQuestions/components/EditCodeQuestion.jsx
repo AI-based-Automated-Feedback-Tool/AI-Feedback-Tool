@@ -26,33 +26,35 @@ export default function EditCodeQuestion({show, handleClose, questionDetails, ha
   }, [questionDetails]);
 
     const manageSaveChanges = () => {
+        const newErrors = {};
         // Validate and submit the question
         if (!questiontext.trim()) {
-            setErrors("Question description is required.");
-            return;
+            newErrors.question = "Question description is required.";
         }
         if (!functionSignature.trim()) {
-            setErrors("Function signature is required.");
-            return;
+            newErrors.functionSignature = "Function signature is required.";
         }
         if (!wrapperCode.trim()) {
-            setErrors("Wrapper code is required.");
-            return;
+            newErrors.wrapperCode = "Wrapper code is required.";
         }
         if (testCases.length === 0){
-            setErrors("At least one test case is required.");
-            return;
+            newErrors.testCases = "At least one test case is required.";
         }
         if (testCases.some(testCase => !testCase.input.trim() || !testCase.output.trim())) {
-            setErrors("All test cases must have both input and output.");
-            return;
+            newErrors.testCases = "All test cases must have both input and output.";
         }
         if (!language) {
-            setErrors("Please select a programming language.");
+            newErrors.language = "Please select a programming language.";
+        }
+        if (points <= 0) {
+            newErrors.points = "Points must be greater than 0.";
+        }
+        if (Object.keys(newErrors).length > 0) {
+            setErrors(newErrors);
             return;
         }
         //Clear error if everything is valid
-        setErrors({});
+        setErrors({}); 
 
         const updatedQuestion = {
             question: questiontext,
@@ -63,6 +65,7 @@ export default function EditCodeQuestion({show, handleClose, questionDetails, ha
             points: points,
         }
         handleSaveChanges(updatedQuestion);
+        
         // Reset form fields    
         setQuestionText("");
         setFunctionSignature("");
