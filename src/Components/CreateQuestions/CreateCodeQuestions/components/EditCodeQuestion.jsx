@@ -1,5 +1,5 @@
 import React from 'react'
-import { Modal, Form, Button  } from 'react-bootstrap'
+import { Modal, Form, Button, Row, Col } from 'react-bootstrap'
 import { useState } from 'react';
 import useFetchLanguages from '../hooks/useFetchLanguages';
 import { useEffect } from 'react';
@@ -8,11 +8,15 @@ export default function EditCodeQuestion({show, handleClose, questionDetails, ha
     const [questiontext, setQuestionText] = useState("");  
     const [functionSignature, setFunctionSignature] = useState("");
     const [wrapperCode, setWrapperCode] = useState("");
-    const [testCases, setTestCases] = useState([]);
+    const [testCases, setTestCases] = useState([{ input: "", output: "" }]);
     const [language, setLanguage] = useState({});
     const [points, setPoints] = useState(0);
     const [errors, setErrors] = useState({});
     const {languages, loading} = useFetchLanguages(setErrors);
+
+    const addTestCase = () => {
+        setTestCases([...testCases,{input: "", output: ""}])
+    }
 
     useEffect(() => {
     if (questionDetails) {
@@ -65,7 +69,7 @@ export default function EditCodeQuestion({show, handleClose, questionDetails, ha
             points: points,
         }
         handleSaveChanges(updatedQuestion);
-        
+
         // Reset form fields    
         setQuestionText("");
         setFunctionSignature("");
@@ -117,21 +121,34 @@ export default function EditCodeQuestion({show, handleClose, questionDetails, ha
             <Form.Group className="mb-3">
                 <Form.Label>Test cases</Form.Label>
                 {testCases.map((testCase, index) => (
-                    <div key={index} className="mb-2">
-                        <Form.Control
-                            type="text"
-                            placeholder="Input"
-                            value={testCase.input}
-                            onChange={(e) => updateTestCaseInput(index, e.target.value)}
-                        />
-                        <Form.Control
-                            type="text"
-                            placeholder="Output"
-                            value={testCase.output}
-                            onChange={(e) => updateTestCaseOutput(index, e.target.value)}
-                        />
-                    </div>
-                ))}
+                        <Row className='mb-2' key={index}>
+                            <Col>
+                                <Form.Control 
+                                    placeholder='Input'
+                                    value={testCase.input}
+                                    onChange={(e) => {
+                                        const newTestCase = [...testCases];
+                                        newTestCase[index].input = e.target.value
+                                        setTestCases(newTestCase)
+                                    } }
+                                />
+                            </Col>
+                            <Col>
+                                <Form.Control
+                                    placeholder='Output'
+                                    value={testCase.output}
+                                    onChange={(e) => {
+                                        const newTestCase = [...testCases];
+                                        newTestCase[index].output = e.target.value
+                                        setTestCases(newTestCase)
+                                    } }
+                                />
+                            </Col>
+                            <Col xs="auto">
+                                <Button variant="outline-secondary" onClick={addTestCase}>+</Button>
+                            </Col>
+                        </Row>
+                    ))}
                 {errors.testCases && <div className="text-danger small">{errors.testCases}</div>}
             </Form.Group>
 
