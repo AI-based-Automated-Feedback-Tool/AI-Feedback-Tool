@@ -4,7 +4,7 @@ import { useState } from 'react';
 import useFetchLanguages from '../hooks/useFetchLanguages';
 import { useEffect } from 'react';
 
-export default function EditCodeQuestion({show, handleClose, questionDetails}) {
+export default function EditCodeQuestion({show, handleClose, questionDetails, handleSaveChanges}) {
     const [questiontext, setQuestionText] = useState("");  
     const [functionSignature, setFunctionSignature] = useState("");
     const [wrapperCode, setWrapperCode] = useState("");
@@ -24,6 +24,53 @@ export default function EditCodeQuestion({show, handleClose, questionDetails}) {
       setPoints(questionDetails.points);
     }
   }, [questionDetails]);
+
+    const manageSaveChanges = () => {
+        // Validate and submit the question
+        if (!questiontext.trim()) {
+            setErrors("Question description is required.");
+            return;
+        }
+        if (!functionSignature.trim()) {
+            setErrors("Function signature is required.");
+            return;
+        }
+        if (!wrapperCode.trim()) {
+            setErrors("Wrapper code is required.");
+            return;
+        }
+        if (testCases.length === 0){
+            setErrors("At least one test case is required.");
+            return;
+        }
+        if (testCases.some(testCase => !testCase.input.trim() || !testCase.output.trim())) {
+            setErrors("All test cases must have both input and output.");
+            return;
+        }
+        if (!language) {
+            setErrors("Please select a programming language.");
+            return;
+        }
+        //Clear error if everything is valid
+        setErrors({});
+
+        const updatedQuestion = {
+            question: questiontext,
+            functionSignature: functionSignature,
+            wrapperCode: wrapperCode,
+            testCases: testCases,
+            language: language,
+            points: points,
+        }
+        handleSaveChanges(updatedQuestion);
+        // Reset form fields    
+        setQuestionText("");
+        setFunctionSignature("");
+        setWrapperCode("");
+        setTestCases([{ input: "", output: "" }]);
+        setLanguage({});
+        setPoints(0);
+  }
 
     return (
     <Modal show={show} onHide={handleClose} size="lg">
@@ -116,7 +163,7 @@ export default function EditCodeQuestion({show, handleClose, questionDetails}) {
 
         <Modal.Footer>
             <Button variant="secondary" onClick={handleClose}>Close</Button>
-            <Button variant="primary" >Save Changes</Button>
+            <Button variant="primary" onClick={manageSaveChanges}>Save Changes</Button>
         </Modal.Footer>
     </Modal>
   )

@@ -29,6 +29,14 @@ export default function CreateCodeQuestionsContent() {
     setShowEditQuestion(true);
   }
 
+  // Function to save changes after editing a question
+  const handleSaveChanges = (updatedQuestion) => {
+    const updatedQuestions = [...questions]
+    updatedQuestions[editQuestionIndex] = updatedQuestion
+    setQuestions(updatedQuestions);
+    setShowEditQuestion(false);
+    setEditQuestionIndex(null);}
+
   return (
     <Col className="w-100">
       <CodeQuestionForm 
@@ -47,7 +55,8 @@ export default function CreateCodeQuestionsContent() {
             <EditCodeQuestion 
               show={showEditQuestion}
               handleClose={() => setShowEditQuestion(false)}
-              questionDetails = {questions[editQuestionIndex]}
+              questionDetails={questions[editQuestionIndex]}
+              handleSaveChanges={handleSaveChanges}
             />
           )}
         </>
