@@ -22,7 +22,6 @@ export const createCodeQuestion = async (questionData) => {
 
         if (!response.ok) {
             const error = await response.json();
-            console.log("Attempting to save questions for exam:", examId);
             console.log(error);
             throw new Error(error.message || 'Failed to save question');
         }

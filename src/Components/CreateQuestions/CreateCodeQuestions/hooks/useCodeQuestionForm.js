@@ -29,7 +29,6 @@ export default function useCodeQuestionForm( examId, initialQuestion = null  ) {
         }, []);
     
     
-    console.log("Attempting to save questions for exam:", examId);
     useEffect(() => {
         if (initialQuestion) {
             setQuestionDescription(initialQuestion.question);
@@ -124,19 +123,17 @@ export default function useCodeQuestionForm( examId, initialQuestion = null  ) {
                     function_signature: question.functionSignature,
                     wrapper_code: question.wrapperCode,
                     test_cases: question.testCases,
-                    language_id: question.selectedLanguage,
+                    language_id: question.language.id,
                     points: question.points,
                     exam_id: examId,
                     user_id: userId
                 };
                 await createCodeQuestion(payload);
-                console.log("Attempting to save questions for exam:", examId);
             }
             setQuestions([]);
             resetForm();
             alert("All questions saved successfully!");
         } catch (error) {
-            console.log("Attempting to save questions for exam:", examId);
             console.error("Error saving questions:", error);
             setErrors("Failed to save questions. Please try again.");
         } finally {
