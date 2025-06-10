@@ -69,6 +69,21 @@ Return ONLY valid JSON with these exact keys.`
     "Suggested resources"
   ]
 }`
+  },
+  {
+    label: 'Custom Prompt',
+    prompt: `Create your own custom prompt structure. You can use these placeholders if needed:
+[QUESTIONS] - Will be replaced with exam questions
+[SUBMISSIONS] - Will be replaced with student submissions
+[ANSWERS] - Will be replaced with correct answers
+
+Suggested structure:
+{
+  "analysis": "Your custom analysis requirements",
+  "strengths": ["What to look for"],
+  "weaknesses": ["What to analyze"],
+  "recommendations": ["What to suggest"]
+}`
   }
 ];
 
@@ -94,9 +109,9 @@ const PromptSelector = () => {
   };
 
   const handlePromptChange = (label) => {
-    const prompt = predefinedPrompts.find(p => p.label === label).prompt;
-    setSelectedLabel(label);
-    setSelectedPrompt(prompt);
+      const prompt = predefinedPrompts.find(p => p.label === label).prompt;
+      setSelectedLabel(label);
+      setSelectedPrompt(prompt);
   };
 
   return (
@@ -143,9 +158,9 @@ const PromptSelector = () => {
 
           <Form.Group className="mb-3">
             <Form.Label>Preview</Form.Label>
-            <Card body className="bg-light">
-              <pre style={{whiteSpace: 'pre-wrap'}}>{selectedPrompt}</pre>
-            </Card>
+              <Card body className="bg-light">
+                <pre style={{whiteSpace: 'pre-wrap'}}>{selectedPrompt}</pre>
+              </Card>
           </Form.Group>
 
           <div className="d-grid">
