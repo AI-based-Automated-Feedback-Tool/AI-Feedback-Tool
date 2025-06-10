@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
 import { createCodeQuestion } from "../service/createCodeQuestionService";
+import { supabase } from "../../../../SupabaseAuth/supabaseClient"; 
 
 export default function useCodeQuestionForm( examId, initialQuestion = null  ) {
+    const [userId, setUserId] = useState(null);
     const [questionDescription, setQuestionDescription] = useState("");
     const [functionSignature, setFunctionSignature] = useState("");
     const [wrapperCode, setWrapperCode] = useState("");
@@ -13,6 +15,19 @@ export default function useCodeQuestionForm( examId, initialQuestion = null  ) {
     const [questions, setQuestions] = useState([]);
     const [showEditQuestion, setShowEditQuestion] = useState(false);
     const [editQuestionIndex, setEditQuestionIndex] = useState(null);
+
+    useEffect(() => {
+            const getUserId = async () => {
+                const { data, error } = await supabase.auth.getUser();
+                if (error) {
+                    setErrors("Failed to get user ID");
+                } else {
+                    setUserId(data.user.id);
+                }
+            }
+            getUserId();
+        }, []);
+    
     
     console.log("Attempting to save questions for exam:", examId);
     useEffect(() => {
@@ -112,6 +127,7 @@ export default function useCodeQuestionForm( examId, initialQuestion = null  ) {
                     language_id: question.selectedLanguage,
                     points: question.points,
                     exam_id: examId,
+                    user_id: userId
                 };
                 await createCodeQuestion(payload);
                 console.log("Attempting to save questions for exam:", examId);
