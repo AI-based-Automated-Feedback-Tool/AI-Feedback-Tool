@@ -98,20 +98,29 @@ const PromptSelector = () => {
   const [selectedPrompt, setSelectedPrompt] = useState(predefinedPrompts[0].prompt);
   const [selectedLabel, setSelectedLabel] = useState(predefinedPrompts[0].label);
   const [selectedProvider, setSelectedProvider] = useState(aiProviders[0].id);
+  const [customPrompt, setCustomPrompt] = useState('');
+  const [isCustomPrompt, setIsCustomPrompt] = useState(false);
 
   const handleSubmit = () => {
+    const finalPrompt = isCustomPrompt ? customPrompt : selectedPrompt;
     navigate(`/teacher/exams/${examId}/ai-feedback`, {
       state: { 
-        prompt: selectedPrompt,
+        prompt: finalPrompt,
         aiProvider: selectedProvider
       }
     });
   };
 
   const handlePromptChange = (label) => {
+    if (label === 'Custom Prompt') {
+      setIsCustomPrompt(true);
+      setCustomPrompt(predefinedPrompts.find(p => p.label === label).prompt);
+    } else {
+      setIsCustomPrompt(false);
       const prompt = predefinedPrompts.find(p => p.label === label).prompt;
       setSelectedLabel(label);
       setSelectedPrompt(prompt);
+    }
   };
 
   return (
