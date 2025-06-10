@@ -151,11 +151,7 @@ const PromptSelector = () => {
                 <Form.Label>Feedback Style</Form.Label>
                 <Form.Select
                   value={selectedLabel}
-                  onChange={(e) => {
-                    const prompt = predefinedPrompts.find(p => p.label === e.target.value).prompt;
-                    setSelectedLabel(e.target.value);
-                    setSelectedPrompt(prompt);
-                  }}
+                  onChange={(e) => handlePromptChange(e.target.value)}
                 >
                   {predefinedPrompts.map((p, idx) => (
                     <option key={idx} value={p.label}>{p.label}</option>
@@ -166,14 +162,33 @@ const PromptSelector = () => {
           </Row>
 
           <Form.Group className="mb-3">
-            <Form.Label>Preview</Form.Label>
+            <Form.Label>Prompt {isCustomPrompt ? 'Editor' : 'Preview'}</Form.Label>
+            {isCustomPrompt ? (
+              <Form.Control
+                as="textarea"
+                rows={10}
+                value={customPrompt}
+                onChange={(e) => setCustomPrompt(e.target.value)}
+                className="font-monospace"
+              />
+            ) : (
               <Card body className="bg-light">
                 <pre style={{whiteSpace: 'pre-wrap'}}>{selectedPrompt}</pre>
               </Card>
+            )}
+            {isCustomPrompt && (
+              <Form.Text className="text-muted">
+                Tip: Use [QUESTIONS], [SUBMISSIONS], and [ANSWERS] placeholders to reference exam data
+              </Form.Text>
+            )}
           </Form.Group>
 
           <div className="d-grid">
-            <Button variant="primary" onClick={handleSubmit}>
+            <Button 
+              variant="primary" 
+              onClick={handleSubmit}
+              disabled={isCustomPrompt && !customPrompt.trim()}
+            >
               Generate Feedback
             </Button>
           </div>
