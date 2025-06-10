@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { createCodeQuestion } from "../service/createCodeQuestionService";
 import { supabase } from "../../../../SupabaseAuth/supabaseClient"; 
+import { useNavigate } from 'react-router-dom';
 
 export default function useCodeQuestionForm( examId, question_count, initialQuestion = null  ) {
     const [userId, setUserId] = useState(null);
@@ -16,6 +17,8 @@ export default function useCodeQuestionForm( examId, question_count, initialQues
     const [showEditQuestion, setShowEditQuestion] = useState(false);
     const [editQuestionIndex, setEditQuestionIndex] = useState(null);
     const [warning, setWarning] = useState(null)
+
+    const navigate = useNavigate();
 
     useEffect(() => {
             const getUserId = async () => {
@@ -148,6 +151,7 @@ export default function useCodeQuestionForm( examId, question_count, initialQues
             resetForm();
             setWarning("");
             alert("All questions saved successfully!");
+            navigate("/teacher"); // Redirect to teacher dashboard
         } catch (error) {
             console.error("Error saving questions:", error);
             setErrors(
