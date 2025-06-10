@@ -7,6 +7,16 @@ import useCodeQuestionForm from './hooks/useCodeQuestionForm';
 
 export default function CreateCodeQuestionsContent({examId, question_count}) {
   const{
+    questionDescription,
+    setQuestionDescription,
+    functionSignature,
+    setFunctionSignature,
+    wrapperCode,
+    setWrapperCode,
+    testCases,
+    setTestCases,
+    selectedLanguage,
+    setSelectedLanguage,
     setErrors,
     errors,
     loading,
@@ -18,24 +28,47 @@ export default function CreateCodeQuestionsContent({examId, question_count}) {
     handleAddQuestion,
     handleDeleteQuestion,
     handleEditQuestion,
-    saveAllQuestions
-  } = useCodeQuestionForm(examId);
-
-  const [error, setError] = useState(null);  
+    saveAllQuestions,
+    addTestCase,
+    validate,
+    resetForm,
+    setPoints,
+    points
+  } = useCodeQuestionForm(examId); 
 
   return (
     <Col className="w-100">
-      <CodeQuestionForm 
-            setError={setError}
-            onAddQuestion={handleAddQuestion}
-      />
-      {error && 
+      {errors?.message && 
         <div className="mt-3">
           <Alert variant="danger">
-            {error}
+            {errors.message}
           </Alert>
         </div>
       }
+      <CodeQuestionForm 
+            setError={setErrors}
+            onAddQuestion={handleAddQuestion}
+            formState={{
+              questionDescription, 
+              setQuestionDescription, 
+              functionSignature, 
+              setFunctionSignature, 
+              wrapperCode, 
+              setWrapperCode, 
+              testCases, 
+              setTestCases, 
+              selectedLanguage, 
+              setSelectedLanguage,
+              points,
+              setPoints,
+              addTestCase,
+              errors,
+              setErrors,
+              validate,
+              resetForm
+            }}
+      />
+      
       {questions.length > 0 && (
         <>
           <CodeQuestionTable 

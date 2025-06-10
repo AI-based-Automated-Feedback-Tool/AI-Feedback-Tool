@@ -135,7 +135,9 @@ export default function useCodeQuestionForm( examId, initialQuestion = null  ) {
             alert("All questions saved successfully!");
         } catch (error) {
             console.error("Error saving questions:", error);
-            setErrors("Failed to save questions. Please try again.");
+            setErrors(
+                {message: "Failed to connect to server. Please check your connection and try again."}
+            );
         } finally {
             setLoading(false);
         }

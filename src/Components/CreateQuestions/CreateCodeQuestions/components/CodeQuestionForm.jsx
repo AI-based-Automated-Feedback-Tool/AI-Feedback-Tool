@@ -3,8 +3,8 @@ import { Form, Button, Container, Row, Col, Card, Alert } from "react-bootstrap"
 import useFetchLanguages from "../hooks/useFetchLanguages";
 import useCodeQuestionForm from "../hooks/useCodeQuestionForm";
 
-export default function CodeQuestionForm({setError, onAddQuestion}) {
-    
+export default function CodeQuestionForm({setError, onAddQuestion, formState}) {
+
     const {languages, loading} = useFetchLanguages(setError);
     const {
         questionDescription, 
@@ -21,16 +21,17 @@ export default function CodeQuestionForm({setError, onAddQuestion}) {
         setPoints,
         addTestCase,
         errors,
+        setErrors,
         validate,
         resetForm
-    } = useCodeQuestionForm();
+    } = formState;
     
 
     const handleAddQuestion = () => {
         // Validate and submit the question
         const isValid = validate();
         if (!isValid) {
-            setError("Please fill in all required fields correctly.");
+            setError({"message": "Please fill in all required fields correctly."});
             return;
         }
 
