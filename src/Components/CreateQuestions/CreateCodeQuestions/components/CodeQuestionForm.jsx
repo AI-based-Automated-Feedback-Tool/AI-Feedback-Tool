@@ -2,7 +2,7 @@ import React from 'react'
 import { Form, Button, Container, Row, Col, Card, Alert } from "react-bootstrap";
 import useFetchLanguages from "../hooks/useFetchLanguages";
 
-export default function CodeQuestionForm({setError, onAddQuestion, formState}) {
+export default function CodeQuestionForm({setError, onAddQuestion, formState, disabled}) {
 
     const {languages, loading} = useFetchLanguages(setError);
     const {
@@ -155,7 +155,7 @@ export default function CodeQuestionForm({setError, onAddQuestion, formState}) {
                         <Button 
                             variant="primary" 
                             onClick={handleAddQuestion} 
-                            disabled= {loading}
+                            disabled= {loading || disabled}
                         >
                             ➕ Save Question
                         </Button>

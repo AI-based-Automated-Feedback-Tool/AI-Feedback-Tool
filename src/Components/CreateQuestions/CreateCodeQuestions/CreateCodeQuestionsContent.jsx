@@ -33,8 +33,16 @@ export default function CreateCodeQuestionsContent({examId, question_count}) {
     validate,
     resetForm,
     setPoints,
-    points
-  } = useCodeQuestionForm(examId); 
+    points,
+    warning
+  } = useCodeQuestionForm(examId, question_count); 
+
+  const isDisabled = () =>{
+        if (questions.length >= parseInt(question_count)) {
+            return true
+        }
+        return false
+    }
 
   return (
     <Col className="w-100">
@@ -45,6 +53,7 @@ export default function CreateCodeQuestionsContent({examId, question_count}) {
           </Alert>
         </div>
       }
+      {warning && <Alert variant="warning">{warning}</Alert>}
       <CodeQuestionForm 
             setError={setErrors}
             onAddQuestion={handleAddQuestion}
@@ -67,6 +76,7 @@ export default function CreateCodeQuestionsContent({examId, question_count}) {
               validate,
               resetForm
             }}
+            disabled={isDisabled()}
       />
       
       {questions.length > 0 && (

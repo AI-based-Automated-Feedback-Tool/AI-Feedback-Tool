@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { createCodeQuestion } from "../service/createCodeQuestionService";
 import { supabase } from "../../../../SupabaseAuth/supabaseClient"; 
 
-export default function useCodeQuestionForm( examId, initialQuestion = null  ) {
+export default function useCodeQuestionForm( examId, question_count, initialQuestion = null  ) {
     const [userId, setUserId] = useState(null);
     const [questionDescription, setQuestionDescription] = useState("");
     const [functionSignature, setFunctionSignature] = useState("");
@@ -15,6 +15,7 @@ export default function useCodeQuestionForm( examId, initialQuestion = null  ) {
     const [questions, setQuestions] = useState([]);
     const [showEditQuestion, setShowEditQuestion] = useState(false);
     const [editQuestionIndex, setEditQuestionIndex] = useState(null);
+    const [warning, setWarning] = useState(null)
 
     useEffect(() => {
             const getUserId = async () => {
@@ -88,7 +89,20 @@ export default function useCodeQuestionForm( examId, initialQuestion = null  ) {
 
     // Function to handle adding a new question
     const handleAddQuestion = (newQuestion) => {
-        setQuestions([...questions, newQuestion]);
+        if (questions.length >= parseInt(question_count)) {
+            setWarning(`You can only add ${question_count} questions.`);
+            return false;
+        }
+        const newQuestionsList = [...questions, newQuestion]
+        setQuestions(newQuestionsList);
+
+        // Show warning if limit reached now
+        if (newQuestionsList.length === parseInt(question_count)) {
+            setWarning(`You have reached the limit of ${question_count} questions.`);
+        } else {
+            setWarning(null);
+        }
+        return true;
     };
   
     // Function to handle deleting a question
@@ -132,6 +146,7 @@ export default function useCodeQuestionForm( examId, initialQuestion = null  ) {
             }
             setQuestions([]);
             resetForm();
+            setWarning("");
             alert("All questions saved successfully!");
         } catch (error) {
             console.error("Error saving questions:", error);
@@ -174,7 +189,8 @@ export default function useCodeQuestionForm( examId, initialQuestion = null  ) {
         handleAddQuestion,
         handleDeleteQuestion,   
         handleEditQuestion,
-        saveAllQuestions
+        saveAllQuestions,
+        warning,
     };
 
 } 
