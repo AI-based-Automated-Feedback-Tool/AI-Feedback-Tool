@@ -29,15 +29,15 @@ export default function EditCodeQuestion({show, handleClose, questionDetails, ha
     const {languages, loading} = useFetchLanguages(setErrors);    
 
     useEffect(() => {
-    if (questionDetails) {
-      setQuestionDescription(questionDetails.question);
-      setFunctionSignature(questionDetails.functionSignature);
-      setWrapperCode(questionDetails.wrapperCode);
-      setTestCases(questionDetails.testCases);
-      setSelectedLanguage(questionDetails.language);
-      setPoints(questionDetails.points);
-    }
-  }, [questionDetails]);
+        if (questionDetails) {
+        setQuestionDescription(questionDetails.question);
+        setFunctionSignature(questionDetails.functionSignature);
+        setWrapperCode(questionDetails.wrapperCode);
+        setTestCases(questionDetails.testCases);
+        setSelectedLanguage(questionDetails.language);
+        setPoints(questionDetails.points);
+        }
+    }, [questionDetails]);
 
     const manageSaveChanges = () => {
         const isValid = validate();
@@ -57,7 +57,7 @@ export default function EditCodeQuestion({show, handleClose, questionDetails, ha
 
         // Reset form fields    
         resetForm();
-  }
+    }
 
     return (
     <Modal show={show} onHide={handleClose} size="lg">

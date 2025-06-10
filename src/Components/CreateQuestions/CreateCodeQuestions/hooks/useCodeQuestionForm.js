@@ -87,31 +87,31 @@ export default function useCodeQuestionForm( examId, initialQuestion = null  ) {
     }
 
     // Function to handle adding a new question
-  const handleAddQuestion = (newQuestion) => {
-    setQuestions([...questions, newQuestion]);
-  };
+    const handleAddQuestion = (newQuestion) => {
+        setQuestions([...questions, newQuestion]);
+    };
   
-  // Function to handle deleting a question
-  const handleDeleteQuestion = (index) => {
-    const updatedQuestions = [...questions]
-    updatedQuestions.splice(index, 1);
-    setQuestions(updatedQuestions);
-  }
+    // Function to handle deleting a question
+    const handleDeleteQuestion = (index) => {
+        const updatedQuestions = [...questions];
+        updatedQuestions.splice(index, 1);
+        setQuestions(updatedQuestions);
+    };
 
-  // Function to handle editing a question
-  const handleEditQuestion = (index) => {
-    setEditQuestionIndex(index);
-    setShowEditQuestion(true);
-  }
+    // Function to handle editing a question
+    const handleEditQuestion = (index) => {
+        setEditQuestionIndex(index);
+        setShowEditQuestion(true);
+    };
 
-  // Function to save changes after editing a question
-  const handleSaveChanges = (updatedQuestion) => {
-    const updatedQuestions = [...questions]
-    updatedQuestions[editQuestionIndex] = updatedQuestion
-    setQuestions(updatedQuestions);
-    setShowEditQuestion(false);
-    setEditQuestionIndex(null);
-}
+    // Function to save changes after editing a question
+    const handleSaveChanges = (updatedQuestion) => {
+        const updatedQuestions = [...questions];
+        updatedQuestions[editQuestionIndex] = updatedQuestion;
+        setQuestions(updatedQuestions);
+        setShowEditQuestion(false);
+        setEditQuestionIndex(null);
+    };
 
     const saveAllQuestions = async () => {
         setLoading(true);
