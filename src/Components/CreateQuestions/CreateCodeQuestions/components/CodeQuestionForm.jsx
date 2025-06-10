@@ -1,50 +1,38 @@
 import React from 'react'
 import { Form, Button, Container, Row, Col, Card, Alert } from "react-bootstrap";
 import useFetchLanguages from "../hooks/useFetchLanguages";
-import { useState } from 'react';
+import useCodeQuestionForm from "../hooks/useCodeQuestionForm";
 
 export default function CodeQuestionForm({setError, onAddQuestion}) {
-    const [testCases, setTestCases] = useState([{ input: "", output: "" }]);
+    
     const {languages, loading} = useFetchLanguages(setError);
-    const [selectedLanguage, setSelectedLanguage] = useState(null);
-    const [questionDescription, setQuestionDescription] = useState("");
-    const [functionSignature, setFunctionSignature] = useState("");
-    const [wrapperCode, setWrapperCode] = useState("");
-    const [points, setPoints] = useState(1);
-
-    const addTestCase = () => {
-        setTestCases([...testCases,{input: "", output: ""}])
-    }
+    const {
+        questionDescription, 
+        setQuestionDescription, 
+        functionSignature, 
+        setFunctionSignature, 
+        wrapperCode, 
+        setWrapperCode, 
+        testCases, 
+        setTestCases, 
+        selectedLanguage, 
+        setSelectedLanguage,
+        points,
+        setPoints,
+        addTestCase,
+        errors,
+        validate,
+        resetForm
+    } = useCodeQuestionForm();
+    
 
     const handleAddQuestion = () => {
         // Validate and submit the question
-        if (!questionDescription.trim()) {
-            setError("Question description is required.");
+        const isValid = validate();
+        if (!isValid) {
+            setError("Please fill in all required fields correctly.");
             return;
         }
-        if (!functionSignature.trim()) {
-            setError("Function signature is required.");
-            return;
-        }
-        if (!wrapperCode.trim()) {
-            setError("Wrapper code is required.");
-            return;
-        }
-        if (testCases.length === 0){
-            setError("At least one test case is required.");
-            return;
-        }
-        if (testCases.some(testCase => !testCase.input.trim() || !testCase.output.trim())) {
-            setError("All test cases must have both input and output.");
-            return;
-        }
-        if (!selectedLanguage) {
-            setError("Please select a programming language.");
-            return;
-        }
-
-        //Clear error if everything is valid
-        setError(null);
 
         const newQuestion = {
             question: questionDescription,
@@ -57,12 +45,7 @@ export default function CodeQuestionForm({setError, onAddQuestion}) {
         onAddQuestion(newQuestion);
 
         // Reset form fields
-        setQuestionDescription("");
-        setFunctionSignature("");
-        setWrapperCode("");
-        setTestCases([{ input: "", output: "" }]);
-        setSelectedLanguage(null);
-        setPoints(1);
+        resetForm();
     }
   return (
     <Card>

@@ -10,6 +10,7 @@ export default function CreateCodeQuestionsContent() {
   const [error, setError] = useState(null);
   const [showEditQuestion, setShowEditQuestion] = useState(false);
   const [editQuestionIndex, setEditQuestionIndex] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   // Function to handle adding a new question
   const handleAddQuestion = (newQuestion) => {
@@ -45,7 +46,13 @@ export default function CreateCodeQuestionsContent() {
             setError={setError}
             onAddQuestion={handleAddQuestion}
       />
-      {error && <Alert variant="danger">{error}</Alert>}
+      {error && 
+        <div className="mt-3">
+          <Alert variant="danger">
+            {error}
+          </Alert>
+        </div>
+      }
       {questions.length > 0 && (
         <>
           <CodeQuestionTable 
@@ -63,7 +70,7 @@ export default function CreateCodeQuestionsContent() {
           )}
           {/* Submit Button */}
           <div className="d-flex justify-content-end" >
-            <Button variant="primary" onClick={handleSubmitQuestions} disabled={""}>
+            <Button variant="primary" >
               {loading ? (
                 <>
                   <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
