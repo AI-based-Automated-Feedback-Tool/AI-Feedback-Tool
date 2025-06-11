@@ -24,5 +24,19 @@ export const ApiCallCountProvider = ({ children }) => {
     }
   }, []);
 
-  
+  // Function to increment count and update localStorage
+  const incrementCount = () => {
+    setCount((prev) => {
+      const newCount = prev + 1;
+      localStorage.setItem('apiCallCount', newCount.toString());
+      localStorage.setItem('apiCallCountDate', getToday());
+      return newCount;
+    });
+  };
+
+  return (
+    <ApiCallCountContext.Provider value={{ count, incrementCount }}>
+      {children}
+    </ApiCallCountContext.Provider>
+  );
 };
