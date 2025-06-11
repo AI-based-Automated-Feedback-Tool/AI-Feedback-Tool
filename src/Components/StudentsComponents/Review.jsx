@@ -37,7 +37,10 @@ const Review = () => {
       <h2 className="text-2xl font-bold">Exam Review</h2>
     <button
      onClick={() => fetchReviewData(submissionId)}
-     className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded mb-4"
+     disabled={loading}
+       className={`${
+         loading ? "bg-gray-400" : "bg-blue-500 hover:bg-blue-600"
+       } text-white px-4 py-2 rounded mb-4`}
     >
      Refresh AI Feedback
     </button>
