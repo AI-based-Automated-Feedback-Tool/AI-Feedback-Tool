@@ -42,7 +42,7 @@ const Review = () => {
          loading ? "bg-gray-400" : "bg-blue-500 hover:bg-blue-600"
        } text-white px-4 py-2 rounded mb-4`}
     >
-     Refresh AI Feedback
+      {loading ? "Refreshing..." : "Refresh AI Feedback"}
     </button>
 
       {reviewData.map((entry, index) => {
