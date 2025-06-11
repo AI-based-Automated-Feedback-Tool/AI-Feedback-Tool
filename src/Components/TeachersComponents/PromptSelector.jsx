@@ -69,6 +69,21 @@ Return ONLY valid JSON with these exact keys.`
     "Suggested resources"
   ]
 }`
+  },
+  {
+    label: 'Custom Prompt',
+    prompt: `Create your own custom prompt structure. You can use these placeholders if needed:
+[QUESTIONS] - Will be replaced with exam questions
+[SUBMISSIONS] - Will be replaced with student submissions
+[ANSWERS] - Will be replaced with correct answers
+
+Suggested structure:
+{
+  "analysis": "Your custom analysis requirements",
+  "strengths": ["What to look for"],
+  "weaknesses": ["What to analyze"],
+  "recommendations": ["What to suggest"]
+}`
   }
 ];
 
@@ -83,20 +98,29 @@ const PromptSelector = () => {
   const [selectedPrompt, setSelectedPrompt] = useState(predefinedPrompts[0].prompt);
   const [selectedLabel, setSelectedLabel] = useState(predefinedPrompts[0].label);
   const [selectedProvider, setSelectedProvider] = useState(aiProviders[0].id);
+  const [customPrompt, setCustomPrompt] = useState('');
+  const [isCustomPrompt, setIsCustomPrompt] = useState(false);
 
   const handleSubmit = () => {
+    const finalPrompt = isCustomPrompt ? customPrompt : selectedPrompt;
     navigate(`/teacher/exams/${examId}/ai-feedback`, {
       state: { 
-        prompt: selectedPrompt,
+        prompt: finalPrompt,
         aiProvider: selectedProvider
       }
     });
   };
 
   const handlePromptChange = (label) => {
-    const prompt = predefinedPrompts.find(p => p.label === label).prompt;
-    setSelectedLabel(label);
-    setSelectedPrompt(prompt);
+    if (label === 'Custom Prompt') {
+      setIsCustomPrompt(true);
+      setCustomPrompt(predefinedPrompts.find(p => p.label === label).prompt);
+    } else {
+      setIsCustomPrompt(false);
+      const prompt = predefinedPrompts.find(p => p.label === label).prompt;
+      setSelectedLabel(label);
+      setSelectedPrompt(prompt);
+    }
   };
 
   return (
@@ -127,11 +151,7 @@ const PromptSelector = () => {
                 <Form.Label>Feedback Style</Form.Label>
                 <Form.Select
                   value={selectedLabel}
-                  onChange={(e) => {
-                    const prompt = predefinedPrompts.find(p => p.label === e.target.value).prompt;
-                    setSelectedLabel(e.target.value);
-                    setSelectedPrompt(prompt);
-                  }}
+                  onChange={(e) => handlePromptChange(e.target.value)}
                 >
                   {predefinedPrompts.map((p, idx) => (
                     <option key={idx} value={p.label}>{p.label}</option>
@@ -142,14 +162,33 @@ const PromptSelector = () => {
           </Row>
 
           <Form.Group className="mb-3">
-            <Form.Label>Preview</Form.Label>
-            <Card body className="bg-light">
-              <pre style={{whiteSpace: 'pre-wrap'}}>{selectedPrompt}</pre>
-            </Card>
+            <Form.Label>Prompt {isCustomPrompt ? 'Editor' : 'Preview'}</Form.Label>
+            {isCustomPrompt ? (
+              <Form.Control
+                as="textarea"
+                rows={10}
+                value={customPrompt}
+                onChange={(e) => setCustomPrompt(e.target.value)}
+                className="font-monospace"
+              />
+            ) : (
+              <Card body className="bg-light">
+                <pre style={{whiteSpace: 'pre-wrap'}}>{selectedPrompt}</pre>
+              </Card>
+            )}
+            {isCustomPrompt && (
+              <Form.Text className="text-muted">
+                Tip: Use [QUESTIONS], [SUBMISSIONS], and [ANSWERS] placeholders to reference exam data
+              </Form.Text>
+            )}
           </Form.Group>
 
           <div className="d-grid">
-            <Button variant="primary" onClick={handleSubmit}>
+            <Button 
+              variant="primary" 
+              onClick={handleSubmit}
+              disabled={isCustomPrompt && !customPrompt.trim()}
+            >
               Generate Feedback
             </Button>
           </div>
