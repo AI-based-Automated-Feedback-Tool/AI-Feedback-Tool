@@ -2,7 +2,20 @@ import React from 'react'
 import { Form, Button, Container, Row, Col, Card, Alert } from "react-bootstrap";
 
 
-export default function EssayQuestionForm() {
+export default function EssayQuestionForm({ formState }) {
+    const {
+        questionText,
+        attachments,
+        wordLimit,
+        points,
+        gradingNotes,
+        setQuestionText,
+        setAttachments, 
+        setWordLimit,
+        setPoints,
+        setGradingNotes 
+    }= formState;
+
   return (
     <Card>
         <Card.Header className='bg-primary text-white'>
@@ -16,25 +29,42 @@ export default function EssayQuestionForm() {
                         as="textarea"
                         rows={2}
                         placeholder="Enter your essay question here..."
+                        value={questionText}
+                        onChange={(e) => setQuestionText(e.target.value)}
+                        required
                     />
                 </Form.Group>
 
                 <Form.Group className='mb-3'>
                     <Form.Label className='fw-bold'>Attachments</Form.Label>
-                    <Form.Control type="file" />
+                    <Form.Control 
+                        type="file" 
+                        onChange={(e) => setAttachments(e.target.files[0])}
+                    />
                 </Form.Group>
 
                 <Row className='mb-3'>
                     <Col>
                         <Form.Group>
                             <Form.Label className='fw-bold'>Word Limit</Form.Label>
-                            <Form.Control type="number" placeholder="Enter the word limit" />
+                            <Form.Control 
+                                type="number" 
+                                placeholder="Enter the word limit" 
+                                value={wordLimit}
+                                onChange={(e) => setWordLimit(e.target.value)}
+                            />
                         </Form.Group>
                     </Col>
                     <Col>
                         <Form.Group>
                             <Form.Label className='fw-bold'>Points *</Form.Label>
-                            <Form.Control type="number" placeholder="Enter points" />
+                            <Form.Control 
+                                type="number" 
+                                placeholder="Enter points" 
+                                value={points}
+                                onChange={(e) => setPoints(e.target.value)}
+                                required
+                            />
                         </Form.Group>
                     </Col>
                 </Row>
@@ -45,6 +75,9 @@ export default function EssayQuestionForm() {
                         as="textarea"
                         rows={3}
                         placeholder="Enter any specific instructions for the essay question evaluation..."
+                        value={gradingNotes}
+                        onChange={(e) => setGradingNotes(e.target.value)}
+                        required
                     />
                 </Form.Group>
 
