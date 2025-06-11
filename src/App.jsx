@@ -29,6 +29,8 @@ import PromptSelector from "./Components/TeachersComponents/PromptSelector";
 import CreateQuestions from "./Components/CreateQuestions/CreateQuestions.jsx";
 import { ResultProvider } from "./Context/ResultContext.jsx";
 import { useContext } from "react";
+import { CodeQuestionsProvider } from "./Context/QuestionsContext/CodeContext.jsx";
+import CodeQuestions from "./Components/StudentsComponents/taskPages/CodeQuestions.jsx";
 
 function AppContent() {
   //get user id from userContext
@@ -39,6 +41,7 @@ function AppContent() {
         <ExamProvider>
           <TaskProvider>
             <ResultProvider studentId={userId}>
+            <CodeQuestionsProvider>
               <Router>
                 <Routes>
                   {/*Login and registration and main page route */}
@@ -82,6 +85,7 @@ function AppContent() {
                   {/*students route */}
                   <Route path="/dashboard" element={<ProtectedRoute />}>
                     <Route path="task/:id" element={<TaskPage />} />
+                    <Route path="task/:id/codeQuestions" element={<CodeQuestions/>} />
                   </Route>
                   <Route
                     path="/student/courses/:userId"
@@ -104,6 +108,7 @@ function AppContent() {
                   </Route>
                 </Routes>
               </Router>
+              </CodeQuestionsProvider>
             </ResultProvider>
           </TaskProvider>
         </ExamProvider>
