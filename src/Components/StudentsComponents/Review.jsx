@@ -1,6 +1,8 @@
 import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useReview } from "../../Context/reviewContext";
+import React, { useEffect, useState } from "react";
+
 
 const Review = () => {
   //extracting submission id from url parameter
@@ -8,12 +10,22 @@ const Review = () => {
   //destructuring review related data and functions from the review context
   const { reviewData, fetchReviewData, loading, error } = useReview();
 
+  const [autoRefreshing, setAutoRefreshing] = useState(false);
+
   //fetch review data when submission id changes
   useEffect(() => {
-    if (submissionId) {
-      fetchReviewData(submissionId);
-    }
-  }, [fetchReviewData, submissionId]);
+  setAutoRefreshing(true);
+  const interval = setInterval(() => {
+    console.log("Auto-refreshing review data...");
+    fetchReviewData(submissionId);
+  }, 5000); // 5 sec
+
+  return () => {
+    clearInterval(interval);
+    setAutoRefreshing(false);
+  };
+}, [fetchReviewData, submissionId]);
+  
 
   if (loading) return <p>Loading review...</p>;
   if (error) return <p className="text-red-500">Error: {error}</p>;
