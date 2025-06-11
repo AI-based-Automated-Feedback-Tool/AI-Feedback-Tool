@@ -13,9 +13,7 @@ export const CodeQuestionsProvider = ({ children }) => {
     //function to fetch all code questions
     const fetchCodeQuestions = async () => {
         try {
-          const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:5000";
-          console.log("API_BASE_URL:", API_BASE_URL);
-          const response = await axios.get(`${API_BASE_URL}/api/createCodeQuestion`, {
+          const response = await axios.get("http://localhost:5000/api/codequestions", {
             headers: {
               "Content-Type": "application/json",
             },
@@ -24,14 +22,9 @@ export const CodeQuestionsProvider = ({ children }) => {
           setQuestions(response.data.questions || []);
         } catch (error) {
           console.error("Error fetching code questions:", error);
-          if (error.response) {
-            setMessage(error.response.data.message || "Failed to fetch questions");
-          } else {
-            setMessage("An error occurred while fetching the questions");
-          }
+          setMessage("Failed to fetch questions");
         }
-    };
-    
+      };
   
     return (
       <CodeQuestionsContext.Provider value={{ fetchCodeQuestions, questions, message }}>
