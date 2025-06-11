@@ -1,5 +1,7 @@
 import React from 'react'
 import { Form, Button, Container, Row, Col, Card, Alert } from "react-bootstrap";
+import { useRef } from 'react';
+
 
 
 export default function EssayQuestionForm({ formState }) {
@@ -15,6 +17,8 @@ export default function EssayQuestionForm({ formState }) {
         setPoints,
         setGradingNotes 
     }= formState;
+
+    const fileInputRef = useRef(null);
 
   return (
     <Card>
@@ -40,7 +44,19 @@ export default function EssayQuestionForm({ formState }) {
                     <Form.Control 
                         type="file" 
                         onChange={(e) => setAttachments(e.target.files[0])}
+                        ref={fileInputRef}
                     />
+                    {attachments && <small className="text-muted">Selected: {attachments.name}<span 
+                        style={{ color: '#6c757d', cursor: 'pointer', marginLeft: '8px' }} 
+                        onClick={() => {
+                            setAttachments(null);
+                            if (fileInputRef.current) {
+                                fileInputRef.current.value = null;
+                            }
+                        }}
+                    >
+                        ❌
+                    </span></small>}
                 </Form.Group>
 
                 <Row className='mb-3'>
