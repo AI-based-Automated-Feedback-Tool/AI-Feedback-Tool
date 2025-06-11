@@ -31,12 +31,14 @@ import { ResultProvider } from "./Context/ResultContext.jsx";
 import { useContext } from "react";
 import { CodeQuestionsProvider } from "./Context/QuestionsContext/CodeContext.jsx";
 import CodeQuestions from "./Components/StudentsComponents/taskPages/CodeQuestions.jsx";
+import { ApiCallCountProvider } from './Context/ApiCallCountContext';
 
 function AppContent() {
   //get user id from userContext
   const { userId } = useContext(UserContext);
 
   return (
+    <ApiCallCountProvider>
       <CourseProvider>
         <ExamProvider>
           <TaskProvider>
@@ -113,6 +115,7 @@ function AppContent() {
           </TaskProvider>
         </ExamProvider>
       </CourseProvider>
+    </ApiCallCountProvider>  
   );
 }
 

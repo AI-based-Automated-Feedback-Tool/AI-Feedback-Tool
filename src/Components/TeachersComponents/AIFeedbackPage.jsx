@@ -1,9 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { Container, Card, Alert, Spinner } from 'react-bootstrap';
 import { supabase } from '../../SupabaseAuth/supabaseClient';
 import { downloadAsTextFile } from '../../utils/downloadTextUtils';
 import { Button } from 'react-bootstrap';
+import { ApiCallCountContext } from "../../Context/ApiCallCountContext";
+import HeaderWithApiCount from '../../Components/TeachersComponents/HeaderWithApiCount';
 
 
 // Default prompt templates for AI feedback generation
@@ -18,6 +20,7 @@ const AIFeedbackPage = () => {
   const { examId } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
+  const { incrementCount } = useContext(ApiCallCountContext);
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -97,6 +100,7 @@ const AIFeedbackPage = () => {
     }
 
     const data = await response.json();
+    incrementCount(); // Increment API call count
     return data;
   };
 
@@ -178,7 +182,7 @@ const AIFeedbackPage = () => {
             <span className="small">Exam Name: {examTitle}</span>
           </div>
 
-          <div className="d-flex gap-2">
+          <div className="d-flex gap-2">            
             <Button
               variant="light"
               size="sm"
@@ -200,7 +204,8 @@ const AIFeedbackPage = () => {
               onClick={() => downloadAsTextFile(feedback)}
             >
               📄 Download .TXT
-            </Button>            
+            </Button>    
+            <HeaderWithApiCount />        
           </div>
         </Card.Header>
         <Card.Body>
