@@ -23,6 +23,13 @@ const Review = () => {
   return (
     <div className="p-4 space-y-6">
       <h2 className="text-2xl font-bold">Exam Review</h2>
+    <button
+     onClick={() => fetchReviewData(submissionId)}
+     className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded mb-4"
+    >
+     Refresh AI Feedback
+    </button>
+
       {reviewData.map((entry, index) => {
         const q = entry.mcq_questions;
         return (
