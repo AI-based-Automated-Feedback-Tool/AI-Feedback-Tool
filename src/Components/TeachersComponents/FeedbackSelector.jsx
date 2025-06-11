@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Container, Card, Form, Row, Col, Button, Spinner, Alert } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../../SupabaseAuth/supabaseClient";
+import HeaderWithApiCount from '../../Components/TeachersComponents/HeaderWithApiCount';
 
 const FeedbackSelector = () => {
   const navigate = useNavigate();
@@ -121,8 +122,10 @@ const FeedbackSelector = () => {
   return (
     <Container className="my-4">
       <Card>
-        <Card.Header className="bg-primary text-white">
-          <h4>🤖 AI Feedback - Select Exam</h4>
+        
+        <Card.Header className="bg-primary text-white d-flex justify-content-between align-items-center">
+          <h4 className="mb-0">🤖 AI Feedback - Select Exam</h4>
+          <HeaderWithApiCount />
         </Card.Header>
         <Card.Body>
           {error && <Alert variant="danger">{error}</Alert>}
@@ -130,7 +133,7 @@ const FeedbackSelector = () => {
           <Form>
             <Card className="mb-4 border-0 shadow-sm">
               <Card.Header className="bg-light">
-                <h5 className="mb-0">Filter Exams</h5>
+                <h5 className="mb-0">Filter Exams</h5>                
               </Card.Header>
               <Card.Body>
                 <Row className="mb-3">
