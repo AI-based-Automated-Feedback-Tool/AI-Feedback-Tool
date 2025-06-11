@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Container, Card, Form, Button, Row, Col } from 'react-bootstrap';
+import HeaderWithApiCount from '../../Components/TeachersComponents/HeaderWithApiCount';
 
 const predefinedPrompts = [
   {
@@ -126,8 +127,9 @@ const PromptSelector = () => {
   return (
     <Container className="mt-4">
       <Card className="shadow-sm">
-        <Card.Header className="bg-primary text-white">
+        <Card.Header className="bg-primary text-white d-flex justify-content-between align-items-center">
           <h4>AI Feedback Generator</h4>
+          <HeaderWithApiCount />
         </Card.Header>
         <Card.Body>
           <Row className="mb-3">
