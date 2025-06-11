@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useTask } from "../../Context/taskContext";
-import PopUp from "./PopUp.jsx";
+import { useTask } from "../../../Context/taskContext.jsx";
+import PopUp from "../PopUp.jsx";
 
 const TaskPage = () => {
 

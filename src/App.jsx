@@ -6,7 +6,7 @@ import SignInPage from "./Components/signInPage";
 import ProtectedRoute from "./Components/ProtectedRoute";
 import ConfigureExam from "./Components/ConfigureExam/ConfigureExam";
 import TeacherLayout from "./layouts/TeacherLayout";
-import TaskPage from "./Components/StudentsComponents/TaskPage";
+import TaskPage from "./Components/StudentsComponents/taskPages/TaskPage.jsx";
 import Courses from "./Components/StudentsComponents/Courses";
 import TeacherCourses from "./Components/TeachersComponents/TeacherCourses";
 import CreateMcqQuestionsContent from "./Components/CreateQuestions/CreateMcqQuestions/CreateMcqQuestionsContent.jsx";
