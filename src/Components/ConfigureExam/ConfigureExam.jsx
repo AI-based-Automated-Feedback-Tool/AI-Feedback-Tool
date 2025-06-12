@@ -93,7 +93,7 @@ const ConfigureExam = () => {
             }
 
             const response = await axios.post(
-                "http://localhost:5000/api/configureExam",
+                "http://localhost:3000/api/configureExam",
                 {
                     ...exam,
                     user_id: session.user.id
