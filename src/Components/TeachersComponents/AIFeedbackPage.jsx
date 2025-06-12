@@ -45,7 +45,7 @@ const AIFeedbackPage = () => {
   const fetchQuestions = async () => {
     const { data, error } = await supabase
       .from('mcq_questions')
-      .select('*')
+      .select('question_id, question_text, options, answers')
       .eq('exam_id', examId);
 
     if (error) throw new Error('Failed to fetch questions');
@@ -56,7 +56,7 @@ const AIFeedbackPage = () => {
   const fetchSubmissions = async () => {
     const { data, error } = await supabase
       .from('exam_submissions')
-      .select('*')
+      .select('student_id, exam_id, total_score, time_taken, id')
       .eq('exam_id', examId);
 
     if (error) throw new Error('Failed to fetch submissions');
@@ -67,9 +67,10 @@ const AIFeedbackPage = () => {
   const fetchAnswers = async (submissionIds) => {
     if (submissionIds.length === 0) return [];
     const { data, error } = await supabase
-      .from('exam_submissions_answers')
-      .select('*')
-      .in('submission_id', submissionIds);
+    .from('exam_submissions_answers')
+    .select('student_answer, is_correct, score, question_id')
+    .in('submission_id', submissionIds);
+
 
     if (error) throw new Error('Failed to fetch submission answers');
     return data;
@@ -77,7 +78,7 @@ const AIFeedbackPage = () => {
 
   // Call AI API to generate feedback
   const callAIAPI = async (promptWithData) => {
-    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
     const response = await fetch(`${apiUrl}/api/ai/generate`, {
       method: 'POST',
