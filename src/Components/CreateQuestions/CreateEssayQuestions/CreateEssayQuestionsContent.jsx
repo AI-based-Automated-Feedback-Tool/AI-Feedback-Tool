@@ -32,7 +32,9 @@ export default function CreateEssayQuestionsContent({examId, question_count}) {
                 setAttachments,
                 setWordLimit,
                 setPoints,
-                setGradingNotes
+                setGradingNotes,
+                onSaveQuestion,
+                error                
               }}/>                  
         </Col>                  
     </>

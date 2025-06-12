@@ -15,7 +15,9 @@ export default function EssayQuestionForm({ formState }) {
         setAttachments, 
         setWordLimit,
         setPoints,
-        setGradingNotes 
+        setGradingNotes,
+        onSaveQuestion,
+        error 
     }= formState;
 
     const fileInputRef = useRef(null);
@@ -37,6 +39,7 @@ export default function EssayQuestionForm({ formState }) {
                         onChange={(e) => setQuestionText(e.target.value)}
                         required
                     />
+                    {error.questionText && <div className="text-danger small">{error.questionText}</div>}
                 </Form.Group>
 
                 <Form.Group className='mb-3'>
@@ -58,6 +61,7 @@ export default function EssayQuestionForm({ formState }) {
                     >
                         ❌
                     </span></small>}
+                    {error.attachments && <div className="text-danger small">{error.attachments}</div>}
                 </Form.Group>
 
                 <Row className='mb-3'>
@@ -70,6 +74,7 @@ export default function EssayQuestionForm({ formState }) {
                                 value={wordLimit}
                                 onChange={(e) => setWordLimit(e.target.value)}
                             />
+                            {error.wordLimit && <div className="text-danger small">{error.wordLimit}</div>}
                         </Form.Group>
                     </Col>
                     <Col>
@@ -82,6 +87,7 @@ export default function EssayQuestionForm({ formState }) {
                                 onChange={(e) => setPoints(e.target.value)}
                                 required
                             />
+                            {error.points && <div className="text-danger small">{error.points}</div>}
                         </Form.Group>
                     </Col>
                 </Row>
@@ -96,11 +102,12 @@ export default function EssayQuestionForm({ formState }) {
                         onChange={(e) => setGradingNotes(e.target.value)}
                         required
                     />
+                    {error.gradingNotes && <div className="text-danger small">{error.gradingNotes}</div>}
                 </Form.Group>
 
                 {/* Submit Button */}
                 <div className="d-flex justify-content-end" >
-                    <Button variant="primary" >
+                    <Button variant="primary"  >
                         ➕ Save Question
                     </Button>
                 </div>   
