@@ -13,7 +13,7 @@ export const CodeQuestionsProvider = ({ children }) => {
     //function to fetch all code questions
     const fetchCodeQuestions = async () => {
         try {
-          const response = await axios.get("http://localhost:5000/api/codequestions", {
+          const response = await axios.get("http://localhost:3000/api/codequestions", {
             headers: {
               "Content-Type": "application/json",
             },
