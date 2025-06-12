@@ -43,6 +43,7 @@ export default function EssayQuestionForm({ formState }) {
                     <Form.Label className='fw-bold'>Attachments</Form.Label>
                     <Form.Control 
                         type="file" 
+                        accept='.png, .jpg, .jpeg, .pdf, .doc, .mp4, .mp3'
                         onChange={(e) => setAttachments(e.target.files[0])}
                         ref={fileInputRef}
                     />
