@@ -2,14 +2,15 @@ import React, { useEffect, useState } from "react";
 import { useCodeQuestions } from "../../../Context/QuestionsContext/CodeContext";
 import "bootstrap/dist/css/bootstrap.min.css";
 import QuestionsNavigator from "../features/QuestionsNavigator";
+import PaginationControls from "../features/Pagination";
 
 const CodeQuestionsList = () => {
   //fetch questions and message from the context
   const { fetchCodeQuestions, questions = [], message } = useCodeQuestions();
-  
+
   //to store student answers for each question
   const [studentAnswers, setStudentAnswers] = useState({});
-  
+
   //to track the current question index for navigation
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
@@ -32,10 +33,10 @@ const CodeQuestionsList = () => {
   return (
     <div className="container mt-5">
       <h1 className="text-center mb-4">Practice Code Questions</h1>
-      
+
       {/*display message if available */}
       {message && <div className="alert alert-info">{message}</div>}
-      
+
       {questions.length > 0 ? (
         <div className="row">
           {/* Main content area */}
@@ -49,38 +50,64 @@ const CodeQuestionsList = () => {
               </div>
               <div className="card-body">
                 {/*display question*/}
-                <p><strong>{currentQuestionIndex + 1})</strong> {questions[currentQuestionIndex].question_description}</p>                  
+                <p>
+                  <strong>{currentQuestionIndex + 1})</strong>{" "}
+                  {questions[currentQuestionIndex].question_description}
+                </p>
                 {/*textarea for student to write their code*/}
-                <label><strong>Your Code:</strong></label>
+                <label>
+                  <strong>Your Code:</strong>
+                </label>
                 <textarea
                   className="form-control"
                   rows={10}
                   value={
                     studentAnswers[questions[currentQuestionIndex].id] ||
-                    `${questions[currentQuestionIndex].function_signature || ""}\n\n# Write your code here\n`
+                    `${
+                      questions[currentQuestionIndex].function_signature || ""
+                    }\n\n# Write your code here\n`
                   }
-                  onChange={(e) => handleChange(questions[currentQuestionIndex].id, e.target.value)}
+                  onChange={(e) =>
+                    handleChange(
+                      questions[currentQuestionIndex].id,
+                      e.target.value
+                    )
+                  }
                 ></textarea>
 
                 {/*display wrapper code for reference if available*/}
                 {questions[currentQuestionIndex].wrapper_code && (
                   <>
-                    <label className="mt-3"><strong>Wrapper Code (for reference):</strong></label>
-                    <pre className="bg-light p-3 rounded">{questions[currentQuestionIndex].wrapper_code}</pre>
+                    <label className="mt-3">
+                      <strong>Wrapper Code (for reference):</strong>
+                    </label>
+                    <pre className="bg-light p-3 rounded">
+                      {questions[currentQuestionIndex].wrapper_code}
+                    </pre>
                   </>
                 )}
 
-                {/*submit button for the student's answer*/}
-                <button
-                  className="btn btn-success mt-3"
-                  onClick={() => handleSubmit(questions[currentQuestionIndex].id)}
-                >
-                  Submit
-                </button>
+                {/*show submit button only if it's the last question or only one question */}
+                {(currentQuestionIndex === questions.length - 1 ||
+                  questions.length === 1) && (
+                  <button
+                    className="btn btn-success mt-3"
+                    onClick={() =>
+                      handleSubmit(questions[currentQuestionIndex].id)
+                    }
+                  >
+                    Submit
+                  </button>
+                )}
+                {/*pagination*/}
+                <PaginationControls
+                  currentQuestionIndex={currentQuestionIndex}
+                  setCurrentQuestionIndex={setCurrentQuestionIndex}
+                  questions={questions}
+                />
               </div>
             </div>
           </div>
-
           {/* Sidebar for QuestionsNavigator */}
           <div className="col-md-4">
             <QuestionsNavigator
