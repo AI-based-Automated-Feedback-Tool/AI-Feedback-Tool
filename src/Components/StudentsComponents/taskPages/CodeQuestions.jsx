@@ -99,12 +99,15 @@ const CodeQuestionsList = () => {
                     Submit
                   </button>
                 )}
-                {/*pagination*/}
-                <PaginationControls
-                  currentQuestionIndex={currentQuestionIndex}
-                  setCurrentQuestionIndex={setCurrentQuestionIndex}
-                  questions={questions}
-                />
+
+                {/*pagination controls only if there are multiple questions and not the last question*/}
+                {questions.length > 1 && currentQuestionIndex !== questions.length - 1 && (
+                  <PaginationControls
+                    currentQuestionIndex={currentQuestionIndex}
+                    setCurrentQuestionIndex={setCurrentQuestionIndex}
+                    questions={questions}
+                  />
+                )}
               </div>
             </div>
           </div>
