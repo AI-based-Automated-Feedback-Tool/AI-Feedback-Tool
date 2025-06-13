@@ -87,21 +87,37 @@ const CodeQuestionsList = () => {
                   </>
                 )}
 
-                {/*show submit button only if it's the last question or only one question */}
-                {(currentQuestionIndex === questions.length - 1 ||
-                  questions.length === 1) && (
-                  <button
-                    className="btn btn-success mt-3"
-                    onClick={() =>
-                      handleSubmit(questions[currentQuestionIndex].id)
-                    }
-                  >
-                    Submit
-                  </button>
-                )}
-
-                {/*pagination controls only if there are multiple questions and not the last question*/}
-                {questions.length > 1 && currentQuestionIndex !== questions.length - 1 && (
+                {/* Conditional rendering for buttons */}
+                {questions.length === 1 ? (
+                  // Show only Submit button if there's one question
+                  <div className="d-flex justify-content-end mt-3">
+                    <button
+                      className="btn btn-success"
+                      onClick={() => handleSubmit(questions[currentQuestionIndex].id)}
+                    >
+                      Submit
+                    </button>
+                  </div>
+                ) : currentQuestionIndex === questions.length - 1 ? (
+                  //show Back and Submit buttons for the last question
+                  <div className="d-flex justify-content-between mt-3">
+                    <button
+                      className="btn btn-secondary"
+                      onClick={() =>
+                        setCurrentQuestionIndex(currentQuestionIndex - 1)
+                      }
+                    >
+                      Back
+                    </button>
+                    <button
+                      className="btn btn-success"
+                      onClick={() => handleSubmit(questions[currentQuestionIndex].id)}
+                    >
+                      Submit
+                    </button>
+                  </div>
+                ) : (
+                  //show pagination controls for navigating questions
                   <PaginationControls
                     currentQuestionIndex={currentQuestionIndex}
                     setCurrentQuestionIndex={setCurrentQuestionIndex}
@@ -111,7 +127,7 @@ const CodeQuestionsList = () => {
               </div>
             </div>
           </div>
-          {/* Sidebar for QuestionsNavigator */}
+          {/*sidebar for QuestionsNavigator */}
           <div className="col-md-4">
             <QuestionsNavigator
               questions={questions}
