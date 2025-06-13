@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useCodeQuestions } from "../../../Context/QuestionsContext/CodeContext";
 import "bootstrap/dist/css/bootstrap.min.css";
+import QuestionsNavigator from "../features/QuestionsNavigator";
 
 const CodeQuestionsList = () => {
   //fetch questions and message from the context
@@ -8,6 +9,9 @@ const CodeQuestionsList = () => {
   
   //to store student answers for each question
   const [studentAnswers, setStudentAnswers] = useState({});
+  
+  //to track the current question index for navigation
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
   //fetch code questions when the component is mounted
   useEffect(() => {
@@ -31,56 +35,63 @@ const CodeQuestionsList = () => {
       
       {/*display message if available */}
       {message && <div className="alert alert-info">{message}</div>}
-
-      {/*render questions*/}
+      
       {questions.length > 0 ? (
         <div className="row">
-          {questions.map((question, index) => (
-            <div className="col-md-12 mb-5" key={question.id || index}>
-              <div className="card shadow-sm">
-                {/*card header with question number*/}
-                <div className="card-header bg-info text-white">
-                  <h5 className="card-title mb-0">
-                    Question {index + 1}
-                  </h5>
-                </div>
-                <div className="card-body">
-                  {/*display question*/}
-                  <p><strong>{index + 1})</strong> {question.question_description}</p>                  
-                  {/*textarea for student to write their code*/}
-                  <label><strong>Your Code:</strong></label>
-                  <textarea
-                    className="form-control"
-                    rows={10}
-                    value={
-                      studentAnswers[question.id] ||
-                      `${question.function_signature || ""}\n\n# Write your code here\n`
-                    }
-                    onChange={(e) => handleChange(question.id, e.target.value)}
-                  ></textarea>
+          {/* Main content area */}
+          <div className="col-md-8 mb-5">
+            <div className="card shadow-sm">
+              {/*card header with question number*/}
+              <div className="card-header bg-info text-white">
+                <h5 className="card-title mb-0">
+                  Question {currentQuestionIndex + 1}
+                </h5>
+              </div>
+              <div className="card-body">
+                {/*display question*/}
+                <p><strong>{currentQuestionIndex + 1})</strong> {questions[currentQuestionIndex].question_description}</p>                  
+                {/*textarea for student to write their code*/}
+                <label><strong>Your Code:</strong></label>
+                <textarea
+                  className="form-control"
+                  rows={10}
+                  value={
+                    studentAnswers[questions[currentQuestionIndex].id] ||
+                    `${questions[currentQuestionIndex].function_signature || ""}\n\n# Write your code here\n`
+                  }
+                  onChange={(e) => handleChange(questions[currentQuestionIndex].id, e.target.value)}
+                ></textarea>
 
-                  {/*display wrapper code for reference if available*/}
-                  {question.wrapper_code && (
-                    <>
-                      <label className="mt-3"><strong>Wrapper Code (for reference):</strong></label>
-                      <pre className="bg-light p-3 rounded">{question.wrapper_code}</pre>
-                    </>
-                  )}
+                {/*display wrapper code for reference if available*/}
+                {questions[currentQuestionIndex].wrapper_code && (
+                  <>
+                    <label className="mt-3"><strong>Wrapper Code (for reference):</strong></label>
+                    <pre className="bg-light p-3 rounded">{questions[currentQuestionIndex].wrapper_code}</pre>
+                  </>
+                )}
 
-                  {/*submit button for the student's answer*/}
-                  <button
-                    className="btn btn-success mt-3"
-                    onClick={() => handleSubmit(question.id)}
-                  >
-                    Submit
-                  </button>
-                </div>
+                {/*submit button for the student's answer*/}
+                <button
+                  className="btn btn-success mt-3"
+                  onClick={() => handleSubmit(questions[currentQuestionIndex].id)}
+                >
+                  Submit
+                </button>
               </div>
             </div>
-          ))}
+          </div>
+
+          {/* Sidebar for QuestionsNavigator */}
+          <div className="col-md-4">
+            <QuestionsNavigator
+              questions={questions}
+              questionIndex={currentQuestionIndex}
+              setQuestionIndex={setCurrentQuestionIndex}
+            />
+          </div>
         </div>
       ) : (
-        // Display message if no questions are available
+        //display message if no questions are available
         <div className="text-center">
           <p className="text-muted">No questions available</p>
         </div>

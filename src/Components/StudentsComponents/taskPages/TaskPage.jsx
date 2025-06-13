@@ -70,10 +70,7 @@ const TaskPage = () => {
 
   //get the current question based on the question index
   const currentQuestion = task.questions[questionIndex];
-  //function to jump to a specific question
-  const handleQuestionJump = (index) => {
-    setQuestionIndex(index);
-  };
+
 
   return (
     <>
@@ -210,7 +207,7 @@ const TaskPage = () => {
             <QuestionsNavigator
               questions={task.questions}
               questionIndex={questionIndex}
-              handleQuestionJump={handleQuestionJump}
+              setQuestionIndex={setQuestionIndex}
             />
           </div>
         </div>
