@@ -117,6 +117,11 @@ const FeedbackSelector = () => {
   }, [selectedExam]);
 
   const handleAIFeedbackClick = () => {
+    if (isLimitReached) {
+      alert("You have reached the daily limit of AI feedback requests. Please try again tomorrow.");
+      return;
+    }
+
     navigate(`/teacher/exams/${selectedExam}/prompt-selector`);
   };
 
