@@ -3,7 +3,7 @@ import React, { useContext } from 'react';
 import { ApiCallCountContext } from '../../Context/ApiCallCountContext';
 
 const HeaderWithApiCount = () => {
-  const { count } = useContext(ApiCallCountContext);
+  const { count, MAX_CALLS_PER_DAY } = useContext(ApiCallCountContext);
 
   return (
     <header
@@ -16,8 +16,7 @@ const HeaderWithApiCount = () => {
         alignItems: 'center',
       }}
     >
-      
-      <div>API Calls Today: {count}</div>
+      <div>API Calls Today: {count}/{MAX_CALLS_PER_DAY}</div>
     </header>
   );
 };
