@@ -11,6 +11,7 @@ export default function EssayQuestionTable({questions, onDelete, onEdit}) {
             <th className="text-center">Word Limit</th>
             <th className='text-center'>Points</th>
             <th className="text-center">Grading Notes</th>
+            <th className="text-center">Actions</th>
         </tr>
       </thead>
       <tbody>

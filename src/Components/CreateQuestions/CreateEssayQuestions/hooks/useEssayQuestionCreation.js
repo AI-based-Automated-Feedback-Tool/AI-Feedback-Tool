@@ -95,6 +95,18 @@ export default function useEssayQuestionCreation(examId, question_count) {
         resetForm();
     }
 
+    // Function to handle deleting a question
+    const handleDeleteQuestion = (index) => {
+        const updatedQuestions = [...question];
+        updatedQuestions.splice(index, 1);
+        setQuestion(updatedQuestions);
+    };
+
+    // Function to handle editing a question
+    const handleEditQuestion = (index) => {
+        setEditQuestionIndex(index);
+        setShowEditQuestion(true);
+    };
 
     return {
         question,
