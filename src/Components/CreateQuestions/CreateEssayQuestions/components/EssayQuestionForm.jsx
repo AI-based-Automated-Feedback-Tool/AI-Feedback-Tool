@@ -1,6 +1,6 @@
 import React from 'react'
 import { Form, Button, Container, Row, Col, Card, Alert } from "react-bootstrap";
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 
 
 
@@ -19,8 +19,7 @@ export default function EssayQuestionForm({ formState }) {
         setPoints,
         setGradingNotes,
         onSaveQuestion,
-        error,
-        attachmentURL 
+        error 
     }= formState;
 
     const fileInputRef = useRef(null);
@@ -113,7 +112,7 @@ export default function EssayQuestionForm({ formState }) {
                     <Button variant="primary" onClick={onSaveQuestion} >
                         ➕ Save Question
                     </Button>
-                    {console.log("Attachment URL:", attachmentURL)}
+                    
                 </div>   
             </Form>
         </Card.Body>

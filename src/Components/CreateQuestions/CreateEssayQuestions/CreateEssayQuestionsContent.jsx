@@ -36,7 +36,7 @@ export default function CreateEssayQuestionsContent({examId, question_count}) {
                 setPoints,
                 setGradingNotes,
                 onSaveQuestion,
-                error                
+                error
               }}/>                  
         </Col>                  
     </>

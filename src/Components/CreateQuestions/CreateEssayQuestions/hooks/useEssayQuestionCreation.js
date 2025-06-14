@@ -5,7 +5,6 @@ export default function useEssayQuestionCreation(examId, question_count) {
     const [question, setQuestion] = useState([]);
     const [questionText, setQuestionText] = useState("");
     const [attachments, setAttachments] = useState(null);
-    const [attachmentURL, setAttachmentURL] = useState("");
     const [wordLimit, setWordLimit] = useState("");
     const [points, setPoints] = useState("");
     const [gradingNotes, setGradingNotes] = useState("");
@@ -57,15 +56,15 @@ export default function useEssayQuestionCreation(examId, question_count) {
         if (!isValid) {
             return; // Don't proceed if there are validation errors
         }
+        let uploadedUrl = null;
         if(attachments) {
             try {
-                let uploadedUrl = null;
-                const response = await uploadAttachment(attachments);
-                const result = await response.json();
-                if (response.ok) {
-                    uploadedUrl = result.url; 
+                const result = await uploadAttachment(attachments);
+
+                if (result?.url?.publicUrl) {
+                    uploadedUrl = result.url.publicUrl;
                 } else {
-                    throw new Error(result.message || "Failed to upload attachment");
+                    throw new Error(result.message || "Invalid upload response");
                 }
 
             } catch (err) {
@@ -80,7 +79,7 @@ export default function useEssayQuestionCreation(examId, question_count) {
         
         const newQuestion = {
             question_text: questionText,
-            attachment_url: attachmentURL,
+            attachment_url: uploadedUrl,
             word_limit: wordLimit,
             points: points,
             grading_note: gradingNotes,
@@ -105,6 +104,6 @@ export default function useEssayQuestionCreation(examId, question_count) {
         setPoints,
         setGradingNotes,
         error,
-        onSaveQuestion 
+        onSaveQuestion ,
     };
 }
