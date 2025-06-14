@@ -2,33 +2,28 @@ import { Modal, Form, Button, Row, Col } from 'react-bootstrap'
 import { useEffect } from 'react';
 import useEssayQuestionCreation from '../hooks/useEssayQuestionCreation';
 
-export default function EditEssayQuestion({show, handleClose, questionDetails, handleSaveChanges}) {
+export default function EditEssayQuestion({show, handleClose, questionDetails, handleSaveChanges, formState}) {
     const {
-        question,
-        examId,
         questionText,
         attachments,
         wordLimit,
         points,
         gradingNotes,
         setQuestionText,
-        setAttachments, 
+        setAttachments,
         setWordLimit,
         setPoints,
         setGradingNotes,
         error,
-        onSaveQuestion ,
         fileInputRef,
-    } = useEssayQuestionCreation();
-
+    } = formState;
     useEffect(() => {
         if (questionDetails) {
-        setQuestionDescription(questionDetails.question);
-        setFunctionSignature(questionDetails.functionSignature);
-        setWrapperCode(questionDetails.wrapperCode);
-        setTestCases(questionDetails.testCases);
-        setSelectedLanguage(questionDetails.language);
-        setPoints(questionDetails.points);
+            setQuestionText(questionDetails.question_text);
+            setAttachments(questionDetails.attachment_url);
+            setWordLimit(questionDetails.word_limit);
+            setPoints(questionDetails.points);
+            setGradingNotes(questionDetails.grading_note);
         }
     }, [questionDetails]);
 
@@ -39,12 +34,11 @@ export default function EditEssayQuestion({show, handleClose, questionDetails, h
         }
 
         const updatedQuestion = {
-            question: questionDescription,
-            functionSignature: functionSignature,
-            wrapperCode: wrapperCode,
-            testCases: testCases,
-            language: selectedLanguage,
+            question_text: questionText,
+            attachment_url: attachments,
+            word_limit: wordLimit,
             points: points,
+            grading_note: gradingNotes,
         }
         handleSaveChanges(updatedQuestion);
 
@@ -64,10 +58,10 @@ export default function EditEssayQuestion({show, handleClose, questionDetails, h
                 <Form.Control
                     as="textarea"
                     rows={3}
-                    value={questionDescription}
-                    onChange={(e) => setQuestionDescription(e.target.value)}
+                    value={questionText}
+                    onChange={(e) => setQuestionText(e.target.value)}
                 />
-                {errors.question && <div className="text-danger small">{errors.question}</div>}
+                {error.question && <div className="text-danger small">{error.question}</div>}
             </Form.Group>
         
             <Form.Group className='mb-3'>

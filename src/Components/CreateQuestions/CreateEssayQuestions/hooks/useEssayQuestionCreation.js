@@ -107,6 +107,15 @@ export default function useEssayQuestionCreation(examId, question_count) {
         setEditQuestionIndex(index);
         setShowEditQuestion(true);
     };
+    // Function to save changes after editing a question
+    // Function to save changes after editing a question
+    const handleSaveChanges = (updatedQuestion) => {
+        const updatedQuestions = [...question];
+        updatedQuestions[editQuestionIndex] = updatedQuestion;
+        setQuestion(updatedQuestions);
+        setShowEditQuestion(false);
+        setEditQuestionIndex(null);
+    };
 
     return {
         question,
@@ -125,6 +134,10 @@ export default function useEssayQuestionCreation(examId, question_count) {
         onSaveQuestion ,
         fileInputRef,
         handleDeleteQuestion,
-        handleEditQuestion
+        handleEditQuestion,
+        editQuestionIndex,
+        showEditQuestion,
+        setShowEditQuestion,
+        handleSaveChanges
     };
 }
