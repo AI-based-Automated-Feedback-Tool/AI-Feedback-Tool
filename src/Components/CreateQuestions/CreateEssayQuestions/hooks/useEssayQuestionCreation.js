@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { uploadAttachment } from "../service/createEssayQuestionService"; // Adjust the import path as necessary
+import { useRef } from 'react';
 
 export default function useEssayQuestionCreation(examId, question_count) {
     const [question, setQuestion] = useState([]);
@@ -9,6 +10,8 @@ export default function useEssayQuestionCreation(examId, question_count) {
     const [points, setPoints] = useState("");
     const [gradingNotes, setGradingNotes] = useState("");
     const [error, setError] = useState({});
+
+    const fileInputRef = useRef(null);
 
     //To check allowed file type attached
     const allowedFileTypes = ['image/png', 'image/jpeg', 'application/pdf', 'application/msword', 'video/mp4', 'audio/mpeg'];
@@ -43,11 +46,13 @@ export default function useEssayQuestionCreation(examId, question_count) {
     const resetForm = () => {
         setQuestionText("");
         setAttachments(null);
-        setAttachmentURL("");
         setWordLimit("");
         setPoints("");
         setGradingNotes("");
         setError({});
+        if (fileInputRef.current) {
+            fileInputRef.current.value = null;
+        }
     }
 
     // Function to handle saving the question
@@ -105,5 +110,6 @@ export default function useEssayQuestionCreation(examId, question_count) {
         setGradingNotes,
         error,
         onSaveQuestion ,
+        fileInputRef,
     };
 }

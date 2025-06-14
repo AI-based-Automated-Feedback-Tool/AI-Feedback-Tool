@@ -16,7 +16,8 @@ export default function CreateEssayQuestionsContent({examId, question_count}) {
     setPoints,
     setGradingNotes,
     onSaveQuestion,
-    error
+    error,
+    fileInputRef
   } = useEssayQuestionCreation(examId, question_count);
     
     
@@ -36,7 +37,8 @@ export default function CreateEssayQuestionsContent({examId, question_count}) {
                 setPoints,
                 setGradingNotes,
                 onSaveQuestion,
-                error
+                error,
+                fileInputRef
               }}/>                  
         </Col>                  
     </>

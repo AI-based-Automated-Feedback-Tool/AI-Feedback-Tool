@@ -1,6 +1,6 @@
 import React from 'react'
 import { Form, Button, Container, Row, Col, Card, Alert } from "react-bootstrap";
-import { useRef, useEffect } from 'react';
+
 
 
 
@@ -19,10 +19,11 @@ export default function EssayQuestionForm({ formState }) {
         setPoints,
         setGradingNotes,
         onSaveQuestion,
-        error 
+        error,
+        fileInputRef
     }= formState;
 
-    const fileInputRef = useRef(null);
+    
 
   return (
     <Card>
