@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { Container, Card, Form, Row, Col, Button, Spinner, Alert } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../../SupabaseAuth/supabaseClient";
 import HeaderWithApiCount from '../../Components/TeachersComponents/HeaderWithApiCount';
+import { ApiCallCountContext } from "../../Context/ApiCallCountContext";
 
 const FeedbackSelector = () => {
   const navigate = useNavigate();
@@ -16,16 +17,16 @@ const FeedbackSelector = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Fetch courses created by the logged-in user
+  const { count, MAX_CALLS_PER_DAY } = useContext(ApiCallCountContext);
+  const isLimitReached = count >= MAX_CALLS_PER_DAY;
+
   useEffect(() => {
     const fetchCourses = async () => {
       setLoading(true);
       try {
         // Get authenticated user
         const { data: { user }, error: userError } = await supabase.auth.getUser();
-        if (userError || !user) {
-          throw new Error("Please login to view courses");
-        }
+        if (userError || !user) throw new Error("Please login to view courses");
 
         // Step 1: Get all exams created by this user
         const { data: exams, error: examsError } = await supabase
@@ -228,14 +229,20 @@ const FeedbackSelector = () => {
 
             <div className="d-flex justify-content-end">
               <Button
-                variant="primary"
+                variant={isLimitReached ? "secondary" : "primary"}
                 size="lg"
                 onClick={handleAIFeedbackClick}
-                disabled={!selectedExam || loading}
+                disabled={!selectedExam || loading || isLimitReached}
               >
                 Proceed to AI Feedback
               </Button>
             </div>
+
+            {isLimitReached && (
+              <p className="text-danger mt-3 text-end fw-bold">
+                You have reached the daily limit of AI feedback requests. Please try again tomorrow.
+              </p>
+            )}
           </Form>
         </Card.Body>
       </Card>
