@@ -1,9 +1,11 @@
-import React from 'react'
 import { useState, useEffect } from 'react';
+import { uploadAttachment } from "../service/createEssayQuestionService"; // Adjust the import path as necessary
 
 export default function useEssayQuestionCreation(examId, question_count) {
+    const [question, setQuestion] = useState([]);
     const [questionText, setQuestionText] = useState("");
     const [attachments, setAttachments] = useState(null);
+    const [attachmentURL, setAttachmentURL] = useState("");
     const [wordLimit, setWordLimit] = useState("");
     const [points, setPoints] = useState("");
     const [gradingNotes, setGradingNotes] = useState("");
@@ -38,8 +40,60 @@ export default function useEssayQuestionCreation(examId, question_count) {
         setError({});
         return true;
     }
+    // Reset the form fields
+    const resetForm = () => {
+        setQuestionText("");
+        setAttachments(null);
+        setAttachmentURL("");
+        setWordLimit("");
+        setPoints("");
+        setGradingNotes("");
+        setError({});
+    }
+
+    // Function to handle saving the question
+    const onSaveQuestion = async() => {
+        const isValid = validate();
+        if (!isValid) {
+            return; // Don't proceed if there are validation errors
+        }
+        if(attachments) {
+            try {
+                let uploadedUrl = null;
+                const response = await uploadAttachment(attachments);
+                const result = await response.json();
+                if (response.ok) {
+                    uploadedUrl = result.url; 
+                } else {
+                    throw new Error(result.message || "Failed to upload attachment");
+                }
+
+            } catch (err) {
+                setError(prevError => ({
+                    ...prevError,
+                    attachments: "Failed to upload attachment. Please try again."
+                }));
+                return;
+            }
+            
+        }
+        
+        const newQuestion = {
+            question_text: questionText,
+            attachment_url: attachmentURL,
+            word_limit: wordLimit,
+            points: points,
+            grading_note: gradingNotes,
+        }
+        
+        setQuestion(prevQuestions => [...prevQuestions, newQuestion]);
+        resetForm();
+    }
+
 
     return {
+        question,
+        examId,
         questionText,
         attachments,
         wordLimit,
@@ -50,6 +104,7 @@ export default function useEssayQuestionCreation(examId, question_count) {
         setWordLimit,
         setPoints,
         setGradingNotes,
-        error 
+        error,
+        onSaveQuestion 
     };
 }

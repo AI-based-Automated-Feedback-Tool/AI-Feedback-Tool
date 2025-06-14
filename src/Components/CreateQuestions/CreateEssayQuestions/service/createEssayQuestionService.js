@@ -1,7 +1,7 @@
 export const uploadAttachment = async (file) => {
     try{
         const formData = new FormData();
-        formData.append('file', file);
+        formData.append('attachment', file);
 
         const res = await fetch(`http://localhost:5000/api/upload`, {
             method: 'POST',

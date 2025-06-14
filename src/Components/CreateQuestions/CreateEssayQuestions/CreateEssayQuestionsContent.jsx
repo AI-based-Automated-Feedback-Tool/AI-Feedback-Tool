@@ -14,7 +14,9 @@ export default function CreateEssayQuestionsContent({examId, question_count}) {
     setAttachments, 
     setWordLimit,
     setPoints,
-    setGradingNotes 
+    setGradingNotes,
+    onSaveQuestion,
+    error
   } = useEssayQuestionCreation(examId, question_count);
     
     
