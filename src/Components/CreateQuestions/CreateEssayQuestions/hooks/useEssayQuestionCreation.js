@@ -10,6 +10,8 @@ export default function useEssayQuestionCreation(examId, question_count) {
     const [points, setPoints] = useState("");
     const [gradingNotes, setGradingNotes] = useState("");
     const [error, setError] = useState({});
+    const [showEditQuestion, setShowEditQuestion] = useState(false);
+    const [editQuestionIndex, setEditQuestionIndex] = useState(null);
 
     const fileInputRef = useRef(null);
 
@@ -78,8 +80,7 @@ export default function useEssayQuestionCreation(examId, question_count) {
                     attachments: "Failed to upload attachment. Please try again."
                 }));
                 return;
-            }
-            
+            }            
         }
         
         const newQuestion = {
@@ -111,5 +112,7 @@ export default function useEssayQuestionCreation(examId, question_count) {
         error,
         onSaveQuestion ,
         fileInputRef,
+        handleDeleteQuestion,
+        handleEditQuestion
     };
 }

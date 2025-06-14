@@ -2,9 +2,11 @@ import React, { use } from 'react'
 import { Container, Row, Col, CardHeader, CardBody, Card, Button, Alert } from 'react-bootstrap';
 import EssayQuestionForm from './components/EssayQuestionForm';
 import useEssayQuestionCreation from './hooks/useEssayQuestionCreation';
+import EssayQuestionTable from './components/EssayQuestionTable';
 
 export default function CreateEssayQuestionsContent({examId, question_count}) { 
   const {
+    question,
     questionText,
     attachments,
     wordLimit,
@@ -17,7 +19,9 @@ export default function CreateEssayQuestionsContent({examId, question_count}) {
     setGradingNotes,
     onSaveQuestion,
     error,
-    fileInputRef
+    fileInputRef,
+    handleDeleteQuestion,
+    handleEditQuestion
   } = useEssayQuestionCreation(examId, question_count);
     
     
@@ -38,9 +42,18 @@ export default function CreateEssayQuestionsContent({examId, question_count}) {
                 setGradingNotes,
                 onSaveQuestion,
                 error,
-                fileInputRef
+                fileInputRef,
+                handleDeleteQuestion,
+                handleEditQuestion
               }}/>                  
-        </Col>                  
+        </Col>   
+        {question.length > 0 &&
+          <EssayQuestionTable
+            questions={question}
+            onDelete={handleDeleteQuestion}
+            onEdit={handleEditQuestion}
+          />
+        }               
     </>
   );
 }
