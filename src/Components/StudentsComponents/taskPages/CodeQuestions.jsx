@@ -8,7 +8,6 @@ import PaginationControls from "../features/Pagination";
 
 const CodeQuestionsList = () => {
   const { id } = useParams();
-  console.log("ID:", id);
 
   // Fetch code questions from context
   const { fetchCodeQuestions, questions = [], message } = useCodeQuestions();
@@ -38,6 +37,13 @@ const CodeQuestionsList = () => {
     const answer = studentAnswers[id];
     console.log("Submitting answer for question", id, answer);
     // TODO: Connect to backend or store submission
+  };
+
+  // Handle running the code
+  const handleRun = (id) => {
+    const codeToRun = studentAnswers[id];
+    console.log("Running code for question", id, codeToRun);
+    // TODO: Integrate with backend or code execution service
   };
 
   return (
@@ -81,12 +87,14 @@ const CodeQuestionsList = () => {
                 </label>
                 <textarea
                   className="form-control"
-                  rows={10}
+                  rows={15}
                   value={
                     studentAnswers[questions[currentQuestionIndex].id] ||
                     `${
                       questions[currentQuestionIndex].function_signature || ""
-                    }\n\n# Write your code here\n`
+                    }\n\n# Write your code here\n\n${
+                      questions[currentQuestionIndex].wrapper_code || ""
+                    }`
                   }
                   onChange={(e) =>
                     handleChange(
@@ -96,22 +104,18 @@ const CodeQuestionsList = () => {
                   }
                 ></textarea>
 
-                {/* Display wrapper code for reference if available */}
-                {questions[currentQuestionIndex].wrapper_code && (
-                  <>
-                    <label className="mt-3">
-                      <strong>Wrapper Code (for reference):</strong>
-                    </label>
-                    <pre className="bg-light p-3 rounded">
-                      {questions[currentQuestionIndex].wrapper_code}
-                    </pre>
-                  </>
-                )}
-
                 {/* Conditional rendering for buttons */}
                 {questions.length === 1 ? (
-                  // Show only Submit button if there's one question
+                  // Show only Submit and Run buttons if there's one question
                   <div className="d-flex justify-content-end mt-3">
+                    <button
+                      className="btn btn-primary me-2"
+                      onClick={() =>
+                        handleRun(questions[currentQuestionIndex].id)
+                      }
+                    >
+                      Run
+                    </button>
                     <button
                       className="btn btn-success"
                       onClick={() =>
@@ -122,7 +126,7 @@ const CodeQuestionsList = () => {
                     </button>
                   </div>
                 ) : currentQuestionIndex === questions.length - 1 ? (
-                  // Show Back and Submit buttons for the last question
+                  // Show Back, Run, and Submit buttons for the last question
                   <div className="d-flex justify-content-between mt-3">
                     <button
                       className="btn btn-secondary"
@@ -132,14 +136,24 @@ const CodeQuestionsList = () => {
                     >
                       Back
                     </button>
-                    <button
-                      className="btn btn-success"
-                      onClick={() =>
-                        handleSubmit(questions[currentQuestionIndex].id)
-                      }
-                    >
-                      Submit
-                    </button>
+                    <div>
+                      <button
+                        className="btn btn-primary me-2"
+                        onClick={() =>
+                          handleRun(questions[currentQuestionIndex].id)
+                        }
+                      >
+                        Run
+                      </button>
+                      <button
+                        className="btn btn-success"
+                        onClick={() =>
+                          handleSubmit(questions[currentQuestionIndex].id)
+                        }
+                      >
+                        Submit
+                      </button>
+                    </div>
                   </div>
                 ) : (
                   // Show pagination controls for navigating questions
