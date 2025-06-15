@@ -37,6 +37,9 @@ export default function EditEssayQuestion({show, handleClose, questionDetails, h
         setTempFileName(null);
         setFileName(null);
         setError({});
+        if (fileInputRef.current) {
+            fileInputRef.current.value = null;
+        }   
         handleClose();
     };
 
@@ -58,7 +61,7 @@ export default function EditEssayQuestion({show, handleClose, questionDetails, h
             setTempAttachments(questionDetails.attachment_url);
             
         }
-    }, [questionDetails]);
+    }, [questionDetails, show]);
 
     const manageSaveChanges = async() => {
         const allowedFileTypes = ['image/png', 'image/jpeg', 'application/pdf', 'application/msword', 'video/mp4', 'audio/mpeg'];
