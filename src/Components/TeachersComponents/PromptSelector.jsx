@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Container, Card, Form, Button, Row, Col } from 'react-bootstrap';
+import { Container, Card, Form, Button, Row, Col, Alert } from 'react-bootstrap';
 import HeaderWithApiCount from './HeaderWithApiCount';
 
 import StandardAnalysis from './Prompts/StandardAnalysis';
 import QuickInsights from './Prompts/QuickInsights';
 import DetailedReport from './Prompts/DetailedReport';
 import CustomPrompt from './Prompts/CustomPrompt';
+
+import { ApiCallCountContext } from '../../Context/ApiCallCountContext'; // ✅ context import
 
 const predefinedPrompts = [
   StandardAnalysis,
@@ -29,7 +31,12 @@ const PromptSelector = () => {
   const [customPrompt, setCustomPrompt] = useState('');
   const [isCustomPrompt, setIsCustomPrompt] = useState(false);
 
+  // ✅ Get API usage info from context
+  const { count, MAX_CALLS_PER_DAY } = useContext(ApiCallCountContext);
+  const isLimitReached = count >= MAX_CALLS_PER_DAY;
+
   const handleSubmit = () => {
+    if (isLimitReached) return;
     const finalPrompt = isCustomPrompt ? customPrompt : selectedPrompt;
     navigate(`/teacher/exams/${examId}/ai-feedback`, {
       state: {
@@ -62,6 +69,12 @@ const PromptSelector = () => {
           <HeaderWithApiCount />
         </Card.Header>
         <Card.Body>
+          {isLimitReached && (
+            <Alert variant="danger" className="text-center">
+              You have reached your daily API usage limit ({MAX_CALLS_PER_DAY} calls).
+            </Alert>
+          )}
+
           <Row className="mb-3">
             <Col md={6}>
               <Form.Group>
@@ -119,7 +132,9 @@ const PromptSelector = () => {
             <Button
               variant="primary"
               onClick={handleSubmit}
-              disabled={isCustomPrompt && !customPrompt.trim()}
+              disabled={
+                (isCustomPrompt && !customPrompt.trim()) || isLimitReached
+              }
             >
               Generate Feedback
             </Button>
