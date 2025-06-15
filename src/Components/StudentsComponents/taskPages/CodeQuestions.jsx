@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import { useCodeQuestions } from "../../../Context/QuestionsContext/CodeContext";
 import "bootstrap/dist/css/bootstrap.min.css";
 import QuestionsNavigator from "../features/QuestionsNavigator";
 import PaginationControls from "../features/Pagination";
 
 const CodeQuestionsList = () => {
+  const { id } = useParams();
+  console.log("ID:", id);
   //fetch questions and message from the context
   const { fetchCodeQuestions, questions = [], message } = useCodeQuestions();
 
@@ -16,8 +19,9 @@ const CodeQuestionsList = () => {
 
   //fetch code questions when the component is mounted
   useEffect(() => {
-    fetchCodeQuestions();
-  }, [fetchCodeQuestions]);
+    fetchCodeQuestions({ examId: id });
+  }, [fetchCodeQuestions, id]);
+  
 
   //handle changes in the student code input
   const handleChange = (id, code) => {
