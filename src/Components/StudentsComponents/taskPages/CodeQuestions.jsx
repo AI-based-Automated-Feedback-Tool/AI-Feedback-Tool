@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useCodeQuestions } from "../../../Context/QuestionsContext/CodeContext";
+import { useTask } from "../../../Context/taskContext";
 import "bootstrap/dist/css/bootstrap.min.css";
 import QuestionsNavigator from "../features/QuestionsNavigator";
 import PaginationControls from "../features/Pagination";
@@ -8,57 +9,73 @@ import PaginationControls from "../features/Pagination";
 const CodeQuestionsList = () => {
   const { id } = useParams();
   console.log("ID:", id);
-  //fetch questions and message from the context
+
+  // Fetch code questions from context
   const { fetchCodeQuestions, questions = [], message } = useCodeQuestions();
 
-  //to store student answers for each question
+  // Fetch timeLeft and formatTime from useTask context
+  const { fetchExamWithQuestions, timeLeft, formatTime } = useTask();
+
+  // To store student answers for each question
   const [studentAnswers, setStudentAnswers] = useState({});
 
-  //to track the current question index for navigation
+  // To track the current question index for navigation
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
-  //fetch code questions when the component is mounted
+  // Fetch code questions and exam metadata (for timer) when the component is mounted
   useEffect(() => {
     fetchCodeQuestions({ examId: id });
-  }, [fetchCodeQuestions, id]);
-  
+    fetchExamWithQuestions(id);
+  }, [id, fetchCodeQuestions, fetchExamWithQuestions]);
 
-  //handle changes in the student code input
+  // Handle changes in the student code input
   const handleChange = (id, code) => {
     setStudentAnswers((prev) => ({ ...prev, [id]: code }));
   };
 
-  //handle submission of a student's answer for a specific question
+  // Handle submission of a student's answer for a specific question
   const handleSubmit = (id) => {
     const answer = studentAnswers[id];
     console.log("Submitting answer for question", id, answer);
+    // TODO: Connect to backend or store submission
   };
 
   return (
     <div className="container mt-5">
       <h1 className="text-center mb-4">Practice Code Questions</h1>
 
-      {/*display message if available */}
+      {/* Display remaining time like in TaskPage */}
+      {timeLeft !== null ? (
+        <div className="alert alert-info text-center">
+          Time Remaining: <strong>{formatTime(timeLeft)}</strong>
+        </div>
+      ) : (
+        <div className="text-center text-muted">Loading timer...</div>
+      )}
+
+      {/* Display message if available */}
       {message && <div className="alert alert-info">{message}</div>}
 
+      {/* Render questions if available */}
       {questions.length > 0 ? (
         <div className="row">
           {/* Main content area */}
           <div className="col-md-8 mb-5">
             <div className="card shadow-sm">
-              {/*card header with question number*/}
+              {/* Card header with question number */}
               <div className="card-header bg-info text-white">
                 <h5 className="card-title mb-0">
                   Question {currentQuestionIndex + 1}
                 </h5>
               </div>
               <div className="card-body">
-                {/*display question*/}
+                {/* Display question */}
                 <p>
                   <strong>{currentQuestionIndex + 1})</strong>{" "}
                   {questions[currentQuestionIndex].question_description}
                 </p>
-                {/*textarea for student to write their code*/}
+
+                {/* Textarea for student to write their code */}
                 <label>
                   <strong>Your Code:</strong>
                 </label>
@@ -79,7 +96,7 @@ const CodeQuestionsList = () => {
                   }
                 ></textarea>
 
-                {/*display wrapper code for reference if available*/}
+                {/* Display wrapper code for reference if available */}
                 {questions[currentQuestionIndex].wrapper_code && (
                   <>
                     <label className="mt-3">
@@ -97,13 +114,15 @@ const CodeQuestionsList = () => {
                   <div className="d-flex justify-content-end mt-3">
                     <button
                       className="btn btn-success"
-                      onClick={() => handleSubmit(questions[currentQuestionIndex].id)}
+                      onClick={() =>
+                        handleSubmit(questions[currentQuestionIndex].id)
+                      }
                     >
                       Submit
                     </button>
                   </div>
                 ) : currentQuestionIndex === questions.length - 1 ? (
-                  //show Back and Submit buttons for the last question
+                  // Show Back and Submit buttons for the last question
                   <div className="d-flex justify-content-between mt-3">
                     <button
                       className="btn btn-secondary"
@@ -115,13 +134,15 @@ const CodeQuestionsList = () => {
                     </button>
                     <button
                       className="btn btn-success"
-                      onClick={() => handleSubmit(questions[currentQuestionIndex].id)}
+                      onClick={() =>
+                        handleSubmit(questions[currentQuestionIndex].id)
+                      }
                     >
                       Submit
                     </button>
                   </div>
                 ) : (
-                  //show pagination controls for navigating questions
+                  // Show pagination controls for navigating questions
                   <PaginationControls
                     currentQuestionIndex={currentQuestionIndex}
                     setCurrentQuestionIndex={setCurrentQuestionIndex}
@@ -131,7 +152,8 @@ const CodeQuestionsList = () => {
               </div>
             </div>
           </div>
-          {/*sidebar for QuestionsNavigator */}
+
+          {/* Sidebar for QuestionsNavigator */}
           <div className="col-md-4">
             <QuestionsNavigator
               questions={questions}
@@ -141,7 +163,7 @@ const CodeQuestionsList = () => {
           </div>
         </div>
       ) : (
-        //display message if no questions are available
+        // Display message if no questions are available
         <div className="text-center">
           <p className="text-muted">No questions available</p>
         </div>
