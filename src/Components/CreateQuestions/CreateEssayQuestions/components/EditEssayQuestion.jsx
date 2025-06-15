@@ -1,9 +1,15 @@
 import { Modal, Form, Button, Row, Col } from 'react-bootstrap'
 import { useEffect } from 'react';
 import { useState } from 'react';
+import { uploadAttachment } from "../service/createEssayQuestionService"; // Adjust the import path as necessary
+
 
 export default function EditEssayQuestion({show, handleClose, questionDetails, handleSaveChanges, formState}) {
     const [fileName, setFileName] = useState(null);
+    const [tempQuestionText, setTempQuestionText] = useState('');
+    const [tempWordLimit, setTempWordLimit] = useState('');
+    const [tempPoints, setTempPoints] = useState('');
+    const [tempGradingNotes, setTempGradingNotes] = useState('');
     const [tempAttachments, setTempAttachments] = useState(null);
     const [tempFileName, setTempFileName] = useState(null);
 
@@ -21,8 +27,18 @@ export default function EditEssayQuestion({show, handleClose, questionDetails, h
         error,
         fileInputRef,
         validate,
-        resetForm
+        resetForm,
+        setError
     } = formState;
+
+    // function to close the dialog and reset temporary state
+    const handleExit = () => {
+        setTempAttachments(null);
+        setTempFileName(null);
+        setFileName(null);
+        setError({});
+        handleClose();
+    };
 
     // dialog form contents
     useEffect(() => {
@@ -34,27 +50,44 @@ export default function EditEssayQuestion({show, handleClose, questionDetails, h
                 setFileName(trimmedName);
                 setTempFileName(trimmedName);
             } 
-            setQuestionText(questionDetails.question_text);
-            setAttachments(questionDetails.attachment_url);
-            setWordLimit(questionDetails.word_limit);
-            setPoints(questionDetails.points);
-            setGradingNotes(questionDetails.grading_note);
+            setTempQuestionText(questionDetails.question_text);
+            setTempWordLimit(questionDetails.word_limit);
+            setTempPoints(questionDetails.points);
+            setTempGradingNotes(questionDetails.grading_note);
             setTempAttachments(questionDetails.attachment_url);
             
         }
     }, [questionDetails]);
 
     const manageSaveChanges = async() => {
-        const isValid = validate();
-        if (!isValid) {
+        const allowedFileTypes = ['image/png', 'image/jpeg', 'application/pdf', 'application/msword', 'video/mp4', 'audio/mpeg'];
+        //validate using temporary state
+        const validationError = {};
+        if (!tempQuestionText.trim()) {
+            validationError.question = "Question text is required.";
+        }
+        if (isNaN(tempWordLimit) || tempWordLimit <= 0) {
+            validationError.wordLimit = "Please enter a valid word limit.";
+        }
+        if (!tempPoints || isNaN(tempPoints) || tempPoints <= 0) {
+            validationError.points = "Please enter a valid points value.";
+        }
+        if (!tempGradingNotes.trim()) {
+            validationError.gradingNotes = "Grading notes are required.";
+        }
+        if (tempAttachments && tempAttachments instanceof File && !allowedFileTypes.includes(tempAttachments.type)) {
+            validationError.attachments = "Invalid file type.";
+        }
+        if (Object.keys(validationError).length > 0) {
+            setError(validationError);
             return;
         }
 
         let attachmentUrlToSave = tempAttachments;
+        let uploadedUrl = null;
         if (tempAttachments instanceof File) {
             try {
                 attachmentUrlToSave = await uploadAttachment(tempAttachments);
-
                 if (attachmentUrlToSave?.url?.publicUrl) {
                     uploadedUrl = attachmentUrlToSave.url.publicUrl;
                 } else {
@@ -64,41 +97,36 @@ export default function EditEssayQuestion({show, handleClose, questionDetails, h
             } catch (err) {
                 setError(prevError => ({
                     ...prevError,
-                    attachment: "Failed to upload attachment. Please try again."
+                    attachment: err.message || "Failed to upload attachment. Please try again."
                 }));
                 return;
             }            
         }
         const updatedQuestion = {
-            question_text: questionText,
-            attachment_url: attachmentUrlToSave,
-            word_limit: wordLimit,
-            points: points,
-            grading_note: gradingNotes,
+            question_text: tempQuestionText.trim(),
+            attachment_url: uploadedUrl || attachmentUrlToSave,
+            word_limit: Number(tempWordLimit),
+            points: Number(tempPoints),
+            grading_note: tempGradingNotes.trim(),
         }
+        setQuestionText(tempQuestionText.trim());
+        setWordLimit(Number(tempWordLimit));
+        setPoints(Number(tempPoints));
+        setGradingNotes(tempGradingNotes.trim());
         setAttachments(attachmentUrlToSave);
-        setFileName(tempFileName);
+
         handleSaveChanges(updatedQuestion);
-
-        // Reset form fields    
-        resetForm();
-        setTempAttachments(null);
-        setTempFileName(null);
+        handleExit();
     }
 
-    const handleExit = () => {
-        setTempAttachments(null);
-        setTempFileName(null);
-        resetForm();
-        setFileName(null);
-        handleClose();
-    }
+    
 
     return (
-    <Modal show={show} onHide={handleClose} size="lg">
+    <Modal show={show} onHide={handleExit} size="lg">
         <Modal.Header closeButton>
             <Modal.Title>Edit Question</Modal.Title>
         </Modal.Header>
+        {error.attachment && <div className="text-danger small">{error.attachment}</div>}
 
         <Modal.Body>
             <Form.Group className="mb-3">
@@ -106,8 +134,8 @@ export default function EditEssayQuestion({show, handleClose, questionDetails, h
                 <Form.Control
                     as="textarea"
                     rows={3}
-                    value={questionText}
-                    onChange={(e) => setQuestionText(e.target.value)}
+                    value={tempQuestionText}
+                    onChange={(e) => setTempQuestionText(e.target.value)}
                 />
                 {error.question && <div className="text-danger small">{error.question}</div>}
             </Form.Group>
@@ -178,8 +206,8 @@ export default function EditEssayQuestion({show, handleClose, questionDetails, h
                             <Form.Control 
                                 type="number" 
                                 placeholder="Enter the word limit" 
-                                value={wordLimit}
-                                onChange={(e) => setWordLimit(e.target.value)}
+                                value={tempWordLimit}
+                                onChange={(e) => setTempWordLimit(e.target.value)}
                             />
                             {error.wordLimit && <div className="text-danger small">{error.wordLimit}</div>}
                     </Form.Group>
@@ -190,8 +218,8 @@ export default function EditEssayQuestion({show, handleClose, questionDetails, h
                             <Form.Control 
                                 type="number" 
                                 placeholder="Enter points" 
-                                value={points}
-                                onChange={(e) => setPoints(e.target.value)}
+                                value={tempPoints}
+                                onChange={(e) => setTempPoints(e.target.value)}
                                 required
                             />
                             {error.points && <div className="text-danger small">{error.points}</div>}
@@ -205,8 +233,8 @@ export default function EditEssayQuestion({show, handleClose, questionDetails, h
                         as="textarea"
                         rows={3}
                         placeholder="Enter any specific instructions for the essay question evaluation..."
-                        value={gradingNotes}
-                        onChange={(e) => setGradingNotes(e.target.value)}
+                        value={tempGradingNotes}
+                        onChange={(e) => setTempGradingNotes(e.target.value)}
                         required
                     />
                     {error.gradingNotes && <div className="text-danger small">{error.gradingNotes}</div>}

@@ -140,6 +140,7 @@ export default function useEssayQuestionCreation(examId, question_count) {
         setShowEditQuestion,
         handleSaveChanges,
         validate,
-        resetForm
+        resetForm,
+        setError
     };
 }
