@@ -54,7 +54,7 @@ const ExamsPage = () => {
     if (currentTime >= startTime && currentTime <= endTime) {
       if (exam.type === "mcq") {
         navigate(`/dashboard/task/${exam.exam_id}`);
-      } else if (exam.exam_type === "code") {
+      } else if (exam.type === "code") {
         navigate(`/dashboard/code/${exam.exam_id}`);
       } else {
         alert("Unknown exam type.");
