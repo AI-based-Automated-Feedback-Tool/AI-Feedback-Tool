@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
-import { Container, Card, Alert, Spinner } from 'react-bootstrap';
+import { Container, Card, Alert, Spinner, Modal } from 'react-bootstrap';
 import { supabase } from '../../SupabaseAuth/supabaseClient';
 import { downloadAsTextFile } from '../../utils/downloadTextUtils';
 import { Button } from 'react-bootstrap';
@@ -20,12 +20,13 @@ const AIFeedbackPage = () => {
   const { examId } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
-  const { incrementCount } = useContext(ApiCallCountContext);
+  const { incrementCount, count, MAX_CALLS_PER_DAY } = useContext(ApiCallCountContext);
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [examTitle, setExamTitle] = useState('');
   const [feedback, setFeedback] = useState(null);
+  const [showLimitModal, setShowLimitModal] = useState(false);
 
   const hasFetched = useRef(false);
 
@@ -67,9 +68,9 @@ const AIFeedbackPage = () => {
   const fetchAnswers = async (submissionIds) => {
     if (submissionIds.length === 0) return [];
     const { data, error } = await supabase
-    .from('exam_submissions_answers')
-    .select('student_answer, is_correct, score, question_id')
-    .in('submission_id', submissionIds);
+      .from('exam_submissions_answers')
+      .select('student_answer, is_correct, score, question_id')
+      .in('submission_id', submissionIds);
 
 
     if (error) throw new Error('Failed to fetch submission answers');
@@ -94,14 +95,12 @@ const AIFeedbackPage = () => {
       try {
         const errorData = await response.json();
         if (errorData?.error) errorMsg = `API error: ${errorData.error}`;
-      } catch {
-        // ignore JSON parse errors
-      }
+      } catch { }
       throw new Error(errorMsg);
     }
 
     const data = await response.json();
-    incrementCount(); // Increment API call count
+    incrementCount();
     return data;
   };
 
@@ -111,6 +110,12 @@ const AIFeedbackPage = () => {
 
     const generateFeedback = async () => {
       try {
+        if (count >= MAX_CALLS_PER_DAY) {
+          setShowLimitModal(true);
+          setLoading(false);
+          return;
+        }
+
         setLoading(true);
         setError(null);
 
@@ -157,7 +162,7 @@ const AIFeedbackPage = () => {
     };
 
     generateFeedback();
-  }, [examId, location.state]);
+  }, [examId, location.state, count, MAX_CALLS_PER_DAY]);
 
   if (loading) return (
     <div className="text-center my-5">
@@ -166,77 +171,89 @@ const AIFeedbackPage = () => {
     </div>
   );
 
-  if (error) return (
-    <Container className="mt-4">
-      <Alert variant="danger">
-        <strong>Error:</strong> {error}
-      </Alert>
-    </Container>
-  );
-
   return (
     <Container className="mt-4">
-      <Card className="shadow-sm mb-4">
-        <Card.Header className="bg-primary text-white d-flex justify-content-between align-items-center">
-          <div>
-            <h4 className="mb-0">AI-Generated Teaching Feedback</h4>
-            <span className="small">Exam Name: {examTitle}</span>
-          </div>
+      {/* Modal for API limit reached */}
+      <Modal show={showLimitModal} onHide={() => navigate('/teacher/dashboard')} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Daily Limit Reached</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>You've reached your daily limit of feedback generations.</p>
+          <p>Please try again tomorrow. This limit helps us keep things running smoothly for everyone 😊</p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="primary" onClick={() => navigate('/teacher/dashboard')}>
+            Back to Dashboard
+          </Button>
+        </Modal.Footer>
+      </Modal>
 
-          <div className="d-flex gap-2">            
-            <Button
-              variant="light"
-              size="sm"
-              onClick={() =>
-                navigate(`/teacher/exams/${examId}/prompt-selector`, {
-                  state: {
-                    prompt: location.state?.prompt || '',
-                    aiProvider: location.state?.aiProvider || 'cohere'
-                  }
-                })
-              }
-            >
-              🔄 Modify Prompt
-            </Button>
+      {error && !showLimitModal && (
+        <Alert variant="danger">
+          <strong>Error:</strong> {error}
+        </Alert>
+      )}
 
-            <Button
-              variant="light"
-              size="sm"
-              onClick={() => downloadAsTextFile(feedback)}
-            >
-              📄 Download .TXT
-            </Button>    
-            <HeaderWithApiCount />        
-          </div>
-        </Card.Header>
-        <Card.Body>
-          {feedback ? (
-            <>
-              {feedback.overallSummary && (
-                <Section title="📊 Overall Summary" text={feedback.overallSummary} />
-              )}
-              {feedback.keyStrengths?.length > 0 && (
-                <Section title="✅ Key Strengths" items={feedback.keyStrengths} />
-              )}
-              {feedback.mostMissedQuestions?.length > 0 && (
-                <Section title="⚠️ Most Missed Questions" items={feedback.mostMissedQuestions} />
-              )}
-              {feedback.teachingSuggestions?.length > 0 && (
-                <Section title="💡 Teaching Suggestions" items={feedback.teachingSuggestions} />
-              )}
-              {feedback.nextSteps?.length > 0 && (
-                <Section title="🚀 Actionable Next Steps" items={feedback.nextSteps} />
-              )}
-            </>
-          ) : (
-            <p>No feedback generated.</p>
-          )}
-        </Card.Body>
-      </Card>
+      {feedback && !showLimitModal && (
+        <Card className="shadow-sm mb-4">
+          <Card.Header className="bg-primary text-white d-flex justify-content-between align-items-center">
+            <div>
+              <h4 className="mb-0">AI-Generated Teaching Feedback</h4>
+              <span className="small">Exam Name: {examTitle}</span>
+            </div>
 
-      <Alert variant="info">
-        <i className="bi bi-robot"></i> Feedback generated using custom AI analysis.
-      </Alert>
+            <div className="d-flex gap-2">
+              <Button
+                variant="light"
+                size="sm"
+                onClick={() =>
+                  navigate(`/teacher/exams/${examId}/prompt-selector`, {
+                    state: {
+                      prompt: location.state?.prompt || '',
+                      aiProvider: location.state?.aiProvider || 'cohere'
+                    }
+                  })
+                }
+              >
+                🔄 Modify Prompt
+              </Button>
+
+              <Button
+                variant="light"
+                size="sm"
+                onClick={() => downloadAsTextFile(feedback)}
+              >
+                📄 Download .TXT
+              </Button>
+              <HeaderWithApiCount />
+            </div>
+          </Card.Header>
+          <Card.Body>
+            {feedback.overallSummary && (
+              <Section title="📊 Overall Summary" text={feedback.overallSummary} />
+            )}
+            {feedback.keyStrengths?.length > 0 && (
+              <Section title="✅ Key Strengths" items={feedback.keyStrengths} />
+            )}
+            {feedback.mostMissedQuestions?.length > 0 && (
+              <Section title="⚠️ Most Missed Questions" items={feedback.mostMissedQuestions} />
+            )}
+            {feedback.teachingSuggestions?.length > 0 && (
+              <Section title="💡 Teaching Suggestions" items={feedback.teachingSuggestions} />
+            )}
+            {feedback.nextSteps?.length > 0 && (
+              <Section title="🚀 Actionable Next Steps" items={feedback.nextSteps} />
+            )}
+          </Card.Body>
+        </Card>
+      )}
+
+      {!showLimitModal && (
+        <Alert variant="info">
+          <i className="bi bi-robot"></i> Feedback generated using custom AI analysis.
+        </Alert>
+      )}
     </Container>
   );
 };
