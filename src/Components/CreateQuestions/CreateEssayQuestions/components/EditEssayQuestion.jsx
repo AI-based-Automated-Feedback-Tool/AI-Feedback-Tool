@@ -1,8 +1,12 @@
 import { Modal, Form, Button, Row, Col } from 'react-bootstrap'
 import { useEffect } from 'react';
-import useEssayQuestionCreation from '../hooks/useEssayQuestionCreation';
+import { useState } from 'react';
 
 export default function EditEssayQuestion({show, handleClose, questionDetails, handleSaveChanges, formState}) {
+    const [fileName, setFileName] = useState(null);
+    const [tempAttachments, setTempAttachments] = useState(null);
+    const [tempFileName, setTempFileName] = useState(null);
+
     const {
         questionText,
         attachments,
@@ -16,34 +20,78 @@ export default function EditEssayQuestion({show, handleClose, questionDetails, h
         setGradingNotes,
         error,
         fileInputRef,
+        validate,
+        resetForm
     } = formState;
+
+    // dialog form contents
     useEffect(() => {
         if (questionDetails) {
+            const url = questionDetails.attachment_url ? questionDetails.attachment_url : null;
+            const fileNameWithTimestamp = url ? url.split('/').pop() : null;
+            if (fileNameWithTimestamp) {
+                const trimmedName = fileNameWithTimestamp.substring(fileNameWithTimestamp.indexOf('_') + 1);
+                setFileName(trimmedName);
+                setTempFileName(trimmedName);
+            } 
             setQuestionText(questionDetails.question_text);
             setAttachments(questionDetails.attachment_url);
             setWordLimit(questionDetails.word_limit);
             setPoints(questionDetails.points);
             setGradingNotes(questionDetails.grading_note);
+            setTempAttachments(questionDetails.attachment_url);
+            
         }
     }, [questionDetails]);
 
-    const manageSaveChanges = () => {
+    const manageSaveChanges = async() => {
         const isValid = validate();
         if (!isValid) {
             return;
         }
 
+        let attachmentUrlToSave = tempAttachments;
+        if (tempAttachments instanceof File) {
+            try {
+                attachmentUrlToSave = await uploadAttachment(tempAttachments);
+
+                if (attachmentUrlToSave?.url?.publicUrl) {
+                    uploadedUrl = attachmentUrlToSave.url.publicUrl;
+                } else {
+                    throw new Error(attachmentUrlToSave.message || "Invalid upload response");
+                }
+            
+            } catch (err) {
+                setError(prevError => ({
+                    ...prevError,
+                    attachment: "Failed to upload attachment. Please try again."
+                }));
+                return;
+            }            
+        }
         const updatedQuestion = {
             question_text: questionText,
-            attachment_url: attachments,
+            attachment_url: attachmentUrlToSave,
             word_limit: wordLimit,
             points: points,
             grading_note: gradingNotes,
         }
+        setAttachments(attachmentUrlToSave);
+        setFileName(tempFileName);
         handleSaveChanges(updatedQuestion);
 
         // Reset form fields    
         resetForm();
+        setTempAttachments(null);
+        setTempFileName(null);
+    }
+
+    const handleExit = () => {
+        setTempAttachments(null);
+        setTempFileName(null);
+        resetForm();
+        setFileName(null);
+        handleClose();
     }
 
     return (
@@ -66,21 +114,58 @@ export default function EditEssayQuestion({show, handleClose, questionDetails, h
         
             <Form.Group className='mb-3'>
                 <Form.Label className='fw-bold'>Attachments</Form.Label>
-                    <Form.Control 
-                        type="file" 
+                {tempAttachments && typeof tempAttachments === 'string' && (
+                    <div className="mb-2">
+                        <span className="text-muted">
+                            Current Attachment: {tempFileName}
+                        </span>
+                        <a
+                            href={tempAttachments}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className='ms-2'
+                        >
+                            View Current Attachment
+                        </a>
+                        <span
+                            style={{
+                                color: '#6c757d',
+                                cursor: 'pointer',
+                                marginLeft: '8px'
+                            }}
+                                onClick={() => {
+                                    setTempAttachments(null);
+                                    setTempFileName(null);
+                                    if (fileInputRef.current) {
+                                        fileInputRef.current.value = null;
+                                    }
+                                }}
+                        >
+                            ❌
+                        </span>
+                    </div>
+                )}
+                    <Form.Control
+                        type="file"
                         accept='.png, .jpg, .jpeg, .pdf, .doc, .mp4, .mp3'
-                        onChange={(e) => setAttachments(e.target.files[0])}
+                        onChange={(e) => {
+                            setTempAttachments(e.target.files[0]);
+                            setTempFileName(e.target.files[0]?.name);
+                        }}
                         ref={fileInputRef}
                     />
-                    {attachments && <small className="text-muted">Selected: {attachments.name}<span 
-                    style={{ color: '#6c757d', cursor: 'pointer', marginLeft: '8px' }} 
-                    onClick={() => {
-                        setAttachments(null);
+                    {tempAttachments instanceof File && <small className="text-muted">Selected: {tempAttachments.name}<span
+                        style={{ color: '#6c757d', cursor: 'pointer', marginLeft: '8px' }}
+                        onClick={() => {
+                            if (tempAttachments && fileInputRef.current) {
+                                fileInputRef.current.value = null;
+                            }
+                        setTempAttachments(null);
+                        setTempFileName(null);
                         if (fileInputRef.current) {
                             fileInputRef.current.value = null;
-                        }
-                    }}
-                    >
+                        } 
+                    }}>
                         ❌
                     </span></small>}
                     {error.attachments && <div className="text-danger small">{error.attachments}</div>}
@@ -129,7 +214,7 @@ export default function EditEssayQuestion({show, handleClose, questionDetails, h
         </Modal.Body>
 
         <Modal.Footer>
-            <Button variant="secondary" onClick={handleClose}>Close</Button>
+            <Button variant="secondary" onClick={handleExit}>Close</Button>
             <Button variant="primary" onClick={manageSaveChanges}>Save Changes</Button>
         </Modal.Footer>
     </Modal>

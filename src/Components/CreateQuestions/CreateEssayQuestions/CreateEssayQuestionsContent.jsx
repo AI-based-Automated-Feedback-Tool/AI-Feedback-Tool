@@ -26,7 +26,9 @@ export default function CreateEssayQuestionsContent({examId, question_count}) {
     editQuestionIndex,
     showEditQuestion,
     setShowEditQuestion,
-    handleSaveChanges
+    handleSaveChanges,
+    validate,
+    resetForm
   } = useEssayQuestionCreation(examId, question_count);
     
     
@@ -52,7 +54,7 @@ export default function CreateEssayQuestionsContent({examId, question_count}) {
                 handleEditQuestion,
                 editQuestionIndex,
                 showEditQuestion,
-                setShowEditQuestion
+                setShowEditQuestion,
               }}/>                  
         </Col>   
         {question.length > 0 &&
@@ -80,7 +82,9 @@ export default function CreateEssayQuestionsContent({examId, question_count}) {
                 setPoints,
                 setGradingNotes,
                 error,
-                fileInputRef
+                fileInputRef,
+                validate,
+                resetForm
               }}
             />
           )}
