@@ -27,7 +27,7 @@ const Review = () => {
         disabled={loading}
         className={`${
           loading ? "bg-gray-400" : "bg-blue-500 hover:bg-blue-600"
-        } text-white px-4 py-2 rounded mb-4`}
+        } text-black px-4 py-2 rounded mb-4`}
       >
         {loading ? "Refreshing..." : "Refresh AI Feedback"}
       </button>
