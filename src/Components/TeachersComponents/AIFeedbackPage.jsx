@@ -100,7 +100,7 @@ const AIFeedbackPage = () => {
     }
 
     const data = await response.json();
-    incrementCount(); // Increment API call count
+    incrementCount();
     return data;
   };
 
@@ -173,14 +173,29 @@ const AIFeedbackPage = () => {
 
   return (
     <Container className="mt-4">
+      {/* Modal for API limit reached */}
+      <Modal show={showLimitModal} onHide={() => navigate('/teacher/dashboard')} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Daily Limit Reached</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>You've reached your daily limit of feedback generations.</p>
+          <p>Please try again tomorrow. This limit helps us keep things running smoothly for everyone 😊</p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="primary" onClick={() => navigate('/teacher/dashboard')}>
+            Back to Dashboard
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {error && !showLimitModal && (
         <Alert variant="danger">
           <strong>Error:</strong> {error}
         </Alert>
-    </Container>
-  );
+      )}
 
-  return (
-    <Container className="mt-4">
+      {feedback && !showLimitModal && (
         <Card className="shadow-sm mb-4">
           <Card.Header className="bg-primary text-white d-flex justify-content-between align-items-center">
             <div>
@@ -232,7 +247,7 @@ const AIFeedbackPage = () => {
             )}
           </Card.Body>
         </Card>
-      )
+      )}
 
       {!showLimitModal && (
         <Alert variant="info">
