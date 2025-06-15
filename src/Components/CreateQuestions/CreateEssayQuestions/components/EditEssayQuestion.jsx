@@ -46,7 +46,8 @@ export default function EditEssayQuestion({show, handleClose, questionDetails, h
             const url = questionDetails.attachment_url ? questionDetails.attachment_url : null;
             const fileNameWithTimestamp = url ? url.split('/').pop() : null;
             if (fileNameWithTimestamp) {
-                const trimmedName = fileNameWithTimestamp.substring(fileNameWithTimestamp.indexOf('_') + 1);
+                const spaceLessFileName = fileNameWithTimestamp.substring(fileNameWithTimestamp.indexOf('_') + 1);
+                const trimmedName = spaceLessFileName.replace(/%20/g, ' ')
                 setFileName(trimmedName);
                 setTempFileName(trimmedName);
             } 
@@ -109,11 +110,6 @@ export default function EditEssayQuestion({show, handleClose, questionDetails, h
             points: Number(tempPoints),
             grading_note: tempGradingNotes.trim(),
         }
-        setQuestionText(tempQuestionText.trim());
-        setWordLimit(Number(tempWordLimit));
-        setPoints(Number(tempPoints));
-        setGradingNotes(tempGradingNotes.trim());
-        setAttachments(attachmentUrlToSave);
 
         handleSaveChanges(updatedQuestion);
         handleExit();

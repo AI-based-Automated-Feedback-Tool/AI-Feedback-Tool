@@ -1,6 +1,16 @@
 import { Table, Button } from 'react-bootstrap';
 
 export default function EssayQuestionTable({questions, onDelete, onEdit}) {
+  // function to get only file name from URL
+  const getFileName = (url) => {
+    const fileNameWithTimestamp = url ? url.split('/').pop() : null;
+    if (fileNameWithTimestamp) {
+      const spaceLessFileName = fileNameWithTimestamp.substring(fileNameWithTimestamp.indexOf('_') + 1);
+      const trimmedName = spaceLessFileName.replace(/%20/g, ' ')
+      return trimmedName;
+                
+    } 
+  }
   return (
     <Table striped bordered hover responsive className="mt-4">
       <thead>
@@ -19,7 +29,7 @@ export default function EssayQuestionTable({questions, onDelete, onEdit}) {
           <tr key={idx}>
             <td>{idx + 1}</td>
             <td>{q.question_text}</td>
-            <td>{q.attachment_url}</td>
+            <td>{getFileName(q.attachment_url)}</td>
             <td>{q.word_limit}</td>
             <td>{q.points}</td>
             <td>{q.grading_note}</td>
