@@ -87,7 +87,7 @@ function AppContent() {
                   {/*students route */}
                   <Route path="/dashboard" element={<ProtectedRoute />}>
                     <Route path="task/:id" element={<TaskPage />} />
-                    <Route path="task/:id/codeQuestions" element={<CodeQuestions/>} />
+                    <Route path="code/:id" element={<CodeQuestions/>} />
                   </Route>
                   <Route
                     path="/student/courses/:userId"
