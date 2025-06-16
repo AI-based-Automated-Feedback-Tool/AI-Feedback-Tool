@@ -1,19 +1,19 @@
 import React, { useEffect, useState, useContext } from "react";
 import { useParams } from "react-router-dom";
-import { UserContext } from "../../../Context/UserContext"; // Import UserContext
+import { UserContext } from "../../../Context/UserContext";
 import { useCodeQuestions } from "../../../Context/QuestionsContext/CodeContext";
 import { useTask } from "../../../Context/taskContext";
 import "bootstrap/dist/css/bootstrap.min.css";
 import QuestionsNavigator from "../features/QuestionsNavigator";
-import PaginationControls from "../features/Pagination";
 
 const CodeQuestionsList = () => {
+  //get exam id from URL params
   const { id } = useParams();
 
-  // Get userId and fetchUserData from UserContext
+  //get user info and methods from context
   const { userId, fetchUserData, userData } = useContext(UserContext);
 
-  // Fetch code questions from context
+  //get question-related methods and data
   const {
     fetchCodeQuestions,
     questions = [],
@@ -23,34 +23,61 @@ const CodeQuestionsList = () => {
     studentAnswers,
   } = useCodeQuestions();
 
-  // Fetch timeLeft and formatTime from useTask context
+  //get exam and timer methods from task context
   const { fetchExamWithQuestions, timeLeft, formatTime, task } = useTask();
 
-  // To track the current question index for navigation
+  //state for current question index
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  //to control review screen visibility
+  const [reviewMode, setReviewMode] = useState(false);
+  //to track submission
+  const [submitted, setSubmitted] = useState(false);
+  //to show tab switch warning
+  const [showTabWarning, setShowTabWarning] = useState(false);
+  //to store code output
+  const [runOutput, setRunOutput] = useState("");
 
-  // Fetch code questions and exam metadata (for timer) when the component is mounted
+  //load questions and exam data when component mounts or id changes
   useEffect(() => {
     fetchCodeQuestions({ examId: id });
     fetchExamWithQuestions(id);
-  }, [id, fetchCodeQuestions, fetchExamWithQuestions]);
+  }, [id]);
 
-  // Optional: fetch user data when userId changes
+  //fetch user data if userId is available
   useEffect(() => {
     if (userId) {
       fetchUserData(userId);
     }
-  }, [userId, fetchUserData]);
+  }, [userId]);
 
-  // Handle changes in the student code input
+  //monitor tab switching and show warning
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        setShowTabWarning(true);
+        setTimeout(() => setShowTabWarning(false), 3000);
+      }
+    };
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, []);
+
+  //update student answer for a question
   const handleChange = (id, code) => {
     handleCodeChange(id, code);
   };
 
-  // Handle submission of a student's answer for a specific question
-  const handleSubmit = async (examId) => {
+  //enter review mode before final submission
+  const handleInitialSubmit = () => {
+    setReviewMode(true);
+  };
+
+  //finalize submission and record time taken
+  const handleFinalSubmit = async () => {
     if (!userId) {
-      alert("You must be logged in to submit answers.");
+      alert("You must be logged in to submit.");
       return;
     }
 
@@ -58,24 +85,83 @@ const CodeQuestionsList = () => {
 
     await submitAllAnswers({
       userId,
-      examId,
+      examId: id,
       timeTaken,
-      focusLossCount: 0, // if you want to track it later
+      focusLossCount: 0,
     });
+
+    setSubmitted(true);
   };
+
+  //simulate running code and show output placeholder
+  const handleRunCode = () => {
+    setRunOutput("⏳ Running code...\n\n(Output will appear here later)");
+  };
+
+  //show thank you message on submission
+  if (submitted) {
+    return (
+      <div className="container mt-5 text-center">
+        <h2 className="text-success mb-4">✅ Submission Successful</h2>
+        <p>Thank you for submitting your answers.</p>
+      </div>
+    );
+  }
+
+  //show review screen before final submission
+  if (reviewMode) {
+    return (
+      <div className="container mt-5">
+        <h3 className="text-primary text-center mb-4">
+          📝 Review Your Answers
+        </h3>
+        <ul className="list-group">
+          {questions.map((q, idx) => (
+            <li key={q.id} className="list-group-item">
+              <strong>Q{idx + 1}:</strong> {q.question_description}
+              <br />
+              <strong>Your Code:</strong>
+              <pre className="bg-light p-2 mt-2 rounded">
+                {studentAnswers[q.id] || "Not answered"}
+              </pre>
+            </li>
+          ))}
+        </ul>
+
+        <div className="d-flex justify-content-center mt-4">
+          <button
+            className="btn btn-secondary me-3"
+            onClick={() => setReviewMode(false)}
+          >
+            Back to Questions
+          </button>
+          <button className="btn btn-success" onClick={handleFinalSubmit}>
+            ✅ Confirm & Submit
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="container mt-5">
+      {/*show warning when tab is switched*/}
+      {!reviewMode && showTabWarning && (
+        <div className="fixed-top bg-danger text-white text-center py-2 fw-bold">
+          ⚠️ You switched tabs. This is being monitored.
+        </div>
+      )}
+
       <h1 className="text-center mb-4">Practice Code Questions</h1>
 
-      {/* Optionally show user name */}
+      {/*show welcome message*/}
       {userData && (
         <div className="mb-3 text-center">
           <strong>Welcome, {userData.name}!</strong>
         </div>
       )}
 
-      {/* Display remaining time like in TaskPage */}
+      {/*show countdown timer*/}
       {timeLeft !== null ? (
         <div className="alert alert-info text-center">
           Time Remaining: <strong>{formatTime(timeLeft)}</strong>
@@ -84,29 +170,27 @@ const CodeQuestionsList = () => {
         <div className="text-center text-muted">Loading timer...</div>
       )}
 
-      {/* Display message if available */}
+      {/*show any message from context*/}
       {message && <div className="alert alert-info">{message}</div>}
 
-      {/* Render questions if available */}
+      {/*render question section if questions are available*/}
       {questions.length > 0 ? (
         <div className="row">
-          {/* Main content area */}
           <div className="col-md-8 mb-5">
             <div className="card shadow-sm">
-              {/* Card header with question number */}
               <div className="card-header bg-info text-white">
                 <h5 className="card-title mb-0">
                   Question {currentQuestionIndex + 1}
                 </h5>
               </div>
               <div className="card-body">
-                {/* Display question */}
+                {/*show question description*/}
                 <p>
                   <strong>{currentQuestionIndex + 1})</strong>{" "}
                   {questions[currentQuestionIndex].question_description}
                 </p>
 
-                {/* Textarea for student to write their code */}
+                {/*code input area*/}
                 <label>
                   <strong>Your Code:</strong>
                 </label>
@@ -115,34 +199,37 @@ const CodeQuestionsList = () => {
                   rows={15}
                   value={
                     studentAnswers[questions[currentQuestionIndex].id] ||
-                    `${
-                      questions[currentQuestionIndex].function_signature || ""
-                    }\n\n# Write your code here\n\n${
-                      questions[currentQuestionIndex].wrapper_code || ""
-                    }`
+                    `${questions[currentQuestionIndex].function_signature || ""}
+                    # Write your code here
+                    ${questions[currentQuestionIndex].wrapper_code || ""}`
                   }
                   onChange={(e) =>
-                    handleChange(questions[currentQuestionIndex].id, e.target.value)
+                    handleChange(
+                      questions[currentQuestionIndex].id,
+                      e.target.value
+                    )
                   }
                 ></textarea>
 
-                {/* Conditional rendering for buttons */}
-                {questions.length === 1 ? (
-                  // Show only Submit and Run buttons if there's one question
-                  <div className="d-flex justify-content-end mt-3">
-                    <button className="btn btn-primary me-2">Run</button>
-                    <button
-                      className="btn btn-success"
-                      onClick={() =>
-                        handleSubmit(questions[currentQuestionIndex].id)
-                      }
-                    >
-                      Submit
-                    </button>
-                  </div>
-                ) : currentQuestionIndex === questions.length - 1 ? (
-                  // Show Back, Run, and Submit buttons for the last question
-                  <div className="d-flex justify-content-between mt-3">
+                {/* run code button */}
+                <button
+                  className="btn btn-warning mt-3"
+                  onClick={handleRunCode}
+                >
+                  ▶️ Run Code
+                </button>
+
+                {/*output display area*/}
+                <div className="mt-3">
+                  <strong>Output:</strong>
+                  <pre className="bg-light p-2 rounded">
+                    {runOutput || "Output will appear here..."}
+                  </pre>
+                </div>
+
+                {/*navigation buttons*/}
+                <div className="d-flex justify-content-between mt-4">
+                  {currentQuestionIndex > 0 && (
                     <button
                       className="btn btn-secondary"
                       onClick={() =>
@@ -151,31 +238,31 @@ const CodeQuestionsList = () => {
                     >
                       Back
                     </button>
-                    <div>
-                      <button className="btn btn-primary me-2">Run</button>
-                      <button
-                        className="btn btn-success"
-                        onClick={() =>
-                          handleSubmit(questions[currentQuestionIndex].id)
-                        }
-                      >
-                        Submit
-                      </button>
-                    </div>
-                  </div>
-                ) : (
-                  // Show pagination controls for navigating questions
-                  <PaginationControls
-                    currentQuestionIndex={currentQuestionIndex}
-                    setCurrentQuestionIndex={setCurrentQuestionIndex}
-                    questions={questions}
-                  />
-                )}
+                  )}
+
+                  {currentQuestionIndex < questions.length - 1 ? (
+                    <button
+                      className="btn btn-primary ms-auto"
+                      onClick={() =>
+                        setCurrentQuestionIndex(currentQuestionIndex + 1)
+                      }
+                    >
+                      Next
+                    </button>
+                  ) : (
+                    <button
+                      className="btn btn-success ms-auto"
+                      onClick={handleInitialSubmit}
+                    >
+                      Submit
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Sidebar for QuestionsNavigator */}
+          {/*question navigator panel*/}
           <div className="col-md-4">
             <QuestionsNavigator
               questions={questions}
@@ -185,7 +272,6 @@ const CodeQuestionsList = () => {
           </div>
         </div>
       ) : (
-        // Display message if no questions are available
         <div className="text-center">
           <p className="text-muted">No questions available</p>
         </div>
