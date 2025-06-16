@@ -27,13 +27,25 @@ export default function EssayQuestionTable({questions, onDelete, onEdit}) {
       <tbody>
         {questions.map((q, idx) => (
           <tr key={idx}>
-            <td>{idx + 1}</td>
-            <td>{q.question_text}</td>
-            <td>{getFileName(q.attachment_url)}</td>
-            <td>{q.word_limit}</td>
-            <td>{q.points}</td>
-            <td>{q.grading_note}</td>
-            
+            <td>
+              {idx + 1}
+            </td>
+            <td style={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}>
+              {q.question_text}
+            </td>
+            <td style={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}>
+              {getFileName(q.attachment_url)}
+            </td>
+            <td>
+              {q.word_limit}
+            </td>
+            <td>
+              {q.points}
+            </td>
+            <td style={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}>
+              {q.grading_note}
+            </td>
+
             <td>
                 <div className="d-flex flex-wrap gap-2 justify-content-center">
                     <Button 

@@ -19,10 +19,18 @@ export default function CodeQuestionTable({questions, onDelete, onEdit}) {
       <tbody>
         {questions.map((q, idx) => (
           <tr key={idx}>
-            <td>{idx + 1}</td>
-            <td>{q.question}</td>
-            <td>{q.functionSignature}</td>
-            <td>{q.wrapperCode}</td>
+            <td>
+              {idx + 1}
+            </td>
+            <td style={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}>
+              {q.question}
+            </td>
+            <td style={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}>
+              {q.functionSignature}
+            </td>
+            <td style={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}>
+              {q.wrapperCode}
+            </td>
             <td>
                 <Table size="sm" bordered>
                   <thead>
