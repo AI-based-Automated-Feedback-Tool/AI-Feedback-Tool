@@ -18,3 +18,24 @@ export const uploadAttachment = async (file) => {
         throw error;
     }
 }
+
+export const removeAttachment = async (filePath) => {
+    try {
+        const res = await fetch(`http://localhost:5000/api/essayQuestions/delete-attachment`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ filePath }),
+        });
+        if (!res.ok) {
+            const error = await res.json();
+            throw new Error(error.message || 'Failed to remove attachment');
+        }
+        const data = await res.json();
+        return data;
+    } catch (error) {
+        console.error('Error removing attachment:', error);
+        throw error;
+    }
+}

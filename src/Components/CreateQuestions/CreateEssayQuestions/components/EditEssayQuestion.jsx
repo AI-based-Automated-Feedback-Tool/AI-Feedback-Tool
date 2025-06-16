@@ -1,7 +1,7 @@
 import { Modal, Form, Button, Row, Col } from 'react-bootstrap'
 import { useEffect } from 'react';
 import { useState } from 'react';
-import { uploadAttachment } from "../service/createEssayQuestionService"; // Adjust the import path as necessary
+import { uploadAttachment, removeAttachment } from "../service/createEssayQuestionService";
 
 
 export default function EditEssayQuestion({show, handleClose, questionDetails, handleSaveChanges, formState}) {
@@ -41,6 +41,12 @@ export default function EditEssayQuestion({show, handleClose, questionDetails, h
             fileInputRef.current.value = null;
         }   
         handleClose();
+    };
+
+    //function to get relative path of the file
+    const getRelativeFilePath = (url) => {
+        const parts = url.split('/storage/v1/object/public/essay-attachments/');
+        return parts[1] || '';
     };
 
     // dialog form contents
@@ -89,6 +95,7 @@ export default function EditEssayQuestion({show, handleClose, questionDetails, h
 
         let attachmentUrlToSave = tempAttachments;
         let uploadedUrl = null;
+        // if a new attachment is selected, upload it
         if (tempAttachments instanceof File) {
             try {
                 attachmentUrlToSave = await uploadAttachment(tempAttachments);
@@ -106,6 +113,21 @@ export default function EditEssayQuestion({show, handleClose, questionDetails, h
                 return;
             }            
         }
+        // delete the previous attachment if a new one is uploaded
+        if (questionDetails.attachment_url && (questionDetails.attachment_url !== attachmentUrlToSave || uploadedUrl)) {
+            const relativeFilePath = getRelativeFilePath(questionDetails.attachment_url);
+            try {
+                await removeAttachment(relativeFilePath);
+            } catch (err) {
+                setError(prevError => ({
+                    ...prevError,
+                    attachment: err.message || "Failed to remove previous attachment."
+                }));
+                return;
+            }
+        }
+
+        // create the updated question object
         const updatedQuestion = {
             question_text: tempQuestionText.trim(),
             attachment_url: uploadedUrl || attachmentUrlToSave,
@@ -125,9 +147,9 @@ export default function EditEssayQuestion({show, handleClose, questionDetails, h
         <Modal.Header closeButton>
             <Modal.Title>Edit Question</Modal.Title>
         </Modal.Header>
-        {error.attachment && <div className="text-danger small">{error.attachment}</div>}
 
         <Modal.Body>
+            {error.attachment && <div className="text-danger small mb-2">{error.attachment}</div>}
             <Form.Group className="mb-3">
                 <Form.Label>Question</Form.Label>
                 <Form.Control
