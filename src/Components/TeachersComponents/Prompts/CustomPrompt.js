@@ -5,13 +5,20 @@ const CustomPrompt = {
 [SUBMISSIONS] - Will be replaced with student submissions
 [ANSWERS] - Will be replaced with correct answers
 
-Suggested structure:
+⚠️ GUIDELINES:
+- When referencing specific questions, use question numbers (e.g., Q1, Q2) or short, clear titles.
+- Avoid internal database IDs or UUIDs in your analysis.
+- Focus on clarity and usefulness for teachers and students.
+
+✅ Suggested structure:
 {
   "analysis": "Your custom analysis requirements",
-  "strengths": ["What to look for"],
-  "weaknesses": ["What to analyze"],
-  "recommendations": ["What to suggest"]
-}`
+  "strengths": ["Key concepts students performed well in"],
+  "weaknesses": ["Areas or questions students struggled with (use Q1, Q2, etc.)"],
+  "recommendations": ["Your actionable suggestions for improvement"]
+}
+
+Make sure to return a valid JSON object only, using keys appropriate to your structure.`
 };
 
 export default CustomPrompt;
