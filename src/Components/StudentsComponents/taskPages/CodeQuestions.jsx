@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useParams } from "react-router-dom";
+import { UserContext } from "../../../Context/UserContext"; // Import UserContext
 import { useCodeQuestions } from "../../../Context/QuestionsContext/CodeContext";
 import { useTask } from "../../../Context/taskContext";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -9,14 +10,21 @@ import PaginationControls from "../features/Pagination";
 const CodeQuestionsList = () => {
   const { id } = useParams();
 
+  // Get userId and fetchUserData from UserContext
+  const { userId, fetchUserData, userData } = useContext(UserContext);
+
   // Fetch code questions from context
-  const { fetchCodeQuestions, questions = [], message } = useCodeQuestions();
+  const {
+    fetchCodeQuestions,
+    questions = [],
+    message,
+    submitAllAnswers,
+    handleCodeChange,
+    studentAnswers,
+  } = useCodeQuestions();
 
   // Fetch timeLeft and formatTime from useTask context
-  const { fetchExamWithQuestions, timeLeft, formatTime } = useTask();
-
-  // To store student answers for each question
-  const [studentAnswers, setStudentAnswers] = useState({});
+  const { fetchExamWithQuestions, timeLeft, formatTime, task } = useTask();
 
   // To track the current question index for navigation
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -27,28 +35,45 @@ const CodeQuestionsList = () => {
     fetchExamWithQuestions(id);
   }, [id, fetchCodeQuestions, fetchExamWithQuestions]);
 
+  // Optional: fetch user data when userId changes
+  useEffect(() => {
+    if (userId) {
+      fetchUserData(userId);
+    }
+  }, [userId, fetchUserData]);
+
   // Handle changes in the student code input
   const handleChange = (id, code) => {
-    setStudentAnswers((prev) => ({ ...prev, [id]: code }));
+    handleCodeChange(id, code);
   };
 
   // Handle submission of a student's answer for a specific question
-  const handleSubmit = (id) => {
-    const answer = studentAnswers[id];
-    console.log("Submitting answer for question", id, answer);
-    // TODO: Connect to backend or store submission
-  };
+  const handleSubmit = async (examId) => {
+    if (!userId) {
+      alert("You must be logged in to submit answers.");
+      return;
+    }
 
-  // Handle running the code
-  const handleRun = (id) => {
-    const codeToRun = studentAnswers[id];
-    console.log("Running code for question", id, codeToRun);
-    // TODO: Integrate with backend or code execution service
+    const timeTaken = task.duration - timeLeft;
+
+    await submitAllAnswers({
+      userId,
+      examId,
+      timeTaken,
+      focusLossCount: 0, // if you want to track it later
+    });
   };
 
   return (
     <div className="container mt-5">
       <h1 className="text-center mb-4">Practice Code Questions</h1>
+
+      {/* Optionally show user name */}
+      {userData && (
+        <div className="mb-3 text-center">
+          <strong>Welcome, {userData.name}!</strong>
+        </div>
+      )}
 
       {/* Display remaining time like in TaskPage */}
       {timeLeft !== null ? (
@@ -97,10 +122,7 @@ const CodeQuestionsList = () => {
                     }`
                   }
                   onChange={(e) =>
-                    handleChange(
-                      questions[currentQuestionIndex].id,
-                      e.target.value
-                    )
+                    handleChange(questions[currentQuestionIndex].id, e.target.value)
                   }
                 ></textarea>
 
@@ -108,14 +130,7 @@ const CodeQuestionsList = () => {
                 {questions.length === 1 ? (
                   // Show only Submit and Run buttons if there's one question
                   <div className="d-flex justify-content-end mt-3">
-                    <button
-                      className="btn btn-primary me-2"
-                      onClick={() =>
-                        handleRun(questions[currentQuestionIndex].id)
-                      }
-                    >
-                      Run
-                    </button>
+                    <button className="btn btn-primary me-2">Run</button>
                     <button
                       className="btn btn-success"
                       onClick={() =>
@@ -137,14 +152,7 @@ const CodeQuestionsList = () => {
                       Back
                     </button>
                     <div>
-                      <button
-                        className="btn btn-primary me-2"
-                        onClick={() =>
-                          handleRun(questions[currentQuestionIndex].id)
-                        }
-                      >
-                        Run
-                      </button>
+                      <button className="btn btn-primary me-2">Run</button>
                       <button
                         className="btn btn-success"
                         onClick={() =>
