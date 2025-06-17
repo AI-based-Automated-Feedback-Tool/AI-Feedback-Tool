@@ -6,8 +6,6 @@ import { Form, Button, Container, Row, Col, Card, Alert } from "react-bootstrap"
 
 export default function EssayQuestionForm({ formState }) {
     const {
-        question,
-        examId,
         questionText,
         attachments,
         wordLimit,

@@ -138,8 +138,8 @@ export default function useEssayQuestionCreation(examId, question_count) {
 
     const saveAllQuestions = async () => {
         setLoading(true);
-        setError(null)
-        try{
+        setError({});
+        try {
             for (const q of question) {
                 const payload = {
                     question_text: q.question_text,
