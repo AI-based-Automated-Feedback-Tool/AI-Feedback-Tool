@@ -1,6 +1,6 @@
 //API service to fetch courses
 export const getCourses = async (userId) => {
-    const res = await fetch(`http://localhost:5000/api/teacher/reports/course?userId=${userId}`);
+    const res = await fetch(`http://localhost:3000/api/teacher/reports/course?userId=${userId}`);
     const data = await res.json();
     if (res.ok) {
         return data.courses;
@@ -14,7 +14,7 @@ export const getExamTitles = async (selectedCourse) => {
     if (!selectedCourse) {
         throw new Error("Course ID is required");
     }   
-    const res = await fetch(`http://localhost:5000/api/teacher/reports/exams?course_id=${selectedCourse}`)
+    const res = await fetch(`http://localhost:3000/api/teacher/reports/exams?course_id=${selectedCourse}`)
     const json = await res.json();
     if (res.ok){
         return json.exams;
@@ -29,7 +29,7 @@ export const getStudents = async (selectedCourse) => {
     if (!selectedCourse) {
         throw new Error("Course ID is required");
     }        
-    const res = await fetch(`http://localhost:5000/api/teacher/reports/students?course_id=${selectedCourse}`)
+    const res = await fetch(`http://localhost:3000/api/teacher/reports/students?course_id=${selectedCourse}`)
     const json = await res.json();
     if (res.ok){
         return json.students;
@@ -44,7 +44,7 @@ export const getExamSubmissions = async (selectedExam) => {
     if (!selectedExam) {
         throw new Error("Exam selection is required");
     }        
-    const res = await fetch(`http://localhost:5000/api/teacher/reports/exam_submission?examId=${selectedExam}`)
+    const res = await fetch(`http://localhost:3000/api/teacher/reports/exam_submission?examId=${selectedExam}`)
     const json = await res.json();
     if (res.ok){
         return json.examSubmissions;
@@ -59,7 +59,7 @@ export const getMcqQuestions = async (selectedExam) => {
     if (!selectedExam) {
         throw new Error("Exam selection is required");
     }        
-    const res = await fetch(`http://localhost:5000/api/teacher/reports/mcq?examId=${selectedExam}`)
+    const res = await fetch(`http://localhost:3000/api/teacher/reports/mcq?examId=${selectedExam}`)
     const json = await res.json();
     if (res.ok){
         return json.mcqQuestions;
@@ -74,7 +74,7 @@ export const getSubmittedAnswers = async (submissionId) => {
     if (!submissionId) {
         throw new Error("Submission ID is required");
     }        
-    const res = await fetch(`http://localhost:5000/api/teacher/reports/submitted_answers?submissionId=${submissionId}`)
+    const res = await fetch(`http://localhost:3000/api/teacher/reports/submitted_answers?submissionId=${submissionId}`)
     const json = await res.json();
     if (res.ok){
         return json.submittedAnswers;
