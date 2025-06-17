@@ -1,8 +1,12 @@
 import { useState, useEffect } from 'react';
-import { uploadAttachment } from "../service/createEssayQuestionService"; // Adjust the import path as necessary
+import { uploadAttachment } from "../service/createEssayQuestionService"; 
 import { useRef } from 'react';
+import { supabase } from "../../../../SupabaseAuth/supabaseClient"; 
+import { createEssayQuestion } from "../service/createEssayQuestionService"; 
+import { useNavigate} from 'react-router-dom';
 
 export default function useEssayQuestionCreation(examId, question_count) {
+    const [userId, setUserId] = useState(null);
     const [question, setQuestion] = useState([]);
     const [questionText, setQuestionText] = useState("");
     const [attachments, setAttachments] = useState(null);
@@ -12,8 +16,23 @@ export default function useEssayQuestionCreation(examId, question_count) {
     const [error, setError] = useState({});
     const [showEditQuestion, setShowEditQuestion] = useState(false);
     const [editQuestionIndex, setEditQuestionIndex] = useState(null);
+    const [loading, setLoading] = useState(false);
 
     const fileInputRef = useRef(null);
+
+    const navigate = useNavigate();
+
+    useEffect(() => {
+            const getUserId = async () => {
+                const { data, error } = await supabase.auth.getUser();
+                if (error) {
+                    setErrors("Failed to get user ID");
+                } else {
+                    setUserId(data.user.id);
+                }
+            }
+            getUserId();
+        }, []);
 
     //To check allowed file type attached
     const allowedFileTypes = ['image/png', 'image/jpeg', 'application/pdf', 'application/msword', 'video/mp4', 'audio/mpeg'];
@@ -107,7 +126,7 @@ export default function useEssayQuestionCreation(examId, question_count) {
         setEditQuestionIndex(index);
         setShowEditQuestion(true);
     };
-    // Function to save changes after editing a question
+
     // Function to save changes after editing a question
     const handleSaveChanges = (updatedQuestion) => {
         const updatedQuestions = [...question];
@@ -116,6 +135,37 @@ export default function useEssayQuestionCreation(examId, question_count) {
         setShowEditQuestion(false);
         setEditQuestionIndex(null);
     };
+
+    const saveAllQuestions = async () => {
+        setLoading(true);
+        setError(null)
+        try{
+            for (const q of question) {
+                const payload = {
+                    question_text: q.question_text,
+                    attachment_url: q.attachment_url,
+                    word_limit: Number(q.word_limit),
+                    points: Number(q.points),
+                    grading_note: q.grading_note,
+                    exam_id: examId,
+                    user_id: userId
+                };
+                await createEssayQuestion(payload);
+            }
+            setQuestion([]);
+            resetForm();
+            //setWarning("");
+            alert("All questions saved successfully!");
+            navigate("/teacher"); // Redirect to teacher dashboard
+        } catch (error) {
+            console.error("Error saving questions:", error);
+            setError(
+                {message: "Failed to connect to server. Please check your connection and try again."}
+            );
+        } finally {
+            setLoading(false);
+        }
+    }
 
     return {
         question,
@@ -141,6 +191,8 @@ export default function useEssayQuestionCreation(examId, question_count) {
         handleSaveChanges,
         validate,
         resetForm,
-        setError
+        setError,
+        saveAllQuestions,
+        loading,
     };
 }

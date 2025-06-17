@@ -29,7 +29,9 @@ export default function CreateEssayQuestionsContent({examId, question_count}) {
     handleSaveChanges,
     validate,
     resetForm,
-    setError
+    setError,
+    saveAllQuestions,
+    loading,
   } = useEssayQuestionCreation(examId, question_count);
     
     
@@ -90,6 +92,19 @@ export default function CreateEssayQuestionsContent({examId, question_count}) {
               }}
             />
           )}
+          {/* Submit Button */}
+          <div className="d-flex justify-content-end" >
+            <Button variant="primary" onClick={saveAllQuestions} disabled={loading}>
+              {loading ? (
+                <>
+                  <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                    Saving Questions...
+                  </>
+              ) : (
+                "➕ Save All Questions"
+              )}                              
+            </Button>
+          </div> 
         </>
         }               
     </>

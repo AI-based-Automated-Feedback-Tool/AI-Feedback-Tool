@@ -39,3 +39,24 @@ export const removeAttachment = async (filePath) => {
         throw error;
     }
 }
+
+export const createEssayQuestion = async (questionData) => {
+    try {
+        const res = await fetch(`http://localhost:5000/api/createEssayQuestion`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(questionData),
+        });
+        if (!res.ok) {
+            const error = await res.json();
+            throw new Error(error.message || 'Failed to create essay question');
+        }
+        const data = await res.json();
+        return data;
+    } catch (error) {
+        console.error('Error creating essay question:', error);
+        throw error;
+    }
+}
