@@ -1,6 +1,6 @@
 // src/components/HeaderWithApiCount.jsx
 import React, { useContext } from 'react';
-import { ApiCallCountContext } from '../../Context/ApiCallCountContext';
+import { ApiCallCountContext } from '../../../Context/ApiCallCountContext';
 
 const HeaderWithApiCount = () => {
   const { count, MAX_CALLS_PER_DAY } = useContext(ApiCallCountContext);

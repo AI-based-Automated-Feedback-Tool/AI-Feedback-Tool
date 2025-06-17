@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useContext } from "react";
 import { Container, Card, Form, Row, Col, Button, Spinner, Alert } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { supabase } from "../../SupabaseAuth/supabaseClient";
-import HeaderWithApiCount from '../../Components/TeachersComponents/HeaderWithApiCount';
-import { ApiCallCountContext } from "../../Context/ApiCallCountContext";
+import { supabase } from "../../../SupabaseAuth/supabaseClient";
+import HeaderWithApiCount from './HeaderWithApiCount';
+import { ApiCallCountContext } from "../../../Context/ApiCallCountContext";
 
 const FeedbackSelector = () => {
   const navigate = useNavigate();
@@ -16,7 +16,6 @@ const FeedbackSelector = () => {
   const [examDetails, setExamDetails] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-
   const { count, MAX_CALLS_PER_DAY } = useContext(ApiCallCountContext);
   const isLimitReached = count >= MAX_CALLS_PER_DAY;
 

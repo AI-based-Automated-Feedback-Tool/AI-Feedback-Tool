@@ -2,13 +2,11 @@ import React, { useState, useContext } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Container, Card, Form, Button, Row, Col, Alert } from 'react-bootstrap';
 import HeaderWithApiCount from './HeaderWithApiCount';
-
 import StandardAnalysis from './Prompts/StandardAnalysis';
 import QuickInsights from './Prompts/QuickInsights';
 import DetailedReport from './Prompts/DetailedReport';
 import CustomPrompt from './Prompts/CustomPrompt';
-
-import { ApiCallCountContext } from '../../Context/ApiCallCountContext'; // ✅ context import
+import { ApiCallCountContext } from '../../../Context/ApiCallCountContext';
 
 const predefinedPrompts = [
   StandardAnalysis,

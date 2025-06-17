@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { Container, Card, Alert, Spinner, Modal } from 'react-bootstrap';
-import { supabase } from '../../SupabaseAuth/supabaseClient';
-import { downloadAsTextFile } from '../../utils/downloadTextUtils';
+import { supabase } from '../../../SupabaseAuth/supabaseClient';
+import { downloadAsTextFile } from '../../../utils/downloadTextUtils';
 import { Button } from 'react-bootstrap';
-import { ApiCallCountContext } from "../../Context/ApiCallCountContext";
-import HeaderWithApiCount from '../../Components/TeachersComponents/HeaderWithApiCount';
+import { ApiCallCountContext } from "../../../Context/ApiCallCountContext";
+import HeaderWithApiCount from './HeaderWithApiCount';
 
 
 // Default prompt templates for AI feedback generation
@@ -21,13 +21,11 @@ const AIFeedbackPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { incrementCount, count, MAX_CALLS_PER_DAY } = useContext(ApiCallCountContext);
-
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [examTitle, setExamTitle] = useState('');
   const [feedback, setFeedback] = useState(null);
   const [showLimitModal, setShowLimitModal] = useState(false);
-
   const hasFetched = useRef(false);
 
   // Fetch exam title from Supabase
