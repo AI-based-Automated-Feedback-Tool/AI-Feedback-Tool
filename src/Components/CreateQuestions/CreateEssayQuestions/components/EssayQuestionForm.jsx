@@ -18,7 +18,8 @@ export default function EssayQuestionForm({ formState }) {
         setGradingNotes,
         onSaveQuestion,
         error,
-        fileInputRef
+        fileInputRef,
+        isDisabled
     }= formState;
 
     
@@ -108,7 +109,7 @@ export default function EssayQuestionForm({ formState }) {
 
                 {/* Submit Button */}
                 <div className="d-flex justify-content-end" >
-                    <Button variant="primary" onClick={onSaveQuestion} >
+                    <Button variant="primary" onClick={onSaveQuestion} disabled={isDisabled()}>
                         ➕ Save Question
                     </Button>
                     

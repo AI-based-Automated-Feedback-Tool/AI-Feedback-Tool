@@ -32,12 +32,15 @@ export default function CreateEssayQuestionsContent({examId, question_count}) {
     setError,
     saveAllQuestions,
     loading,
+    warning,
+    isDisabled
   } = useEssayQuestionCreation(examId, question_count);
     
     
   return (
     <>               
         <Col className="w-100">
+          {warning && <Alert variant="warning">{warning}</Alert>}
             <EssayQuestionForm 
               formState={{
                 questionText,
@@ -58,6 +61,7 @@ export default function CreateEssayQuestionsContent({examId, question_count}) {
                 editQuestionIndex,
                 showEditQuestion,
                 setShowEditQuestion,
+                isDisabled
               }}/>                  
         </Col>   
         {question.length > 0 &&

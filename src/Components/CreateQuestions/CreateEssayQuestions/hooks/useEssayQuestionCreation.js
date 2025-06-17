@@ -17,6 +17,7 @@ export default function useEssayQuestionCreation(examId, question_count) {
     const [showEditQuestion, setShowEditQuestion] = useState(false);
     const [editQuestionIndex, setEditQuestionIndex] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [warning, setWarning] = useState(null)
 
     const fileInputRef = useRef(null);
 
@@ -82,6 +83,11 @@ export default function useEssayQuestionCreation(examId, question_count) {
         if (!isValid) {
             return; // Don't proceed if there are validation errors
         }
+
+        if (question.length >= parseInt(question_count)) {
+            setWarning(`You can only add ${question_count} questions.`);
+            return false;
+        }
         let uploadedUrl = null;
         if(attachments) {
             try {
@@ -110,8 +116,16 @@ export default function useEssayQuestionCreation(examId, question_count) {
             grading_note: gradingNotes,
         }
         
-        setQuestion(prevQuestions => [...prevQuestions, newQuestion]);
+        const newQuestionsList = [...question, newQuestion]
+        setQuestion(newQuestionsList);
+        // Show warning if limit reached now
+        if (newQuestionsList.length === parseInt(question_count)) {
+            setWarning(`You have reached the limit of ${question_count} questions.`);
+        } else {
+            setWarning(null);
+        }
         resetForm();
+        return true;
     }
 
     // Function to handle deleting a question
@@ -167,6 +181,14 @@ export default function useEssayQuestionCreation(examId, question_count) {
         }
     }
 
+
+    const isDisabled = () =>{
+        if (question.length >= parseInt(question_count)) {
+            return true
+        }
+        return false
+    }
+
     return {
         question,
         examId,
@@ -194,5 +216,7 @@ export default function useEssayQuestionCreation(examId, question_count) {
         setError,
         saveAllQuestions,
         loading,
+        warning,
+        isDisabled
     };
 }
