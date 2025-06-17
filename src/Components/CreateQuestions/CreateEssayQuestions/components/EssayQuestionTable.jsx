@@ -1,18 +1,26 @@
-import React from 'react'
 import { Table, Button } from 'react-bootstrap';
 
-export default function CodeQuestionTable({questions, onDelete, onEdit}) {
+export default function EssayQuestionTable({questions, onDelete, onEdit}) {
+  // function to get only file name from URL
+  const getFileName = (url) => {
+    const fileNameWithTimestamp = url ? url.split('/').pop() : null;
+    if (fileNameWithTimestamp) {
+      const spaceLessFileName = fileNameWithTimestamp.substring(fileNameWithTimestamp.indexOf('_') + 1);
+      const trimmedName = spaceLessFileName.replace(/%20/g, ' ')
+      return trimmedName;
+                
+    } 
+  }
   return (
     <Table striped bordered hover responsive className="mt-4">
       <thead>
         <tr>
             <th>#</th>
             <th className="text-center">Question</th>
-            <th className="text-center">Function signature</th>
-            <th className="text-center">Wrapper code</th>
-            <th className='text-center'>Test cases</th>
-            <th className="text-center">Programming language</th>
-            <th className="text-center">Points</th>
+            <th className="text-center">Attachment</th>
+            <th className="text-center">Word Limit</th>
+            <th className='text-center'>Points</th>
+            <th className="text-center">Grading Notes</th>
             <th className="text-center">Actions</th>
         </tr>
       </thead>
@@ -23,34 +31,21 @@ export default function CodeQuestionTable({questions, onDelete, onEdit}) {
               {idx + 1}
             </td>
             <td style={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}>
-              {q.question}
+              {q.question_text}
             </td>
             <td style={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}>
-              {q.functionSignature}
-            </td>
-            <td style={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}>
-              {q.wrapperCode}
+              {getFileName(q.attachment_url)}
             </td>
             <td>
-                <Table size="sm" bordered>
-                  <thead>
-                    <tr>
-                      <th>Input</th>
-                      <th>Output</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {q.testCases.map((testCase, tIdx) => (
-                      <tr key={tIdx}>
-                        <td>{testCase.input}</td>
-                        <td>{testCase.output}</td>
-                      </tr>
-                    ))}
-      </tbody>
-    </Table>
+              {q.word_limit}
             </td>
-            <td>{q.language.language_name}</td>
-            <td>{q.points}</td>
+            <td>
+              {q.points}
+            </td>
+            <td style={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}>
+              {q.grading_note}
+            </td>
+
             <td>
                 <div className="d-flex flex-wrap gap-2 justify-content-center">
                     <Button 
