@@ -227,7 +227,7 @@ export const TaskProvider = ({ children }) => {
 
         // Trigger AI MCQ feedback generation
         try {
-              await fetch("http://localhost:5000/api/mcq-feedback", {
+              await fetch("http://localhost:3000/api/mcq-feedback", {
               method: "POST",
               headers: {
              "Content-Type": "application/json",
