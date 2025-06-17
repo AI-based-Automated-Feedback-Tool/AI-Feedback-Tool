@@ -5,6 +5,9 @@ import { useCodeQuestions } from "../../../Context/QuestionsContext/CodeContext"
 import { useTask } from "../../../Context/taskContext";
 import "bootstrap/dist/css/bootstrap.min.css";
 import QuestionsNavigator from "../features/QuestionsNavigator";
+import { ApiCallCountContext } from "../../../Context/ApiCallCountContext";
+
+const API_URL = "http://localhost:3000";
 
 const CodeQuestionsList = () => {
   //get exam id from URL params
@@ -26,6 +29,10 @@ const CodeQuestionsList = () => {
   //get exam and timer methods from task context
   const { fetchExamWithQuestions, timeLeft, formatTime, task } = useTask();
 
+  // Api call count context for daily limit management
+  const { count, incrementCount, MAX_CALLS_PER_DAY } =
+    useContext(ApiCallCountContext);
+
   //state for current question index
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   //to control review screen visibility
@@ -36,6 +43,8 @@ const CodeQuestionsList = () => {
   const [showTabWarning, setShowTabWarning] = useState(false);
   //to store code output
   const [runOutput, setRunOutput] = useState("");
+  // loading state for run code button
+  const [isRunning, setIsRunning] = useState(false);
 
   //load questions and exam data when component mounts or id changes
   useEffect(() => {
@@ -94,8 +103,72 @@ const CodeQuestionsList = () => {
   };
 
   //simulate running code and show output placeholder
-  const handleRunCode = () => {
-    setRunOutput("⏳ Running code...\n\n(Output will appear here later)");
+  const handleRunCode = async () => {
+    const currentQuestion = questions[currentQuestionIndex];
+    if (!currentQuestion) {
+      setRunOutput("⚠️ No current question selected.");
+      return;
+    }
+
+    const studentCode = studentAnswers[currentQuestion.id];
+
+    if (!studentCode) {
+      setRunOutput("⚠️ Please write your code before running.");
+      return;
+    }
+
+    if (count >= MAX_CALLS_PER_DAY) {
+      setRunOutput(
+        "🚫 You've reached your daily AI run limit. Try again tomorrow."
+      );
+      return;
+    }
+
+    const prompt = `
+  You are a code evaluation assistant. Evaluate the student's solution for the following problem.
+  
+  Question:
+  ${currentQuestion.question_description}
+  
+  Function Signature:
+  ${currentQuestion.function_signature || "function solution() {}"}
+  
+  Student's Code:
+  ${studentCode}
+  
+  Test Cases:
+  ${JSON.stringify(currentQuestion.test_cases || [])}
+  
+  Please run the student's function using the test cases and report which ones pass or fail. Give detailed feedback if any test case fails, and suggest improvements.
+  `;
+
+    try {
+      setIsRunning(true);
+      incrementCount();
+
+      const res = await fetch(`${API_URL}/api/ai/generate`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          prompt,
+          provider: "openrouter",
+        }),
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        setRunOutput(data.result);
+      } else {
+        setRunOutput(`❌ AI Error: ${data.error || data.details}`);
+      }
+    } catch (err) {
+      console.error("AI Run Error:", err);
+      setRunOutput("⚠️ Failed to contact AI verification service.");
+    } finally {
+      setIsRunning(false);
+    }
   };
 
   //show thank you message on submission
@@ -215,8 +288,9 @@ const CodeQuestionsList = () => {
                 <button
                   className="btn btn-warning mt-3"
                   onClick={handleRunCode}
+                  disabled={isRunning}
                 >
-                  ▶️ Run Code
+                  {isRunning ? "Running..." : "▶️ Run Code"}
                 </button>
 
                 {/*output display area*/}
