@@ -52,7 +52,13 @@ const ExamsPage = () => {
     const endTime = new Date(exam.end_time);
 
     if (currentTime >= startTime && currentTime <= endTime) {
-      navigate(`/dashboard/task/${exam.exam_id}`);
+      if (exam.type === "mcq") {
+        navigate(`/dashboard/task/${exam.exam_id}`);
+      } else if (exam.type === "code") {
+        navigate(`/dashboard/code/${exam.exam_id}`);
+      } else {
+        alert("Unknown exam type.");
+      }
     } else if (currentTime > endTime) {
       alert("The exam has ended.");
     } else {

@@ -1,94 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Container, Card, Form, Button, Row, Col } from 'react-bootstrap';
+import { Container, Card, Form, Button, Row, Col, Alert } from 'react-bootstrap';
+import HeaderWithApiCount from './HeaderWithApiCount';
+import StandardAnalysis from './Prompts/StandardAnalysis';
+import QuickInsights from './Prompts/QuickInsights';
+import DetailedReport from './Prompts/DetailedReport';
+import CustomPrompt from './Prompts/CustomPrompt';
+import { ApiCallCountContext } from '../../../Context/ApiCallCountContext';
 
 const predefinedPrompts = [
-  {
-    label: 'Standard Analysis',
-    prompt: `Analyze these exam results and provide feedback in this exact JSON structure:
-    
-{
-  "overallSummary": "Brief 2-3 sentence summary of class performance",
-  "keyStrengths": [
-    "List 3-5 concepts students mastered well",
-    "Include specific question numbers as evidence"
-  ],
-  "mostMissedQuestions": [
-    "Top 3-5 questions students struggled with",
-    "Briefly explain the misconceptions"
-  ],
-  "teachingSuggestions": [
-    "2-3 specific reteaching strategies",
-    "Activity ideas to reinforce weak areas"
-  ],
-  "nextSteps": [
-    "Immediate actions for the teacher",
-    "Follow-up assessment ideas"
-  ]
-}
-
-Questions: [QUESTIONS]
-Submissions: [SUBMISSIONS]
-Answers: [ANSWERS]
-
-Return ONLY valid JSON with these exact keys.`
-  },
-  {
-    label: 'Quick Insights',
-    prompt: `Provide concise exam feedback in this JSON format:
-{
-  "overallSummary": "One paragraph summary",
-  "keyStrengths": ["2-3 strengths max"],
-  "mostMissedQuestions": ["2-3 weak areas"],
-  "teachingSuggestions": ["2 quick recommendations"],
-  "nextSteps": ["1-2 action items"]
-}`
-  },
-  {
-    label: 'Detailed Report',
-    prompt: `Create comprehensive feedback in this structure:
-{
-  "overallSummary": "Detailed performance analysis (3-4 sentences)",
-  "keyStrengths": [
-    "3-5 mastered concepts with question examples",
-    "Performance patterns observed"
-  ],
-  "mostMissedQuestions": [
-    "Top 5 difficult questions",
-    "Detailed misconception analysis for each",
-    "Prerequisite knowledge gaps"
-  ],
-  "teachingSuggestions": [
-    "Differentiated instruction strategies",
-    "Reteaching methods for each weak area",
-    "Recommended practice activities"
-  ],
-  "nextSteps": [
-    "Short-term remediation plan",
-    "Long-term instructional adjustments",
-    "Suggested resources"
-  ]
-}`
-  },
-  {
-    label: 'Custom Prompt',
-    prompt: `Create your own custom prompt structure. You can use these placeholders if needed:
-[QUESTIONS] - Will be replaced with exam questions
-[SUBMISSIONS] - Will be replaced with student submissions
-[ANSWERS] - Will be replaced with correct answers
-
-Suggested structure:
-{
-  "analysis": "Your custom analysis requirements",
-  "strengths": ["What to look for"],
-  "weaknesses": ["What to analyze"],
-  "recommendations": ["What to suggest"]
-}`
-  }
+  StandardAnalysis,
+  QuickInsights,
+  DetailedReport,
+  CustomPrompt
 ];
 
 const aiProviders = [
-  { id: 'cohere', name: 'Cohere AI', model: 'command' },  
+  { id: 'cohere', name: 'Cohere AI', model: 'command' },
   { id: 'openrouter', name: 'OpenRouter AI', model: 'openrouter-chat' }
 ];
 
@@ -101,10 +29,15 @@ const PromptSelector = () => {
   const [customPrompt, setCustomPrompt] = useState('');
   const [isCustomPrompt, setIsCustomPrompt] = useState(false);
 
+  // ✅ Get API usage info from context
+  const { count, MAX_CALLS_PER_DAY } = useContext(ApiCallCountContext);
+  const isLimitReached = count >= MAX_CALLS_PER_DAY;
+
   const handleSubmit = () => {
+    if (isLimitReached) return;
     const finalPrompt = isCustomPrompt ? customPrompt : selectedPrompt;
     navigate(`/teacher/exams/${examId}/ai-feedback`, {
-      state: { 
+      state: {
         prompt: finalPrompt,
         aiProvider: selectedProvider
       }
@@ -114,22 +47,32 @@ const PromptSelector = () => {
   const handlePromptChange = (label) => {
     if (label === 'Custom Prompt') {
       setIsCustomPrompt(true);
-      setCustomPrompt(predefinedPrompts.find(p => p.label === label).prompt);
+      const promptObj = predefinedPrompts.find(p => p.label === label);
+      if (promptObj) setCustomPrompt(promptObj.prompt);
     } else {
       setIsCustomPrompt(false);
-      const prompt = predefinedPrompts.find(p => p.label === label).prompt;
-      setSelectedLabel(label);
-      setSelectedPrompt(prompt);
+      const promptObj = predefinedPrompts.find(p => p.label === label);
+      if (promptObj) {
+        setSelectedPrompt(promptObj.prompt);
+        setSelectedLabel(label);
+      }
     }
   };
 
   return (
     <Container className="mt-4">
       <Card className="shadow-sm">
-        <Card.Header className="bg-primary text-white">
+        <Card.Header className="bg-primary text-white d-flex justify-content-between align-items-center">
           <h4>AI Feedback Generator</h4>
+          <HeaderWithApiCount />
         </Card.Header>
         <Card.Body>
+          {isLimitReached && (
+            <Alert variant="danger" className="text-center">
+              You have reached your daily API usage limit ({MAX_CALLS_PER_DAY} calls).
+            </Alert>
+          )}
+
           <Row className="mb-3">
             <Col md={6}>
               <Form.Group>
@@ -173,7 +116,7 @@ const PromptSelector = () => {
               />
             ) : (
               <Card body className="bg-light">
-                <pre style={{whiteSpace: 'pre-wrap'}}>{selectedPrompt}</pre>
+                <pre style={{ whiteSpace: 'pre-wrap' }}>{selectedPrompt}</pre>
               </Card>
             )}
             {isCustomPrompt && (
@@ -184,10 +127,12 @@ const PromptSelector = () => {
           </Form.Group>
 
           <div className="d-grid">
-            <Button 
-              variant="primary" 
+            <Button
+              variant="primary"
               onClick={handleSubmit}
-              disabled={isCustomPrompt && !customPrompt.trim()}
+              disabled={
+                (isCustomPrompt && !customPrompt.trim()) || isLimitReached
+              }
             >
               Generate Feedback
             </Button>

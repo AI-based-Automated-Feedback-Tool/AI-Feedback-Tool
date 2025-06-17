@@ -18,25 +18,27 @@ import StudentLayout from "./Components/StudentsComponents/StudentLayout";
 import { UserProvider, UserContext } from "./Context/userContext.jsx";
 import TeacherReportContent from "./Components/TeacherReport/TeacherReportContent.jsx";
 import Result from "./Components/StudentsComponents/Result.jsx";
-import AIFeedbackPage from "./Components/TeachersComponents/AIFeedbackPage";
+import AIFeedbackPage from "./Components/TeachersComponents/AIFeedback/AIFeedbackPage.jsx";
 import { CourseProvider } from "./Context/courseContext.jsx";
 import { ExamProvider } from "./Context/examContext.jsx";
 import { TaskProvider } from "./Context/taskContext.jsx";
 import Review from "./Components/StudentsComponents/Review.jsx";
 import { ReviewProvider } from "./Context/ReviewContext.jsx";
-import FeedbackSelector from "./Components/TeachersComponents/FeedbackSelector";
-import PromptSelector from "./Components/TeachersComponents/PromptSelector";
+import FeedbackSelector from "./Components/TeachersComponents/AIFeedback/FeedbackSelector.jsx";
+import PromptSelector from "./Components/TeachersComponents/AIFeedback/PromptSelector.jsx";
 import CreateQuestions from "./Components/CreateQuestions/CreateQuestions.jsx";
 import { ResultProvider } from "./Context/ResultContext.jsx";
 import { useContext } from "react";
 import { CodeQuestionsProvider } from "./Context/QuestionsContext/CodeContext.jsx";
 import CodeQuestions from "./Components/StudentsComponents/taskPages/CodeQuestions.jsx";
+import { ApiCallCountProvider } from './Context/ApiCallCountContext';
 
 function AppContent() {
   //get user id from userContext
   const { userId } = useContext(UserContext);
 
   return (
+    <ApiCallCountProvider>
       <CourseProvider>
         <ExamProvider>
           <TaskProvider>
@@ -85,7 +87,7 @@ function AppContent() {
                   {/*students route */}
                   <Route path="/dashboard" element={<ProtectedRoute />}>
                     <Route path="task/:id" element={<TaskPage />} />
-                    <Route path="task/:id/codeQuestions" element={<CodeQuestions/>} />
+                    <Route path="code/:id" element={<CodeQuestions/>} />
                   </Route>
                   <Route
                     path="/student/courses/:userId"
@@ -113,6 +115,7 @@ function AppContent() {
           </TaskProvider>
         </ExamProvider>
       </CourseProvider>
+    </ApiCallCountProvider>  
   );
 }
 

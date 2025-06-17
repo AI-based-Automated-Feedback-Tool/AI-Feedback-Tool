@@ -44,7 +44,10 @@ export const ExamProvider = ({ children }) => {
       //Fetch all exams and related questions
       const { data: examData, error: examError } = await supabase
         .from("exams")
-        .select("*, mcq_questions!inner(exam_id)")
+        .select(
+          // fetch both MCQ and code questions related to the exam
+          "*, mcq_questions(*), code_questions(*)"
+        )
         .eq("course_id", courseId);
 
       if (examError || !examData) {
@@ -54,10 +57,16 @@ export const ExamProvider = ({ children }) => {
         return;
       }
 
-      //Filter to only exams that actually have MCQ questions
-      const examsWithQuestions = examData.filter(
-        (exam) => exam.mcq_questions.length > 0
-      );
+      //Filter to only exams that actually have MCQ or Code questions depending on exam type
+      const examsWithQuestions = examData.filter((exam) => {
+        if (exam.type === "mcq") {
+          return exam.mcq_questions.length > 0;
+        } else if (exam.type === "code") {
+          return exam.code_questions.length > 0;
+        }
+        return false; //skip exams of other types or without questions
+      });
+
       console.log("📄 Exams with questions:", examsWithQuestions);
 
       //Fetch user's submitted exam IDs

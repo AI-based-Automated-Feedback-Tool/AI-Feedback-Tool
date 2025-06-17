@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5000/api/configureExam';
+const API_URL = 'http://localhost:3000/api/configureExam';
 
 export const saveExamConfig = async (examData) => {
   const response = await axios.post(API_URL, {

@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useTask } from "../../../Context/taskContext.jsx";
 import PopUp from "../PopUp.jsx";
+import QuestionsNavigator from "../features/QuestionsNavigator.jsx";
 
 const TaskPage = () => {
-
   const [showTabWarning, setShowTabWarning] = useState(false);
   const {
     task,
@@ -24,7 +24,7 @@ const TaskPage = () => {
     popupMessage,
     setShowPopup,
     formatTime,
-    timeLeft
+    timeLeft,
   } = useTask();
 
   //get task id from url
@@ -36,7 +36,7 @@ const TaskPage = () => {
     fetchExamWithQuestions(id);
   }, [id, fetchExamWithQuestions]);
 
-   // Add visibilitychange listener to detect tab switches
+  // Add visibilitychange listener to detect tab switches
   useEffect(() => {
     const handleVisibilityChange = () => {
       if (!document.hidden) {
@@ -70,12 +70,9 @@ const TaskPage = () => {
 
   //get the current question based on the question index
   const currentQuestion = task.questions[questionIndex];
-  //function to jump to a specific question
-  const handleQuestionJump = (index) => {
-    setQuestionIndex(index);
-  };
 
-   return (
+
+  return (
     <>
       {/*  Add warning banner UI for tab switching */}
       {/*  Only show during active exam (not review) */}
@@ -167,9 +164,7 @@ const TaskPage = () => {
                         name={`q${questionIndex}`}
                         value={opt}
                         checked={answers[questionIndex] === opt}
-                        onChange={() =>
-                          handleAnswerSelect(questionIndex, opt)
-                        }
+                        onChange={() => handleAnswerSelect(questionIndex, opt)}
                       />
                       <label
                         className="form-check-label"
@@ -197,10 +192,7 @@ const TaskPage = () => {
                         Review Answers
                       </button>
                     ) : (
-                      <button
-                        className="btn btn-primary"
-                        onClick={handleNext}
-                      >
+                      <button className="btn btn-primary" onClick={handleNext}>
                         Next
                       </button>
                     )}
@@ -212,39 +204,16 @@ const TaskPage = () => {
 
           {/*right side: Question navigator*/}
           <div className="col-lg-3 col-md-4">
-            <div
-              className="bg-white p-3 shadow rounded sticky-top"
-              style={{ top: "80px", maxHeight: "80vh", overflowY: "auto" }}
-            >
-              <h6 className="text-center mb-3">Questions</h6>
-              <div className="d-flex flex-row flex-wrap justify-content-center gap-2">
-                {task.questions.map((_, idx) => (
-                  <button
-                    key={idx}
-                    className={`btn ${
-                      idx === questionIndex
-                        ? "btn-primary"
-                        : "btn-outline-secondary"
-                    } rounded-circle`}
-                    style={{
-                      width: "40px",
-                      height: "40px",
-                      fontWeight: "bold",
-                    }}
-                    onClick={() => handleQuestionJump(idx)}
-                  >
-                    {idx + 1}
-                  </button>
-                ))}
-              </div>
-            </div>
+            <QuestionsNavigator
+              questions={task.questions}
+              questionIndex={questionIndex}
+              setQuestionIndex={setQuestionIndex}
+            />
           </div>
         </div>
       </div>
     </>
   );
 };
-
-
 
 export default TaskPage;
