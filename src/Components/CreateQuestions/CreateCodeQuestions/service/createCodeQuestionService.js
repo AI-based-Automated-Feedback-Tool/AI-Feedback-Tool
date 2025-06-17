@@ -1,6 +1,6 @@
 //API service to fetch programming languages
 export const getLanguages = async () => {
-    const res = await fetch(`http://localhost:5000/api/createCodeQuestions/languages`);
+    const res = await fetch(`http://localhost:3000/api/createCodeQuestions/languages`);
     const data = await res.json();
     if (res.ok) {
         return data.languages;
@@ -12,7 +12,7 @@ export const getLanguages = async () => {
 // API service to create a new code question
 export const createCodeQuestion = async (questionData) => {
     try{
-        const response = await fetch('http://localhost:5000/api/createCodeQuestion', {
+        const response = await fetch('http://localhost:3000/api/createCodeQuestion', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
