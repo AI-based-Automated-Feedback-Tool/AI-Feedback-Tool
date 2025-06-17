@@ -30,7 +30,8 @@ const CodeQuestionsList = () => {
   const { fetchExamWithQuestions, timeLeft, formatTime, task } = useTask();
 
   // Api call count context for daily limit management
-  const { count, incrementCount, MAX_CALLS_PER_DAY } = useContext(ApiCallCountContext);
+  const { count, incrementCount, MAX_CALLS_PER_DAY } =
+    useContext(ApiCallCountContext);
 
   //state for current question index
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -117,7 +118,9 @@ const CodeQuestionsList = () => {
     }
 
     if (count >= MAX_CALLS_PER_DAY) {
-      setRunOutput("🚫 You've reached your daily AI run limit. Try again tomorrow.");
+      setRunOutput(
+        "🚫 You've reached your daily AI run limit. Try again tomorrow."
+      );
       return;
     }
 
@@ -150,7 +153,7 @@ const CodeQuestionsList = () => {
         },
         body: JSON.stringify({
           prompt,
-          provider: "openrouter", // optional, defaults to cohere
+          provider: "openrouter",
         }),
       });
 
