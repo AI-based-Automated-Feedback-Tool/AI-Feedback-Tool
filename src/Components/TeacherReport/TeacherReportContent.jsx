@@ -39,12 +39,17 @@ export default function TeacherReportContent() {
     const {codeQuestions, loadingCode} = useFetchCodeQuestions(selectedExam, setReportError);
     const {exams, loadingExams} = useFetchExams(selectedCourse, setError);
     const [submissionId, setSubmissionId] = useState([]);
-    const {submittedAnswers, loadingAnswers} = useFetchSubmittedExamAnswers(submissionId, setReportError);
 
-    const { scores, avgScore, highestScore, iniTotalScore, noOfStudentsDoneExam, avgTimeInMinutes, avgFocusLoss } = useReportCalculations(examSubmissions, mcqQuestions, codeQuestions, selectedExam, exams);
+    //find exam type
+    const selectedExamObject = exams.find((exam) => exam.exam_id === selectedExam)
+    const examType = selectedExamObject?.type || 'mcq';
 
-    const scoreDistributionData = calculateScoreDistribution(scores, iniTotalScore);
-    const questionStats = calculateQuestionStats(submittedAnswers, mcqQuestions, noOfStudentsDoneExam);
+    const { scores, avgScore, highestScore, iniTotalScore, noOfStudentsDoneExam, avgTimeInMinutes, avgFocusLoss } = useReportCalculations(examSubmissions, mcqQuestions, codeQuestions, examType);
+
+    const scoreDistributionData = calculateScoreDistribution(scores, iniTotalScore);  
+    const {submittedAnswers, loadingAnswers} = useFetchSubmittedExamAnswers(submissionId, examType, setReportError);
+    const questionStats = calculateQuestionStats(submittedAnswers, mcqQuestions, codeQuestions, examType, noOfStudentsDoneExam);
+ 
 
     useEffect(() => {
             const getUserId = async () => {

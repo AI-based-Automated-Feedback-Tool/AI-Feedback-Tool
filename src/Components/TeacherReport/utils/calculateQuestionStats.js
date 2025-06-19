@@ -1,4 +1,4 @@
-const calculateQuestionStats = (submittedAnswers, mcqQuestions, noOfStudentsDoneExam) => {
+const calculateQuestionStats = (submittedAnswers, mcqQuestions, codeQuestions, examType, noOfStudentsDoneExam) => {
 
     // take submitted answers to get question id and is it correct or wrong
     const filteredSubmittedAnswers = submittedAnswers.map((answer) => {
@@ -7,9 +7,15 @@ const calculateQuestionStats = (submittedAnswers, mcqQuestions, noOfStudentsDone
             isCorrect: answer.is_correct
         };
     });
+    console.log("Filtered Submitted Answers: ", filteredSubmittedAnswers);
 
     // Group answers by question ID 
-    const questionStats = mcqQuestions.map((question, index) => {
+    let questionBank = mcqQuestions
+    if (examType === 'code') {
+        questionBank = codeQuestions
+        console.log("Code Questions: ", questionBank);
+    }
+    const questionStats = questionBank.map((question, index) => {
         let correct = 0;
         let incorrect = 0;
         filteredSubmittedAnswers.forEach((answer) => {
@@ -33,6 +39,7 @@ const calculateQuestionStats = (submittedAnswers, mcqQuestions, noOfStudentsDone
                 : 0
         };
     })
+    console.log("Question Stats: ", questionStats);
     return questionStats;
 }
 export default calculateQuestionStats;

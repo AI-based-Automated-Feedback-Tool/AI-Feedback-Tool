@@ -1,6 +1,5 @@
-const useReportCalculations = (examSubmissions, mcqQuestions, codeQuestions, selectedExam, exams) => {
-    const selectedExamObject = exams.find((exam) => exam.exam_id === selectedExam)
-    const examType = selectedExamObject?.type || 'mcq'; 
+const useReportCalculations = (examSubmissions, mcqQuestions, codeQuestions, examType) => {
+
     const noOfStudentsDoneExam = examSubmissions.length;
     const scores = examSubmissions.map((submission) => submission.total_score)
     let totalScore = 0;
