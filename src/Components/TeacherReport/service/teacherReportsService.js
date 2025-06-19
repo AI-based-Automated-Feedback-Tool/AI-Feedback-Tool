@@ -84,4 +84,19 @@ export const getSubmittedAnswers = async (submissionId) => {
     }
 }
 
+//Api service to fetch code questions
+export const getCodeQuestions = async (selectedExam) => {
+    if (!selectedExam) {
+        throw new Error("Exam selection is required");
+    }
+    const res = await fetch(`http://localhost:3000/api/teacher/reports/code_questions?examId=${selectedExam}`)
+    const json = await res.json();
+    if (res.ok){
+        return json.codeQuestions;
+    }
+    else {
+        throw new Error(json.message || "Failed to fetch code questions");
+    }
+}
+
             
