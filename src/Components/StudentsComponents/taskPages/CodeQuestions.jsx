@@ -90,7 +90,7 @@ const CodeQuestionsList = () => {
       return;
     }
 
-    const timeTaken = task.duration - timeLeft;
+    const timeTaken = task.duration * 60 - timeLeft;
 
     await submitAllAnswers({
       userId,
