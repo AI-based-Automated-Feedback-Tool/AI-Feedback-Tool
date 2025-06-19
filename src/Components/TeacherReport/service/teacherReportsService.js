@@ -99,4 +99,19 @@ export const getCodeQuestions = async (selectedExam) => {
     }
 }
 
+//API service to fetch submitted code answers
+export const getSubmittedCodeAnswers = async (submissionId) => {
+    if (!submissionId) {
+        throw new Error("Submission ID is required");
+    }
+    const res = await fetch(`http://localhost:3000/api/teacher/reports/submitted_code_answers?submissionId=${submissionId}`)
+    const json = await res.json();
+    if (res.ok){
+        return json.submittedAnswers;
+    }
+    else {
+        throw new Error(json.message || "Failed to fetch submitted code answers");
+    }
+}
+
             
