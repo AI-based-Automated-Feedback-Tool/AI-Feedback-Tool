@@ -1,4 +1,6 @@
-const useReportCalculations = (examSubmissions, mcqQuestions) => {
+const useReportCalculations = (examSubmissions, mcqQuestions, codeQuestions, selectedExam, exams) => {
+    const selectedExamObject = exams.find((exam) => exam.exam_id === selectedExam)
+    const examType = selectedExamObject?.type || 'mcq'; 
     const noOfStudentsDoneExam = examSubmissions.length;
     const scores = examSubmissions.map((submission) => submission.total_score)
     let totalScore = 0;
@@ -9,10 +11,18 @@ const useReportCalculations = (examSubmissions, mcqQuestions) => {
     const highestScore = scores.length > 0 ? Math.max(...scores) : 0;
 
     //calculate total score assigned by teacher when creating the exam
-    const iniScore = mcqQuestions.map((q) => q.points)
-    let iniTotalScore = 0
-    for(let i=0; i<iniScore.length; i++){
-        iniTotalScore += iniScore[i]
+    let iniTotalScore = 0;
+    if(examType === 'code'){
+        const iniScore = codeQuestions.map((q) => q.points)
+
+        for(let i=0; i<iniScore.length; i++){
+            iniTotalScore += iniScore[i]
+        }
+    } else if(examType === 'mcq'){
+        const iniScore = mcqQuestions.map((q) => q.points)
+        for(let i=0; i<iniScore.length; i++){
+            iniTotalScore += iniScore[i]
+        }
     }
 
     //average time taken

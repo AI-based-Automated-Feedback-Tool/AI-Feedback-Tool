@@ -17,6 +17,8 @@ import useReportCalculations from './hooks/useReportCalculations';
 import calculateScoreDistribution from './utils/calculateScoreDistribution';
 import calculateQuestionStats from './utils/calculateQuestionStats';
 import StyledDivider from './components/StyledDivider';
+import useFetchCodeQuestions from './hooks/useFetchCodeQuestions';
+import useFetchExams from './hooks/useFetchExams';      
 
 export default function TeacherReportContent() {
     const [selectedCourse, setSelectedCourse] = useState("");
@@ -34,10 +36,12 @@ export default function TeacherReportContent() {
     const [reportRequested, setReportRequested] = useState(false);
 
     const {mcqQuestions, loadingMcq} = useFetchMcqQuestions(selectedExam, setReportError)
+    const {codeQuestions, loadingCode} = useFetchCodeQuestions(selectedExam, setReportError);
+    const {exams, loadingExams} = useFetchExams(selectedCourse, setError);
     const [submissionId, setSubmissionId] = useState([]);
     const {submittedAnswers, loadingAnswers} = useFetchSubmittedExamAnswers(submissionId, setReportError);
 
-    const { scores, avgScore, highestScore, iniTotalScore, noOfStudentsDoneExam, avgTimeInMinutes, avgFocusLoss } = useReportCalculations(examSubmissions, mcqQuestions);
+    const { scores, avgScore, highestScore, iniTotalScore, noOfStudentsDoneExam, avgTimeInMinutes, avgFocusLoss } = useReportCalculations(examSubmissions, mcqQuestions, codeQuestions, selectedExam, exams);
 
     const scoreDistributionData = calculateScoreDistribution(scores, iniTotalScore);
     const questionStats = calculateQuestionStats(submittedAnswers, mcqQuestions, noOfStudentsDoneExam);
