@@ -114,4 +114,20 @@ export const getSubmittedCodeAnswers = async (submissionId) => {
     }
 }
 
+//Api service to fetch essay questions
+export const getEssayQuestions = async (selectedExam) => {
+    if (!selectedExam) {
+        throw new Error("Exam selection is required");
+    }
+    const res = await fetch(`http://localhost:3000/api/teacher/reports/essay_questions?examId=${selectedExam}`)
+    const json = await res.json();
+    if (res.ok){
+        return json.essayQuestions;
+    }
+    else {
+        throw new Error(json.message || "Failed to fetch essay questions");
+    }
+}
+
+
             
