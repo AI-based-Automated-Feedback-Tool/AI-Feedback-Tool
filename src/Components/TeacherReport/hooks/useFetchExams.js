@@ -3,11 +3,11 @@ import { getExamTitles } from "../service/teacherReportsService";
 
 const useFetchExams = (selectedCourse, setGlobalError) => {
     const [exams, setExams] = useState([]);
-    const [loading, setLoading] = useState(false);
+    const [loadingExams, setLoadingExams] = useState(false);
 
     useEffect(() => {
         if (!selectedCourse) return;
-        setLoading(true);
+        setLoadingExams(true);
 
         getExamTitles(selectedCourse)
             .then(data => {
@@ -16,8 +16,8 @@ const useFetchExams = (selectedCourse, setGlobalError) => {
             .catch(error => {
                 setGlobalError(error.message || "Failed to fetch exam titles");
             })
-            .finally(() => setLoading(false));
+            .finally(() => setLoadingExams(false));
     }, [selectedCourse]);
-    return { exams, loading };
+    return { exams, loadingExams };
 }
 export default useFetchExams;

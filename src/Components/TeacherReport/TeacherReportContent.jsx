@@ -17,6 +17,8 @@ import useReportCalculations from './hooks/useReportCalculations';
 import calculateScoreDistribution from './utils/calculateScoreDistribution';
 import calculateQuestionStats from './utils/calculateQuestionStats';
 import StyledDivider from './components/StyledDivider';
+import useFetchCodeQuestions from './hooks/useFetchCodeQuestions';
+import useFetchExams from './hooks/useFetchExams';      
 
 export default function TeacherReportContent() {
     const [selectedCourse, setSelectedCourse] = useState("");
@@ -34,13 +36,20 @@ export default function TeacherReportContent() {
     const [reportRequested, setReportRequested] = useState(false);
 
     const {mcqQuestions, loadingMcq} = useFetchMcqQuestions(selectedExam, setReportError)
+    const {codeQuestions, loadingCode} = useFetchCodeQuestions(selectedExam, setReportError);
+    const {exams, loadingExams} = useFetchExams(selectedCourse, setError);
     const [submissionId, setSubmissionId] = useState([]);
-    const {submittedAnswers, loadingAnswers} = useFetchSubmittedExamAnswers(submissionId, setReportError);
 
-    const { scores, avgScore, highestScore, iniTotalScore, noOfStudentsDoneExam, avgTimeInMinutes, avgFocusLoss } = useReportCalculations(examSubmissions, mcqQuestions);
+    //find exam type
+    const selectedExamObject = exams.find((exam) => exam.exam_id === selectedExam)
+    const examType = selectedExamObject?.type || 'mcq';
 
-    const scoreDistributionData = calculateScoreDistribution(scores, iniTotalScore);
-    const questionStats = calculateQuestionStats(submittedAnswers, mcqQuestions, noOfStudentsDoneExam);
+    const { scores, avgScore, highestScore, iniTotalScore, noOfStudentsDoneExam, avgTimeInMinutes, avgFocusLoss } = useReportCalculations(examSubmissions, mcqQuestions, codeQuestions, examType);
+
+    const scoreDistributionData = calculateScoreDistribution(scores, iniTotalScore);  
+    const {submittedAnswers, loadingAnswers} = useFetchSubmittedExamAnswers(submissionId, examType, setReportError);
+    const questionStats = calculateQuestionStats(submittedAnswers, mcqQuestions, codeQuestions, examType, noOfStudentsDoneExam);
+ 
 
     useEffect(() => {
             const getUserId = async () => {

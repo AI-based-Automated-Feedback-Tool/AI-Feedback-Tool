@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { getSubmittedAnswers } from "../service/teacherReportsService";
+import { getSubmittedCodeAnswers } from "../service/teacherReportsService";
 
-const useFetchSubmittedExamAnswers = (submissionId, setGlobalError) => {
+const useFetchSubmittedExamAnswers = (submissionId, examType, setGlobalError) => {
     const [submittedAnswers, setSubmittedAnswers] = useState([]);
     const [loadingAnswers, setLoadingAnswers] = useState(false);
 
@@ -14,17 +15,31 @@ const useFetchSubmittedExamAnswers = (submissionId, setGlobalError) => {
         setLoadingAnswers(true);
 
         submissionId.forEach(id => {
-            getSubmittedAnswers(id)
-                .then(data => {
-                setSubmittedAnswers(prevAnswers => [...prevAnswers, ...data]);
-            })
-            .catch(error => {
-                setGlobalError(error.message || "Failed to fetch exam submissions");
-            })
-            .finally(() => setLoadingAnswers(false));
+            if (examType === "code") {
+                getSubmittedCodeAnswers(id)
+                    .then(data => {
+                        setSubmittedAnswers(prevAnswers => [...prevAnswers, ...data]);
+                    })
+                    .catch(error => {
+                        setGlobalError(error.message || "Failed to fetch code exam submissions");
+                    })
+                    .finally(() => setLoadingAnswers(false));
+                return;
+            } else if (examType === "mcq") {
+                getSubmittedAnswers(id)
+                    .then(data => {
+                        setSubmittedAnswers(prevAnswers => [...prevAnswers, ...data]);
+                    })
+                    .catch(error => {
+                        setGlobalError(error.message || "Failed to fetch MCQ exam submissions");
+                    })
+                    .finally(() => setLoadingAnswers(false));
+                return;
+            }
         });
     }, [submissionId]);
-
+    
     return { submittedAnswers, loadingAnswers };
+    
 }
 export default useFetchSubmittedExamAnswers;

@@ -2,7 +2,6 @@ import { BarChart,Bar,XAxis,YAxis,Tooltip,Legend,ResponsiveContainer,CartesianGr
 import { Row, Col, CardHeader, CardBody, Card, Button, Alert } from 'react-bootstrap';
 
 export default function QuestionAccuracyChart({questionStats}) {
-
     return (
         <CardBody>
             <h5 className="mb-4">📊 Question Accuracy Breakdown</h5>
