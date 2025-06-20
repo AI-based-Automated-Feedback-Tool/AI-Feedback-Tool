@@ -22,6 +22,7 @@ const useFetchCodeQuestions = (selectedExam, setGlobalError) => {
             })
             .finally(() => setLoadingCode(false));
     }, [selectedExam]);
+
     return { codeQuestions, loadingCode };
 }
 export default useFetchCodeQuestions;

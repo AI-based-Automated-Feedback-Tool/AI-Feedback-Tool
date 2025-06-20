@@ -7,13 +7,10 @@ const calculateQuestionStats = (submittedAnswers, mcqQuestions, codeQuestions, e
             isCorrect: answer.is_correct
         };
     });
-    console.log("Filtered Submitted Answers: ", filteredSubmittedAnswers);
-
     // Group answers by question ID 
     let questionBank = mcqQuestions
     if (examType === 'code') {
         questionBank = codeQuestions
-        console.log("Code Questions: ", questionBank);
     }
     const questionStats = questionBank.map((question, index) => {
         let correct = 0;
@@ -27,6 +24,7 @@ const calculateQuestionStats = (submittedAnswers, mcqQuestions, codeQuestions, e
                 }
             }
         })
+
         return {
             questionId: question.question_id,
             id: `Question ${index + 1}`,
@@ -39,7 +37,6 @@ const calculateQuestionStats = (submittedAnswers, mcqQuestions, codeQuestions, e
                 : 0
         };
     })
-    console.log("Question Stats: ", questionStats);
     return questionStats;
 }
 export default calculateQuestionStats;
