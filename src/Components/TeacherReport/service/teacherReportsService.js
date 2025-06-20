@@ -129,5 +129,20 @@ export const getEssayQuestions = async (selectedExam) => {
     }
 }
 
+//Api service to fetch submitted essay answers
+export const getSubmittedEssayAnswers = async (submissionId) => {
+    if (!submissionId) {
+        throw new Error("Submission ID is required");
+    }
+    const res = await fetch(`http://localhost:3000/api/teacher/reports/submitted_essay_answers?submissionId=${submissionId}`)
+    const json = await res.json();
+    if (res.ok){
+        return json.submittedAnswers;
+    }
+    else {
+        throw new Error(json.message || "Failed to fetch submitted essay answers");
+    }
+}
+
 
             

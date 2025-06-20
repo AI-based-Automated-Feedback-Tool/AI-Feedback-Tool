@@ -50,7 +50,7 @@ export default function TeacherReportContent() {
 
     const scoreDistributionData = calculateScoreDistribution(scores, iniTotalScore);  
     const {submittedAnswers, loadingAnswers} = useFetchSubmittedExamAnswers(submissionId, examType, setReportError);
-    const questionStats = calculateQuestionStats(submittedAnswers, mcqQuestions, codeQuestions, examType, noOfStudentsDoneExam);
+    const questionStats = calculateQuestionStats(submittedAnswers, mcqQuestions, codeQuestions, essayQuestions, examType, noOfStudentsDoneExam);
  
 
     useEffect(() => {
