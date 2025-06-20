@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { getSubmittedAnswers } from "../service/teacherReportsService";
 import { getSubmittedCodeAnswers } from "../service/teacherReportsService";
+import { getSubmittedEssayAnswers } from "../service/teacherReportsService";
 
 const useFetchSubmittedExamAnswers = (submissionId, examType, setGlobalError) => {
     const [submittedAnswers, setSubmittedAnswers] = useState([]);
@@ -32,6 +33,16 @@ const useFetchSubmittedExamAnswers = (submissionId, examType, setGlobalError) =>
                     })
                     .catch(error => {
                         setGlobalError(error.message || "Failed to fetch MCQ exam submissions");
+                    })
+                    .finally(() => setLoadingAnswers(false));
+                return;
+            } else if (examType === "essay") {
+                getSubmittedEssayAnswers(id)
+                    .then(data => {
+                        setSubmittedAnswers(prevAnswers => [...prevAnswers, ...data]);
+                    })
+                    .catch(error => {
+                        setGlobalError(error.message || "Failed to fetch essay exam submissions");
                     })
                     .finally(() => setLoadingAnswers(false));
                 return;

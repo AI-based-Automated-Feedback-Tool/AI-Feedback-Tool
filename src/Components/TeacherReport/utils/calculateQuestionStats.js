@@ -1,4 +1,4 @@
-const calculateQuestionStats = (submittedAnswers, mcqQuestions, codeQuestions, examType, noOfStudentsDoneExam) => {
+const calculateQuestionStats = (submittedAnswers, mcqQuestions, codeQuestions, essayQuestions, examType, noOfStudentsDoneExam) => {
 
     // take submitted answers to get question id and is it correct or wrong
     const filteredSubmittedAnswers = submittedAnswers.map((answer) => {
@@ -11,6 +11,8 @@ const calculateQuestionStats = (submittedAnswers, mcqQuestions, codeQuestions, e
     let questionBank = mcqQuestions
     if (examType === 'code') {
         questionBank = codeQuestions
+    } else if (examType === 'essay') {
+        questionBank = essayQuestions
     }
     const questionStats = questionBank.map((question, index) => {
         let correct = 0;

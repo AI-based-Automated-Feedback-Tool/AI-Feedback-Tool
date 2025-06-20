@@ -1,4 +1,4 @@
-const useReportCalculations = (examSubmissions, mcqQuestions, codeQuestions, examType) => {
+const useReportCalculations = (examSubmissions, mcqQuestions, codeQuestions, essayQuestions, examType) => {
 
     const noOfStudentsDoneExam = examSubmissions.length;
     const scores = examSubmissions.map((submission) => submission.total_score)
@@ -19,6 +19,11 @@ const useReportCalculations = (examSubmissions, mcqQuestions, codeQuestions, exa
         }
     } else if(examType === 'mcq'){
         const iniScore = mcqQuestions.map((q) => q.points)
+        for(let i=0; i<iniScore.length; i++){
+            iniTotalScore += iniScore[i]
+        }
+    } else if(examType === 'essay'){
+        const iniScore = essayQuestions.map((q) => q.points)
         for(let i=0; i<iniScore.length; i++){
             iniTotalScore += iniScore[i]
         }
