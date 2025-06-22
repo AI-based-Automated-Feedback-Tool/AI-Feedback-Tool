@@ -13,7 +13,7 @@ export default function StudentReportCard({ studentReportData }) {
   return (
     <div>
         <Row className="mb-4 mt-4">
-            <Card className="text-center border-0 shadow-sm bg-light">
+            <Card className="text-start border-0 shadow-sm bg-light">
                 <CardBody>
                     <h5>
                         <span className="text-muted mb-1">Student Name: </span>
@@ -23,7 +23,7 @@ export default function StudentReportCard({ studentReportData }) {
             </Card>
         </Row>
         <Row className="mb-4 mt-4">
-            <Card className="text-center border-0 shadow-sm bg-light">
+            <Card className="text-start border-0 shadow-sm bg-light">
                 <CardBody>
                     <h5>
                         <span className="text-muted mb-1">Submission date and time: </span>
@@ -59,7 +59,7 @@ export default function StudentReportCard({ studentReportData }) {
             </Col>
         </Row>
         <Row className="mb-4 mt-4">
-            <Card className="text-center border-0 shadow-sm bg-light">
+            <Card className="text-start border-0 shadow-sm bg-light">
                 <CardBody>
                     <h5>
                         <span className="text-muted mb-1">Overall Feedback: </span>
