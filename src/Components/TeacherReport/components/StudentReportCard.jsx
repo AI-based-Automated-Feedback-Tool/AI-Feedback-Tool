@@ -4,6 +4,12 @@ import StudentReportTable from './StudentReportTable';
 
 
 export default function StudentReportCard({ studentReportData }) {
+    const formatDateTime = (rawTime) => {
+        return new Date(rawTime).toLocaleString('en-US', {
+            dateStyle: 'medium',
+            timeStyle: 'short',
+        });
+    };
   return (
     <div>
         <Row className="mb-4 mt-4">
@@ -21,7 +27,7 @@ export default function StudentReportCard({ studentReportData }) {
                 <CardBody>
                     <h5>
                         <span className="text-muted mb-1">Submission date and time: </span>
-                        <span className="fw-bold text-primary">{studentReportData[0].submitted_at}</span>
+                        <span className="fw-bold text-primary">{formatDateTime(studentReportData[0].submitted_at)}</span>
                     </h5>
                 </CardBody>
             </Card>
@@ -39,7 +45,7 @@ export default function StudentReportCard({ studentReportData }) {
                 <Card className="text-center border-0 shadow-sm bg-light">
                     <CardBody>
                         <p className="text-muted mb-1">Duration</p>
-                        <h3 className="fw-bold text-primary">{studentReportData[0].time_taken}</h3>
+                        <h3 className="fw-bold text-primary">{(studentReportData[0].time_taken/60).toFixed(2)} minutes</h3>
                     </CardBody>
                 </Card>
             </Col>
