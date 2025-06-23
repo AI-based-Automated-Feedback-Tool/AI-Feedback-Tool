@@ -18,6 +18,8 @@ export default function StudentReportCard({ studentReportData, examType }) {
 
     } else if (examType === 'essay') {
         reportData = studentReportData[0].essay_exam_submissions_answers;
+    } else if (examType === 'code') {
+        reportData = studentReportData[0].code_submissions_answers;
     }
   return (
     <div>
