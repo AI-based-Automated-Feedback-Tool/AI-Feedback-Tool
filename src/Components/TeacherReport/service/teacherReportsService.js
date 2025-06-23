@@ -144,5 +144,20 @@ export const getSubmittedEssayAnswers = async (submissionId) => {
     }
 }
 
+//Api service to fetch data for student specific report
+export const getStudentReportData = async (examId, studentId, examType) => {
+    if (!examId || !studentId || !examType) {
+        throw new Error("Exam ID, Student ID, and Exam Type are required");
+    }
+    const res = await fetch(`http://localhost:3000/api/teacher/reports/student_exam_details?examId=${examId}&studentId=${studentId}&examType=${examType}`)
+    const json = await res.json();
+    if (res.ok){
+        return json.submittedAnswers;
+    }
+    else {
+        throw new Error(json.message || "Failed to fetch student report data");
+    }
+}
+
 
             

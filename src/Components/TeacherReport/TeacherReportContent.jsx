@@ -19,7 +19,9 @@ import calculateQuestionStats from './utils/calculateQuestionStats';
 import StyledDivider from './components/StyledDivider';
 import useFetchCodeQuestions from './hooks/useFetchCodeQuestions';
 import useFetchExams from './hooks/useFetchExams';  
-import useFetchEssayQuestions from './hooks/useFetchEssayQuestions';    
+import useFetchEssayQuestions from './hooks/useFetchEssayQuestions';   
+import useFetchStudentReportData from './hooks/useFetchStudentReportData';
+import StudentReportCard from './components/StudentReportCard'; 
 
 export default function TeacherReportContent() {
     const [selectedCourse, setSelectedCourse] = useState("");
@@ -46,13 +48,16 @@ export default function TeacherReportContent() {
     const selectedExamObject = exams.find((exam) => exam.exam_id === selectedExam)
     const examType = selectedExamObject?.type || 'mcq';
 
+    // Fetch student report data
+    const { studentReportData, loadingStudentReport } = useFetchStudentReportData(selectedExam, selectedStudent, examType, setReportError);
+
+
     const { scores, avgScore, highestScore, iniTotalScore, noOfStudentsDoneExam, avgTimeInMinutes, avgFocusLoss } = useReportCalculations(examSubmissions, mcqQuestions, codeQuestions, essayQuestions, examType);
 
     const scoreDistributionData = calculateScoreDistribution(scores, iniTotalScore);  
     const {submittedAnswers, loadingAnswers} = useFetchSubmittedExamAnswers(submissionId, examType, setReportError);
     const questionStats = calculateQuestionStats(submittedAnswers, mcqQuestions, codeQuestions, essayQuestions, examType, noOfStudentsDoneExam);
  
-
     useEffect(() => {
             const getUserId = async () => {
                 setLoadingUser(true);
@@ -184,9 +189,21 @@ export default function TeacherReportContent() {
                                 </CardHeader>
                                 {/*  Insert student-specific report */}
                                 <CardBody>
-                                    <Alert variant="info">
-                                        Student-specific report will go here.
-                                    </Alert>
+                                    {reportError ? (
+                                        <CardBody>
+                                            <Alert variant="danger">{reportError}</Alert>
+                                        </CardBody>
+                                    ) : studentReportData ?  (
+                                        <CardBody>
+                                            <StudentReportCard studentReportData={studentReportData} examType={examType} />
+                                        </CardBody>
+                                    ) : (
+                                        <CardBody>
+                                            <Alert variant="info">
+                                                No report data available for this student.
+                                            </Alert>
+                                        </CardBody>
+                                    )}
                                 </CardBody>
                             </>
                         ): (selectedCourse && selectedExam) ? (
