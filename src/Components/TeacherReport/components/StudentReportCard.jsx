@@ -3,13 +3,22 @@ import { Row, Col, CardHeader, CardBody, Card } from 'react-bootstrap';
 import StudentReportTable from './StudentReportTable';
 
 
-export default function StudentReportCard({ studentReportData }) {
+export default function StudentReportCard({ studentReportData, examType }) {
     const formatDateTime = (rawTime) => {
         return new Date(rawTime).toLocaleString('en-US', {
             dateStyle: 'medium',
             timeStyle: 'short',
         });
     };
+
+    let reportData = studentReportData[0];
+
+    if (examType === 'mcq') {
+        reportData = studentReportData[0].exam_submissions_answers;
+
+    } else if (examType === 'essay') {
+        reportData = studentReportData[0].essay_exam_submissions_answers;
+    }
   return (
     <div>
         <Row className="mb-4 mt-4">
@@ -74,7 +83,7 @@ export default function StudentReportCard({ studentReportData }) {
                 <h5 className="fw-bold text-primary m-0">Question Details :</h5>
                 </CardHeader>
             <CardBody>
-                <StudentReportTable studentReportTableData={studentReportData[0].exam_submissions_answers} />
+                <StudentReportTable studentReportTableData={reportData} examType={examType} />
             </CardBody>
             </Card>
         </Row>

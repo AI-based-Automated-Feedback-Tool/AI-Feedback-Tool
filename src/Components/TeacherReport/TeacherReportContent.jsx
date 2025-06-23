@@ -43,11 +43,14 @@ export default function TeacherReportContent() {
     const {essayQuestions, loadingEssay} = useFetchEssayQuestions(selectedExam, setReportError);
     const {exams, loadingExams} = useFetchExams(selectedCourse, setError);
     const [submissionId, setSubmissionId] = useState([]);
-    const { studentReportData, loadingStudentReport } = useFetchStudentReportData(selectedExam, selectedStudent, setReportError);   
 
     //find exam type
     const selectedExamObject = exams.find((exam) => exam.exam_id === selectedExam)
     const examType = selectedExamObject?.type || 'mcq';
+
+    // Fetch student report data
+    const { studentReportData, loadingStudentReport } = useFetchStudentReportData(selectedExam, selectedStudent, examType, setReportError);
+
 
     const { scores, avgScore, highestScore, iniTotalScore, noOfStudentsDoneExam, avgTimeInMinutes, avgFocusLoss } = useReportCalculations(examSubmissions, mcqQuestions, codeQuestions, essayQuestions, examType);
 
@@ -194,7 +197,7 @@ export default function TeacherReportContent() {
                                         </CardBody>
                                     ) : studentReportData ?  (
                                         <CardBody>
-                                            <StudentReportCard studentReportData={studentReportData} />
+                                            <StudentReportCard studentReportData={studentReportData} examType={examType} />
                                         </CardBody>
                                     ) : (
                                         <CardBody>

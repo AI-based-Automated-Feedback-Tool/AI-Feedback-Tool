@@ -1,7 +1,7 @@
 import { Table } from 'react-bootstrap';
 
-export default function StudentReportTable({ studentReportTableData }) {
-    console.log("Student Report Table Data:", studentReportTableData);
+export default function StudentReportTable({ studentReportTableData, examType }) {
+  
   return (
     <div className="table-responsive">
         <Table striped bordered hover responsive>
@@ -9,7 +9,7 @@ export default function StudentReportTable({ studentReportTableData }) {
             <tr>
               <th>#</th>
               <th>Question</th>
-              <th>Your Answer</th>
+              <th>Student Answer</th>
               <th>Correct</th>
               <th>Score</th>
             </tr>
@@ -18,8 +18,16 @@ export default function StudentReportTable({ studentReportTableData }) {
             {studentReportTableData?.map((item, index) => (
               <tr key={index}>
                 <td>{index + 1}</td>
-                <td>{item.mcq_questions.question_text}</td>
-                <td>{item.student_answer}</td>
+                <td>
+                  {examType === 'mcq'
+                    ? item.mcq_questions?.question_text
+                    : item.essay_questions?.question_text}
+                </td>
+                <td>
+                  {examType === 'mcq'
+                    ? item.student_answer.join(', ')
+                    : item.student_answer?.text}
+                </td>
                 <td>
                   {item.is_correct ? (
                     <span className="text-success fw-bold">✔ Yes</span>
