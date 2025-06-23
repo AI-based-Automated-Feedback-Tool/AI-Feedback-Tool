@@ -58,7 +58,6 @@ export default function TeacherReportContent() {
     const {submittedAnswers, loadingAnswers} = useFetchSubmittedExamAnswers(submissionId, examType, setReportError);
     const questionStats = calculateQuestionStats(submittedAnswers, mcqQuestions, codeQuestions, essayQuestions, examType, noOfStudentsDoneExam);
  
-
     useEffect(() => {
             const getUserId = async () => {
                 setLoadingUser(true);
