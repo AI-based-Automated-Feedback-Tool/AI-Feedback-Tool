@@ -94,7 +94,6 @@ const CodeQuestionsList = () => {
 
     await submitAllAnswers({
       userId,
-      examId: id,
       timeTaken,
       focusLossCount: 0,
     });
