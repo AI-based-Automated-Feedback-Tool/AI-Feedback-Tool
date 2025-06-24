@@ -102,6 +102,10 @@ const PromptSelector = () => {
             </Alert>
           )}
 
+          <Alert variant="info" className="text-center">
+            This exam contains: <strong>{questionTypes.join(', ').toUpperCase()}</strong> questions.
+          </Alert>
+
           <Row className="mb-3">
             <Col md={6}>
               <Form.Group>
