@@ -53,7 +53,7 @@ export const CodeQuestionsProvider = ({ children }) => {
       // Prepare the answers array with questionId and corresponding code
       const answers = questions.map((q) => ({
         questionId: q.question_id,
-        code: studentAnswers[q.id] || "",
+        code: studentAnswers[q.question_id] || "",
       }));
   
       // Extract exam_id from the first question (assuming all belong to the same exam)
