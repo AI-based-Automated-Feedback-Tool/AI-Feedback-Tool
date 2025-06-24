@@ -1,6 +1,5 @@
-// Step 1: Add Code Prompt Support (UI-Only Base)
-import React, { useState, useContext } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import React, { useState, useContext, useEffect } from 'react';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { Container, Card, Form, Button, Row, Col, Alert } from 'react-bootstrap';
 import HeaderWithApiCount from './HeaderWithApiCount';
 import StandardAnalysis from './Prompts/StandardAnalysis';
@@ -13,6 +12,7 @@ import CodeStyleReview from './Prompts/CodeStyleReview';
 import CodeCustomPrompt from './Prompts/CodeCustomPrompt';
 import { ApiCallCountContext } from '../../../Context/ApiCallCountContext';
 
+// Prompts with label and prompt text (make sure your prompt components export prompt and label props)
 const MCQpredefinedPrompts = [
   StandardAnalysis,
   QuickInsights,
@@ -37,9 +37,23 @@ const aiProviders = [
 
 const PromptSelector = () => {
   const { examId } = useParams();
+  const location = useLocation();
   const navigate = useNavigate();
-  const [selectedPrompt, setSelectedPrompt] = useState(predefinedPrompts[0].prompt);
-  const [selectedLabel, setSelectedLabel] = useState(predefinedPrompts[0].label);
+
+  const questionTypes = location.state?.questionTypes || (location.state?.selectedType ? [location.state.selectedType] : []);
+
+
+  // Decide which prompt list to show based on questionTypes
+  const isCodeExam = questionTypes.includes('code');
+  const isMCQExam = questionTypes.includes('mcq');
+
+  // If both present, you can combine or default to one, here we choose code prompts if code present
+  const promptsList = isCodeExam ? codePredefinedPrompts : MCQpredefinedPrompts;
+
+  // Initialize selected prompt/label to first prompt in chosen list
+  const [selectedPrompt, setSelectedPrompt] = useState(promptsList[0].prompt);
+  const [selectedLabel, setSelectedLabel] = useState(promptsList[0].label);
+
   const [selectedProvider, setSelectedProvider] = useState(aiProviders[0].id);
   const [customPrompt, setCustomPrompt] = useState('');
   const [isCustomPrompt, setIsCustomPrompt] = useState(false);
@@ -53,8 +67,9 @@ const PromptSelector = () => {
     navigate(`/teacher/exams/${examId}/ai-feedback`, {
       state: {
         prompt: finalPrompt,
-        aiProvider: selectedProvider
-      }
+        aiProvider: selectedProvider,
+        questionTypes: questionTypes,
+      },
     });
   };
 
@@ -144,7 +159,9 @@ const PromptSelector = () => {
             <Button
               variant="primary"
               onClick={handleSubmit}
-              disabled={(isCustomPrompt && !customPrompt.trim()) || isLimitReached}
+              disabled={
+                (isCustomPrompt && !customPrompt.trim()) || isLimitReached
+              }
             >
               Generate Feedback
             </Button>
@@ -155,4 +172,4 @@ const PromptSelector = () => {
   );
 };
 
-export default PromptSelector;
+export default PromptSelector; 
