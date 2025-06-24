@@ -17,18 +17,15 @@ const MCQpredefinedPrompts = [
   StandardAnalysis,
   QuickInsights,
   DetailedReport,
-  CustomPrompt
+  CustomPrompt,
 ];
 
 const codePredefinedPrompts = [
   CodeErrorAnalysis,
   CodeOptimizationTips,
   CodeStyleReview,
-  CodeCustomPrompt
+  CodeCustomPrompt,
 ];
-
-// ✅ Still using MCQ prompts only for now
-const predefinedPrompts = MCQpredefinedPrompts;
 
 const aiProviders = [
   { id: 'cohere', name: 'Cohere AI', model: 'command' },
@@ -76,11 +73,11 @@ const PromptSelector = () => {
   const handlePromptChange = (label) => {
     if (label === 'Custom Prompt') {
       setIsCustomPrompt(true);
-      const promptObj = predefinedPrompts.find(p => p.label === label);
+      const promptObj = promptsList.find((p) => p.label === label);
       if (promptObj) setCustomPrompt(promptObj.prompt);
     } else {
       setIsCustomPrompt(false);
-      const promptObj = predefinedPrompts.find(p => p.label === label);
+      const promptObj = promptsList.find((p) => p.label === label);
       if (promptObj) {
         setSelectedPrompt(promptObj.prompt);
         setSelectedLabel(label);
@@ -110,10 +107,7 @@ const PromptSelector = () => {
             <Col md={6}>
               <Form.Group>
                 <Form.Label>AI Feedback Provider</Form.Label>
-                <Form.Select
-                  value={selectedProvider}
-                  onChange={(e) => setSelectedProvider(e.target.value)}
-                >
+                <Form.Select value={selectedProvider} onChange={(e) => setSelectedProvider(e.target.value)}>
                   {aiProviders.map((provider) => (
                     <option key={provider.id} value={provider.id}>
                       {provider.name}
@@ -125,12 +119,11 @@ const PromptSelector = () => {
             <Col md={6}>
               <Form.Group>
                 <Form.Label>Feedback Style</Form.Label>
-                <Form.Select
-                  value={selectedLabel}
-                  onChange={(e) => handlePromptChange(e.target.value)}
-                >
-                  {predefinedPrompts.map((p, idx) => (
-                    <option key={idx} value={p.label}>{p.label}</option>
+                <Form.Select value={selectedLabel} onChange={(e) => handlePromptChange(e.target.value)}>
+                  {promptsList.map((p, idx) => (
+                    <option key={idx} value={p.label}>
+                      {p.label}
+                    </option>
                   ))}
                 </Form.Select>
               </Form.Group>
@@ -163,9 +156,7 @@ const PromptSelector = () => {
             <Button
               variant="primary"
               onClick={handleSubmit}
-              disabled={
-                (isCustomPrompt && !customPrompt.trim()) || isLimitReached
-              }
+              disabled={(isCustomPrompt && !customPrompt.trim()) || isLimitReached}
             >
               Generate Feedback
             </Button>
@@ -176,4 +167,4 @@ const PromptSelector = () => {
   );
 };
 
-export default PromptSelector; 
+export default PromptSelector;
