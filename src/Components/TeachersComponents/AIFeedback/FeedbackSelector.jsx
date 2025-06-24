@@ -121,7 +121,10 @@ const FeedbackSelector = () => {
       return;
     }
 
-    navigate(`/teacher/exams/${selectedExam}/prompt-selector`);
+    navigate(`/teacher/exams/${selectedExam}/prompt-selector`, {
+      state: { questionTypes: [selectedType] },
+    });
+
   };
 
   return (
