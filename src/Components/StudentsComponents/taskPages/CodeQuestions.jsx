@@ -74,8 +74,8 @@ const CodeQuestionsList = () => {
   }, []);
 
   //update student answer for a question
-  const handleChange = (id, code) => {
-    handleCodeChange(id, code);
+  const handleChange = (questionId, code) => {
+    handleCodeChange(questionId, code);
   };
 
   //enter review mode before final submission
@@ -90,11 +90,10 @@ const CodeQuestionsList = () => {
       return;
     }
 
-    const timeTaken = task.duration - timeLeft;
+    const timeTaken = task.duration * 60 - timeLeft;
 
     await submitAllAnswers({
       userId,
-      examId: id,
       timeTaken,
       focusLossCount: 0,
     });
@@ -110,7 +109,7 @@ const CodeQuestionsList = () => {
       return;
     }
 
-    const studentCode = studentAnswers[currentQuestion.id];
+    const studentCode = studentAnswers[currentQuestion.question_id];
 
     if (!studentCode) {
       setRunOutput("⚠️ Please write your code before running.");
@@ -190,12 +189,12 @@ const CodeQuestionsList = () => {
         </h3>
         <ul className="list-group">
           {questions.map((q, idx) => (
-            <li key={q.id} className="list-group-item">
+            <li key={q.question_id} className="list-group-item">
               <strong>Q{idx + 1}:</strong> {q.question_description}
               <br />
               <strong>Your Code:</strong>
               <pre className="bg-light p-2 mt-2 rounded">
-                {studentAnswers[q.id] || "Not answered"}
+                {studentAnswers[q.question_id] || "Not answered"}
               </pre>
             </li>
           ))}
@@ -271,14 +270,14 @@ const CodeQuestionsList = () => {
                   className="form-control"
                   rows={15}
                   value={
-                    studentAnswers[questions[currentQuestionIndex].id] ||
+                    studentAnswers[questions[currentQuestionIndex].question_id] ||
                     `${questions[currentQuestionIndex].function_signature || ""}
-                    # Write your code here
-                    ${questions[currentQuestionIndex].wrapper_code || ""}`
+                    // Write your code below`
                   }
+                                  
                   onChange={(e) =>
                     handleChange(
-                      questions[currentQuestionIndex].id,
+                      questions[currentQuestionIndex].question_id,
                       e.target.value
                     )
                   }

@@ -52,12 +52,13 @@ export const CodeQuestionsProvider = ({ children }) => {
     try {
       // Prepare the answers array with questionId and corresponding code
       const answers = questions.map((q) => ({
-        questionId: q.id,
-        code: studentAnswers[q.id] || "",
+        questionId: q.question_id,
+        code: studentAnswers[q.question_id] || "",
       }));
   
       // Extract exam_id from the first question (assuming all belong to the same exam)
       const exam_id = questions[0]?.exam_id;
+      console.log("Submitting answers:", { userId, exam_id, answers, timeTaken, focusLossCount });
   
       // Validate payload before submission
       if (!userId || !exam_id || answers.length === 0) {
