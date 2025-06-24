@@ -1,19 +1,34 @@
-import React, { useState, useContext } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import React, { useState, useContext, useEffect } from 'react';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { Container, Card, Form, Button, Row, Col, Alert } from 'react-bootstrap';
 import HeaderWithApiCount from './HeaderWithApiCount';
 import StandardAnalysis from './Prompts/StandardAnalysis';
 import QuickInsights from './Prompts/QuickInsights';
 import DetailedReport from './Prompts/DetailedReport';
 import CustomPrompt from './Prompts/CustomPrompt';
+import CodeErrorAnalysis from './Prompts/CodeErrorAnalysis';
+import CodeOptimizationTips from './Prompts/CodeOptimizationTips';
+import CodeStyleReview from './Prompts/CodeStyleReview';
+import CodeCustomPrompt from './Prompts/CodeCustomPrompt';
 import { ApiCallCountContext } from '../../../Context/ApiCallCountContext';
 
-const predefinedPrompts = [
+// Prompts with label and prompt text (make sure your prompt components export prompt and label props)
+const MCQpredefinedPrompts = [
   StandardAnalysis,
   QuickInsights,
   DetailedReport,
   CustomPrompt
 ];
+
+const codePredefinedPrompts = [
+  CodeErrorAnalysis,
+  CodeOptimizationTips,
+  CodeStyleReview,
+  CodeCustomPrompt
+];
+
+// ✅ Still using MCQ prompts only for now
+const predefinedPrompts = MCQpredefinedPrompts;
 
 const aiProviders = [
   { id: 'cohere', name: 'Cohere AI', model: 'command' },
@@ -22,14 +37,27 @@ const aiProviders = [
 
 const PromptSelector = () => {
   const { examId } = useParams();
+  const location = useLocation();
   const navigate = useNavigate();
-  const [selectedPrompt, setSelectedPrompt] = useState(predefinedPrompts[0].prompt);
-  const [selectedLabel, setSelectedLabel] = useState(predefinedPrompts[0].label);
+
+  const questionTypes = location.state?.questionTypes || (location.state?.selectedType ? [location.state.selectedType] : []);
+
+
+  // Decide which prompt list to show based on questionTypes
+  const isCodeExam = questionTypes.includes('code');
+  const isMCQExam = questionTypes.includes('mcq');
+
+  // If both present, you can combine or default to one, here we choose code prompts if code present
+  const promptsList = isCodeExam ? codePredefinedPrompts : MCQpredefinedPrompts;
+
+  // Initialize selected prompt/label to first prompt in chosen list
+  const [selectedPrompt, setSelectedPrompt] = useState(promptsList[0].prompt);
+  const [selectedLabel, setSelectedLabel] = useState(promptsList[0].label);
+
   const [selectedProvider, setSelectedProvider] = useState(aiProviders[0].id);
   const [customPrompt, setCustomPrompt] = useState('');
   const [isCustomPrompt, setIsCustomPrompt] = useState(false);
 
-  // ✅ Get API usage info from context
   const { count, MAX_CALLS_PER_DAY } = useContext(ApiCallCountContext);
   const isLimitReached = count >= MAX_CALLS_PER_DAY;
 
@@ -39,8 +67,9 @@ const PromptSelector = () => {
     navigate(`/teacher/exams/${examId}/ai-feedback`, {
       state: {
         prompt: finalPrompt,
-        aiProvider: selectedProvider
-      }
+        aiProvider: selectedProvider,
+        questionTypes: questionTypes,
+      },
     });
   };
 
@@ -72,6 +101,10 @@ const PromptSelector = () => {
               You have reached your daily API usage limit ({MAX_CALLS_PER_DAY} calls).
             </Alert>
           )}
+
+          <Alert variant="info" className="text-center">
+            This exam contains: <strong>{questionTypes.join(', ').toUpperCase()}</strong> questions.
+          </Alert>
 
           <Row className="mb-3">
             <Col md={6}>
@@ -143,4 +176,4 @@ const PromptSelector = () => {
   );
 };
 
-export default PromptSelector;
+export default PromptSelector; 
