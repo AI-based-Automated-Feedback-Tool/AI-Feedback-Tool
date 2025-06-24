@@ -1,3 +1,4 @@
+// Step 1: Add Code Prompt Support (UI-Only Base)
 import React, { useState, useContext } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Container, Card, Form, Button, Row, Col, Alert } from 'react-bootstrap';
@@ -6,14 +7,28 @@ import StandardAnalysis from './Prompts/StandardAnalysis';
 import QuickInsights from './Prompts/QuickInsights';
 import DetailedReport from './Prompts/DetailedReport';
 import CustomPrompt from './Prompts/CustomPrompt';
+import CodeErrorAnalysis from './Prompts/CodeErrorAnalysis';
+import CodeOptimizationTips from './Prompts/CodeOptimizationTips';
+import CodeStyleReview from './Prompts/CodeStyleReview';
+import CodeCustomPrompt from './Prompts/CodeCustomPrompt';
 import { ApiCallCountContext } from '../../../Context/ApiCallCountContext';
 
-const predefinedPrompts = [
+const MCQpredefinedPrompts = [
   StandardAnalysis,
   QuickInsights,
   DetailedReport,
   CustomPrompt
 ];
+
+const codePredefinedPrompts = [
+  CodeErrorAnalysis,
+  CodeOptimizationTips,
+  CodeStyleReview,
+  CodeCustomPrompt
+];
+
+// ✅ Still using MCQ prompts only for now
+const predefinedPrompts = MCQpredefinedPrompts;
 
 const aiProviders = [
   { id: 'cohere', name: 'Cohere AI', model: 'command' },
@@ -29,7 +44,6 @@ const PromptSelector = () => {
   const [customPrompt, setCustomPrompt] = useState('');
   const [isCustomPrompt, setIsCustomPrompt] = useState(false);
 
-  // ✅ Get API usage info from context
   const { count, MAX_CALLS_PER_DAY } = useContext(ApiCallCountContext);
   const isLimitReached = count >= MAX_CALLS_PER_DAY;
 
@@ -130,9 +144,7 @@ const PromptSelector = () => {
             <Button
               variant="primary"
               onClick={handleSubmit}
-              disabled={
-                (isCustomPrompt && !customPrompt.trim()) || isLimitReached
-              }
+              disabled={(isCustomPrompt && !customPrompt.trim()) || isLimitReached}
             >
               Generate Feedback
             </Button>
