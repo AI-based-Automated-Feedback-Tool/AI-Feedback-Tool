@@ -1,4 +1,5 @@
 import {  useState, useEffect } from 'react';
+import { saveCourse } from '../service/registerCourseService';
 
 const useRegisterCourse = () => {
     const [courseName, setCourseName] = useState('');
@@ -20,6 +21,25 @@ const useRegisterCourse = () => {
         if (!validateForm()) return;
 
         setLoading(true);
+        const courseData = {
+            title: courseName,
+            description: courseDescription,
+            course_code: courseCode,
+            user_id: userId,
+        }
+        try {
+            const result = await saveCourse(courseData);
+            if (result) {
+                setCourseName('');
+                setCourseDescription('');
+                setCourseCode('');
+                alert('Course registered successfully');
+            }
+        } catch (error) {
+            setError(error.message);
+        } finally {
+            setLoading(false);
+        }
         
     }
     
