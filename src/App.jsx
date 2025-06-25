@@ -34,6 +34,7 @@ import { CodeQuestionsProvider } from "./Context/QuestionsContext/CodeContext.js
 import CodeQuestions from "./Components/StudentsComponents/taskPages/CodeQuestions.jsx";
 import { ApiCallCountProvider } from './Context/ApiCallCountContext';
 import RegisterCourseContent from "./Components/registerCourse/registerCourseContent.jsx";
+import ExamsContent from "./Components/Exams/ExamsContent.jsx";
 
 function AppContent() {
   //get user id from userContext
@@ -57,6 +58,7 @@ function AppContent() {
                   <Route path="/teacher" element={<ProtectedRoute />}>
                     <Route element={<TeacherLayout />}>
                       <Route index element={<TeacherCourses />} />
+                      <Route path="exams/:examId" element={<ExamsContent />} />
                       <Route path="exams" element={<ConfigureExam />} />
                       <Route
                         path="exams/:examId/ai-feedback"
