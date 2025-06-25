@@ -111,7 +111,7 @@ const CourseExamsPage = () => {
               </thead>
               <tbody>
                 {exams.map((exam) => (
-                  <tr key={exam.exam_id} style={{ cursor: 'pointer' }} >
+                  <tr key={exam.exam_id} style={{ cursor: 'pointer' }} onClick={() => navigate(`/teacher/exams/${exam.exam_id}`)}>
                     <td>{exam.title}</td>
                     <td>{exam.type.toUpperCase()}</td>
                     <td>{formatDuration(exam.duration)}</td>
