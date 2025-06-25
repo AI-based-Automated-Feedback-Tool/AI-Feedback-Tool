@@ -3,12 +3,24 @@ import LoadingCard from '../TeacherReport/components/LoadingCard';
 import { useEffect, useState } from 'react';
 import { supabase } from '../../SupabaseAuth/supabaseClient';
 import CreateCourseForm from './components/CreateCourseForm';
+import useRegisterCourse from './components/hooks/useRegisterCourse';
 
 
 export default function RegisterCourseContent() {
     const [userId, setUserId] = useState(null);
     const [loadingUser, setLoadingUser] = useState(true);
-    const [error, setError] = useState(null);
+    const { 
+        courseName, 
+        setCourseName, 
+        courseDescription, 
+        setCourseDescription, 
+        courseCode, 
+        setCourseCode,
+        loading,
+        registerCourse,
+        error,
+        setError    
+    } = useRegisterCourse();
 
     useEffect(() => {
                 const getUserId = async () => {
@@ -36,7 +48,21 @@ export default function RegisterCourseContent() {
                     <h4>📋 Register course</h4>
                 </CardHeader>
                 <Card.Body>
-                    <CreateCourseForm />
+                    <CreateCourseForm 
+                        formState={{
+                            courseName,
+                            setCourseName,
+                            courseDescription,
+                            setCourseDescription,
+                            courseCode,
+                            setCourseCode,
+                            userId,
+                            error,
+                            setError,
+                            loading,
+                            registerCourse
+                        }}
+                    />
                 </Card.Body>
             </Card>
         </>)}
