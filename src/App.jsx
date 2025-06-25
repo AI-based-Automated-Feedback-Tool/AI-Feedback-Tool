@@ -33,6 +33,7 @@ import { useContext } from "react";
 import { CodeQuestionsProvider } from "./Context/QuestionsContext/CodeContext.jsx";
 import CodeQuestions from "./Components/StudentsComponents/taskPages/CodeQuestions.jsx";
 import { ApiCallCountProvider } from './Context/ApiCallCountContext';
+import RegisterCourseContent from "./Components/registerCourse/registerCourseContent.jsx";
 
 function AppContent() {
   //get user id from userContext
@@ -82,7 +83,7 @@ function AppContent() {
                         element={<CourseExamsPage />}
                       />
                       <Route path="profile" element={<ProfilePage />} />
-                      <Route path="students" element={""} />
+                      <Route path="registerCourse" element={<RegisterCourseContent />} />
                       <Route
                         path="reports"
                         element={<TeacherReportContent />}
