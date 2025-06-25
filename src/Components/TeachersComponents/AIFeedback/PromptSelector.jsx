@@ -54,15 +54,29 @@ const PromptSelector = () => {
 
   const handleSubmit = () => {
     if (isLimitReached) return;
+
     const finalPrompt = isCustomPrompt ? customPrompt : selectedPrompt;
-    navigate(`/teacher/exams/${examId}/ai-feedback`, {
-      state: {
-        prompt: finalPrompt,
-        aiProvider: selectedProvider,
-        questionTypes: questionTypes,
-      },
-    });
+
+    // Check question type and route accordingly
+    if (questionTypes.includes('code')) {
+      navigate(`/teacher/exams/${examId}/ai-feedback-code`, {
+        state: {
+          prompt: finalPrompt,
+          aiProvider: selectedProvider,
+          questionTypes,
+        },
+      });
+    } else {
+      navigate(`/teacher/exams/${examId}/ai-feedback`, {
+        state: {
+          prompt: finalPrompt,
+          aiProvider: selectedProvider,
+          questionTypes,
+        },
+      });
+    }
   };
+
 
   const handlePromptChange = (label) => {
     if (label === 'Custom Prompt') {
