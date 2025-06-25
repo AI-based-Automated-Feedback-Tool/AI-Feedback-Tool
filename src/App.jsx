@@ -19,6 +19,7 @@ import { UserProvider, UserContext } from "./Context/userContext.jsx";
 import TeacherReportContent from "./Components/TeacherReport/TeacherReportContent.jsx";
 import Result from "./Components/StudentsComponents/Result.jsx";
 import AIFeedbackPage from "./Components/TeachersComponents/AIFeedback/AIFeedbackPage.jsx";
+import AIFeedbackPage_Code from "./Components/TeachersComponents/AIFeedback/AIFeedbackPage_Code.jsx";
 import { CourseProvider } from "./Context/courseContext.jsx";
 import { ExamProvider } from "./Context/examContext.jsx";
 import { TaskProvider } from "./Context/taskContext.jsx";
@@ -60,6 +61,10 @@ function AppContent() {
                       <Route
                         path="exams/:examId/ai-feedback"
                         element={<AIFeedbackPage />}
+                      />
+                      <Route
+                        path="exams/:examId/ai-feedback-code"
+                        element={<AIFeedbackPage_Code />}
                       />
                       <Route
                         path="ai-feedback"

@@ -12,7 +12,7 @@ import CodeStyleReview from './Prompts/CodeStyleReview';
 import CodeCustomPrompt from './Prompts/CodeCustomPrompt';
 import { ApiCallCountContext } from '../../../Context/ApiCallCountContext';
 
-// Prompts with label and prompt text (make sure your prompt components export prompt and label props)
+
 const MCQpredefinedPrompts = [
   StandardAnalysis,
   QuickInsights,
@@ -40,35 +40,43 @@ const PromptSelector = () => {
   const questionTypes = location.state?.questionTypes || (location.state?.selectedType ? [location.state.selectedType] : []);
 
 
-  // Decide which prompt list to show based on questionTypes
+  
   const isCodeExam = questionTypes.includes('code');
-  const isMCQExam = questionTypes.includes('mcq');
-
-  // If both present, you can combine or default to one, here we choose code prompts if code present
-  const promptsList = isCodeExam ? codePredefinedPrompts : MCQpredefinedPrompts;
-
-  // Initialize selected prompt/label to first prompt in chosen list
+  const isMCQExam = questionTypes.includes('mcq'); 
+  const promptsList = isCodeExam ? codePredefinedPrompts : MCQpredefinedPrompts; 
   const [selectedPrompt, setSelectedPrompt] = useState(promptsList[0].prompt);
   const [selectedLabel, setSelectedLabel] = useState(promptsList[0].label);
-
   const [selectedProvider, setSelectedProvider] = useState(aiProviders[0].id);
   const [customPrompt, setCustomPrompt] = useState('');
   const [isCustomPrompt, setIsCustomPrompt] = useState(false);
-
   const { count, MAX_CALLS_PER_DAY } = useContext(ApiCallCountContext);
   const isLimitReached = count >= MAX_CALLS_PER_DAY;
 
   const handleSubmit = () => {
     if (isLimitReached) return;
+
     const finalPrompt = isCustomPrompt ? customPrompt : selectedPrompt;
-    navigate(`/teacher/exams/${examId}/ai-feedback`, {
-      state: {
-        prompt: finalPrompt,
-        aiProvider: selectedProvider,
-        questionTypes: questionTypes,
-      },
-    });
+
+    // Check question type and route accordingly
+    if (questionTypes.includes('code')) {
+      navigate(`/teacher/exams/${examId}/ai-feedback-code`, {
+        state: {
+          prompt: finalPrompt,
+          aiProvider: selectedProvider,
+          questionTypes,
+        },
+      });
+    } else {
+      navigate(`/teacher/exams/${examId}/ai-feedback`, {
+        state: {
+          prompt: finalPrompt,
+          aiProvider: selectedProvider,
+          questionTypes,
+        },
+      });
+    }
   };
+
 
   const handlePromptChange = (label) => {
     if (label === 'Custom Prompt') {
