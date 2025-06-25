@@ -1,53 +1,70 @@
-import React, { useEffect, useState } from 'react';
-import { useParams, useLocation } from 'react-router-dom';
-import { Spinner } from 'react-bootstrap';
+// AIFeedbackPage_Code.jsx
+
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { supabase } from '../../../SupabaseAuth/supabaseClient';
 
 const AIFeedbackPage_Code = () => {
   const { examId } = useParams();
-  const location = useLocation();
+  const [examTitle, setExamTitle] = useState("");
+  const [codeData, setCodeData] = useState([]);
 
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  // Placeholder: this useEffect will later be used to fetch exam data
   useEffect(() => {
-    const init = async () => {
+    const fetchData = async () => {
       try {
-        // Simulate async operation
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        setLoading(false);
-      } catch (err) {
-        setError('Failed to load data.');
-        setLoading(false);
+        // 1. Get exam title
+        const { data: exam, error: examError } = await supabase
+          .from("exams")
+          .select("title")
+          .eq("exam_id", examId)
+          .single();
+        if (examError) throw examError;
+        setExamTitle(exam.title);
+
+        // 2. Get code questions for this exam
+        const { data: questions, error: questionError } = await supabase
+          .from("code_questions")
+          .select("*")
+          .eq("exam_id", examId);
+        if (questionError) throw questionError;
+
+        const questionIds = questions.map(q => q.id);
+
+        // 3. Get student answers for those questions
+        const { data: answers, error: answerError } = await supabase
+          .from("code_submissions_answers")
+          .select("*")
+          .in("question_id", questionIds);
+        if (answerError) throw answerError;
+
+        // 4. Merge questions with answers
+        const merged = answers.map(answer => {
+          const question = questions.find(q => q.id === answer.question_id);
+          return {
+            ...answer,
+            question_description: question?.question_description || "",
+            function_signature: question?.function_signature || "",
+            wrapper_code: question?.wrapper_code || "",
+            test_cases: question?.test_cases || "",
+            points: question?.points || 0,
+          };
+        });
+
+        setCodeData(merged);
+        console.log("Merged Code Data:", merged);
+      } catch (error) {
+        console.error("Error fetching data:", error.message);
       }
     };
 
-    init();
+    if (examId) fetchData();
   }, [examId]);
 
-  if (loading) {
-    return (
-      <div className="d-flex justify-content-center align-items-center vh-100">
-        <Spinner animation="border" role="status" />
-        <span className="ms-2">Loading code feedback...</span>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="container mt-5">
-        <div className="alert alert-danger" role="alert">
-          {error}
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="container mt-5">
-      <h2>AI Feedback for Code Questions</h2>
-      <p>This page will show AI-generated feedback for student code submissions.</p>
+    <div className="p-4">
+      <h2 className="text-xl font-semibold mb-4">AI Feedback – Code Questions</h2>
+      <p className="mb-6">Exam: <strong>{examTitle}</strong></p>
+      <p>Fetched <strong>{codeData.length}</strong> code answers from the database.</p>
     </div>
   );
 };
