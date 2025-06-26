@@ -67,9 +67,23 @@ export default function ExamsContent() {
               ))}
             </ListGroup>
           )}
+
+          {examDetails?.type === 'essay' && (
+            <ListGroup variant="flush">
+              {examDetails?.questions?.map((q, index) => (
+                <ListGroup.Item key={q.question_id} className="mb-3">
+                  <strong>Q{index + 1}:</strong> {q.question_text}
+                  <p className="mt-2"><strong>Word Limit:</strong> {q.word_limit}</p>
+                  {q.grading_note && <p><strong>Grading Note:</strong> {q.grading_note}</p>}
+                  
+                  <p><strong>Points:</strong> {q.points}</p>
+                </ListGroup.Item>
+              ))}
+            </ListGroup>
+          )}
         </Card.Body>
       </Card>
     </Col>
-    
+
   )
 }
