@@ -24,6 +24,31 @@ export default function ExamsContent() {
           <p><strong>Start:</strong> {formatDateTime(examDetails?.start_time)}</p>
           <p><strong>End:</strong> {formatDateTime(examDetails?.end_time)}</p>
           <p><strong>Instructions:</strong> {examDetails?.instructions || '---'}</p>
+
+          <hr />
+          <h5 className="mt-4">📝 Questions ({examDetails?.questions.length})</h5>
+          <ListGroup variant="flush">
+            {examDetails?.questions?.map((q, index) => (
+              <ListGroup.Item key={q.question_id} className="mb-3">
+                <strong>Q{index + 1}:</strong> {q.question_text}
+                <div className="mt-2">
+                  {q.options?.map((option, i) => {
+                    const isCorrect = q.answers.includes(option);
+                    return (
+                      <div key={i} className={`px-2 py-1 rounded mb-1 ${isCorrect ? 'bg-success text-white' : 'bg-light'}`}>
+                        {String.fromCharCode(65 + i)}. {option}
+                      </div>
+                    );
+                  })}
+                </div>
+                <div className="mt-2">
+                  <small>
+                    Points: <strong>{q.points}</strong> | Correct Answer(s): <strong>{q.no_of_correct_answers}</strong>
+                  </small>
+                </div>
+              </ListGroup.Item>
+            ))}
+          </ListGroup>
         </Card.Body>
       </Card>
     </Col>
