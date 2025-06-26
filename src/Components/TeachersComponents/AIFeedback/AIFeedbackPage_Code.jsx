@@ -1,16 +1,27 @@
-// Add fetch call to API + parse response
-import React, { useEffect, useState, useRef } from "react";
+// AIFeedbackPage_Code.jsx
+import React, { useEffect, useState, useRef, useContext } from "react";
 import { useParams, useLocation } from "react-router-dom";
 import { supabase } from '../../../SupabaseAuth/supabaseClient';
+import { ApiCallCountContext } from "../../context/ApiCallCountContext";
 
-const defaultPrompts = [ /* same as before */ ];
+const defaultPrompts = [
+  {
+    label: 'Code Feedback',
+    prompt: `You are a programming education AI assistant...
+[QUESTIONS]
+[SUBMISSIONS]`
+  }
+];
 
 const AIFeedbackPage_Code = () => {
   const { examId } = useParams();
   const location = useLocation();
   const [examTitle, setExamTitle] = useState("");
   const [feedback, setFeedback] = useState(null);
+  const [showLimitModal, setShowLimitModal] = useState(false);
   const hasFetched = useRef(false);
+
+  const { apiCallCount, incrementApiCallCount, MAX_API_CALLS_PER_DAY } = useContext(ApiCallCountContext);
 
   const callAIAPI = async (promptWithData) => {
     const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
@@ -35,6 +46,11 @@ const AIFeedbackPage_Code = () => {
 
     const generateFeedback = async () => {
       try {
+        if (apiCallCount >= MAX_API_CALLS_PER_DAY) {
+          setShowLimitModal(true);
+          return;
+        }
+
         const { data: exam } = await supabase
           .from("exams")
           .select("title")
@@ -70,18 +86,26 @@ const AIFeedbackPage_Code = () => {
         }
 
         setFeedback(parsed);
+        incrementApiCallCount();
       } catch (err) {
         console.error("AI Feedback error:", err.message);
       }
     };
 
     generateFeedback();
-  }, [examId, location.state]);
+  }, [examId, location.state, apiCallCount, MAX_API_CALLS_PER_DAY, incrementApiCallCount]);
 
   return (
     <div className="p-4">
       <h2>AI Feedback – Code</h2>
       <p>Exam: <strong>{examTitle}</strong></p>
+
+      {showLimitModal && (
+        <div className="bg-red-100 text-red-800 p-4 rounded mt-4">
+          You have reached the maximum number of feedback generations for today ({MAX_API_CALLS_PER_DAY}).
+        </div>
+      )}
+
       <div className="mt-4">
         <h4>AI Feedback:</h4>
         <pre className="bg-gray-100 p-3 rounded">
