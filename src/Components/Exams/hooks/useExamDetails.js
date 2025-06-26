@@ -23,10 +23,18 @@ const useExamDetails = ({examId}) => {
         }
     }, [examId]);
 
+    //function to format date and time
+    const formatDateTime = (dateStr) =>
+    new Date(dateStr).toLocaleString('en-US', {
+      dateStyle: 'medium',
+      timeStyle: 'short',
+    });
+
     return {
         examDetails,
         loading,
-        error
+        error,
+        formatDateTime
     };
 };
 
