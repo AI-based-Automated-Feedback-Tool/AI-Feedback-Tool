@@ -1,70 +1,93 @@
-// AIFeedbackPage_Code.jsx
-
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+// Add fetch call to API + parse response
+import React, { useEffect, useState, useRef } from "react";
+import { useParams, useLocation } from "react-router-dom";
 import { supabase } from '../../../SupabaseAuth/supabaseClient';
+
+const defaultPrompts = [ /* same as before */ ];
 
 const AIFeedbackPage_Code = () => {
   const { examId } = useParams();
+  const location = useLocation();
   const [examTitle, setExamTitle] = useState("");
-  const [codeData, setCodeData] = useState([]);
+  const [feedback, setFeedback] = useState(null);
+  const hasFetched = useRef(false);
+
+  const callAIAPI = async (promptWithData) => {
+    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+    const response = await fetch(`${apiUrl}/api/ai/generate`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        prompt: promptWithData,
+        provider: location.state?.aiProvider || 'cohere'
+      })
+    });
+
+    if (!response.ok) throw new Error('Failed to fetch AI feedback');
+
+    const data = await response.json();
+    return data;
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
+    if (hasFetched.current) return;
+    hasFetched.current = true;
+
+    const generateFeedback = async () => {
       try {
-        // 1. Get exam title
-        const { data: exam, error: examError } = await supabase
+        const { data: exam } = await supabase
           .from("exams")
           .select("title")
           .eq("exam_id", examId)
           .single();
-        if (examError) throw examError;
         setExamTitle(exam.title);
 
-        // 2. Get code questions for this exam
-        const { data: questions, error: questionError } = await supabase
+        const { data: questions } = await supabase
           .from("code_questions")
-          .select("*")
+          .select("question_id, question_description, function_signature, wrapper_code, test_cases, points")
           .eq("exam_id", examId);
-        if (questionError) throw questionError;
 
-        const questionIds = questions.map(q => q.id);
+        const questionIds = questions.map(q => q.question_id);
 
-        // 3. Get student answers for those questions
-        const { data: answers, error: answerError } = await supabase
+        const { data: submissions } = await supabase
           .from("code_submissions_answers")
-          .select("*")
+          .select("student_answer, is_correct, score, question_id")
           .in("question_id", questionIds);
-        if (answerError) throw answerError;
 
-        // 4. Merge questions with answers
-        const merged = answers.map(answer => {
-          const question = questions.find(q => q.id === answer.question_id);
-          return {
-            ...answer,
-            question_description: question?.question_description || "",
-            function_signature: question?.function_signature || "",
-            wrapper_code: question?.wrapper_code || "",
-            test_cases: question?.test_cases || "",
-            points: question?.points || 0,
-          };
-        });
+        const customPrompt = location.state?.prompt || defaultPrompts[0].prompt;
 
-        setCodeData(merged);
-        console.log("Merged Code Data:", merged);
-      } catch (error) {
-        console.error("Error fetching data:", error.message);
+        const promptWithData = customPrompt
+          .replace('[QUESTIONS]', JSON.stringify(questions))
+          .replace('[SUBMISSIONS]', JSON.stringify(submissions));
+
+        const aiResult = await callAIAPI(promptWithData);
+
+        let parsed;
+        try {
+          parsed = JSON.parse(aiResult.result);
+        } catch {
+          parsed = { overallSummary: aiResult.result };
+        }
+
+        setFeedback(parsed);
+      } catch (err) {
+        console.error("AI Feedback error:", err.message);
       }
     };
 
-    if (examId) fetchData();
-  }, [examId]);
+    generateFeedback();
+  }, [examId, location.state]);
 
   return (
     <div className="p-4">
-      <h2 className="text-xl font-semibold mb-4">AI Feedback – Code Questions</h2>
-      <p className="mb-6">Exam: <strong>{examTitle}</strong></p>
-      <p>Fetched <strong>{codeData.length}</strong> code answers from the database.</p>
+      <h2>AI Feedback – Code</h2>
+      <p>Exam: <strong>{examTitle}</strong></p>
+      <div className="mt-4">
+        <h4>AI Feedback:</h4>
+        <pre className="bg-gray-100 p-3 rounded">
+          {feedback ? JSON.stringify(feedback, null, 2) : "Generating..."}
+        </pre>
+      </div>
     </div>
   );
 };
