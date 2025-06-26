@@ -12,6 +12,16 @@ export default function ExamsContent() {
     }= useExamDetails({ examId });
     console.log("Exam Details:", examDetails);
 
+    // function to get only file name from URL
+    const getFileName = (url) => {
+      const fileNameWithTimestamp = url ? url.split('/').pop() : null;
+      if (fileNameWithTimestamp) {
+        const spaceLessFileName = fileNameWithTimestamp.substring(fileNameWithTimestamp.indexOf('_') + 1);
+        const trimmedName = spaceLessFileName.replace(/%20/g, ' ')
+        return trimmedName;                  
+      } 
+    }
+
   return (
     <Col className="w-100" style={{ backgroundColor: '#f8f9fa' }}>
       <Card className="mt-4">
@@ -75,7 +85,11 @@ export default function ExamsContent() {
                   <strong>Q{index + 1}:</strong> {q.question_text}
                   <p className="mt-2"><strong>Word Limit:</strong> {q.word_limit}</p>
                   {q.grading_note && <p><strong>Grading Note:</strong> {q.grading_note}</p>}
-                  
+                  {q.attachment_url && (
+                    <div className="mt-2">
+                      <p><strong>Attachment:</strong> {getFileName(q.attachment_url)}</p>
+                    </div>
+                  )}
                   <p><strong>Points:</strong> {q.points}</p>
                 </ListGroup.Item>
               ))}
