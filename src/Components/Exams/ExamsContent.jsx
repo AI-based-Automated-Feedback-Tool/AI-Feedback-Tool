@@ -1,4 +1,4 @@
-import { Card, CardBody, CardHeader, Col, Badge , ListGroup } from 'react-bootstrap';
+import { Card, CardBody, CardHeader, Col, Badge , ListGroup, Button } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 import useExamDetails from './hooks/useExamDetails';
 
@@ -34,6 +34,11 @@ export default function ExamsContent() {
           <p><strong>Start:</strong> {formatDateTime(examDetails?.start_time)}</p>
           <p><strong>End:</strong> {formatDateTime(examDetails?.end_time)}</p>
           <p><strong>Instructions:</strong> {examDetails?.instructions || '---'}</p>
+          <div className="d-flex justify-content-end ">
+            <Button variant="outline-primary" size="sm" className='mb-3' onClick={handleEditExam}>
+              ✏️ Edit
+            </Button>
+          </div>
 
           <hr />
           <h5 className="mt-4">📝 Questions ({examDetails?.questions.length})</h5>
@@ -57,6 +62,11 @@ export default function ExamsContent() {
                     <small>
                       Points: <strong>{q.points}</strong> | Correct Answer(s): <strong>{q.no_of_correct_answers}</strong>
                     </small>
+                    <div className="d-flex justify-content-end">
+                      <Button variant="outline-primary" size="sm" className='mb-3' onClick={() => handleEditQuestion(q, examDetails?.type)}>
+                        ✏️ Edit
+                      </Button>
+                    </div>
                   </div>
                 </ListGroup.Item>
               ))}
