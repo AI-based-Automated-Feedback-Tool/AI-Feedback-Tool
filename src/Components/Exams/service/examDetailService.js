@@ -19,7 +19,7 @@ export const editExamDetails = async (examData) => {
         throw new Error("Exam ID is required");
     }
     const res = await fetch('http://localhost:3000/api/editExamDetails', {
-        method: 'POST',
+        method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
         },

@@ -20,7 +20,10 @@ export default function EditExam({examId, show, handleClose}) {
         setAiAssessmentGuide,           
         questionCount,
         setQuestionCount,
-        manageSaveChangesToExam
+        manageSaveChangesToExam,
+        setError,
+        setLoading,
+        validate
     } = useEditExam({examId});  
 
     function formatDateTimeToLocalInput(utcDateString) {
@@ -77,10 +80,20 @@ export default function EditExam({examId, show, handleClose}) {
             ai_assessment_guide:aiAssessmentGuide,
             question_count:questionCount,
         };
+
+        setLoading(true);
+        setError({});
+
         manageSaveChangesToExam(updatedExam);
 
         // Reset form fields    
-        resetForm();
+        setType("");
+        setDuration("");
+        setStartTime("");
+        setEndTime("");
+        setInstructions("");
+        setAiAssessmentGuide("");
+        setQuestionCount("");
     }
 
     return (
@@ -170,7 +183,7 @@ export default function EditExam({examId, show, handleClose}) {
 
         <Modal.Footer>
             <Button variant="secondary" onClick={handleClose}>Close</Button>
-            <Button variant="primary" onClick={manageSaveChangesToExam}>Save Changes</Button>
+            <Button variant="primary" onClick={manageSaveChanges}>Save Changes</Button>
         </Modal.Footer>
     </Modal>
   )

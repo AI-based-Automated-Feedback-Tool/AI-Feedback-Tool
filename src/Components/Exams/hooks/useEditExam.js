@@ -53,12 +53,6 @@ const useEditExam = ({examId}) => {
 
     // Function to manage saving changes to the exam
     const manageSaveChangesToExam = async(updatedExam) => {
-        if (!validate()) {
-            return;
-        }
-
-        setLoading(true);
-        setError({});
         try {
             const updatedExamDetails = await editExamDetails(updatedExam);
             setLoading(false);
@@ -92,7 +86,10 @@ const useEditExam = ({examId}) => {
         questionCount,
         setQuestionCount,
         manageSaveChangesToExam,
-        handleEditExam
+        handleEditExam,
+        setError,
+        setLoading,
+        validate,
     };
 };
 
