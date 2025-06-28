@@ -102,6 +102,15 @@ export default function ExamsContent() {
                     <p className="mb-1"><strong>Wrapper Code:</strong></p>
                     <pre className="bg-secondary text-white p-2 rounded"><code>{q.wrapper_code}</code></pre>
                     <p><strong>Points:</strong> {q.points}</p>
+                    <p className="mt-2"><strong>Test Cases:</strong></p>
+                    <ListGroup variant="flush">
+                      {q.test_cases.map((tc, tcIndex) => (
+                        <ListGroup.Item key={tcIndex} className="bg-light p-2 mb-2">
+                          <p><strong>Input:</strong> <code>{JSON.stringify(tc.input)}</code></p>
+                          <p><strong>Expected Output:</strong> <code>{JSON.stringify(tc.output)}</code></p>
+                        </ListGroup.Item>
+                      ))}
+                    </ListGroup>
                   </ListGroup.Item>
                 ))}
               </ListGroup>
