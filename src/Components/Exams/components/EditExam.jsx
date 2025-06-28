@@ -4,6 +4,7 @@ import useEditExam from '../hooks/useEditExam';
 import EditMcqQuestionCollection from './EditMcqQuestionCollection';
 import { useNavigate } from 'react-router-dom';
 import EditCodeQuestionCollection from './EditCodeQuestionCollection';
+import EditEssayQuestionCollection from './EditEssayQuestionCollection';
 
 export default function EditExam({examId, show, handleClose, onSaveSuccess}) {
     const {
@@ -234,7 +235,14 @@ export default function EditExam({examId, show, handleClose, onSaveSuccess}) {
                     questions={questions}
                     setQuestions={setQuestions}
                 />
-            )}  
+            )} 
+
+            { examDetails?.type === 'essay' && (
+                <EditEssayQuestionCollection
+                    questions={questions}
+                    setQuestions={setQuestions}
+                />
+            )} 
 
         </Modal.Body>
 
