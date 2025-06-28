@@ -1,20 +1,33 @@
 import { Card, CardBody, CardHeader, Col, Badge , ListGroup, Button } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
+import { useState } from 'react';
 import useExamDetails from './hooks/useExamDetails';
 import EditExam from './components/EditExam';
+import { useNavigate } from 'react-router-dom';
+
 
 export default function ExamsContent() {
-    const { examId } = useParams();
+    const { examId, course_id } = useParams();
     const {
         examDetails,
         loading,
         error,
-        formatDateTime,
-        handleEditExam,
-        showEditExam,
-        closeEditExam
+        formatDateTime
     }= useExamDetails({ examId });
-    console.log("Exam Details:", examDetails);
+
+    const navigate = useNavigate();
+
+    const [showEditExam, setShowEditExam] = useState(false);
+
+    //function to handle edit exam
+    const handleEditExam = (examId) => {
+        setShowEditExam(true);
+    };
+
+    //function to close edit exam modal
+    const closeEditExam = () => {
+        setShowEditExam(false);
+    };
 
     // function to get only file name from URL
     const getFileName = (url) => {
@@ -25,6 +38,10 @@ export default function ExamsContent() {
         return trimmedName;                  
       } 
     }
+
+    const handleSaveSuccess = () => {
+      navigate(`/teacher/courses/${course_id}/exams`);
+  };
 
   return (
     <Col className="w-100" style={{ backgroundColor: '#f8f9fa' }}>
@@ -106,13 +123,14 @@ export default function ExamsContent() {
               </ListGroup>
             )}
           </>
-          <EditExam
-            examId={examId}
-            show={showEditExam}
-            handleClose={() =>  closeEditExam()}
-          />
         </Card.Body>
       </Card>
+      <EditExam
+        examId={examId}
+        show={showEditExam}
+        handleClose={closeEditExam}
+        onSaveSuccess={handleSaveSuccess}
+      />
     </Col>
 
   )

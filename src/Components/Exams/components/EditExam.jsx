@@ -2,8 +2,9 @@ import { Modal, Form, Button, Row, Col, Accordion } from 'react-bootstrap'
 import { useEffect } from 'react';
 import useEditExam from '../hooks/useEditExam';
 import EditQuestionCollection from './EditQuestionCollection';
+import { useNavigate } from 'react-router-dom';
 
-export default function EditExam({examId, show, handleClose}) {
+export default function EditExam({examId, show, handleClose, onSaveSuccess}) {
     const {
         examDetails,
         error,
@@ -27,7 +28,9 @@ export default function EditExam({examId, show, handleClose}) {
         validate,
         questions,
         setQuestions
-    } = useEditExam({examId});  
+    } = useEditExam({examId});
+
+    const navigate = useNavigate();
 
     function formatDateTimeToLocalInput(utcDateString) {
         if (!utcDateString) return '';
@@ -68,7 +71,7 @@ export default function EditExam({examId, show, handleClose}) {
         return `${year}-${month}-${day}T${hours}:${minutes}`; // format for datetime-local
     };
 
-    const manageSaveChanges = () => {
+    const manageSaveChanges = async() => {
         const isValid = validate();
         if (!isValid) {
             return;
@@ -92,23 +95,23 @@ export default function EditExam({examId, show, handleClose}) {
                 no_of_correct_answers: q.no_of_correct_answers
             }))
         };
-        console.log('Updated Exam Details:', updatedExam);
-        setLoading(true);
-        setError({});
-
-        manageSaveChangesToExam(updatedExam);
-
-        // Reset form fields    
-        setType("");
-        setDuration("");
-        setStartTime("");
-        setEndTime("");
-        setInstructions("");
-        setAiAssessmentGuide("");
-        setQuestionCount("");
-        setQuestions([]);
-        handleClose();
-    }
+        
+        try {
+            setLoading(true);
+            setError({});
+            const saved = await manageSaveChangesToExam(updatedExam);
+            console.log('Result from manageSaveChangesToExam:', saved); 
+            if (saved) {
+                console.log('Saved successfully!');
+                handleClose();
+                onSaveSuccess?.();
+            }
+        } catch (error) {
+            setError({ message: error.message });
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return (
     <Modal show={show} onHide={handleClose} size="lg">
@@ -199,7 +202,6 @@ export default function EditExam({examId, show, handleClose}) {
             <EditQuestionCollection
                 questions={questions}
                 setQuestions={setQuestions}
-
             />
 
         </Modal.Body>

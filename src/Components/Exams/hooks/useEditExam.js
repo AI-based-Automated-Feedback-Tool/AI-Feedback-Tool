@@ -1,10 +1,12 @@
 import {  useState, useEffect } from 'react';
 import  useExamDetails  from './useExamDetails';
 import { editExamDetails } from '../service/examDetailService'; 
+import { getExamDetails } from '../service/examDetailService';
 
 const useEditExam = ({examId}) => {
     const { 
         examDetails, 
+        setExamDetails,
         loading, 
         error, 
         formatDateTime, 
@@ -12,7 +14,8 @@ const useEditExam = ({examId}) => {
         setLoading,
         showEditExam,
         handleEditExam,     
-        handleEditQuestion
+        handleEditQuestion,
+        closeEditExam
     } = useExamDetails({ examId });
 
     const [type, setType] = useState(examDetails?.type);
@@ -57,14 +60,33 @@ const useEditExam = ({examId}) => {
     const manageSaveChangesToExam = async(updatedExam) => {
         try {
             const updatedExamDetails = await editExamDetails(updatedExam);
-            setLoading(false);
             return updatedExamDetails;
         } catch (error) {
             setError({ message: error.message });
+            return null;
         } finally {
             setLoading(false);
         }
 
+    };
+
+    // Function to refresh the exam details after saving changes
+    const refreshExamDetails = async () => {
+        try {
+            const refreshedDetails = await getExamDetails(examId);
+
+            setExamDetails(refreshedDetails);
+            setType(refreshedDetails.type);
+            setDuration(refreshedDetails.duration);
+            setStartTime(formatDateTimeToLocalInput(refreshedDetails.start_time));
+            setEndTime(formatDateTimeToLocalInput(refreshedDetails.end_time));
+            setInstructions(refreshedDetails.instructions);
+            setAiAssessmentGuide(refreshedDetails.ai_assessment_guide);
+            setQuestionCount(refreshedDetails.question_count);
+            setQuestions(refreshedDetails.questions);
+        } catch (error) {
+            setError({ message: error.message });
+        }
     };
 
     return {
@@ -93,7 +115,8 @@ const useEditExam = ({examId}) => {
         setLoading,
         validate,
         questions,
-        setQuestions
+        setQuestions,
+        refreshExamDetails
     };
 };
 

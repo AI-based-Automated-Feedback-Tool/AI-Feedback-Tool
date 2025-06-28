@@ -5,7 +5,7 @@ const useExamDetails = ({examId}) => {
     const [examDetails, setExamDetails] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState({});
-    const [showEditExam, setShowEditExam] = useState(false);
+    
 
     useEffect(() => {
         const fetchExamDetails = async () => {
@@ -31,16 +31,6 @@ const useExamDetails = ({examId}) => {
       timeStyle: 'short',
     });
 
-    //function to handle edit exam
-    const handleEditExam = (examId) => {
-        setShowEditExam(true);
-    };
-
-    //function to close edit exam modal
-    const closeEditExam = () => {
-        setShowEditExam(false);
-    };
-
     //function to handle edit question
     const handleEditQuestion = (questionId, questionType) => {
         console.log(`Edit question with ID: ${questionId} and Type: ${questionType}`);
@@ -48,15 +38,14 @@ const useExamDetails = ({examId}) => {
 
     return {
         examDetails,
+        setExamDetails,
         loading,
         setLoading,
         error,
         formatDateTime,
         setError,
-        showEditExam,
-        handleEditExam,
         handleEditQuestion,
-        closeEditExam
+        
     };
 };
 
