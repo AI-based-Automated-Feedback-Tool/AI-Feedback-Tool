@@ -34,16 +34,16 @@ export default function ExamsContent() {
         </Card.Header>
         <Card.Body>
           <>
+            <div className="d-flex justify-content-end ">
+              <Button variant="outline-primary" size="sm" className='mb-3' onClick={() => handleEditExam(examId)}>
+                ✏️ Edit Exam
+              </Button>
+            </div>
             <p><strong>Type:</strong> <Badge bg="secondary">{examDetails?.type.toUpperCase()}</Badge></p>
             <p><strong>Duration:</strong> {examDetails?.duration} minutes</p>
             <p><strong>Start:</strong> {formatDateTime(examDetails?.start_time)}</p>
             <p><strong>End:</strong> {formatDateTime(examDetails?.end_time)}</p>
             <p><strong>Instructions:</strong> {examDetails?.instructions || '---'}</p>
-            <div className="d-flex justify-content-end ">
-              <Button variant="outline-primary" size="sm" className='mb-3' onClick={() => handleEditExam(examId)}>
-                ✏️ Edit
-              </Button>
-            </div>
 
             <hr />
             <h5 className="mt-4">📝 Questions ({examDetails?.questions.length})</h5>
@@ -67,11 +67,6 @@ export default function ExamsContent() {
                       <small>
                         Points: <strong>{q.points}</strong> | Correct Answer(s): <strong>{q.no_of_correct_answers}</strong>
                       </small>
-                      <div className="d-flex justify-content-end">
-                        <Button variant="outline-primary" size="sm" className='mb-3' onClick={() => handleEditQuestion(q.question_id, examDetails?.type)}>
-                          ✏️ Edit
-                        </Button>
-                      </div>
                     </div>
                   </ListGroup.Item>
                 ))}
@@ -88,12 +83,6 @@ export default function ExamsContent() {
                     <p className="mb-1"><strong>Wrapper Code:</strong></p>
                     <pre className="bg-secondary text-white p-2 rounded"><code>{q.wrapper_code}</code></pre>
                     <p><strong>Points:</strong> {q.points}</p>
-
-                    <div className="d-flex justify-content-end">
-                      <Button variant="outline-primary" size="sm" className='mb-3' onClick={() => handleEditQuestion(q.question_id, examDetails?.type)}>
-                        ✏️ Edit
-                      </Button>
-                    </div>
                   </ListGroup.Item>
                 ))}
               </ListGroup>
@@ -112,12 +101,6 @@ export default function ExamsContent() {
                       </div>
                     )}
                     <p><strong>Points:</strong> {q.points}</p>
-
-                    <div className="d-flex justify-content-end">
-                      <Button variant="outline-primary" size="sm" className='mb-3' onClick={() => handleEditQuestion(q.question_id, examDetails?.type)}>
-                        ✏️ Edit
-                      </Button>
-                    </div>
                   </ListGroup.Item>
                 ))}
               </ListGroup>

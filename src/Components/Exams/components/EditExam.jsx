@@ -1,6 +1,7 @@
-import { Modal, Form, Button, Row, Col } from 'react-bootstrap'
+import { Modal, Form, Button, Row, Col, Accordion } from 'react-bootstrap'
 import { useEffect } from 'react';
 import useEditExam from '../hooks/useEditExam';
+import EditQuestionCollection from './EditQuestionCollection';
 
 export default function EditExam({examId, show, handleClose}) {
     const {
@@ -23,7 +24,9 @@ export default function EditExam({examId, show, handleClose}) {
         manageSaveChangesToExam,
         setError,
         setLoading,
-        validate
+        validate,
+        questions,
+        setQuestions
     } = useEditExam({examId});  
 
     function formatDateTimeToLocalInput(utcDateString) {
@@ -47,6 +50,7 @@ export default function EditExam({examId, show, handleClose}) {
             setInstructions(examDetails.instructions);
             setAiAssessmentGuide(examDetails.ai_assessment_guide);
             setQuestionCount(examDetails.question_count);
+            setQuestions(examDetails.questions);
         }
     }, [examDetails]);
     
@@ -79,8 +83,16 @@ export default function EditExam({examId, show, handleClose}) {
             instructions:instructions,
             ai_assessment_guide:aiAssessmentGuide,
             question_count:questionCount,
+            questions: questions.map(q => ({
+                question_id: q.question_id,
+                question_text: q.question_text,
+                options: q.options,
+                answers: q.answers,
+                points: q.points,
+                no_of_correct_answers: q.no_of_correct_answers
+            }))
         };
-
+        console.log('Updated Exam Details:', updatedExam);
         setLoading(true);
         setError({});
 
@@ -94,6 +106,8 @@ export default function EditExam({examId, show, handleClose}) {
         setInstructions("");
         setAiAssessmentGuide("");
         setQuestionCount("");
+        setQuestions([]);
+        handleClose();
     }
 
     return (
@@ -179,6 +193,15 @@ export default function EditExam({examId, show, handleClose}) {
                     </Form.Group>
                 </Col>
             </Row>
+
+            <hr />
+
+            <EditQuestionCollection
+                questions={questions}
+                setQuestions={setQuestions}
+
+            />
+
         </Modal.Body>
 
         <Modal.Footer>

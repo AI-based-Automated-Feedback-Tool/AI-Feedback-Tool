@@ -22,6 +22,8 @@ const useEditExam = ({examId}) => {
     const [instructions, setInstructions] = useState(examDetails?.instructions);
     const [aiAssessmentGuide, setAiAssessmentGuide] = useState(examDetails?.ai_assessment_guide);
     const [questionCount, setQuestionCount] = useState(examDetails?.questions.length || 0);
+
+    const [questions, setQuestions] = useState(examDetails?.questions || []);
     
 
     const validate = () => {
@@ -90,6 +92,8 @@ const useEditExam = ({examId}) => {
         setError,
         setLoading,
         validate,
+        questions,
+        setQuestions
     };
 };
 
