@@ -58,7 +58,6 @@ function AppContent() {
                   <Route path="/teacher" element={<ProtectedRoute />}>
                     <Route element={<TeacherLayout />}>
                       <Route index element={<TeacherCourses />} />
-                      <Route path="exams/:examId" element={<ExamsContent />} />
                       <Route path="exams" element={<ConfigureExam />} />
                       <Route
                         path="exams/:examId/ai-feedback"
@@ -84,6 +83,8 @@ function AppContent() {
                         path="courses/:course_id/exams"
                         element={<CourseExamsPage />}
                       />
+                      <Route path="courses/:course_id/exams/:examId" element={<ExamsContent />} />
+
                       <Route path="profile" element={<ProfilePage />} />
                       <Route path="registerCourse" element={<RegisterCourseContent />} />
                       <Route
