@@ -84,11 +84,7 @@ export default function EditMcqQuestionCollection({questions, setQuestions}) {
                     value={JSON.stringify(tc.input)}
                     onChange={(e) => {
                       const updated = [...questions];
-                      try {
-                        updated[index].test_cases[tcIndex].input = JSON.parse(e.target.value);
-                      } catch {
-                        // Optionally show error for invalid JSON
-                      }
+                      updated[index].test_cases[tcIndex].input = JSON.parse(e.target.value);                      
                       setQuestions(updated);
                     }}
                   />
@@ -99,8 +95,7 @@ export default function EditMcqQuestionCollection({questions, setQuestions}) {
                     value={JSON.stringify(tc.output)}
                     onChange={(e) => {
                       const updated = [...questions];
-                      updated[index].test_cases[tcIndex].output = JSON.parse(e.target.value);
-                      
+                      updated[index].test_cases[tcIndex].output = JSON.parse(e.target.value);                      
                       setQuestions(updated);
                     }}
                   />

@@ -77,26 +77,51 @@ export default function EditExam({examId, show, handleClose, onSaveSuccess}) {
         if (!isValid) {
             return;
         }
+        let updatedExam = {};
+        examDetails?.type === 'mcq' && (
+            updatedExam = {
+                exam_id: examId,
+                type:type,
+                duration:duration,
+                start_time:startTime,
+                end_time:endTime,
+                instructions:instructions,
+                ai_assessment_guide:aiAssessmentGuide,
+                question_count:questionCount,
+                questions: questions.map(q => ({
+                    question_id: q.question_id,
+                    question_text: q.question_text,
+                    options: q.options,
+                    answers: q.answers,
+                    points: q.points,
+                    no_of_correct_answers: q.no_of_correct_answers
+                }))
+            }
+        );
+        examDetails?.type === 'code' && (
+            updatedExam = {
+                exam_id: examId,
+                type:type,
+                duration:duration,
+                start_time:startTime,
+                end_time:endTime,
+                instructions:instructions,
+                ai_assessment_guide:aiAssessmentGuide,
+                question_count:questionCount,
+                questions: questions.map(q => ({
+                    question_id: q.question_id,
+                    question_description: q.question_description,
+                    function_signature: q.function_signature,
+                    wrapper_code: q.wrapper_code,
+                    points: q.points,
+                    test_cases: q.test_cases.map(tc => ({
+                        input: tc.input,
+                        output: tc.output
+                    }))
+                }))
+            }
+        );
 
-        const updatedExam = {
-            exam_id: examId,
-            type:type,
-            duration:duration,
-            start_time:startTime,
-            end_time:endTime,
-            instructions:instructions,
-            ai_assessment_guide:aiAssessmentGuide,
-            question_count:questionCount,
-            questions: questions.map(q => ({
-                question_id: q.question_id,
-                question_text: q.question_text,
-                options: q.options,
-                answers: q.answers,
-                points: q.points,
-                no_of_correct_answers: q.no_of_correct_answers
-            }))
-        };
-        
         try {
             setLoading(true);
             setError({});
