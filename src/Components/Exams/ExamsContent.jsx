@@ -61,6 +61,8 @@ export default function ExamsContent() {
             <p><strong>Start:</strong> {formatDateTime(examDetails?.start_time)}</p>
             <p><strong>End:</strong> {formatDateTime(examDetails?.end_time)}</p>
             <p><strong>Instructions:</strong> {examDetails?.instructions || '---'}</p>
+            <p><strong>AI Assessment Guide:</strong> {examDetails?.ai_assessment_guide || '---'}</p>
+            <p><strong>Question Count:</strong> {examDetails?.question_count || 0}</p>
 
             <hr />
             <h5 className="mt-4">📝 Questions ({examDetails?.questions.length})</h5>
