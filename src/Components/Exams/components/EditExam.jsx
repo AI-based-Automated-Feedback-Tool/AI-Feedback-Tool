@@ -1,8 +1,9 @@
 import { Modal, Form, Button, Row, Col, Accordion } from 'react-bootstrap'
 import { useEffect } from 'react';
 import useEditExam from '../hooks/useEditExam';
-import EditQuestionCollection from './EditQuestionCollection';
+import EditMcqQuestionCollection from './EditMcqQuestionCollection';
 import { useNavigate } from 'react-router-dom';
+import EditCodeQuestionCollection from './EditCodeQuestionCollection';
 
 export default function EditExam({examId, show, handleClose, onSaveSuccess}) {
     const {
@@ -198,11 +199,17 @@ export default function EditExam({examId, show, handleClose, onSaveSuccess}) {
             </Row>
 
             <hr />
-
-            <EditQuestionCollection
+            { examDetails?.type === 'mcq' && <EditMcqQuestionCollection
                 questions={questions}
                 setQuestions={setQuestions}
-            />
+            />}
+
+            { examDetails?.type === 'code' && (
+                <EditCodeQuestionCollection
+                    questions={questions}
+                    setQuestions={setQuestions}
+                />
+            )}  
 
         </Modal.Body>
 

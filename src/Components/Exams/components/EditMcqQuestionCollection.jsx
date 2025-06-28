@@ -1,6 +1,6 @@
 import { Form, Row, Col } from 'react-bootstrap';
 
-export default function EditQuestionCollection({questions, setQuestions}) {
+export default function EditMcqQuestionCollection({questions, setQuestions}) {
 
   return (
     <>
