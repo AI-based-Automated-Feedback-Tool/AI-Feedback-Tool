@@ -1,72 +1,247 @@
-// AIFeedbackPage_Code.jsx
-
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import React, { useState, useEffect, useRef, useContext } from 'react';
+import { useParams, useLocation, useNavigate } from 'react-router-dom';
+import { Container, Card, Alert, Spinner, Modal, Button } from 'react-bootstrap';
 import { supabase } from '../../../SupabaseAuth/supabaseClient';
+import { downloadAsTextFile } from '../../../utils/downloadTextUtils';
+import { ApiCallCountContext } from "../../../Context/ApiCallCountContext";
+import HeaderWithApiCount from './HeaderWithApiCount';
+
+const defaultPrompts = [
+  {
+    label: 'Code Feedback',
+    prompt: `You are a programming education AI assistant...
+[QUESTIONS]
+[SUBMISSIONS]
+[ANSWERS]`
+  }
+];
 
 const AIFeedbackPage_Code = () => {
   const { examId } = useParams();
-  const [examTitle, setExamTitle] = useState("");
-  const [codeData, setCodeData] = useState([]);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { incrementCount, count, MAX_CALLS_PER_DAY } = useContext(ApiCallCountContext);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [examTitle, setExamTitle] = useState('');
+  const [feedback, setFeedback] = useState(null);
+  const [showLimitModal, setShowLimitModal] = useState(false);
+  const hasFetched = useRef(false);
+
+  const fetchExamTitle = async () => {
+    const { data, error } = await supabase
+      .from('exams')
+      .select('title')
+      .eq('exam_id', examId)
+      .single();
+
+    if (error) throw new Error('Failed to fetch exam title');
+    return data?.title || 'Unknown Exam';
+  };
+
+  const fetchQuestions = async () => {
+    const { data, error } = await supabase
+      .from('code_questions')
+      .select('question_id, question_description, function_signature, wrapper_code, test_cases, points')
+      .eq('exam_id', examId);
+
+    if (error) throw new Error('Failed to fetch code questions');
+    return data;
+  };
+
+  const fetchSubmissions = async (questions) => {
+    const questionIds = questions.map(q => q.question_id);
+
+    const { data, error } = await supabase
+      .from('code_submissions_answers')
+      .select('student_answer, is_correct, score, question_id')
+      .in('question_id', questionIds);
+
+    if (error) throw new Error('Failed to fetch code submissions');
+    return data;
+  };
+
+  const callAIAPI = async (promptWithData) => {
+    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+    const response = await fetch(`${apiUrl}/api/ai/generate`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        prompt: promptWithData,
+        provider: location.state?.aiProvider || 'cohere'
+      })
+    });
+
+    if (!response.ok) {
+      let errorMsg = `API error: ${response.status} ${response.statusText}`;
+      try {
+        const errorData = await response.json();
+        if (errorData?.error) errorMsg = `API error: ${errorData.error}`;
+      } catch {}
+      throw new Error(errorMsg);
+    }
+
+    const data = await response.json();
+    incrementCount();
+    return data;
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
+    if (hasFetched.current) return;
+    hasFetched.current = true;
+
+    const generateFeedback = async () => {
       try {
-        // 1. Get exam title
-        const { data: exam, error: examError } = await supabase
-          .from("exams")
-          .select("title")
-          .eq("exam_id", examId)
-          .single();
-        if (examError) throw examError;
-        setExamTitle(exam.title);
+        if (count >= MAX_CALLS_PER_DAY) {
+          setShowLimitModal(true);
+          setLoading(false);
+          return;
+        }
 
-        // 2. Get code questions for this exam
-        const { data: questions, error: questionError } = await supabase
-          .from("code_questions")
-          .select("*")
-          .eq("exam_id", examId);
-        if (questionError) throw questionError;
+        setLoading(true);
+        setError(null);
 
-        const questionIds = questions.map(q => q.id);
+        const customPrompt = location.state?.prompt || defaultPrompts[0].prompt;
 
-        // 3. Get student answers for those questions
-        const { data: answers, error: answerError } = await supabase
-          .from("code_submissions_answers")
-          .select("*")
-          .in("question_id", questionIds);
-        if (answerError) throw answerError;
+        const title = await fetchExamTitle();
+        setExamTitle(title);
 
-        // 4. Merge questions with answers
-        const merged = answers.map(answer => {
-          const question = questions.find(q => q.id === answer.question_id);
-          return {
-            ...answer,
-            question_description: question?.question_description || "",
-            function_signature: question?.function_signature || "",
-            wrapper_code: question?.wrapper_code || "",
-            test_cases: question?.test_cases || "",
-            points: question?.points || 0,
+        const questions = await fetchQuestions();
+        const submissions = await fetchSubmissions(questions);
+
+        const promptWithData = customPrompt
+          .replace('[QUESTIONS]', JSON.stringify(questions))
+          .replace('[SUBMISSIONS]', JSON.stringify(submissions))
+          .replace('[ANSWERS]', ''); // in case needed later
+
+        const data = await callAIAPI(promptWithData);
+
+        let parsedFeedback;
+        try {
+          parsedFeedback = JSON.parse(data.result);
+        } catch {
+          parsedFeedback = {
+            overallSummary: data.result,
+            keyStrengths: [],
+            mostMissedQuestions: [],
+            teachingSuggestions: [],
+            nextSteps: []
           };
-        });
+        }
 
-        setCodeData(merged);
-        console.log("Merged Code Data:", merged);
-      } catch (error) {
-        console.error("Error fetching data:", error.message);
+        setFeedback(parsedFeedback);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
       }
     };
 
-    if (examId) fetchData();
-  }, [examId]);
+    generateFeedback();
+  }, [examId, location.state, count, MAX_CALLS_PER_DAY]);
+
+  if (loading) {
+    return (
+      <div className="text-center my-5">
+        <Spinner animation="border" />
+        <p>Generating AI feedback...</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="p-4">
-      <h2 className="text-xl font-semibold mb-4">AI Feedback – Code Questions</h2>
-      <p className="mb-6">Exam: <strong>{examTitle}</strong></p>
-      <p>Fetched <strong>{codeData.length}</strong> code answers from the database.</p>
-    </div>
+    <Container className="mt-4">
+      <Modal show={showLimitModal} onHide={() => navigate('/teacher/dashboard')} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Daily Limit Reached</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>You've reached your daily limit of feedback generations.</p>
+          <p>Please try again tomorrow.</p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="primary" onClick={() => navigate('/teacher/dashboard')}>
+            Back to Dashboard
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {error && !showLimitModal && (
+        <Alert variant="danger">
+          <strong>Error:</strong> {error}
+        </Alert>
+      )}
+
+      {feedback && !showLimitModal && (
+        <Card className="shadow-sm mb-4">
+          <Card.Header className="bg-primary text-white d-flex justify-content-between align-items-center">
+            <div>
+              <h4 className="mb-0">AI-Generated Feedback for Code Exam</h4>
+              <span className="small">Exam Name: {examTitle}</span>
+            </div>
+            <div className="d-flex gap-2">
+              <Button
+                variant="light"
+                size="sm"
+                onClick={() =>
+                  navigate(`/teacher/exams/${examId}/prompt-selector`, {
+                    state: {
+                      prompt: location.state?.prompt || '',
+                      aiProvider: location.state?.aiProvider || 'cohere'
+                    }
+                  })
+                }
+              >
+                🔄 Modify Prompt
+              </Button>
+              <Button variant="light" size="sm" onClick={() => downloadAsTextFile(feedback)}>
+                📄 Download .TXT
+              </Button>
+              <HeaderWithApiCount />
+            </div>
+          </Card.Header>
+          <Card.Body>
+            {feedback.overallSummary && (
+              <Section title="📊 Overall Summary" text={feedback.overallSummary} />
+            )}
+            {feedback.keyStrengths?.length > 0 && (
+              <Section title="✅ Key Strengths" items={feedback.keyStrengths} />
+            )}
+            {feedback.mostMissedQuestions?.length > 0 && (
+              <Section title="⚠️ Most Missed Questions" items={feedback.mostMissedQuestions} />
+            )}
+            {feedback.teachingSuggestions?.length > 0 && (
+              <Section title="💡 Teaching Suggestions" items={feedback.teachingSuggestions} />
+            )}
+            {feedback.nextSteps?.length > 0 && (
+              <Section title="🚀 Actionable Next Steps" items={feedback.nextSteps} />
+            )}
+          </Card.Body>
+        </Card>
+      )}
+
+      {!showLimitModal && (
+        <Alert variant="info">
+          <i className="bi bi-robot"></i> Feedback generated using custom AI analysis.
+        </Alert>
+      )}
+    </Container>
   );
 };
+
+const Section = ({ title, items = [], text = '' }) => (
+  <div className="mb-4">
+    <h5 className="text-secondary">{title}</h5>
+    {items.length > 0 ? (
+      <ul>
+        {items.map((item, idx) => (
+          <li key={idx}>{item}</li>
+        ))}
+      </ul>
+    ) : (
+      <p>{text}</p>
+    )}
+  </div>
+);
 
 export default AIFeedbackPage_Code;
