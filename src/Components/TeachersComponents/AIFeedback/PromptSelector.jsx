@@ -37,15 +37,30 @@ const PromptSelector = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const questionTypes = location.state?.questionTypes || (location.state?.selectedType ? [location.state.selectedType] : []);
+  const [questionTypes, setQuestionTypes] = useState(() => {
+  const qt = location.state?.questionTypes || location.state?.questionType;
+    return Array.isArray(qt) ? qt : qt ? [qt] : [];
+  });
 
 
-  
-  const isCodeExam = questionTypes.includes('code');
-  const isMCQExam = questionTypes.includes('mcq'); 
-  const promptsList = isCodeExam ? codePredefinedPrompts : MCQpredefinedPrompts; 
+  const [promptsList, setPromptsList] = useState(() =>
+    questionTypes.includes('code') ? codePredefinedPrompts : MCQpredefinedPrompts
+  );
+
   const [selectedPrompt, setSelectedPrompt] = useState(promptsList[0].prompt);
   const [selectedLabel, setSelectedLabel] = useState(promptsList[0].label);
+
+  useEffect(() => {
+    const qt = location.state?.questionTypes || location.state?.questionType;
+    const types = Array.isArray(qt) ? qt : qt ? [qt] : [];
+    setQuestionTypes(types);
+
+    const newPrompts = types.includes('code') ? codePredefinedPrompts : MCQpredefinedPrompts;
+    setPromptsList(newPrompts);
+    setSelectedPrompt(newPrompts[0].prompt);
+    setSelectedLabel(newPrompts[0].label);
+  }, [location.state]);
+
   const [selectedProvider, setSelectedProvider] = useState(aiProviders[0].id);
   const [customPrompt, setCustomPrompt] = useState('');
   const [isCustomPrompt, setIsCustomPrompt] = useState(false);
