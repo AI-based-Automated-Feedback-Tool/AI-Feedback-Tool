@@ -187,7 +187,8 @@ const AIFeedbackPage_Code = () => {
                   navigate(`/teacher/exams/${examId}/prompt-selector`, {
                     state: {
                       prompt: location.state?.prompt || '',
-                      aiProvider: location.state?.aiProvider || 'cohere'
+                      aiProvider: location.state?.aiProvider || 'cohere',
+                      questionType: 'code'
                     }
                   })
                 }
