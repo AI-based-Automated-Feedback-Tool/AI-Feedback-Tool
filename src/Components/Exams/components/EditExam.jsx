@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import EditCodeQuestionCollection from './EditCodeQuestionCollection';
 import EditEssayQuestionCollection from './EditEssayQuestionCollection';
 import { useRef } from 'react';
-import { uploadAttachment, removeAttachment } from "../../CreateQuestions/CreateEssayQuestions/service/createEssayQuestionService";
+import { uploadAttachment } from "../../CreateQuestions/CreateEssayQuestions/service/createEssayQuestionService";
 
 
 export default function EditExam({examId, show, handleClose, onSaveSuccess}) {
