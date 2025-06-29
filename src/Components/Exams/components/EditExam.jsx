@@ -5,8 +5,12 @@ import EditMcqQuestionCollection from './EditMcqQuestionCollection';
 import { useNavigate } from 'react-router-dom';
 import EditCodeQuestionCollection from './EditCodeQuestionCollection';
 import EditEssayQuestionCollection from './EditEssayQuestionCollection';
+import { useRef } from 'react';
+import { uploadAttachment, removeAttachment } from "../../CreateQuestions/CreateEssayQuestions/service/createEssayQuestionService";
+
 
 export default function EditExam({examId, show, handleClose, onSaveSuccess}) {
+    const essayAttachmentRef = useRef({});
     const {
         examDetails,
         error,
@@ -122,6 +126,46 @@ export default function EditExam({examId, show, handleClose, onSaveSuccess}) {
                 }))
             }
         );
+
+        if (examDetails?.type === 'essay') {
+            const originalAttachments = essayAttachmentRef.current;
+
+            for (const q of questions) {
+                const original = originalAttachments[q.question_id];
+
+                // Delete if removed
+                if (original && !q.attachment_url && !q.attachments) {
+                const filePath = original.replace(getPublicAttachmentUrl(''), '');
+                await removeAttachment(filePath);
+                }
+
+                // Upload if it's a new file
+                if (q.attachments instanceof File) {
+                const { url } = await uploadAttachment(q.attachments);
+                q.attachment_url = url.publicUrl;
+                q.attachments = null;
+                }
+            }
+
+            updatedExam = {
+                exam_id: examId,
+                type,
+                duration,
+                start_time: startTime,
+                end_time: endTime,
+                instructions,
+                ai_assessment_guide: aiAssessmentGuide,
+                question_count: questionCount,
+                questions: questions.map(q => ({
+                question_id: q.question_id,
+                question_text: q.question_text,
+                grading_note: q.grading_note,
+                word_limit: q.word_limit,
+                points: q.points,
+                attachment_url: q.attachment_url || null
+                }))
+            };
+        }
 
         try {
             setLoading(true);

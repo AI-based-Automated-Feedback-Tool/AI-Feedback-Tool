@@ -1,12 +1,43 @@
 import { Form, Row, Col, Button} from 'react-bootstrap';
+import { useState, useEffect, useRef } from 'react';
+const SUPABASE_PUBLIC_URL = "https://okmurjvzsgdxjiaflacq.supabase.co/storage/v1/object/public/essay-attachments/";
 
-export default function EditEssayQuestionCollection({questions, setQuestions}) {
+export default function EditEssayQuestionCollection({questions, setQuestions, attachmentRef}) {
+  const localAttachmentBackup = useRef({});
 
+  useEffect(() => {
+    const map = {};
+    questions.forEach(q => {
+      if (q.attachment_url) {
+        map[q.question_id] = q.attachment_url;
+      }
+    });
+    localAttachmentBackup.current = map;
+    if (attachmentRef) {
+      attachmentRef.current = map;
+    }
+  }, [questions]);
+
+  const getPublicAttachmentUrl = (path) => {
+    if (!path) return null;
+    return path.startsWith("http") ? path : `${SUPABASE_PUBLIC_URL}${path}`;
+  };
+
+  
   return (
     <>
       {questions.map((q, index) => {
-        const answers = Array.isArray(q.answers) ? q.answers : [];
+        const attachments = q.attachments || q.attachment_url || null;
+        const isFile = attachments instanceof File;
 
+        // Compute fileName (if attachment is a URL or File)
+        let fileName = null;
+        if (attachments instanceof File) {
+          fileName = attachments.name;
+        } else if (typeof attachments === 'string') {
+          const filePart = attachments.split('/').pop();
+          fileName = decodeURIComponent(filePart?.substring(filePart.indexOf('_') + 1));
+        }
         return (
           <div key={q.question_id} className="mb-4 p-3 border rounded bg-light">
             <h6>Question {index + 1}</h6>
@@ -74,16 +105,46 @@ export default function EditEssayQuestionCollection({questions, setQuestions}) {
               />
             </Form.Group>
 
-            {/* Attachments */}
             <Form.Group className="mb-2">
-              <Form.Label>Attachments</Form.Label>
+              <Form.Label>Attachment</Form.Label>
+              {attachments && (
+                <div className="mb-2">
+                  <span className="text-muted">Attachment: {fileName}</span>
+                  {!isFile && (
+                    <a
+                      href={getPublicAttachmentUrl(attachments)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="ms-2"
+                    >
+                      View
+                    </a>
+                  )}
+                  <span
+                    className="ms-2"
+                    style={{ cursor: 'pointer' }}
+                    onClick={() => {
+                      const updated = [...questions];
+                      updated[index].attachments = null;
+                      updated[index].attachment_url = null;
+                      setQuestions(updated);
+                    }}
+                  >
+                    ❌
+                  </span>
+                </div>
+              )}
               <Form.Control
                 type="file"
-                multiple
+                accept=".png,.jpg,.jpeg,.pdf,.doc,.mp4,.mp3"
                 onChange={(e) => {
-                  const updated = [...questions];
-                  updated[index].attachments = Array.from(e.target.files);
-                  setQuestions(updated);
+                  const file = e.target.files[0];
+                  if (file) {
+                    const updated = [...questions];
+                    updated[index].attachments = file;
+                    updated[index].attachment_url = null;
+                    setQuestions(updated);
+                  }
                 }}
               />
             </Form.Group>
