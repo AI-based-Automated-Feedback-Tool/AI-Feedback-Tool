@@ -14,7 +14,7 @@ export default function ExamsContent() {
         error,
         formatDateTime
     }= useExamDetails({ examId });
- console.log('Exam Details:', examDetails);
+
     const navigate = useNavigate();
 
     const [showEditExam, setShowEditExam] = useState(false);
