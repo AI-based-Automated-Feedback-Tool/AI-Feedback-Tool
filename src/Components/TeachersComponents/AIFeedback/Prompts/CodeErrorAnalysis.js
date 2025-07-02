@@ -14,6 +14,7 @@ Then provide:
 2. A list of major error patterns
 3. Teaching suggestions to help avoid such mistakes
 
+Guidelines: [GUIDELINES]
 Code: [QUESTIONS]
 Submissions: [SUBMISSIONS]
 Answers: [ANSWERS]

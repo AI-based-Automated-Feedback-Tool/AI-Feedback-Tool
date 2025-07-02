@@ -8,6 +8,7 @@ You may include instructions like:
 - Identify errors, bad practices, or optimization opportunities
 
 Use the following placeholders in your prompt:
+- [GUIDELINES]
 - [QUESTIONS] – array of code questions
 - [SUBMISSIONS] – array of student code submissions
 - [ANSWERS] – array of expected solutions

@@ -9,6 +9,7 @@ For each improvement:
 - Explain why it's useful
 - Refer to examples from the code where appropriate
 
+Guidelines: [GUIDELINES]
 Code: [QUESTIONS]
 Submissions: [SUBMISSIONS]
 Answers: [ANSWERS]
