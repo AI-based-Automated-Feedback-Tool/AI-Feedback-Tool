@@ -28,15 +28,18 @@ const AIFeedbackPage_Code = () => {
   const [showLimitModal, setShowLimitModal] = useState(false);
   const hasFetched = useRef(false);
 
-  const fetchExamTitle = async () => {
+  const fetchExamMetadata = async () => {
     const { data, error } = await supabase
       .from('exams')
-      .select('title')
+      .select('title, ai_assessment_guide')
       .eq('exam_id', examId)
       .single();
 
-    if (error) throw new Error('Failed to fetch exam title');
-    return data?.title || 'Unknown Exam';
+    if (error) throw new Error('Failed to fetch exam metadata');
+    return {
+      title: data?.title || 'Unknown Exam',
+      guide: data?.ai_assessment_guide || ''
+    };
   };
 
   const fetchQuestions = async () => {
@@ -103,7 +106,7 @@ const AIFeedbackPage_Code = () => {
 
         const customPrompt = location.state?.prompt || defaultPrompts[0].prompt;
 
-        const title = await fetchExamTitle();
+        const { title, guide } = await fetchExamMetadata();
         setExamTitle(title);
 
         const questions = await fetchQuestions();
@@ -112,7 +115,8 @@ const AIFeedbackPage_Code = () => {
         const promptWithData = customPrompt
           .replace('[QUESTIONS]', JSON.stringify(questions))
           .replace('[SUBMISSIONS]', JSON.stringify(submissions))
-          .replace('[ANSWERS]', ''); // in case needed later
+          .replace('[ANSWERS]', '') 
+          .replace('[GUIDELINES]', guide); 
 
         const data = await callAIAPI(promptWithData);
 
@@ -136,6 +140,7 @@ const AIFeedbackPage_Code = () => {
         setLoading(false);
       }
     };
+
 
     generateFeedback();
   }, [examId, location.state, count, MAX_CALLS_PER_DAY]);
