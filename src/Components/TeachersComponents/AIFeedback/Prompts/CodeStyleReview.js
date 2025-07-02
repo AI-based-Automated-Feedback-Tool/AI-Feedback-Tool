@@ -22,6 +22,7 @@ Based on your evaluation, return a JSON object with the following structure:
 Use examples from the student's submissions when relevant to support your points.
 
 Data:
+Guidelines: [GUIDELINES]
 Code Questions: [QUESTIONS]
 Student Submissions: [SUBMISSIONS]
 Expected Answers: [ANSWERS]`
