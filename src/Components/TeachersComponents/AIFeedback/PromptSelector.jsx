@@ -10,6 +10,10 @@ import CodeErrorAnalysis from './Prompts/CodeErrorAnalysis';
 import CodeOptimizationTips from './Prompts/CodeOptimizationTips';
 import CodeStyleReview from './Prompts/CodeStyleReview';
 import CodeCustomPrompt from './Prompts/CodeCustomPrompt';
+import EssayContentPrompt from './Prompts/EssayContentPrompt';
+import EssayGeneralPrompt from './Prompts/EssayGeneralPrompt';
+import EssayCustomPrompt from './Prompts/EssayCustomPrompt';
+import EssayTechnicalPrompt from './Prompts/EssayTechnicalPrompt';
 import { ApiCallCountContext } from '../../../Context/ApiCallCountContext';
 
 
@@ -27,6 +31,13 @@ const codePredefinedPrompts = [
   CodeCustomPrompt,
 ];
 
+const essayPredefinedPrompts = [
+  EssayContentPrompt,
+  EssayGeneralPrompt,
+  EssayCustomPrompt,
+  EssayTechnicalPrompt,
+];
+
 const aiProviders = [
   { id: 'cohere', name: 'Cohere AI', model: 'command' },
   { id: 'openrouter', name: 'OpenRouter AI', model: 'openrouter-chat' }
@@ -38,27 +49,31 @@ const PromptSelector = () => {
   const navigate = useNavigate();
 
   const [questionTypes, setQuestionTypes] = useState(() => {
-  const qt = location.state?.questionTypes || location.state?.questionType;
+    const qt = location.state?.questionTypes || location.state?.questionType;
     return Array.isArray(qt) ? qt : qt ? [qt] : [];
   });
 
+  const [promptsList, setPromptsList] = useState(() => {
+    if (questionTypes.includes('code')) return codePredefinedPrompts;
+    if (questionTypes.includes('essay')) return essayPredefinedPrompts;
+    return MCQpredefinedPrompts;
+  });
 
-  const [promptsList, setPromptsList] = useState(() =>
-    questionTypes.includes('code') ? codePredefinedPrompts : MCQpredefinedPrompts
-  );
-
-  const [selectedPrompt, setSelectedPrompt] = useState(promptsList[0].prompt);
-  const [selectedLabel, setSelectedLabel] = useState(promptsList[0].label);
+  const [selectedPrompt, setSelectedPrompt] = useState(promptsList[0]?.prompt || '');
+  const [selectedLabel, setSelectedLabel] = useState(promptsList[0]?.label || '');
 
   useEffect(() => {
     const qt = location.state?.questionTypes || location.state?.questionType;
     const types = Array.isArray(qt) ? qt : qt ? [qt] : [];
     setQuestionTypes(types);
 
-    const newPrompts = types.includes('code') ? codePredefinedPrompts : MCQpredefinedPrompts;
+    let newPrompts = MCQpredefinedPrompts;
+    if (types.includes('code')) newPrompts = codePredefinedPrompts;
+    else if (types.includes('essay')) newPrompts = essayPredefinedPrompts;
+
     setPromptsList(newPrompts);
-    setSelectedPrompt(newPrompts[0].prompt);
-    setSelectedLabel(newPrompts[0].label);
+    setSelectedPrompt(newPrompts[0]?.prompt || '');
+    setSelectedLabel(newPrompts[0]?.label || '');
   }, [location.state]);
 
   const [selectedProvider, setSelectedProvider] = useState(aiProviders[0].id);
