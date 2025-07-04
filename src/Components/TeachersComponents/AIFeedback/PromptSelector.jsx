@@ -16,7 +16,7 @@ import EssayCustomPrompt from './Prompts/EssayCustomPrompt';
 import EssayTechnicalPrompt from './Prompts/EssayTechnicalPrompt';
 import { ApiCallCountContext } from '../../../Context/ApiCallCountContext';
 
-// Predefined prompts for MCQ questions
+
 const MCQpredefinedPrompts = [
   StandardAnalysis,
   QuickInsights,
@@ -24,7 +24,6 @@ const MCQpredefinedPrompts = [
   CustomPrompt,
 ];
 
-// Code-related prompts
 const codePredefinedPrompts = [
   CodeErrorAnalysis,
   CodeOptimizationTips,
@@ -32,12 +31,11 @@ const codePredefinedPrompts = [
   CodeCustomPrompt,
 ];
 
-// Essay-related prompts
 const essayPredefinedPrompts = [
-  EssayContentPrompt, 
+  EssayContentPrompt,
   EssayGeneralPrompt,
   EssayCustomPrompt,
-  EssayTechnicalPrompt
+  EssayTechnicalPrompt,
 ];
 
 const aiProviders = [
@@ -55,23 +53,27 @@ const PromptSelector = () => {
     return Array.isArray(qt) ? qt : qt ? [qt] : [];
   });
 
+  const [promptsList, setPromptsList] = useState(() => {
+    if (questionTypes.includes('code')) return codePredefinedPrompts;
+    if (questionTypes.includes('essay')) return essayPredefinedPrompts;
+    return MCQpredefinedPrompts;
+  });
 
-  const [promptsList, setPromptsList] = useState(() =>
-    questionTypes.includes('code') ? codePredefinedPrompts : MCQpredefinedPrompts
-  );
-
-  const [selectedPrompt, setSelectedPrompt] = useState(promptsList[0].prompt);
-  const [selectedLabel, setSelectedLabel] = useState(promptsList[0].label);
+  const [selectedPrompt, setSelectedPrompt] = useState(promptsList[0]?.prompt || '');
+  const [selectedLabel, setSelectedLabel] = useState(promptsList[0]?.label || '');
 
   useEffect(() => {
     const qt = location.state?.questionTypes || location.state?.questionType;
     const types = Array.isArray(qt) ? qt : qt ? [qt] : [];
     setQuestionTypes(types);
 
-    const newPrompts = types.includes('code') ? codePredefinedPrompts : MCQpredefinedPrompts;
+    let newPrompts = MCQpredefinedPrompts;
+    if (types.includes('code')) newPrompts = codePredefinedPrompts;
+    else if (types.includes('essay')) newPrompts = essayPredefinedPrompts;
+
     setPromptsList(newPrompts);
-    setSelectedPrompt(newPrompts[0].prompt);
-    setSelectedLabel(newPrompts[0].label);
+    setSelectedPrompt(newPrompts[0]?.prompt || '');
+    setSelectedLabel(newPrompts[0]?.label || '');
   }, [location.state]);
 
   const [selectedProvider, setSelectedProvider] = useState(aiProviders[0].id);
