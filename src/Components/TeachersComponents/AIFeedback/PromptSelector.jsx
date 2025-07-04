@@ -16,7 +16,7 @@ import EssayCustomPrompt from './Prompts/EssayCustomPrompt';
 import EssayTechnicalPrompt from './Prompts/EssayTechnicalPrompt';
 import { ApiCallCountContext } from '../../../Context/ApiCallCountContext';
 
-
+// Predefined prompts for MCQ questions
 const MCQpredefinedPrompts = [
   StandardAnalysis,
   QuickInsights,
@@ -24,11 +24,20 @@ const MCQpredefinedPrompts = [
   CustomPrompt,
 ];
 
+// Code-related prompts
 const codePredefinedPrompts = [
   CodeErrorAnalysis,
   CodeOptimizationTips,
   CodeStyleReview,
   CodeCustomPrompt,
+];
+
+// Essay-related prompts
+const essayPredefinedPrompts = [
+  EssayContentPrompt, 
+  EssayGeneralPrompt,
+  EssayCustomPrompt,
+  EssayTechnicalPrompt
 ];
 
 const aiProviders = [
