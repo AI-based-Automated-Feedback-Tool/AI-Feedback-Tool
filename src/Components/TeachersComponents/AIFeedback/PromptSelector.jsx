@@ -10,6 +10,10 @@ import CodeErrorAnalysis from './Prompts/CodeErrorAnalysis';
 import CodeOptimizationTips from './Prompts/CodeOptimizationTips';
 import CodeStyleReview from './Prompts/CodeStyleReview';
 import CodeCustomPrompt from './Prompts/CodeCustomPrompt';
+import EssayContentPrompt from './Prompts/EssayContentPrompt';
+import EssayGeneralPrompt from './Prompts/EssayGeneralPrompt';
+import EssayCustomPrompt from './Prompts/EssayCustomPrompt';
+import EssayTechnicalPrompt from './Prompts/EssayTechnicalPrompt';
 import { ApiCallCountContext } from '../../../Context/ApiCallCountContext';
 
 
@@ -38,7 +42,7 @@ const PromptSelector = () => {
   const navigate = useNavigate();
 
   const [questionTypes, setQuestionTypes] = useState(() => {
-  const qt = location.state?.questionTypes || location.state?.questionType;
+    const qt = location.state?.questionTypes || location.state?.questionType;
     return Array.isArray(qt) ? qt : qt ? [qt] : [];
   });
 
