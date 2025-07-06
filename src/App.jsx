@@ -60,42 +60,17 @@ function AppContent() {
                     <Route element={<TeacherLayout />}>
                       <Route index element={<TeacherCourses />} />
                       <Route path="exams" element={<ConfigureExam />} />
-                      <Route
-                        path="exams/:examId/ai-feedback"
-                        element={<AIFeedbackPage />}
-                      />
-                      <Route
-                        path="exams/:examId/ai-feedback-code"
-                        element={<AIFeedbackPage_Code />}
-                      />
-                      <Route
-                        path="exams/:examId/ai-feedback-essay"
-                        element={<AIFeedbackPage_Essay />}
-                      />
-                      <Route
-                        path="ai-feedback"
-                        element={<FeedbackSelector />}
-                      />
-                      <Route
-                        path="exams/:examId/prompt-selector"
-                        element={<PromptSelector />}
-                      />
-                      <Route
-                        path="exams/:examId/questions/:questionType"
-                        element={<CreateQuestions />}
-                      />
-                      <Route
-                        path="courses/:course_id/exams"
-                        element={<CourseExamsPage />}
-                      />
+                      <Route path="exams/:examId/ai-feedback" element={<AIFeedbackPage />} />
+                      <Route path="exams/:examId/ai-feedback-code" element={<AIFeedbackPage_Code />} />
+                      <Route path="exams/:examId/ai-feedback-essay" element={<AIFeedbackPage_Essay />} />
+                      <Route path="ai-feedback" element={<FeedbackSelector />} />
+                      <Route path="exams/:examId/prompt-selector" element={<PromptSelector />} />
+                      <Route path="exams/:examId/questions/:questionType" element={<CreateQuestions />} />
+                      <Route path="courses/:course_id/exams" element={<CourseExamsPage />} />
                       <Route path="courses/:course_id/exams/:examId" element={<ExamsContent />} />
-
                       <Route path="profile" element={<ProfilePage />} />
                       <Route path="registerCourse" element={<RegisterCourseContent />} />
-                      <Route
-                        path="reports"
-                        element={<TeacherReportContent />}
-                      />
+                      <Route path="reports" element={<TeacherReportContent />} />
                     </Route>
                   </Route>
                   {/*students route */}
