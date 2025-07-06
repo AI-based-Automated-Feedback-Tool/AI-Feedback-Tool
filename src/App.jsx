@@ -20,6 +20,7 @@ import TeacherReportContent from "./Components/TeacherReport/TeacherReportConten
 import Result from "./Components/StudentsComponents/Result.jsx";
 import AIFeedbackPage from "./Components/TeachersComponents/AIFeedback/AIFeedbackPage.jsx";
 import AIFeedbackPage_Code from "./Components/TeachersComponents/AIFeedback/AIFeedbackPage_Code.jsx";
+import AIFeedbackPage_Essay from "./Components/TeachersComponents/AIFeedback/AIFeedbackPage_Essay.jsx";
 import { CourseProvider } from "./Context/courseContext.jsx";
 import { ExamProvider } from "./Context/examContext.jsx";
 import { TaskProvider } from "./Context/taskContext.jsx";
@@ -59,38 +60,17 @@ function AppContent() {
                     <Route element={<TeacherLayout />}>
                       <Route index element={<TeacherCourses />} />
                       <Route path="exams" element={<ConfigureExam />} />
-                      <Route
-                        path="exams/:examId/ai-feedback"
-                        element={<AIFeedbackPage />}
-                      />
-                      <Route
-                        path="exams/:examId/ai-feedback-code"
-                        element={<AIFeedbackPage_Code />}
-                      />
-                      <Route
-                        path="ai-feedback"
-                        element={<FeedbackSelector />}
-                      />
-                      <Route
-                        path="exams/:examId/prompt-selector"
-                        element={<PromptSelector />}
-                      />
-                      <Route
-                        path="exams/:examId/questions/:questionType"
-                        element={<CreateQuestions />}
-                      />
-                      <Route
-                        path="courses/:course_id/exams"
-                        element={<CourseExamsPage />}
-                      />
+                      <Route path="exams/:examId/ai-feedback" element={<AIFeedbackPage />} />
+                      <Route path="exams/:examId/ai-feedback-code" element={<AIFeedbackPage_Code />} />
+                      <Route path="exams/:examId/ai-feedback-essay" element={<AIFeedbackPage_Essay />} />
+                      <Route path="ai-feedback" element={<FeedbackSelector />} />
+                      <Route path="exams/:examId/prompt-selector" element={<PromptSelector />} />
+                      <Route path="exams/:examId/questions/:questionType" element={<CreateQuestions />} />
+                      <Route path="courses/:course_id/exams" element={<CourseExamsPage />} />
                       <Route path="courses/:course_id/exams/:examId" element={<ExamsContent />} />
-
                       <Route path="profile" element={<ProfilePage />} />
                       <Route path="registerCourse" element={<RegisterCourseContent />} />
-                      <Route
-                        path="reports"
-                        element={<TeacherReportContent />}
-                      />
+                      <Route path="reports" element={<TeacherReportContent />} />
                     </Route>
                   </Route>
                   {/*students route */}
