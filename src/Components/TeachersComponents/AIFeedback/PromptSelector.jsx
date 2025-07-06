@@ -83,29 +83,39 @@ const PromptSelector = () => {
   const isLimitReached = count >= MAX_CALLS_PER_DAY;
 
   const handleSubmit = () => {
-    if (isLimitReached) return;
+  if (isLimitReached) return;
 
-    const finalPrompt = isCustomPrompt ? customPrompt : selectedPrompt;
+  const finalPrompt = isCustomPrompt ? customPrompt : selectedPrompt;
 
-    // Check question type and route accordingly
-    if (questionTypes.includes('code')) {
-      navigate(`/teacher/exams/${examId}/ai-feedback-code`, {
-        state: {
-          prompt: finalPrompt,
-          aiProvider: selectedProvider,
-          questionTypes,
-        },
-      });
-    } else {
-      navigate(`/teacher/exams/${examId}/ai-feedback`, {
-        state: {
-          prompt: finalPrompt,
-          aiProvider: selectedProvider,
-          questionTypes,
-        },
-      });
-    }
-  };
+  // Check question type and route accordingly
+  if (questionTypes.includes('code')) {
+    navigate(`/teacher/exams/${examId}/ai-feedback-code`, {
+      state: {
+        prompt: finalPrompt,
+        aiProvider: selectedProvider,
+        questionTypes,
+      },
+    });
+  } else if (questionTypes.includes('essay')) {
+    navigate(`/teacher/exams/${examId}/ai-feedback-essay`, {
+      state: {
+        prompt: finalPrompt,
+        aiProvider: selectedProvider,
+        questionTypes,
+      },
+    });
+  } else {
+    // default to MCQ feedback
+    navigate(`/teacher/exams/${examId}/ai-feedback`, {
+      state: {
+        prompt: finalPrompt,
+        aiProvider: selectedProvider,
+        questionTypes,
+      },
+    });
+  }
+};
+
 
 
   const handlePromptChange = (label) => {
