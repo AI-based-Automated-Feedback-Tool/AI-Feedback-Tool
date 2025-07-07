@@ -225,8 +225,30 @@ const AIFeedbackPage_Essay = () => {
             )}
           </Card.Body>
         </Card>
+      )}
+
+      {!showLimitModal && (
+        <Alert variant="info">
+          <i className="bi bi-robot"></i> Feedback generated using custom AI analysis.
+        </Alert>
+      )}
     </Container>
   );
 };
+
+const Section = ({ title, items = [], text = '' }) => (
+  <div className="mb-4">
+    <h5 className="text-secondary">{title}</h5>
+    {items.length > 0 ? (
+      <ul>
+        {items.map((item, idx) => (
+          <li key={idx}>{item}</li>
+        ))}
+      </ul>
+    ) : (
+      <p>{text}</p>
+    )}
+  </div>
+);
 
 export default AIFeedbackPage_Essay;  
