@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { Container, Card, Button, Spinner, Alert } from 'react-bootstrap';
-import { useNavigate, useParams } from 'react-router-dom';
-import HeaderWithApiCount from './HeaderWithApiCount';
+import React, { useState, useEffect, useRef, useContext } from 'react';
+import { useParams, useLocation, useNavigate } from 'react-router-dom';
+import { Container, Card, Alert, Spinner, Modal, Button } from 'react-bootstrap';
 import { supabase } from '../../../SupabaseAuth/supabaseClient';
 import { downloadAsTextFile } from '../../../utils/downloadTextUtils';
 import { ApiCallCountContext } from "../../../Context/ApiCallCountContext";
@@ -22,104 +21,139 @@ Generate a comprehensive feedback summary including overall performance, strengt
 
 const AIFeedbackPage_Essay = () => {
   const { examId } = useParams();
+  const location = useLocation();
   const navigate = useNavigate();
-
-  const [essayQuestion, setEssayQuestion] = useState(null);
-  const [essaySubmission, setEssaySubmission] = useState(null);
-  const [promptData, setPromptData] = useState(null);
+  const { incrementCount, count, MAX_CALLS_PER_DAY } = useContext(ApiCallCountContext);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [aiLoading, setAiLoading] = useState(false);
-  const [aiError, setAiError] = useState(null);
+  const [examTitle, setExamTitle] = useState('');
+  const [feedback, setFeedback] = useState(null);
+  const [showLimitModal, setShowLimitModal] = useState(false);
+  const hasFetched = useRef(false);
+
+  const fetchExamMetadata = async () => {
+    const { data, error } = await supabase
+      .from('exams')
+      .select('title, ai_assessment_guide')
+      .eq('exam_id', examId)
+      .single();
+
+    if (error) throw new Error('Failed to fetch exam metadata');
+    return {
+      title: data?.title || 'Unknown Exam',
+      guide: data?.ai_assessment_guide || ''
+    };
+  };
+
+  const fetchEssayQuestions = async () => {
+    const { data, error } = await supabase
+      .from('essay_questions')
+      .select('question_id, question_text, points')
+      .eq('exam_id', examId);
+
+    if (error) throw new Error('Failed to fetch essay questions');
+    return data;
+  };
+
+  const fetchEssayAnswers = async (questions) => {
+    const questionIds = questions.map(q => q.question_id);
+
+    const { data, error } = await supabase
+      .from('essay_exam_submissions_answers')
+      .select('student_answer, score, question_id')
+      .in('question_id', questionIds);
+
+    if (error) throw new Error('Failed to fetch essay submissions');
+    return data;
+  };
+
+  const callAIAPI = async (promptWithData) => {
+    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+    const response = await fetch(`${apiUrl}/api/ai/generate`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        prompt: promptWithData,
+        provider: location.state?.aiProvider || 'cohere'
+      })
+    });
+
+    if (!response.ok) {
+      let errorMsg = `API error: ${response.status} ${response.statusText}`;
+      try {
+        const errorData = await response.json();
+        if (errorData?.error) errorMsg = `API error: ${errorData.error}`;
+      } catch {}
+      throw new Error(errorMsg);
+    }
+
+    const data = await response.json();
+    incrementCount();
+    return data;
+  };
 
   useEffect(() => {
-    const fetchEssayData = async () => {
+    if (hasFetched.current) return;
+    hasFetched.current = true;
+
+    const generateFeedback = async () => {
+      try {
+        if (count >= MAX_CALLS_PER_DAY) {
+          setShowLimitModal(true);
+          setLoading(false);
+          return;
+        }
+
         setLoading(true);
         setError(null);
 
-      try {
-        const { data: question, error: questionError } = await supabase
-          .from('essay_questions')
-          .select('*')
-          .eq('exam_id', examId)
-          .single();
+        const customPrompt = location.state?.prompt || defaultPrompts[0].prompt;
 
-        if (questionError) throw questionError;
-        setEssayQuestion(question);
+        const { title, guide } = await fetchExamMetadata();
+        setExamTitle(title);
 
-        const { data: submission, error: submissionError } = await supabase
-          .from('essay_submissions_answers')
-          .select('*')
-          .eq('question_id', question.question_id)
-          .order('created_at', { ascending: false })
-          .limit(1)
-          .single();
+        const questions = await fetchEssayQuestions();
+        const answers = await fetchEssayAnswers(questions);
 
-        if (submissionError && submissionError.code !== 'PGRST116') throw submissionError;
-        setEssaySubmission(submission || null);
+        const promptWithData = customPrompt
+          .replace('[QUESTIONS]', JSON.stringify(questions))
+          .replace('[ANSWERS]', JSON.stringify(answers))
+          .replace('[GUIDELINES]', guide);
 
-        const { data: prompt, error: promptError } = await supabase
-          .from('prompts')
-          .select('*')
-          .eq('exam_id', examId)
-          .eq('question_type', 'essay')
-          .single();
+        const data = await callAIAPI(promptWithData);
 
-        if (promptError && promptError.code !== 'PGRST116') throw promptError;
-        setPromptData(prompt || null);
+        let parsedFeedback;
+        try {
+          parsedFeedback = JSON.parse(data.result);
+        } catch {
+          parsedFeedback = {
+            overallSummary: data.result,
+            keyStrengths: [],
+            mostMissedQuestions: [],
+            teachingSuggestions: [],
+            nextSteps: []
+          };
+        }
 
+        setFeedback(parsedFeedback);
       } catch (err) {
-        setError(err.message || 'Failed to load data');
+        setError(err.message);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchEssayData();
-  }, [examId]);
+    generateFeedback();
+  }, [examId, location.state, count, MAX_CALLS_PER_DAY]);
 
-  const callAIForEssayFeedback = async () => {
-    if (!promptData?.prompt_text || !essaySubmission?.student_answer) {
-      setAiError('Missing prompt or student answer.');
-      return;
-    }
-
-    setAiLoading(true);
-    setAiError(null);
-
-    try {
-      const prompt = promptData.prompt_text.replace('{{student_answer}}', essaySubmission.student_answer);
-
-      const response = await fetch('/api/generate-essay-feedback', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prompt })
-      });
-
-      const result = await response.json();
-
-      if (!response.ok) throw new Error(result.error || 'AI feedback generation failed.');
-
-      const updatedFeedback = result.feedback;
-
-      const { error: updateError } = await supabase
-        .from('essay_submissions_answers')
-        .update({ ai_feedback: updatedFeedback })
-        .eq('id', essaySubmission.id);
-
-      if (updateError) throw updateError;
-
-      setEssaySubmission(prev => ({
-        ...prev,
-        ai_feedback: updatedFeedback
-      }));
-
-    } catch (err) {
-      setAiError(err.message || 'AI generation error');
-    } finally {
-      setAiLoading(false);
-    }
-  };
+  if (loading) {
+    return (
+      <div className="text-center my-5">
+        <Spinner animation="border" />
+        <p>Generating AI feedback...</p>
+      </div>
+    );
+  }
 
   return (
     <Container className="mt-4">
