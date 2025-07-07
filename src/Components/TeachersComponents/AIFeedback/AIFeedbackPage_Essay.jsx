@@ -3,6 +3,22 @@ import { Container, Card, Button, Spinner, Alert } from 'react-bootstrap';
 import { useNavigate, useParams } from 'react-router-dom';
 import HeaderWithApiCount from './HeaderWithApiCount';
 import { supabase } from '../../../SupabaseAuth/supabaseClient';
+import { downloadAsTextFile } from '../../../utils/downloadTextUtils';
+import { ApiCallCountContext } from "../../../Context/ApiCallCountContext";
+import HeaderWithApiCount from './HeaderWithApiCount';
+
+const defaultPrompts = [
+  {
+    label: 'Essay Feedback',
+    prompt: `You are an educational AI assistant providing feedback on essay-based exams.
+Evaluate the following essay questions, student answers, and grading guidelines.
+Generate a comprehensive feedback summary including overall performance, strengths, weaknesses, and actionable recommendations.
+
+[QUESTIONS]
+[ANSWERS]
+[GUIDELINES]`
+  }
+];
 
 const AIFeedbackPage_Essay = () => {
   const { examId } = useParams();
@@ -18,8 +34,8 @@ const AIFeedbackPage_Essay = () => {
 
   useEffect(() => {
     const fetchEssayData = async () => {
-      setLoading(true);
-      setError(null);
+        setLoading(true);
+        setError(null);
 
       try {
         const { data: question, error: questionError } = await supabase
@@ -107,27 +123,27 @@ const AIFeedbackPage_Essay = () => {
 
   return (
     <Container className="mt-4">
-      <Card className="shadow-sm mb-4">
-        <Card.Header className="bg-primary text-white d-flex justify-content-between align-items-center">
-          <div>
-            <h4 className="mb-0">AI-Generated Feedback for Essay Exam</h4>
+        <Card className="shadow-sm mb-4">
+          <Card.Header className="bg-primary text-white d-flex justify-content-between align-items-center">
+            <div>
+              <h4 className="mb-0">AI-Generated Feedback for Essay Exam</h4>
             <span className="small">Exam ID: {examId}</span>
-          </div>
-          <div className="d-flex gap-2">
-            <Button
-              variant="light"
-              size="sm"
+            </div>
+            <div className="d-flex gap-2">
+              <Button
+                variant="light"
+                size="sm"
               onClick={() => navigate(`/teacher/exams/${examId}/prompt-selector`, {
                 state: { questionType: 'essay' }
               })}
-            >
-              🔄 Modify Prompt
-            </Button>
-            <HeaderWithApiCount />
-          </div>
-        </Card.Header>
+              >
+                🔄 Modify Prompt
+              </Button>
+              <HeaderWithApiCount />
+            </div>
+          </Card.Header>
 
-        <Card.Body>
+          <Card.Body>
           {loading ? (
             <div className="text-center my-4">
               <Spinner animation="border" />
@@ -173,9 +189,9 @@ const AIFeedbackPage_Essay = () => {
                 </Button>
               </div>
             </>
-          )}
-        </Card.Body>
-      </Card>
+            )}
+          </Card.Body>
+        </Card>
     </Container>
   );
 };
