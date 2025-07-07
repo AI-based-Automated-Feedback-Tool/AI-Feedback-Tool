@@ -113,6 +113,28 @@ const AIFeedbackPage_Essay = () => {
 
               <h6>Prompt Used:</h6>
               <p>{promptData?.prompt_text || 'No prompt selected for this exam.'}</p>
+
+              {aiError && (
+                <Alert variant="danger" className="mt-3">
+                  <strong>Error:</strong> {aiError}
+                </Alert>
+              )}
+
+              <div className="mt-3 d-flex justify-content-start gap-2">
+                <Button
+                  variant="primary"
+                  disabled={aiLoading || !essaySubmission || !promptData}
+                  onClick={callAIForEssayFeedback}
+                >
+                  {aiLoading ? (
+                    <>
+                      <Spinner animation="border" size="sm" /> Generating Feedback...
+                    </>
+                  ) : (
+                    '✨ Generate AI Feedback'
+                  )}
+                </Button>
+              </div>
             </>
           )}
         </Card.Body>
