@@ -22,7 +22,6 @@ const AIFeedbackPage_Essay = () => {
       setError(null);
 
       try {
-        // 1. Fetch essay question by exam ID
         const { data: question, error: questionError } = await supabase
           .from('essay_questions')
           .select('*')
@@ -30,10 +29,8 @@ const AIFeedbackPage_Essay = () => {
           .single();
 
         if (questionError) throw questionError;
-
         setEssayQuestion(question);
 
-        // 2. Fetch student's essay submission for the question (optional: latest submission or based on user context)
         const { data: submission, error: submissionError } = await supabase
           .from('essay_submissions_answers')
           .select('*')
@@ -43,10 +40,8 @@ const AIFeedbackPage_Essay = () => {
           .single();
 
         if (submissionError && submissionError.code !== 'PGRST116') throw submissionError;
-
         setEssaySubmission(submission || null);
 
-        // 3. Fetch stored AI prompt for essay type (if exists)
         const { data: prompt, error: promptError } = await supabase
           .from('prompts')
           .select('*')
@@ -55,7 +50,6 @@ const AIFeedbackPage_Essay = () => {
           .single();
 
         if (promptError && promptError.code !== 'PGRST116') throw promptError;
-
         setPromptData(prompt || null);
 
       } catch (err) {
@@ -67,6 +61,39 @@ const AIFeedbackPage_Essay = () => {
 
     fetchEssayData();
   }, [examId]);
+
+  const callAIForEssayFeedback = async () => {
+    if (!promptData?.prompt_text || !essaySubmission?.student_answer) {
+      setAiError('Missing prompt or student answer.');
+      return;
+    }
+
+    setAiLoading(true);
+    setAiError(null);
+
+    try {
+      const prompt = promptData.prompt_text.replace('{{student_answer}}', essaySubmission.student_answer);
+
+      const response = await fetch('/api/generate-essay-feedback', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt })
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) throw new Error(result.error || 'AI feedback generation failed.');
+
+      const updatedFeedback = result.feedback;
+
+      
+
+    } catch (err) {
+      setAiError(err.message || 'AI generation error');
+    } finally {
+      setAiLoading(false);
+    }
+  };
 
   return (
     <Container className="mt-4">
