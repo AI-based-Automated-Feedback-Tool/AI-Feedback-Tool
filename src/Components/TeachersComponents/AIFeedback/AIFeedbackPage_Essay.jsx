@@ -13,6 +13,8 @@ const AIFeedbackPage_Essay = () => {
   const [promptData, setPromptData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiError, setAiError] = useState(null);
 
   useEffect(() => {
     const fetchEssayData = async () => {
