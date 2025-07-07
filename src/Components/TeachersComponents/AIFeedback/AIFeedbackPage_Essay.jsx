@@ -157,6 +157,28 @@ const AIFeedbackPage_Essay = () => {
 
   return (
     <Container className="mt-4">
+      <Modal show={showLimitModal} onHide={() => navigate('/teacher/dashboard')} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Daily Limit Reached</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>You've reached your daily limit of feedback generations.</p>
+          <p>Please try again tomorrow.</p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="primary" onClick={() => navigate('/teacher/dashboard')}>
+            Back to Dashboard
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {error && !showLimitModal && (
+        <Alert variant="danger">
+          <strong>Error:</strong> {error}
+        </Alert>
+      )}
+
+      {feedback && !showLimitModal && (
         <Card className="shadow-sm mb-4">
           <Card.Header className="bg-primary text-white d-flex justify-content-between align-items-center">
             <div>
@@ -230,4 +252,4 @@ const AIFeedbackPage_Essay = () => {
   );
 };
 
-export default AIFeedbackPage_Essay;
+export default AIFeedbackPage_Essay;  
