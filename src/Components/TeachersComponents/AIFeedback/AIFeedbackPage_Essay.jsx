@@ -157,77 +157,98 @@ const AIFeedbackPage_Essay = () => {
 
   return (
     <Container className="mt-4">
+      <Modal show={showLimitModal} onHide={() => navigate('/teacher/dashboard')} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Daily Limit Reached</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>You've reached your daily limit of feedback generations.</p>
+          <p>Please try again tomorrow.</p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="primary" onClick={() => navigate('/teacher/dashboard')}>
+            Back to Dashboard
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {error && !showLimitModal && (
+        <Alert variant="danger">
+          <strong>Error:</strong> {error}
+        </Alert>
+      )}
+
+      {feedback && !showLimitModal && (
         <Card className="shadow-sm mb-4">
           <Card.Header className="bg-primary text-white d-flex justify-content-between align-items-center">
             <div>
               <h4 className="mb-0">AI-Generated Feedback for Essay Exam</h4>
-            <span className="small">Exam ID: {examId}</span>
+              <span className="small">Exam Name: {examTitle}</span>
             </div>
             <div className="d-flex gap-2">
               <Button
                 variant="light"
                 size="sm"
-              onClick={() => navigate(`/teacher/exams/${examId}/prompt-selector`, {
-                state: { questionType: 'essay' }
-              })}
+                onClick={() =>
+                  navigate(`/teacher/exams/${examId}/prompt-selector`, {
+                    state: {
+                      prompt: location.state?.prompt || '',
+                      aiProvider: location.state?.aiProvider || 'cohere',
+                      questionType: 'essay'
+                    }
+                  })
+                }
               >
                 🔄 Modify Prompt
+              </Button>
+              <Button variant="light" size="sm" onClick={() => downloadAsTextFile(feedback)}>
+                📄 Download .TXT
               </Button>
               <HeaderWithApiCount />
             </div>
           </Card.Header>
-
           <Card.Body>
-          {loading ? (
-            <div className="text-center my-4">
-              <Spinner animation="border" />
-              <p className="mt-2">Loading essay question, submission, and prompt...</p>
-            </div>
-          ) : error ? (
-            <Alert variant="danger">
-              <strong>Error:</strong> {error}
-            </Alert>
-          ) : (
-            <>
-              <h5>Essay Question:</h5>
-              <p>{essayQuestion?.question_description || 'No question found.'}</p>
-
-              <h6>Student Answer:</h6>
-              <p>{essaySubmission?.student_answer || 'No student submission found.'}</p>
-
-              <h6>AI Feedback:</h6>
-              <p>{essaySubmission?.ai_feedback || 'AI feedback not generated yet.'}</p>
-
-              <h6>Prompt Used:</h6>
-              <p>{promptData?.prompt_text || 'No prompt selected for this exam.'}</p>
-
-              {aiError && (
-                <Alert variant="danger" className="mt-3">
-                  <strong>Error:</strong> {aiError}
-                </Alert>
-              )}
-
-              <div className="mt-3 d-flex justify-content-start gap-2">
-                <Button
-                  variant="primary"
-                  disabled={aiLoading || !essaySubmission || !promptData}
-                  onClick={callAIForEssayFeedback}
-                >
-                  {aiLoading ? (
-                    <>
-                      <Spinner animation="border" size="sm" /> Generating Feedback...
-                    </>
-                  ) : (
-                    '✨ Generate AI Feedback'
-                  )}
-                </Button>
-              </div>
-            </>
+            {feedback.overallSummary && (
+              <Section title="📊 Overall Summary" text={feedback.overallSummary} />
+            )}
+            {feedback.keyStrengths?.length > 0 && (
+              <Section title="✅ Key Strengths" items={feedback.keyStrengths} />
+            )}
+            {feedback.mostMissedQuestions?.length > 0 && (
+              <Section title="⚠️ Most Missed Questions" items={feedback.mostMissedQuestions} />
+            )}
+            {feedback.teachingSuggestions?.length > 0 && (
+              <Section title="💡 Teaching Suggestions" items={feedback.teachingSuggestions} />
+            )}
+            {feedback.nextSteps?.length > 0 && (
+              <Section title="🚀 Actionable Next Steps" items={feedback.nextSteps} />
             )}
           </Card.Body>
         </Card>
+      )}
+
+      {!showLimitModal && (
+        <Alert variant="info">
+          <i className="bi bi-robot"></i> Feedback generated using custom AI analysis.
+        </Alert>
+      )}
     </Container>
   );
 };
 
-export default AIFeedbackPage_Essay;
+const Section = ({ title, items = [], text = '' }) => (
+  <div className="mb-4">
+    <h5 className="text-secondary">{title}</h5>
+    {items.length > 0 ? (
+      <ul>
+        {items.map((item, idx) => (
+          <li key={idx}>{item}</li>
+        ))}
+      </ul>
+    ) : (
+      <p>{text}</p>
+    )}
+  </div>
+);
+
+export default AIFeedbackPage_Essay;  
