@@ -86,7 +86,17 @@ const AIFeedbackPage_Essay = () => {
 
       const updatedFeedback = result.feedback;
 
-      
+      const { error: updateError } = await supabase
+        .from('essay_submissions_answers')
+        .update({ ai_feedback: updatedFeedback })
+        .eq('id', essaySubmission.id);
+
+      if (updateError) throw updateError;
+
+      setEssaySubmission(prev => ({
+        ...prev,
+        ai_feedback: updatedFeedback
+      }));
 
     } catch (err) {
       setAiError(err.message || 'AI generation error');
