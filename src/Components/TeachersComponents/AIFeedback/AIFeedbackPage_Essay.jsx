@@ -157,7 +157,7 @@ const AIFeedbackPage_Essay = () => {
 
   return (
     <Container className="mt-4">
-      <Modal show={showLimitModal} onHide={() => navigate('/teacher/dashboard')} centered>
+      <Modal show={showLimitModal} onHide={() => navigate('/teacher')} centered>
         <Modal.Header closeButton>
           <Modal.Title>Daily Limit Reached</Modal.Title>
         </Modal.Header>
@@ -166,7 +166,7 @@ const AIFeedbackPage_Essay = () => {
           <p>Please try again tomorrow.</p>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="primary" onClick={() => navigate('/teacher/dashboard')}>
+          <Button variant="primary" onClick={() => navigate('/teacher')}>
             Back to Dashboard
           </Button>
         </Modal.Footer>
