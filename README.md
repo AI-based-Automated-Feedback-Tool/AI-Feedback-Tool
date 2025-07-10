@@ -39,6 +39,64 @@
 - **AI Integration:** OpenAI / Cohere / DeepSeek API
 - **Database:** Supabase
 
+## 👥 Team
+
+|       Name       |  GitHub Name |                       Role                          |
+|------------------|--------------|-----------------------------------------------------|
+| Sujeewa Herath   | SampathHM    | Frontend and backend Developer / Project Management |
+| Upeksha Chiranthi| upeksha-c    | Frontend and backend Developer / Project Management |
+| Archana Ojha     | ojhaarch2054 | Frontend and backend Developer / Project Management |
+| Nipuni Kodikara  | t3komu00     | Frontend and backend Developer / Project Management |
+
+
+## 🔗 APIs Used
+
+We integrated multiple AI APIs to provide personalized feedback, error analysis, and solution suggestions for students' answers.
+
+---
+
+### 1. Cohere API
+- **Description:**  
+  Cohere focuses on natural language understanding, making it suitable for generating concise feedback, text classification, and summarization.
+- **Pros:**
+  - Cost-effective for text-focused tasks.
+  - Strong in maintaining tone consistency and clarity.
+  - Easy to integrate with clear API documentation.
+- **Cons:**
+  - Limited capabilities for complex code-related tasks.
+  - Less effective in multi-step reasoning or advanced technical explanations.
+
+---
+
+### 2. OpenRouter AI
+- **Description:**  
+  OpenRouter AI provides access to multiple open-source and commercial AI models via a single API interface. It is used for generating personalized and context-aware feedback.
+- **Pros:**
+  - Flexibility to switch between multiple models (including open-source and advanced models).
+  - Pay-as-you-go model cost-effective for small projects.
+  - Ideal for natural language tasks and creative text generation.
+- **Cons:**
+  - Quality depends on the selected model some models may underperform.
+  - Less predictable behavior compared to single-provider APIs.
+
+---
+
+### 3. DeepSeek API
+- **Description:**  
+  DeepSeek AI specializes in code generation, explanation, and problem-solving, making it ideal for programming-related feedback.
+- **Pros:**
+  - Fast response time.
+  - Strong performance on code-related questions and technical answers.
+  - Competitive pricing for AI code assistance.
+- **Cons:**
+  - Sometimes less accurate for abstract or non-technical content.
+  - Smaller community and fewer resources for troubleshooting.
+
+---
+
+✅ We selected these AI APIs to balance **quality**, **cost**, and **task suitability**, ensuring the best experience for both students and teachers.
+
+
 
 ## 🔗 UI Wireframe (Figma)
 
