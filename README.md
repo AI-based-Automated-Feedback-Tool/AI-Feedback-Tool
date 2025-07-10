@@ -73,10 +73,10 @@ We integrated multiple AI APIs to provide personalized feedback, error analysis,
   OpenRouter AI provides access to multiple open-source and commercial AI models via a single API interface. It is used for generating personalized and context-aware feedback.
 - **Pros:**
   - Flexibility to switch between multiple models (including open-source and advanced models).
-  - Pay-as-you-go model—cost-effective for small projects.
+  - Pay-as-you-go model cost-effective for small projects.
   - Ideal for natural language tasks and creative text generation.
 - **Cons:**
-  - Quality depends on the selected model—some models may underperform.
+  - Quality depends on the selected model some models may underperform.
   - Less predictable behavior compared to single-provider APIs.
 
 ---
