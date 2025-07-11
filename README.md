@@ -97,6 +97,50 @@ We integrated multiple AI APIs to provide personalized feedback, error analysis,
 ✅ We selected these AI APIs to balance **quality**, **cost**, and **task suitability**, ensuring the best experience for both students and teachers.
 
 
+## 🚀 Installation & Setup Guide
+
+This guide walks you through setting up the **Student AI Feedback System** on your local machine. The system consists of:
+
+
+### ✅ Frontend Setup (React + Vite)
+
+#### Prerequisites:
+
+- Node.js (v18 or higher) ➔ [Download Node.js](https://nodejs.org/)
+- npm (comes with Node.js) or yarn
+- A Supabase project ➔ [https://supabase.io/](https://supabase.io/)
+- AI API Keys:
+  - [Cohere](https://cohere.ai/)
+  - [OpenRouter AI](https://openrouter.ai/)
+  - [DeepSeek](https://deepseek.com/)
+
+#### Steps:
+
+1. **Clone the Frontend Repository:**
+
+   ```bash
+   git clone https://github.com/AI-based-Automated-Feedback-Tool/AI-Feedback-Tool.git
+   cd frontend-repo
+    ```
+
+2. **Install Frontend Dependencies:**
+
+   ```bash
+   npm install
+   ```
+  
+3. **Create a `.env` file in the root directory:**
+
+  VITE_SUPABASE_URL=your_supabase_url
+  VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+
+4. **Start the Frontend Server:**
+
+   ```bash
+   npm run dev
+   ```
+  the frontend will be running at `http://localhost:5173`
+
 
 ## 🔗 UI Wireframe (Figma)
 
