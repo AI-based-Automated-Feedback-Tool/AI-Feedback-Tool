@@ -142,6 +142,54 @@ This guide walks you through setting up the **Student AI Feedback System** on yo
   the frontend will be running at `http://localhost:5173`
 
 
+### ✅ Backend Setup (Node.js + Express)
+
+#### Prerequisites:
+- Node.js (v18 or higher) ➔ [Download Node.js](https://nodejs.org/)
+- npm (comes with Node.js) or yarn
+- A Supabase project ➔ [https://supabase.io/](https://supabase.io/)
+- AI API Keys:
+  - [Cohere](https://cohere.ai/)
+  - [OpenRouter AI](https://openrouter.ai/)
+  - [DeepSeek](https://deepseek.com/)
+  
+#### Steps:
+1. **Clone the Backend Repository:**
+
+   ```bash
+   git clone https://github.com/AI-based-Automated-Feedback-Tool/AI-Feedback-Tool-Backend.git
+    cd backend-repo
+    ```
+
+2. **Install Backend Dependencies:**
+    ```bash
+    npm install
+    ```
+
+3. **Create a `.env` file in the root directory:**
+
+
+    ```bash
+    SUPABASE_URL=your_supabase_url
+    SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
+    COHERE_API_KEY=your_cohere_api_key
+    OPENROUTER_API_KEY=your_openrouter_api_key
+    DEEPSEEK_API_KEY=your_deepseek_api_key
+    OPENAI_API_KEY=your_openai_api_key
+    PORT=3000
+    ```
+    Replace the placeholders with your actual API keys and Supabase credentials.
+    
+4. **Start the Backend Server:**
+
+    ```bash
+    npm run start
+    ```
+    The backend will be running at `http://localhost:3000`
+    ---
+
+
+
 ## 🔗 UI Wireframe (Figma)
 
 You can view the UI wireframe here: [Click to open Figma Design](https://www.figma.com/design/pk7MWiVJ9oJxGG89NFyQTW/AI-Powered-Exam---Assignment-Web-App?node-id=1-20&t=79hujBb7N1vTSMNq-1)
