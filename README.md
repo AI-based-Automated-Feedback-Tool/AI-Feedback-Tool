@@ -131,15 +131,21 @@ This guide walks you through setting up the **Student AI Feedback System** on yo
   
 3. **Create a `.env` file in the root directory:**
 
-  VITE_SUPABASE_URL=your_supabase_url
-  VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+    ```bash
+    VITE_SUPABASE_URL=your_supabase_url
+    VITE_SUPABASE_ANON_KEY=your_supabase_anon_key    
+    ```
+  
+    Replace the placeholders with your actual API keys and Supabase credentials.
+
 
 4. **Start the Frontend Server:**
 
    ```bash
    npm run dev
    ```
-  the frontend will be running at `http://localhost:5173`
+  The frontend will be running at `http://localhost:5173`
+
 
 
 ### ✅ Backend Setup (Node.js + Express)
@@ -162,12 +168,12 @@ This guide walks you through setting up the **Student AI Feedback System** on yo
     ```
 
 2. **Install Backend Dependencies:**
+
     ```bash
     npm install
     ```
 
 3. **Create a `.env` file in the root directory:**
-
 
     ```bash
     SUPABASE_URL=your_supabase_url
@@ -185,8 +191,9 @@ This guide walks you through setting up the **Student AI Feedback System** on yo
     ```bash
     npm run start
     ```
+    
     The backend will be running at `http://localhost:3000`
-    ---
+  
 
 
 
