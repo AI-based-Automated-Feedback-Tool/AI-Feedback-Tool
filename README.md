@@ -200,3 +200,33 @@ This guide walks you through setting up the **Student AI Feedback System** on yo
 ## 🔗 UI Wireframe (Figma)
 
 You can view the UI wireframe here: [Click to open Figma Design](https://www.figma.com/design/pk7MWiVJ9oJxGG89NFyQTW/AI-Powered-Exam---Assignment-Web-App?node-id=1-20&t=79hujBb7N1vTSMNq-1)
+
+
+
+## 👥 User Onboarding Flow (Teacher & Student)
+
+This section explains how both **teachers and students** can sign up, log in, and start using the system.  
+Follow the steps below, and refer to the screenshots provided for a visual guide.
+
+---
+
+### 1️⃣ Landing Page – "AI-Based Automated Feedback Tool"
+
+📷 *[Screenshot 1]*
+
+- When you visit `http://localhost:5173`, you will see the **Intro Page**.
+- Click the **"Get Started"** button to begin.
+
+---
+
+### 2️⃣ Login Page
+
+📷 *[Screenshot 2]*
+
+- If you already have an account, enter your **email** and **password** here.
+- Click **"Login"** to access your dashboard.
+- If you are new, click the **"Sign Up"** link below the login button.
+
+---
+
+
