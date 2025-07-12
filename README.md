@@ -230,3 +230,35 @@ Follow the steps below, and refer to the screenshots provided for a visual guide
 ---
 
 
+### 3️⃣ Sign Up Page
+
+📷 *[Screenshot 3]*
+
+- Fill in the following fields to create an account:
+  - **Full Name**
+  - **Email**
+  - **Password**
+  - **Role** ➔ Choose **Teacher** from the dropdown
+- Click **"Sign Up"** to register.
+- The system will store your role and details securely in Supabase Auth.
+
+---
+
+### 4️⃣ Post-Login Redirection
+
+- After login:
+  - If you signed up as a **teacher**, you will be redirected to the **Teacher Dashboard**.
+  - If you signed up as a **student**, you will be redirected to the **Student Dashboard**.
+
+✅ Your role is automatically detected based on what you selected during signup.
+
+---
+
+### 🔐 Authentication Notes
+
+- User authentication is handled by **Supabase Auth**.
+- The `role` (student/teacher) is stored as user metadata in Supabase and used to control access.
+- Unauthorized users cannot access teacher-specific routes.
+
+---
+
