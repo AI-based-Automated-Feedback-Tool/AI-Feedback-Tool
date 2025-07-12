@@ -200,3 +200,65 @@ This guide walks you through setting up the **Student AI Feedback System** on yo
 ## 🔗 UI Wireframe (Figma)
 
 You can view the UI wireframe here: [Click to open Figma Design](https://www.figma.com/design/pk7MWiVJ9oJxGG89NFyQTW/AI-Powered-Exam---Assignment-Web-App?node-id=1-20&t=79hujBb7N1vTSMNq-1)
+
+
+
+## 👥 User Onboarding Flow (Teacher & Student)
+
+This section explains how both **teachers and students** can sign up, log in, and start using the system.  
+Follow the steps below, and refer to the screenshots provided for a visual guide.
+
+---
+
+### 1️⃣ Landing Page – "AI-Based Automated Feedback Tool"
+
+📷 *[Screenshot 1]*
+
+- When you visit `http://localhost:5173`, you will see the **Intro Page**.
+- Click the **"Get Started"** button to begin.
+
+---
+
+### 2️⃣ Login Page
+
+📷 *[Screenshot 2]*
+
+- If you already have an account, enter your **email** and **password** here.
+- Click **"Login"** to access your dashboard.
+- If you are new, click the **"Sign Up"** link below the login button.
+
+---
+
+
+### 3️⃣ Sign Up Page
+
+📷 *[Screenshot 3]*
+
+- Fill in the following fields to create an account:
+  - **Full Name**
+  - **Email**
+  - **Password**
+  - **Role** ➔ Choose **Teacher** from the dropdown
+- Click **"Sign Up"** to register.
+- The system will store your role and details securely in Supabase Auth.
+
+---
+
+### 4️⃣ Post-Login Redirection
+
+- After login:
+  - If you signed up as a **teacher**, you will be redirected to the **Teacher Dashboard**.
+  - If you signed up as a **student**, you will be redirected to the **Student Dashboard**.
+
+✅ Your role is automatically detected based on what you selected during signup.
+
+---
+
+### 🔐 Authentication Notes
+
+- User authentication is handled by **Supabase Auth**.
+- The `role` (student/teacher) is stored as user metadata in Supabase and used to control access.
+- Unauthorized users cannot access teacher-specific routes.
+
+---
+
