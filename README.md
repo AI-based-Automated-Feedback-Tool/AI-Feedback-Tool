@@ -195,13 +195,15 @@ This guide walks you through setting up the **Student AI Feedback System** on yo
     The backend will be running at `http://localhost:3000`
   
 
-
+---
+---
 
 ## 🔗 UI Wireframe (Figma)
 
 You can view the UI wireframe here: [Click to open Figma Design](https://www.figma.com/design/pk7MWiVJ9oJxGG89NFyQTW/AI-Powered-Exam---Assignment-Web-App?node-id=1-20&t=79hujBb7N1vTSMNq-1)
 
-
+---
+---
 
 ## 👥 User Onboarding Flow (Teacher & Student)
 
