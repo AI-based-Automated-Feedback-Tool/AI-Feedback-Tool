@@ -265,3 +265,38 @@ Follow the steps below, and refer to the screenshots provided for a visual guide
 
 ---
 
+## 👨‍🏫 Teacher Dashboard
+
+The Teacher Dashboard provides a central interface for educators to manage their courses, exams, and student feedback with ease.
+
+![Teacher Dashboard Screenshot](./assets/teacher-dashboard.png)
+
+
+### 🧩 Features
+
+- **📚 Course Cards**
+  - Displays all courses assigned to the teacher.
+  - Each course is presented as a clickable card.
+  - Cards show:
+    - **Course Title**
+    - **Course Code**
+    - **Brief Description**
+
+- **🧭 Sidebar Navigation**
+  - `Dashboard` – Home view showing teacher's courses.
+  - `Configure Exam` – Set up exams for selected courses.
+  - `Register Course` – Register new courses to the system.
+  - `Reports` – View student performance and analytics.
+  - `AI Feedback` – Access AI-generated feedback for student answers.
+  - `Profile` – Manage teacher profile information.
+
+- **🔝 Top Bar**
+  - Profile icon leading to the profile page.
+  - Red **Log Out** button to securely exit the dashboard.
+
+
+### 🎯 Purpose
+
+The Teacher Dashboard ensures that instructors can quickly navigate between their teaching resources, configure exams, register new courses, and leverage AI tools to enhance educational delivery.
+
+---
