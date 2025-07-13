@@ -269,7 +269,7 @@ Follow the steps below, and refer to the screenshots provided for a visual guide
 
 The Teacher Dashboard provides a central interface for educators to manage their courses, exams, and student feedback with ease.
 
-![Teacher Dashboard Screenshot](./assets/teacher-dashboard.png)
+<div align="center"> <img src="./src/assets/teacher-dashboard.png" alt="Intro Page" width="800"/> </div>
 
 
 ### 🧩 Features
