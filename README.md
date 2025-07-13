@@ -214,7 +214,8 @@ Follow the steps below, and refer to the screenshots provided for a visual guide
 
 ### 1️⃣ Landing Page – "AI-Based Automated Feedback Tool"
 
-📷 *[Screenshot 1]*
+<div align="center"> <img src="./src/assets/Intro_Page.png" alt="Intro Page" width="800"/> </div>
+
 
 - When you visit `http://localhost:5173`, you will see the **Intro Page**.
 - Click the **"Get Started"** button to begin.
@@ -223,7 +224,7 @@ Follow the steps below, and refer to the screenshots provided for a visual guide
 
 ### 2️⃣ Login Page
 
-📷 *[Screenshot 2]*
+<div align="center"> <img src="./src/assets/Login_Page.png" alt="Login Page" width="300"/> </div>
 
 - If you already have an account, enter your **email** and **password** here.
 - Click **"Login"** to access your dashboard.
@@ -234,7 +235,7 @@ Follow the steps below, and refer to the screenshots provided for a visual guide
 
 ### 3️⃣ Sign Up Page
 
-📷 *[Screenshot 3]*
+<div align="center"> <img src="./src/assets/SignUp_Page.png" alt="Sign Up Page" width="400"/> </div>
 
 - Fill in the following fields to create an account:
   - **Full Name**
