@@ -280,6 +280,17 @@ The **Teacher Profile Page** allows teachers to view and manage their personal i
 
 ---
 
+### ✏️ Edit Profile
+- Allows the teacher to update their **name**.
+- **Email field** is shown as read-only for security.
+- Includes **Save Changes** and **Cancel** buttons for interaction.
+
+<div align="center">
+  <img src="./src/assets/teacher-profile-edit.png" alt="Edit Profile Page" width="800"/>
+</div>
+
+---
+
 ## 👨‍🏫 Teacher Dashboard
 
 The Teacher Dashboard provides a central interface for educators to manage their courses, exams, and student feedback with ease.
