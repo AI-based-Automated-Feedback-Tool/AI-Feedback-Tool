@@ -313,7 +313,15 @@ This page enables teachers to:
 - See exam types (e.g., MCQ, CODE, ESSAY), durations, number of questions, and due dates.
 - Manage or create new exams with ease.
 
+### 📘 Example: `JS201 - Advanced JavaScript`
 
+> The page title reflects the selected course (e.g., `JS201 - Advanced JavaScript`), providing context for the listed exams.
+
+### 🧾 Page Preview
+
+<div align="center">
+  <img src="./src/assets/course-exams.png" alt="Course Exams Page" width="800"/>
+</div>
 
 ### 📋 Exam Table Overview
 
