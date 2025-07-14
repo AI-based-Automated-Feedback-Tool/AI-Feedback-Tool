@@ -300,3 +300,37 @@ The Teacher Dashboard provides a central interface for educators to manage their
 The Teacher Dashboard ensures that instructors can quickly navigate between their teaching resources, configure exams, register new courses, and leverage AI tools to enhance educational delivery.
 
 ---
+
+## 📄 Course Exams Page
+
+When a teacher clicks on a specific course card in the **Teacher Dashboard**, they are navigated to the **Course Exams Page**. This page displays a detailed list of all the exams created under that course.
+
+### 🎯 Purpose
+
+This page enables teachers to:
+
+- View all exams associated with the selected course.
+- See exam types (e.g., MCQ, CODE, ESSAY), durations, number of questions, and due dates.
+- Manage or create new exams with ease.
+
+
+
+### 📋 Exam Table Overview
+
+| Field        | Description                                      |
+|--------------|--------------------------------------------------|
+| **Title**    | Name of the exam (e.g., "Basic JavaScript test") |
+| **Type**     | Exam type: `MCQ`, `CODE`, or `ESSAY`             |
+| **Duration** | Time allowed for the exam                        |
+| **Questions**| Number of questions in the exam                  |
+| **Due Date** | Date & time the exam is due                      |
+
+Each row in the table corresponds to one exam under the selected course.
+
+### ➕ Create New Exam
+
+A **"Create New Exam"** button is available in the top-right corner. Clicking it opens a form for adding a new exam to the current course.
+
+---
+
+
