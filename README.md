@@ -265,6 +265,21 @@ Follow the steps below, and refer to the screenshots provided for a visual guide
 
 ---
 
+## 👤 Teacher Profile Page
+
+The **Teacher Profile Page** allows teachers to view and manage their personal information. It provides a clean and intuitive interface with an avatar, name, and email address display. Users can also update their name through the Edit Profile form.
+
+### 🔍 View Profile
+- Displays the teacher's **name** and **email address**.
+- Shows a circular avatar based on the teacher’s initial.
+- Includes an **Edit Profile** button for updating profile details.
+
+<div align="center">
+  <img src="./src/assets/teacher-profile-view.png" alt="View Profile Page" width="800"/>
+</div>
+
+---
+
 ## 👨‍🏫 Teacher Dashboard
 
 The Teacher Dashboard provides a central interface for educators to manage their courses, exams, and student feedback with ease.
@@ -340,5 +355,7 @@ Each row in the table corresponds to one exam under the selected course.
 A **"Create New Exam"** button is available in the top-right corner. Clicking it opens a form for adding a new exam to the current course.
 
 ---
+
+
 
 
