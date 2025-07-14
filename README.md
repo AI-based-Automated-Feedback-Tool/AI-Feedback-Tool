@@ -275,7 +275,7 @@ The **Teacher Profile Page** allows teachers to view and manage their personal i
 - Includes an **Edit Profile** button for updating profile details.
 
 <div align="center">
-  <img src="./src/assets/teacher-profile-view.png" alt="View Profile Page" width="800"/>
+  <img src="./src/assets/teacher-profile-view.png" alt="View Profile Page" width="400"/>
 </div>
 
 ---
@@ -286,7 +286,7 @@ The **Teacher Profile Page** allows teachers to view and manage their personal i
 - Includes **Save Changes** and **Cancel** buttons for interaction.
 
 <div align="center">
-  <img src="./src/assets/teacher-profile-edit.png" alt="Edit Profile Page" width="800"/>
+  <img src="./src/assets/teacher-profile-edit.png" alt="Edit Profile Page" width="400"/>
 </div>
 
 ---
