@@ -407,3 +407,6 @@ The **Configure New Exam** page allows teachers to create and customize a new ex
 - **Save & Proceed to Questions**: Button at the bottom lets the teacher confirm configurations and move to the question creation interface.
 
 ---
+<div align="center">
+  <img src="./src/assets/configure-exam.png" alt="Configure Exam Page" width="800"/>
+</div>
