@@ -389,3 +389,21 @@ The **Configure New Exam** page allows teachers to create and customize a new ex
 - These instructions are visible to students during the exam.
 
 ---
+
+### 🧠 Grading Configuration
+- **AI Assessment Guidelines**: Teachers can define automated grading rules to be followed by the AI engine:
+  - e.g., *Points deduction for late submissions* or *Requirement of code documentation*.
+  
+- **Question Type**: Choose the type of questions for the exam using a dropdown menu:
+  - `Multiple Choice Questions`
+  - `Programming Code`
+  - `Essay`
+
+- **Total Questions**: Specify the number of questions to include in the exam (e.g., `15`).
+
+---
+
+### ✅ Action
+- **Save & Proceed to Questions**: Button at the bottom lets the teacher confirm configurations and move to the question creation interface.
+
+---
