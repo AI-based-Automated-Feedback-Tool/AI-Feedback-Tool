@@ -368,5 +368,45 @@ A **"Create New Exam"** button is available in the top-right corner. Clicking it
 ---
 
 
+## 🛠️ Configure New Exam
 
+The **Configure New Exam** page allows teachers to create and customize a new exam with complete control over scheduling, instructions, grading criteria, and question types.
 
+---
+
+### 🧾 Basic Information
+- **Exam Title**: Input a descriptive name for the exam (e.g., *Data Structures Final Exam*).
+- **Course**: Select the relevant course from a dropdown menu populated from the course database.
+- **Exam Duration (Minutes)**: Define the estimated time (in minutes) students will have to complete the exam.
+- **Start Time / End Time**: Set the specific exam availability window using date-time pickers.
+
+---
+
+### 📜 Exam Rules & Instructions
+- **Student Instructions**: Add important rules and guidelines for students, such as:
+  - Allowed materials during the exam.
+  - Submission expectations and formatting.
+- These instructions are visible to students during the exam.
+
+---
+
+### 🧠 Grading Configuration
+- **AI Assessment Guidelines**: Teachers can define automated grading rules to be followed by the AI engine:
+  - e.g., *Points deduction for late submissions* or *Requirement of code documentation*.
+  
+- **Question Type**: Choose the type of questions for the exam using a dropdown menu:
+  - `Multiple Choice Questions`
+  - `Programming Code`
+  - `Essay`
+
+- **Total Questions**: Specify the number of questions to include in the exam (e.g., `15`).
+
+---
+
+### ✅ Action
+- **Save & Proceed to Questions**: Button at the bottom lets the teacher confirm configurations and move to the question creation interface.
+
+---
+<div align="center">
+  <img src="./src/assets/configure-exam.png" alt="Configure Exam Page" width="800"/>
+</div>
