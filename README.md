@@ -368,5 +368,24 @@ A **"Create New Exam"** button is available in the top-right corner. Clicking it
 ---
 
 
+## 🛠️ Configure New Exam
 
+The **Configure New Exam** page allows teachers to create and customize a new exam with complete control over scheduling, instructions, grading criteria, and question types.
 
+---
+
+### 🧾 Basic Information
+- **Exam Title**: Input a descriptive name for the exam (e.g., *Data Structures Final Exam*).
+- **Course**: Select the relevant course from a dropdown menu populated from the course database.
+- **Exam Duration (Minutes)**: Define the estimated time (in minutes) students will have to complete the exam.
+- **Start Time / End Time**: Set the specific exam availability window using date-time pickers.
+
+---
+
+### 📜 Exam Rules & Instructions
+- **Student Instructions**: Add important rules and guidelines for students, such as:
+  - Allowed materials during the exam.
+  - Submission expectations and formatting.
+- These instructions are visible to students during the exam.
+
+---
