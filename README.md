@@ -410,3 +410,10 @@ The **Configure New Exam** page allows teachers to create and customize a new ex
 <div align="center">
   <img src="./src/assets/configure-exam.png" alt="Configure Exam Page" width="800"/>
 </div>
+
+
+## ❓ Create MCQ Questions
+
+The **Create MCQ Questions** page allows instructors to add multiple-choice questions to the exam configured previously. This interface provides fields to define the question, answer choices, correct answers, and point value—ensuring each question is clearly defined and ready for automated assessment.
+
+---
