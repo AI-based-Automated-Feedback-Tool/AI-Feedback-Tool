@@ -454,3 +454,25 @@ Below the input form is a **Preview Questions** section, where teachers can revi
 - **+ Save All Question**: Submits all created questions to be linked with the exam.
 
 ---
+
+<div align="center">
+  <img src="./src/assets/create-mcq-question.png" alt="Create MCQ Questions Page" width="800"/>
+</div>
+
+> ⚠️ **Note on Question Types**
+>
+> The interface for creating questions dynamically changes based on the selected **Question Type** from the exam configuration step:
+>
+> - **Multiple Choice Questions (MCQ)**:
+>   - Displays fields to enter a question, multiple answer options, select the correct answer(s), and assign point value.
+>   - Supports both single and multiple correct answers.
+>
+> - **Programming Code Questions**:
+>   - Includes fields to define the problem description, input/output expectations, and any code boilerplate.
+>   - Teachers can optionally define test cases and expected output for automatic evaluation.
+>
+> - **Essay Questions**:
+>   - Provides a rich text area for the teacher to enter the essay prompt or topic.
+>   - Essay answers will be manually or AI-evaluated based on the guidelines set during exam configuration.
+>
+> This modular behavior ensures that each type of question receives the appropriate structure and validation criteria tailored to its nature.
