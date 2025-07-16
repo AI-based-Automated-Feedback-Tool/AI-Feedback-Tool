@@ -417,3 +417,21 @@ The **Configure New Exam** page allows teachers to create and customize a new ex
 The **Create MCQ Questions** page allows instructors to add multiple-choice questions to the exam configured previously. This interface provides fields to define the question, answer choices, correct answers, and point value—ensuring each question is clearly defined and ready for automated assessment.
 
 ---
+
+### 🔹 Question Setup
+
+- **Question \***: Input the actual question text you want students to answer.
+  - Example: *Which array method adds one or more elements to the end of an array?*
+
+- **Answer Options \***: Enter up to 4 possible answer choices.
+  - Example: `push()`, `pop()`, `shift()`, `unshift()`
+
+- **No of answers \***: Indicate how many answers the student is expected to select (e.g., `1` for single answer, `2+` for multi-answer questions).
+
+- **Select Correct Answer(s) \***: Check the box(es) for the correct answer(s). This is used to validate student responses automatically.
+
+- **Number of points \***: Assign the point value for the question based on its difficulty or importance (e.g., `2` points).
+
+- **+ Save Question**: Adds the current question to the list below for review before final submission.
+
+---
