@@ -435,3 +435,22 @@ The **Create MCQ Questions** page allows instructors to add multiple-choice ques
 - **+ Save Question**: Adds the current question to the list below for review before final submission.
 
 ---
+
+### 🔍 Preview Questions
+
+Below the input form is a **Preview Questions** section, where teachers can review all added questions in tabular format before finalizing.
+
+#### Table Columns:
+- `#`: Question number in sequence.
+- `Question`: Displays the text of the question.
+- `Points`: Shows how many points are awarded for a correct answer.
+- `No of answers`: Indicates how many answers are correct.
+- `Answer options`: Lists all the provided answer choices.
+- `Correct Answers`: Displays which option(s) were marked as correct.
+- `Actions`:
+  - **Edit**: Modify the question details.
+  - **Delete**: Remove the question from the list.
+
+- **+ Save All Question**: Submits all created questions to be linked with the exam.
+
+---
