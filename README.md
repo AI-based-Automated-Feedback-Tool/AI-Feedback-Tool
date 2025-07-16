@@ -410,3 +410,69 @@ The **Configure New Exam** page allows teachers to create and customize a new ex
 <div align="center">
   <img src="./src/assets/configure-exam.png" alt="Configure Exam Page" width="800"/>
 </div>
+
+
+## ❓ Create MCQ Questions
+
+The **Create MCQ Questions** page allows instructors to add multiple-choice questions to the exam configured previously. This interface provides fields to define the question, answer choices, correct answers, and point value—ensuring each question is clearly defined and ready for automated assessment.
+
+---
+
+### 🔹 Question Setup
+
+- **Question \***: Input the actual question text you want students to answer.
+  - Example: *Which array method adds one or more elements to the end of an array?*
+
+- **Answer Options \***: Enter up to 4 possible answer choices.
+  - Example: `push()`, `pop()`, `shift()`, `unshift()`
+
+- **No of answers \***: Indicate how many answers the student is expected to select (e.g., `1` for single answer, `2+` for multi-answer questions).
+
+- **Select Correct Answer(s) \***: Check the box(es) for the correct answer(s). This is used to validate student responses automatically.
+
+- **Number of points \***: Assign the point value for the question based on its difficulty or importance (e.g., `2` points).
+
+- **+ Save Question**: Adds the current question to the list below for review before final submission.
+
+---
+
+### 🔍 Preview Questions
+
+Below the input form is a **Preview Questions** section, where teachers can review all added questions in tabular format before finalizing.
+
+#### Table Columns:
+- `#`: Question number in sequence.
+- `Question`: Displays the text of the question.
+- `Points`: Shows how many points are awarded for a correct answer.
+- `No of answers`: Indicates how many answers are correct.
+- `Answer options`: Lists all the provided answer choices.
+- `Correct Answers`: Displays which option(s) were marked as correct.
+- `Actions`:
+  - **Edit**: Modify the question details.
+  - **Delete**: Remove the question from the list.
+
+- **+ Save All Question**: Submits all created questions to be linked with the exam.
+
+---
+
+<div align="center">
+  <img src="./src/assets/create-mcq-question.png" alt="Create MCQ Questions Page" width="800"/>
+</div>
+
+> ⚠️ **Note on Question Types**
+>
+> The interface for creating questions dynamically changes based on the selected **Question Type** from the exam configuration step:
+>
+> - **Multiple Choice Questions (MCQ)**:
+>   - Displays fields to enter a question, multiple answer options, select the correct answer(s), and assign point value.
+>   - Supports both single and multiple correct answers.
+>
+> - **Programming Code Questions**:
+>   - Includes fields to define the problem description, input/output expectations, and any code boilerplate.
+>   - Teachers can optionally define test cases and expected output for automatic evaluation.
+>
+> - **Essay Questions**:
+>   - Provides a rich text area for the teacher to enter the essay prompt or topic.
+>   - Essay answers will be manually or AI-evaluated based on the guidelines set during exam configuration.
+>
+> This modular behavior ensures that each type of question receives the appropriate structure and validation criteria tailored to its nature.
