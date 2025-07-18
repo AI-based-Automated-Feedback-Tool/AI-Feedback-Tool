@@ -533,3 +533,38 @@ This interface enables teachers to generate automated feedback for selected exam
 
 ---
 
+
+### 🔹 Features
+
+- **AI Feedback Provider**
+  - Dropdown selection to choose between different AI engines.
+  - Currently supported:
+    - **Cohere AI**
+    - **OpenRouter AI**
+
+- **Feedback Style**
+  - Style options are **exam-type dependent**:
+
+    **🟦 MCQ Exam Feedback Styles**
+    - Standard Analysis
+    - Quick Insight
+    - Detailed Report
+    - Custom Prompt
+
+    **🟩 Code Exam Feedback Styles**
+    - Error Analysis
+    - Optimization Tips
+    - Code Style Review
+    - Custom Prompt
+
+    **🟨 Essay Exam Feedback Styles**
+    - Content & Relevance Focus
+    - General Essay Feedback
+    - Technical Accuracy & Completeness
+    - Custom Prompt
+
+- **Custom Prompt Editor**
+  - All exam types allow **Custom Prompt**, giving teachers full control to define how the feedback should be generated.
+  - Once selected, the custom prompt JSON appears in an editable preview box.
+
+---
