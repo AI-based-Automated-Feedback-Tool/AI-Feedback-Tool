@@ -521,3 +521,64 @@ Once all selections are made, the exam details are displayed:
 ### ✅ Proceed
 
 After reviewing the details, the user can click the `Proceed to AI Feedback` button to continue to the AI-generated feedback interface.
+
+
+## 🤖 AI Feedback Generator
+
+<div align="center">
+  <img src="./src/assets/ai-feedback-generator.png" alt="AI Feedback Generator" width="800"/>
+</div>
+
+This interface enables teachers to generate automated feedback for selected exams using AI models. The page dynamically adapts based on the **exam type** (MCQ, Code, or Essay), offering tailored feedback prompts.
+
+---
+
+
+### 🔹 Features
+
+- **AI Feedback Provider**
+  - Dropdown selection to choose between different AI engines.
+  - Currently supported:
+    - **Cohere AI**
+    - **OpenRouter AI**
+
+- **Feedback Style**
+  - Style options are **exam-type dependent**:
+
+    **🟦 MCQ Exam Feedback Styles**
+    - Standard Analysis
+    - Quick Insight
+    - Detailed Report
+    - Custom Prompt
+
+    **🟩 Code Exam Feedback Styles**
+    - Error Analysis
+    - Optimization Tips
+    - Code Style Review
+    - Custom Prompt
+
+    **🟨 Essay Exam Feedback Styles**
+    - Content & Relevance Focus
+    - General Essay Feedback
+    - Technical Accuracy & Completeness
+    - Custom Prompt
+
+- **Custom Prompt Editor**
+  - All exam types allow **Custom Prompt**, giving teachers full control to define how the feedback should be generated.
+  - Once selected, the custom prompt JSON appears in an editable preview box.
+
+---
+
+### 📊 Prompt Preview
+
+When a style is selected, a predefined **prompt structure** is displayed in the preview box. Teachers can review or modify it if using the custom prompt option.
+
+> Example (MCQ Standard Prompt):
+```json
+{
+  "overallSummary": "...",
+  "keyStrengths": [ ... ],
+  "mostMissedQuestions": [ ... ],
+  "teachingSuggestions": [ ... ],
+  "nextSteps": [ ... ]
+}
