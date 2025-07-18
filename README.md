@@ -476,3 +476,48 @@ Below the input form is a **Preview Questions** section, where teachers can revi
 >   - Essay answers will be manually or AI-evaluated based on the guidelines set during exam configuration.
 >
 > This modular behavior ensures that each type of question receives the appropriate structure and validation criteria tailored to its nature.
+
+
+## 🧠 AI Feedback - Select Exam
+
+<div align="center">
+  <img src="./src/assets/ai-feedback-select-exam.png" alt="AI Feedback - Select Exam" width="800"/>
+</div>
+
+This page allows teachers to filter and select an exam before generating AI-based feedback.
+
+### 🔹 Filter Exams
+
+To proceed with generating feedback, the teacher must complete the following steps:
+
+- **Select Course**  
+  Choose the relevant course from the dropdown. Example:  
+  `JS201 - Advanced JavaScript`
+
+- **Select Exam Type**  
+  Choose the type of exam from the available options:
+  - Multiple Choice Questions (MCQ)
+  - Programming Code
+  - Essay
+
+- **Select Exam**  
+  Pick the specific exam related to the selected course and exam type.
+
+  ### 🔸 Exam Details
+
+Once all selections are made, the exam details are displayed:
+
+- **Title**: Java script exam 3  
+- **Duration**: 30 mins  
+- **Questions**: 10  
+- **Type**: MCQ  
+- **Instructions**: Answer all questions.
+
+> ℹ️ This interface adapts based on the **exam type**:
+> - MCQ exams lead to an objective-based feedback view.
+> - Code exams include code editors and test cases.
+> - Essay exams bring up a descriptive answer analysis panel.
+
+### ✅ Proceed
+
+After reviewing the details, the user can click the `Proceed to AI Feedback` button to continue to the AI-generated feedback interface.
