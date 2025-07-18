@@ -606,3 +606,25 @@ To maintain system performance and ensure fair usage of AI resources, the **AI F
   - Shows a warning alert
   - Disables the **Generate Feedback** button
   - Prevents further API calls until the next day
+
+### ⚠️ API Limit Reached — Example Message
+
+> "You’ve reached your daily limit of 10 AI feedback requests. Please try again tomorrow."
+
+### ✅ Best Practices
+
+- Prioritize generating feedback only after finalizing:
+  - Exam selection
+  - AI provider
+  - Prompt style or custom prompt
+- Use the **Custom Prompt** feature to preview and edit prompts before sending to AI.
+- Avoid unnecessary test clicks to preserve your quota.
+
+### 🚀 Coming Soon (Planned Enhancements)
+
+- Admin-configurable quota settings
+- Role-based limits (e.g., more calls for premium users)
+- API usage history logs
+
+---
+
