@@ -568,3 +568,17 @@ This interface enables teachers to generate automated feedback for selected exam
   - Once selected, the custom prompt JSON appears in an editable preview box.
 
 ---
+
+### 📊 Prompt Preview
+
+When a style is selected, a predefined **prompt structure** is displayed in the preview box. Teachers can review or modify it if using the custom prompt option.
+
+> Example (MCQ Standard Prompt):
+```json
+{
+  "overallSummary": "...",
+  "keyStrengths": [ ... ],
+  "mostMissedQuestions": [ ... ],
+  "teachingSuggestions": [ ... ],
+  "nextSteps": [ ... ]
+}
