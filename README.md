@@ -476,3 +476,13 @@ Below the input form is a **Preview Questions** section, where teachers can revi
 >   - Essay answers will be manually or AI-evaluated based on the guidelines set during exam configuration.
 >
 > This modular behavior ensures that each type of question receives the appropriate structure and validation criteria tailored to its nature.
+
+
+## 🧠 AI Feedback - Select Exam
+
+<div align="center">
+  <img src="./src/assets/ai-feedback-select-exam.png" alt="AI Feedback - Select Exam" width="800"/>
+</div>
+
+This page allows teachers to filter and select an exam before generating AI-based feedback.
+
