@@ -22,3 +22,13 @@ export const EssayQuestionsProvider = ({ children }) => {
       setMessage("Failed to fetch essay questions.");
     }
   }, []);
+
+  /**
+   * Update student's essay answer for a question
+   */
+  const handleEssayAnswerChange = (questionId, answerText) => {
+    setStudentEssayAnswers((prev) => ({
+      ...prev,
+      [questionId]: answerText,
+    }));
+  };
