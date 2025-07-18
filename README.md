@@ -582,3 +582,49 @@ When a style is selected, a predefined **prompt structure** is displayed in the 
   "teachingSuggestions": [ ... ],
   "nextSteps": [ ... ]
 }
+
+---
+
+## ⛔ API Call Limiting
+
+To maintain system performance and ensure fair usage of AI resources, the **AI Feedback Generator** includes a built-in **daily API call limit**.
+
+### 🔢 Daily Limit
+
+- Each user is allowed up to **10 AI feedback generations per day**.
+- This applies globally to all exam types (MCQ, Code, Essay).
+- The count resets automatically **at midnight (UTC)**.
+
+### 🧠 How It Works
+
+- A counter at the top-right corner of the interface shows:
+  
+  **`API Calls Today: 3/10`**
+
+- Every time a teacher clicks **"Generate Feedback"**, it adds **1** to the count.
+- Once the **limit is reached**, the system:
+  - Shows a warning alert
+  - Disables the **Generate Feedback** button
+  - Prevents further API calls until the next day
+
+### ⚠️ API Limit Reached — Example Message
+
+> "You’ve reached your daily limit of 10 AI feedback requests. Please try again tomorrow."
+
+### ✅ Best Practices
+
+- Prioritize generating feedback only after finalizing:
+  - Exam selection
+  - AI provider
+  - Prompt style or custom prompt
+- Use the **Custom Prompt** feature to preview and edit prompts before sending to AI.
+- Avoid unnecessary test clicks to preserve your quota.
+
+### 🚀 Coming Soon (Planned Enhancements)
+
+- Admin-configurable quota settings
+- Role-based limits (e.g., more calls for premium users)
+- API usage history logs
+
+---
+
