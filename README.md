@@ -521,3 +521,15 @@ Once all selections are made, the exam details are displayed:
 ### ✅ Proceed
 
 After reviewing the details, the user can click the `Proceed to AI Feedback` button to continue to the AI-generated feedback interface.
+
+
+## 🤖 AI Feedback Generator
+
+<div align="center">
+  <img src="./src/assets/ai-feedback-generator.png" alt="AI Feedback Generator" width="800"/>
+</div>
+
+This interface enables teachers to generate automated feedback for selected exams using AI models. The page dynamically adapts based on the **exam type** (MCQ, Code, or Essay), offering tailored feedback prompts.
+
+---
+
