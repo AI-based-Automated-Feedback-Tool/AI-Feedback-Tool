@@ -502,3 +502,22 @@ To proceed with generating feedback, the teacher must complete the following ste
 
 - **Select Exam**  
   Pick the specific exam related to the selected course and exam type.
+
+  ### 🔸 Exam Details
+
+Once all selections are made, the exam details are displayed:
+
+- **Title**: Java script exam 3  
+- **Duration**: 30 mins  
+- **Questions**: 10  
+- **Type**: MCQ  
+- **Instructions**: Answer all questions.
+
+> ℹ️ This interface adapts based on the **exam type**:
+> - MCQ exams lead to an objective-based feedback view.
+> - Code exams include code editors and test cases.
+> - Essay exams bring up a descriptive answer analysis panel.
+
+### ✅ Proceed
+
+After reviewing the details, the user can click the `Proceed to AI Feedback` button to continue to the AI-generated feedback interface.
