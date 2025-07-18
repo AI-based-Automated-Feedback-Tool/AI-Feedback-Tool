@@ -32,3 +32,51 @@ export const EssayQuestionsProvider = ({ children }) => {
       [questionId]: answerText,
     }));
   };
+
+   /**
+   * Submit all essay answers to backend
+   */
+  const submitEssayAnswers = async ({ studentId, examId, answers }) => {
+    try {
+      const payload = {
+        student_id: studentId,
+        exam_id: examId,
+        answers: Object.keys(answers).map((questionId) => ({
+          question_id: questionId,
+          student_answer: { text: answers[questionId] },
+        })),
+      };
+
+      console.log("Submitting essay answers:", payload);
+
+      const res = await axios.post(
+        "http://localhost:3000/api/student-essay-questions/submit",
+        payload
+      );
+
+      console.log("Essay submission response:", res.data);
+      setMessage("Essay answers submitted successfully.");
+    } catch (error) {
+      console.error("Error submitting essay answers:", error);
+      setMessage("Failed to submit essay answers.");
+    }
+  };
+
+  return (
+    <EssayQuestionsContext.Provider
+      value={{
+        fetchEssayQuestions,
+        essayQuestions,
+        studentEssayAnswers,
+        handleEssayAnswerChange,
+        submitEssayAnswers,
+        message
+      }}
+    >
+      {children}
+    </EssayQuestionsContext.Provider>
+  );
+};
+
+// Custom hook
+export const useEssayQuestions = () => useContext(EssayQuestionsContext);
