@@ -486,3 +486,19 @@ Below the input form is a **Preview Questions** section, where teachers can revi
 
 This page allows teachers to filter and select an exam before generating AI-based feedback.
 
+### 🔹 Filter Exams
+
+To proceed with generating feedback, the teacher must complete the following steps:
+
+- **Select Course**  
+  Choose the relevant course from the dropdown. Example:  
+  `JS201 - Advanced JavaScript`
+
+- **Select Exam Type**  
+  Choose the type of exam from the available options:
+  - Multiple Choice Questions (MCQ)
+  - Programming Code
+  - Essay
+
+- **Select Exam**  
+  Pick the specific exam related to the selected course and exam type.
