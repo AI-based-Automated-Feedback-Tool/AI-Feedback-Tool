@@ -574,7 +574,8 @@ This interface enables teachers to generate automated feedback for selected exam
 When a style is selected, a predefined **prompt structure** is displayed in the preview box. Teachers can review or modify it if using the custom prompt option.
 
 > Example (MCQ Standard Prompt):
-```json
+
+
 Analyze these exam results and provide feedback in this exact JSON structure:
 
 {
@@ -607,7 +608,7 @@ Questions: [QUESTIONS]
 Submissions: [SUBMISSIONS]
 Answers: [ANSWERS]
 
----
+
 
 ## ⛔ API Call Limiting
 
