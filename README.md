@@ -578,6 +578,7 @@ When a style is selected, a predefined **prompt structure** is displayed in the 
 
 Analyze these exam results and provide feedback in this exact JSON structure:
 
+```json
 {
   "overallSummary": "Brief 2-3 sentence summary of class performance",
   "keyStrengths": [
@@ -599,6 +600,7 @@ Analyze these exam results and provide feedback in this exact JSON structure:
   ]
 }
 
+```
 IMPORTANT:
 - Use question numbers (e.g. Q1, Q2) or short titles from the Questions array for references.
 - DO NOT use internal IDs or UUIDs in the response.
