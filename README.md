@@ -282,7 +282,11 @@ This short video demonstrates how to get started with the **AI-Based Automated F
 
 ## 🎬 Watch the Walkthrough
 
-[![Watch the video](https://img.youtube.com/vi/0Prh4bd8N48/0.jpg)](https://youtu.be/0Prh4bd8N48)
+<p align="center">
+  <a href="https://youtu.be/0Prh4bd8N48" target="_blank">
+    <img src="https://img.youtube.com/vi/0Prh4bd8N48/0.jpg" alt="Watch the video" />
+  </a>
+</p>
 ---
 
 
