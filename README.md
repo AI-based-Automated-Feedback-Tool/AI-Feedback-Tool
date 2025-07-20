@@ -278,6 +278,14 @@ This short video demonstrates how to get started with the **AI-Based Automated F
 
 🛠️ This video is part of the official tutorial series for our app, developed as a group project in **Summer 2025**.
 
+👉 Watch the video and follow along to get started in just a few minutes!
+
+## 🎬 Watch the Walkthrough
+
+[Click here to watch the video](./videos/signin_signup_walkthrough/How%20to%20Sign%20In%20and%20Sign%20Up.mp4
+---
+
+
 ## 👤 Teacher Profile Page
 
 The **Teacher Profile Page** allows teachers to view and manage their personal information. It provides a clean and intuitive interface with an avatar, name, and email address display. Users can also update their name through the Edit Profile form.
