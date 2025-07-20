@@ -265,6 +265,31 @@ Follow the steps below, and refer to the screenshots provided for a visual guide
 
 ---
 
+## 🎬 Sign In / Sign Up Walkthrough Video
+
+This short video demonstrates how to get started with the **AI-Based Automated Feedback Tool**, a platform built to help teachers and students generate intelligent, real-time feedback for coding and objective exams.
+
+📌 In this video, you'll learn:
+
+- What the platform is about
+- How to sign up as a teacher or student
+- How to log in using your credentials
+- Role-based redirection to the appropriate dashboard
+
+🛠️ This video is part of the official tutorial series for our app, developed as a group project in **Summer 2025**.
+
+👉 Watch the video and follow along to get started in just a few minutes!
+
+## 🎬 Watch the Walkthrough
+
+<p align="center">
+  <a href="https://youtu.be/0Prh4bd8N48" target="_blank">
+    <img src="https://img.youtube.com/vi/0Prh4bd8N48/0.jpg" alt="Watch the video" />
+  </a>
+</p>
+---
+
+
 ## 👤 Teacher Profile Page
 
 The **Teacher Profile Page** allows teachers to view and manage their personal information. It provides a clean and intuitive interface with an avatar, name, and email address display. Users can also update their name through the Edit Profile form.
