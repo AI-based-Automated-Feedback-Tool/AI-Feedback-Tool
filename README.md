@@ -282,8 +282,7 @@ This short video demonstrates how to get started with the **AI-Based Automated F
 
 ## 🎬 Watch the Walkthrough
 
-[![Watch the video](./videos/signin_signup_walkthrough/intro_image.png)](./videos/signin_signup_walkthrough/How%20to%20Sign%20In%20and%20Sign%20Up.mp4)
-
+[![Watch the video](https://img.youtube.com/vi/0Prh4bd8N48/0.jpg)](https://youtu.be/0Prh4bd8N48)
 ---
 
 
