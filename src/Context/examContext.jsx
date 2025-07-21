@@ -63,7 +63,9 @@ export const ExamProvider = ({ children }) => {
           return exam.mcq_questions.length > 0;
         } else if (exam.type === "code") {
           return exam.code_questions.length > 0;
-        }
+         } else if (exam.type === "essay") {
+          return true;  // Include all essay exams
+      }
         return false; //skip exams of other types or without questions
       });
 
