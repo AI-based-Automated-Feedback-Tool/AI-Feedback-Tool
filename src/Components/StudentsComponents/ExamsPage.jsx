@@ -5,10 +5,9 @@ import AssignmentCard from "./AssignmentCard";
 import { CourseContext } from "../../Context/courseContext";
 
 const ExamsPage = () => {
-  //extract course id
   const { courseId, userId } = useParams();
   const navigate = useNavigate();
-  //destructure from exam context
+
   const {
     pendingExams,
     completedExams,
@@ -17,45 +16,45 @@ const ExamsPage = () => {
     error,
     submissionIds,
   } = useContext(ExamContext);
-  //destructure course context to get course title
+
   const { enrolledCourses, fetchEnrolledCourses } = useContext(CourseContext);
 
-  //fetch exam whenever course id changes
   useEffect(() => {
     fetchExams(courseId);
   }, [courseId, fetchExams]);
-  //to fetch title
+
   useEffect(() => {
     if (userId) {
       fetchEnrolledCourses(userId);
     }
   }, [userId, fetchEnrolledCourses]);
 
-  //fun to determine the status of an exam
   const getExamStatus = (exam) => {
     const currentTime = new Date();
     const startTime = new Date(exam.start_time);
     const endTime = new Date(exam.end_time);
 
     if (currentTime > endTime) {
-      return "closed"; //exam has ended
+      return "closed";
     } else if (currentTime >= startTime && !exam.isTaken) {
-      return "open"; //exam is ongoing or ready to be taken
+      return "open";
     }
-    return "pending"; //exam is scheduled but not yet started
+    return "pending";
   };
 
-  //navigate to task page only if current time >= start_time
   const handleStart = (exam) => {
     const currentTime = new Date();
     const startTime = new Date(exam.start_time);
     const endTime = new Date(exam.end_time);
 
     if (currentTime >= startTime && currentTime <= endTime) {
+      console.log("Starting exam of type:", exam.type, "Exam ID:", exam.exam_id);
       if (exam.type === "mcq") {
         navigate(`/dashboard/task/${exam.exam_id}`);
       } else if (exam.type === "code") {
         navigate(`/dashboard/code/${exam.exam_id}`);
+      } else if (exam.type === "essay") {
+        navigate(`/dashboard/essay/${exam.exam_id}`);
       } else {
         alert("Unknown exam type.");
       }
@@ -63,15 +62,10 @@ const ExamsPage = () => {
       alert("The exam has ended.");
     } else {
       alert("Exam hasn't started yet.");
-      console.log("Exam hasn't started yet.");
     }
   };
 
-  //navigate to review page for completed exams
   const handleReview = (examId) => {
-    console.log("submissionIds:", submissionIds);
-    console.log("examId:", examId);
-
     const submissionId = submissionIds[examId];
 
     if (submissionId) {
@@ -80,20 +74,17 @@ const ExamsPage = () => {
       );
     } else {
       alert("Submission ID not found for this exam.");
-      console.log("Submission ID not found for examId:", examId);
     }
   };
 
   if (loading) return <p>Loading exams...</p>;
   if (error) return <p>{error}</p>;
 
-  //find course title based on course id
   const courseTitle =
     enrolledCourses.find(
       (course) => String(course.course_id) === String(courseId)
     )?.title || "Loading course...";
 
-  //derive open and closed exams from pendingExams
   const openExams = pendingExams.filter(
     (exam) => getExamStatus(exam) === "open"
   );
@@ -101,8 +92,12 @@ const ExamsPage = () => {
     (exam) => getExamStatus(exam) === "closed"
   );
 
+  console.log("pendingExams:", pendingExams);
+  pendingExams.forEach((exam) => {
+  console.log(`Exam Title: ${exam.title}, Type: ${exam.type}, Status: ${getExamStatus(exam)}`);
+});
+  console.log("completedExams:", completedExams);
   console.log("courseId:", courseId);
-  console.log("enrolledCourses:", enrolledCourses);
 
   return (
     <div className="container py-4">
@@ -149,6 +144,7 @@ const ExamsPage = () => {
           </div>
         </>
       )}
+
       {completedExams.length > 0 && (
         <>
           <h5 className="mt-5 text-success">Completed Exams</h5>
@@ -170,12 +166,12 @@ const ExamsPage = () => {
         </>
       )}
 
-      {/*fallback message when no exams are available */}
       {pendingExams.length === 0 &&
         !pendingExams.some((exam) => getExamStatus(exam) === "closed") &&
         completedExams.length === 0 && (
           <p className="mt-5 text-center text-muted">No exam is added.</p>
         )}
+        
     </div>
   );
 };

@@ -10,6 +10,8 @@ const EssayQuestionsList = () => {
   const { userId } = useContext(UserContext);
   const { timeLeft, formatTime } = useTask();
 
+  console.log("Rendering EssayQuestionsList for examId:", examId);
+
   const {
     fetchEssayQuestions,
     essayQuestions = [],
