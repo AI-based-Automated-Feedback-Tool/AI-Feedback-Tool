@@ -265,6 +265,31 @@ Follow the steps below, and refer to the screenshots provided for a visual guide
 
 ---
 
+## 🎬 Sign In / Sign Up Walkthrough Video
+
+This short video demonstrates how to get started with the **AI-Based Automated Feedback Tool**, a platform built to help teachers and students generate intelligent, real-time feedback for coding and objective exams.
+
+📌 In this video, you'll learn:
+
+- What the platform is about
+- How to sign up as a teacher or student
+- How to log in using your credentials
+- Role-based redirection to the appropriate dashboard
+
+🛠️ This video is part of the official tutorial series for our app, developed as a group project in **Summer 2025**.
+
+👉 Watch the video and follow along to get started in just a few minutes!
+
+## 🎬 Watch the Walkthrough
+
+<p align="center">
+  <a href="https://youtu.be/0Prh4bd8N48" target="_blank">
+    <img src="https://img.youtube.com/vi/0Prh4bd8N48/0.jpg" alt="Watch the video" />
+  </a>
+</p>
+---
+
+
 ## 👤 Teacher Profile Page
 
 The **Teacher Profile Page** allows teachers to view and manage their personal information. It provides a clean and intuitive interface with an avatar, name, and email address display. Users can also update their name through the Edit Profile form.
@@ -476,3 +501,221 @@ Below the input form is a **Preview Questions** section, where teachers can revi
 >   - Essay answers will be manually or AI-evaluated based on the guidelines set during exam configuration.
 >
 > This modular behavior ensures that each type of question receives the appropriate structure and validation criteria tailored to its nature.
+
+
+## 🧠 AI Feedback - Select Exam
+
+<div align="center">
+  <img src="./src/assets/ai-feedback-select-exam.png" alt="AI Feedback - Select Exam" width="800"/>
+</div>
+
+This page allows teachers to filter and select an exam before generating AI-based feedback.
+
+### 🔹 Filter Exams
+
+To proceed with generating feedback, the teacher must complete the following steps:
+
+- **Select Course**  
+  Choose the relevant course from the dropdown. Example:  
+  `JS201 - Advanced JavaScript`
+
+- **Select Exam Type**  
+  Choose the type of exam from the available options:
+  - Multiple Choice Questions (MCQ)
+  - Programming Code
+  - Essay
+
+- **Select Exam**  
+  Pick the specific exam related to the selected course and exam type.
+
+  ### 🔸 Exam Details
+
+Once all selections are made, the exam details are displayed:
+
+- **Title**: Java script exam 3  
+- **Duration**: 30 mins  
+- **Questions**: 10  
+- **Type**: MCQ  
+- **Instructions**: Answer all questions.
+
+> ℹ️ This interface adapts based on the **exam type**:
+> - MCQ exams lead to an objective-based feedback view.
+> - Code exams include code editors and test cases.
+> - Essay exams bring up a descriptive answer analysis panel.
+
+### ✅ Proceed
+
+After reviewing the details, the user can click the `Proceed to AI Feedback` button to continue to the AI-generated feedback interface.
+
+
+## 🤖 AI Feedback Generator
+
+<div align="center">
+  <img src="./src/assets/ai-feedback-generator.png" alt="AI Feedback Generator" width="800"/>
+</div>
+
+This interface enables teachers to generate automated feedback for selected exams using AI models. The page dynamically adapts based on the **exam type** (MCQ, Code, or Essay), offering tailored feedback prompts.
+
+---
+
+
+### 🔹 Features
+
+- **AI Feedback Provider**
+  - Dropdown selection to choose between different AI engines.
+  - Currently supported:
+    - **Cohere AI**
+    - **OpenRouter AI**
+
+- **Feedback Style**
+  - Style options are **exam-type dependent**:
+
+    **🟦 MCQ Exam Feedback Styles**
+    - Standard Analysis
+    - Quick Insight
+    - Detailed Report
+    - Custom Prompt
+
+    **🟩 Code Exam Feedback Styles**
+    - Error Analysis
+    - Optimization Tips
+    - Code Style Review
+    - Custom Prompt
+
+    **🟨 Essay Exam Feedback Styles**
+    - Content & Relevance Focus
+    - General Essay Feedback
+    - Technical Accuracy & Completeness
+    - Custom Prompt
+
+- **Custom Prompt Editor**
+  - All exam types allow **Custom Prompt**, giving teachers full control to define how the feedback should be generated.
+  - Once selected, the custom prompt JSON appears in an editable preview box.
+
+---
+
+### 📊 Prompt Preview
+
+When a style is selected, a predefined **prompt structure** is displayed in the preview box. Teachers can review or modify it if using the custom prompt option.
+
+> Example (MCQ Standard Prompt):
+
+
+Analyze these exam results and provide feedback in this exact JSON structure:
+
+```json
+{
+  "overallSummary": "Brief 2-3 sentence summary of class performance",
+  "keyStrengths": [
+    "List 3-5 concepts students mastered well",
+    "Include specific question numbers or short titles as evidence (avoid internal IDs or UUIDs)"
+  ],
+  "mostMissedQuestions": [
+    "Top 3-5 questions students struggled with",
+    "Briefly explain the misconceptions",
+    "Use question numbers or short question titles instead of technical IDs"
+  ],
+  "teachingSuggestions": [
+    "2-3 specific reteaching strategies",
+    "Activity ideas to reinforce weak areas"
+  ],
+  "nextSteps": [
+    "Immediate actions for the teacher",
+    "Follow-up assessment ideas"
+  ]
+}
+
+```
+IMPORTANT:
+- Use question numbers (e.g. Q1, Q2) or short titles from the Questions array for references.
+- DO NOT use internal IDs or UUIDs in the response.
+- Return ONLY valid JSON with these exact keys.
+
+Questions: [QUESTIONS]
+Submissions: [SUBMISSIONS]
+Answers: [ANSWERS]
+
+
+
+## ⛔ API Call Limiting
+
+To maintain system performance and ensure fair usage of AI resources, the **AI Feedback Generator** includes a built-in **daily API call limit**.
+
+### 🔢 Daily Limit
+
+- Each user is allowed up to **10 AI feedback generations per day**.
+- This applies globally to all exam types (MCQ, Code, Essay).
+- The count resets automatically **at midnight (UTC)**.
+
+### 🧠 How It Works
+
+- A counter at the top-right corner of the interface shows:
+  
+  **`API Calls Today: 3/10`**
+
+- Every time a teacher clicks **"Generate Feedback"**, it adds **1** to the count.
+- Once the **limit is reached**, the system:
+  - Shows a warning alert
+  - Disables the **Generate Feedback** button
+  - Prevents further API calls until the next day
+
+### ⚠️ API Limit Reached — Example Message
+
+> "You’ve reached your daily limit of 10 AI feedback requests. Please try again tomorrow."
+
+### ✅ Best Practices
+
+- Prioritize generating feedback only after finalizing:
+  - Exam selection
+  - AI provider
+  - Prompt style or custom prompt
+- Use the **Custom Prompt** feature to preview and edit prompts before sending to AI.
+- Avoid unnecessary test clicks to preserve your quota.
+
+### 🚀 Coming Soon (Planned Enhancements)
+
+- Admin-configurable quota settings
+- Role-based limits (e.g., more calls for premium users)
+- API usage history logs
+
+---
+
+## 🧠 AI-Generated Teaching Feedback Page
+
+This page is responsible for displaying detailed teaching feedback generated by the AI based on exam results. It fetches and renders structured feedback in a visually organized layout, helping teachers identify strengths, weaknesses, and suggestions for improvement.
+
+<div align="center">
+  <img src="./src/assets/ai-feedback-page.png" alt="AI Feedback Page" width="800"/>
+</div>
+
+### ✨ Key Features
+
+- **AI Feedback Display**  
+  The page shows the AI's response following a strict JSON format, rendered into five intuitive sections:
+  - **📊 Overall Summary**
+  - **✅ Key Strengths**
+  - **⚠️ Most Missed Questions**
+  - **💡 Teaching Suggestions**
+  - **🚀 Actionable Next Steps**
+
+- **🔁 Modify Prompt**  
+  Users can click the **Modify Prompt** button to return to the prompt editor. This allows the teacher to adjust the question or prompt style and regenerate more targeted feedback.
+
+- **📥 Download Feedback**  
+  A **Download .TXT** button allows teachers to download the AI-generated feedback as a `.txt` file for offline use or reporting purposes.
+
+- **📈 API Call Count Tracker**  
+  The page displays the current API usage count (e.g., `API Calls Today: 1/10`). This ensures the teacher is aware of their remaining feedback requests for the day.
+
+### 📂 JSON Structure Expected from AI
+
+The AI response is rendered based on the following structure:
+
+```json
+{
+  "overallSummary": "Brief summary of class performance",
+  "keyStrengths": [ "Concepts students mastered", "Evidence with question numbers" ],
+  "mostMissedQuestions": [ "Challenging questions with brief analysis" ],
+  "teachingSuggestions": [ "Reteaching strategies and methods" ],
+  "nextSteps": [ "Immediate and long-term actions" ]
+}
