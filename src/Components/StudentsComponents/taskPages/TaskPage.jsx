@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useTask } from "../../../Context/taskContext.jsx";
 import PopUp from "../PopUp.jsx";
 import QuestionsNavigator from "../features/QuestionsNavigator.jsx";
+import EssayQuestionsList from "./EssayQuestionsList.jsx"; 
 
 const TaskPage = () => {
   const [showTabWarning, setShowTabWarning] = useState(false);
@@ -59,6 +60,11 @@ const TaskPage = () => {
         You have already submitted this exam. You cannot retake it.
       </div>
     );
+  }
+
+   // ✅ Render EssayQuestionsList if task type is essay
+  if (task.task_type === "essay") {
+    return <EssayQuestionsList />;
   }
   //handle cases where the task or its questions are not found
   if (!task || !task.questions || task.questions.length === 0)
