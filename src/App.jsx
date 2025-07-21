@@ -37,6 +37,11 @@ import { ApiCallCountProvider } from './Context/ApiCallCountContext';
 import RegisterCourseContent from "./Components/registerCourse/registerCourseContent.jsx";
 import ExamsContent from "./Components/Exams/ExamsContent.jsx";
 
+//  Essay Context and List
+import { EssayQuestionsProvider } from './Context/QuestionsContext/EssayContext.jsx';
+import EssayQuestionsList from './Components/StudentsComponents/taskPages/EssayQuestionsList.jsx';
+
+
 function AppContent() {
   //get user id from userContext
   const { userId } = useContext(UserContext);
@@ -48,6 +53,7 @@ function AppContent() {
           <TaskProvider>
             <ResultProvider studentId={userId}>
             <CodeQuestionsProvider>
+             <EssayQuestionsProvider> {/*  Essay Context Provider */}
               <Router>
                 <Routes>
                   {/*Login and registration and main page route */}
@@ -77,6 +83,8 @@ function AppContent() {
                   <Route path="/dashboard" element={<ProtectedRoute />}>
                     <Route path="task/:id" element={<TaskPage />} />
                     <Route path="code/:id" element={<CodeQuestions/>} />
+                     {/*  Added EssayQuestionsList Route */}
+                    <Route path="essay/:id" element={<EssayQuestionsList />} />
                   </Route>
                   <Route
                     path="/student/courses/:userId"
@@ -99,6 +107,7 @@ function AppContent() {
                   </Route>
                 </Routes>
               </Router>
+              </EssayQuestionsProvider> {/*  Essay Context Provider */}
               </CodeQuestionsProvider>
             </ResultProvider>
           </TaskProvider>
