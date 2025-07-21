@@ -35,3 +35,39 @@ On the left side, the sidebar includes:
 
 ---
 
+## Viewing Courses
+
+The main dashboard displays **courses** the teacher is currently enrolled in.  
+Each **course card** includes:
+
+- Course Name
+- Course Code
+- Brief Description
+
+---
+
+## Viewing Exams in a Course
+
+When the teacher clicks on a course, they’ll see all exams created under that course.
+
+Each **exam card** shows:
+
+- Exam Name  
+- Exam Type – MCQ, Code, or Essay  
+- Exam Duration  
+- Number of Questions  
+- Exam Due Date
+
+---
+
+There’s also a link or button to **Create a New Exam**, which we’ll explore in the **next video**.
+
+---
+
+## Summary
+
+That wraps up the walkthrough of the **Teacher Dashboard**.
+
+Stay tuned for our next video, where we’ll show how to configure exams and use the AI feedback features in action.
+
+Thanks for watching!
