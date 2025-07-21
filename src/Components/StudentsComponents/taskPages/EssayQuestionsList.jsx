@@ -46,7 +46,7 @@ const EssayQuestionsList = () => {
   if (submitted) {
     return (
       <div className="container mt-5 text-center">
-        <h2 className="text-success mb-4">✅ Submission Successful</h2>
+        <h2 className="text-success mb-4"> Submission Successful</h2>
         <p>Thank you for submitting your essay answers.</p>
       </div>
     );
@@ -71,7 +71,7 @@ const EssayQuestionsList = () => {
             Back to Questions
           </button>
           <button className="btn btn-success" onClick={handleFinalSubmit}>
-            ✅ Confirm & Submit
+             Confirm & Submit
           </button>
         </div>
       </div>
