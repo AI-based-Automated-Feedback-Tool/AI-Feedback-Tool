@@ -2,15 +2,11 @@ import React, { useEffect, useState, useContext } from "react";
 import { useParams } from "react-router-dom";
 import { useEssayQuestions } from "../../../Context/QuestionsContext/EssayContext";
 import { UserContext } from "../../../Context/UserContext";
-import { useTask } from "../../../Context/taskContext";
 import QuestionsNavigator from "../features/QuestionsNavigator";
 
 const EssayQuestionsList = () => {
   const { id: examId } = useParams();
   const { userId } = useContext(UserContext);
-  
-
-  console.log("Rendering EssayQuestionsList for examId:", examId);
 
   const {
     fetchEssayQuestions,
@@ -25,11 +21,12 @@ const EssayQuestionsList = () => {
   const [submitted, setSubmitted] = useState(false);
   const [timeLeft, setTimeLeft] = useState(0); // in seconds
 
+  // Fetch questions
   useEffect(() => {
     fetchEssayQuestions(examId);
   }, [examId]);
 
-   // Initialize timer after questions are fetched
+  // Initialize timer after questions are fetched
   useEffect(() => {
     if (essayQuestions.length > 0) {
       // Assuming the exam duration is the same for all questions
@@ -60,7 +57,6 @@ const EssayQuestionsList = () => {
     return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
   };
 
-
   const handleChange = (questionId, text) => {
     handleEssayAnswerChange(questionId, text);
   };
@@ -81,7 +77,7 @@ const EssayQuestionsList = () => {
   if (submitted) {
     return (
       <div className="container mt-5 text-center">
-        <h2 className="text-success mb-4"> Submission Successful</h2>
+        <h2 className="text-success mb-4">Submission Successful</h2>
         <p>Thank you for submitting your essay answers.</p>
       </div>
     );
@@ -106,7 +102,7 @@ const EssayQuestionsList = () => {
             Back to Questions
           </button>
           <button className="btn btn-success" onClick={handleFinalSubmit}>
-             Confirm & Submit
+            Confirm & Submit
           </button>
         </div>
       </div>
@@ -122,7 +118,7 @@ const EssayQuestionsList = () => {
   return (
     <div className="container mt-5">
       <h2>Essay Questions</h2>
-      <p>Time Left: {formatTime(timeLeft)}</p>
+      <p><strong>Time Left:</strong> {formatTime(timeLeft)}</p>
 
       <div className="card mb-3">
         <div className="card-header">
