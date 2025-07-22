@@ -413,7 +413,7 @@ This video is the second part of our tutorial series for the **AI-Based Automate
 
 <p align="center">
   <a href="https://youtu.be/PgDzuw2nIGY" target="_blank">
-    <img src="https://img.youtube.com/vi/YOUR_VIDEO_ID/0.jpg" alt="Watch the video" />
+    <img src="https://img.youtube.com/vi/PgDzuw2nIGY/0.jpg" alt="Watch the video" />
   </a>
 </p>
 
