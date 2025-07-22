@@ -392,6 +392,21 @@ A **"Create New Exam"** button is available in the top-right corner. Clicking it
 
 ---
 
+## 🎬 Teacher Dashboard Walkthrough Video
+
+This video is the second part of our tutorial series for the **AI-Based Automated Feedback Tool**, a platform designed to help teachers and students generate intelligent, real-time feedback for coding and objective exams.
+
+📌 In this video, you'll learn:
+
+- How to log in using a teacher account
+- How the Teacher Dashboard works
+- Overview of side navigation options like Dashboard, Configure Exam, Register Course, Reports, Profile, and AI Feedback
+- How courses and exams are displayed for each teacher
+
+🛠️ This video is part of the official tutorial series for our group project, developed in **Summer 2025**.
+
+
+
 
 ## 🛠️ Configure New Exam
 
