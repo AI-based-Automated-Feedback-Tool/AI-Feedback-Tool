@@ -8,7 +8,7 @@ import QuestionsNavigator from "../features/QuestionsNavigator";
 const EssayQuestionsList = () => {
   const { id: examId } = useParams();
   const { userId } = useContext(UserContext);
-  const { timeLeft, formatTime } = useTask();
+  
 
   console.log("Rendering EssayQuestionsList for examId:", examId);
 
@@ -23,10 +23,43 @@ const EssayQuestionsList = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [reviewMode, setReviewMode] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(0); // in seconds
 
   useEffect(() => {
     fetchEssayQuestions(examId);
   }, [examId]);
+
+   // Initialize timer after questions are fetched
+  useEffect(() => {
+    if (essayQuestions.length > 0) {
+      // Assuming the exam duration is the same for all questions
+      setTimeLeft(essayQuestions[0].duration * 60); // convert minutes to seconds
+    }
+  }, [essayQuestions]);
+
+  // Timer countdown
+  useEffect(() => {
+    if (timeLeft <= 0) {
+      if (!submitted) {
+        console.log("Time's up! Auto-submitting answers.");
+        handleFinalSubmit();
+      }
+      return;
+    }
+
+    const timer = setInterval(() => {
+      setTimeLeft(prev => prev - 1);
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [timeLeft, submitted]);
+
+  const formatTime = (seconds) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+  };
+
 
   const handleChange = (questionId, text) => {
     handleEssayAnswerChange(questionId, text);
