@@ -405,6 +405,17 @@ This video is the second part of our tutorial series for the **AI-Based Automate
 
 🛠️ This video is part of the official tutorial series for our group project, developed in **Summer 2025**.
 
+👉 Watch the video to get familiar with the teacher's workflow before moving on to exam creation and AI feedback.
+
+---
+
+## 🎥 Watch the Teacher Dashboard Walkthrough
+
+<p align="center">
+  <a href="https://youtu.be/PgDzuw2nIGY" target="_blank">
+    <img src="https://img.youtube.com/vi/YOUR_VIDEO_ID/0.jpg" alt="Watch the video" />
+  </a>
+</p>
 
 
 
