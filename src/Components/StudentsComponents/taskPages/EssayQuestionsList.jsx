@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { useEssayQuestions } from "../../../Context/QuestionsContext/EssayContext";
 import { UserContext } from "../../../Context/UserContext";
 import QuestionsNavigator from "../features/QuestionsNavigator";
-import supabase from "../../../supabaseClient"; // ✅ Make sure this file exists
+import supabase from "../../../supabaseClient"; 
 
 const EssayQuestionsList = () => {
   const { id: examId } = useParams();
@@ -22,12 +22,12 @@ const EssayQuestionsList = () => {
   const [submitted, setSubmitted] = useState(false);
   const [timeLeft, setTimeLeft] = useState(null);
 
-  // ✅ Fetch essay questions
+  //  Fetch essay questions
   useEffect(() => {
     fetchEssayQuestions(examId);
   }, [examId]);
 
-  // ✅ Fetch exam duration from "exams" table
+  //  Fetch exam duration from "exams" table
   useEffect(() => {
     const fetchExamDuration = async () => {
       const { data, error } = await supabase
@@ -53,7 +53,7 @@ const EssayQuestionsList = () => {
     fetchExamDuration();
   }, [examId]);
 
-  // ✅ Timer logic
+  //  Timer logic
   useEffect(() => {
     if (timeLeft === null) return; // Wait until timeLeft is initialized
     if (timeLeft <= 0 && !submitted) {
