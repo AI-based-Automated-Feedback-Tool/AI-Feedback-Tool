@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { useEssayQuestions } from "../../../Context/QuestionsContext/EssayContext";
 import { UserContext } from "../../../Context/UserContext";
 import QuestionsNavigator from "../features/QuestionsNavigator";
-import supabase from "../../../supabaseClient"; 
+import supabase from "../../../supabaseClient";
 
 const EssayQuestionsList = () => {
   const { id: examId } = useParams();
@@ -21,17 +21,15 @@ const EssayQuestionsList = () => {
   const [reviewMode, setReviewMode] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [timeLeft, setTimeLeft] = useState(null);
-  const [focusLossCount, setFocusLossCount] = useState(0);
-  const [showWarningBanner, setShowWarningBanner] = useState(false);
-  
+  const [focusLossCount, setFocusLossCount] = useState(0); // 🔹 ADDED
+  const [showWarningBanner, setShowWarningBanner] = useState(false); // 🔹 ADDED
 
-
-  //  Fetch essay questions
+  // ✅ Fetch essay questions
   useEffect(() => {
     fetchEssayQuestions(examId);
   }, [examId]);
 
-  //  Fetch exam duration from "exams" table
+  // ✅ Fetch exam duration from "exams" table
   useEffect(() => {
     const fetchExamDuration = async () => {
       const { data, error } = await supabase
@@ -42,7 +40,7 @@ const EssayQuestionsList = () => {
 
       if (error) {
         console.error("Error fetching exam duration:", error);
-        setTimeLeft(30 * 60); // fallback to 30 min
+        setTimeLeft(30 * 60);
       } else {
         const minutes = data?.duration;
         if (typeof minutes === "number") {
@@ -57,9 +55,9 @@ const EssayQuestionsList = () => {
     fetchExamDuration();
   }, [examId]);
 
-  //  Timer logic
+  // ✅ Timer logic
   useEffect(() => {
-    if (timeLeft === null) return; // Wait until timeLeft is initialized
+    if (timeLeft === null) return;
     if (timeLeft <= 0 && !submitted) {
       console.log("⏰ Time's up. Submitting...");
       handleFinalSubmit();
@@ -73,7 +71,7 @@ const EssayQuestionsList = () => {
     return () => clearInterval(timer);
   }, [timeLeft, submitted]);
 
-   //  Tab switch focus loss monitoring
+  // 🔹 ADDED: Tab switch focus loss monitoring
   useEffect(() => {
     const handleVisibilityChange = () => {
       if (document.hidden) {
@@ -91,7 +89,6 @@ const EssayQuestionsList = () => {
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
   }, []);
-
 
   const formatTime = (seconds) => {
     const mins = Math.floor(seconds / 60);
@@ -162,6 +159,13 @@ const EssayQuestionsList = () => {
 
   return (
     <div className="container mt-5">
+      {/* 🔹 ADDED: Warning Banner */}
+      {showWarningBanner && (
+        <div className="alert alert-danger text-center" role="alert">
+          🚨 You switched tabs. This behavior is being monitored.
+        </div>
+      )}
+
       <h2>Essay Questions</h2>
       <p>
         <strong>Time Left:</strong> {formatTime(timeLeft)}
