@@ -6,9 +6,12 @@ import QuestionsNavigator from "../features/QuestionsNavigator";
 import supabase from "../../../supabaseClient";
 
 const EssayQuestionsList = () => {
+    // Get exam ID from URL parameters
   const { id: examId } = useParams();
+    // Get logged-in user ID from context
   const { userId } = useContext(UserContext);
-
+   
+   // Destructure methods and state from EssayContext
   const {
     fetchEssayQuestions,
     essayQuestions = [],
@@ -17,12 +20,13 @@ const EssayQuestionsList = () => {
     submitEssayAnswers,
   } = useEssayQuestions();
 
+  // Component state management
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [reviewMode, setReviewMode] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [timeLeft, setTimeLeft] = useState(null);
-  const [focusLossCount, setFocusLossCount] = useState(0); // 🔹 ADDED
-  const [showWarningBanner, setShowWarningBanner] = useState(false); // 🔹 ADDED
+  const [focusLossCount, setFocusLossCount] = useState(0); // Number of times tab was switched
+  const [showWarningBanner, setShowWarningBanner] = useState(false); // Show tab switch warning
 
   // ✅ Fetch essay questions
   useEffect(() => {
