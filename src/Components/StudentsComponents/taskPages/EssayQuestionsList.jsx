@@ -27,18 +27,22 @@ const EssayQuestionsList = () => {
   }, [examId]);
 
   // 2. Setup timer once questions load
-  useEffect(() => {
-    if (essayQuestions.length > 0 && timeLeft === null) {
-      const duration = essayQuestions[0]?.duration;
+ useEffect(() => {
+  console.log("⏱ Essay Questions Fetched:", essayQuestions);
 
-      if (duration && typeof duration === "number" && duration > 0) {
-        setTimeLeft(duration * 60);
-      } else {
-        console.warn("❗ Essay question duration missing or invalid. Defaulting to 30 minutes.");
-        setTimeLeft(30 * 60);
-      }
+  if (essayQuestions.length > 0) {
+    const duration = essayQuestions[0]?.duration;
+    console.log("⏱ Duration value from backend:", duration, typeof duration);
+
+    if (duration && typeof duration === "number" && duration > 0) {
+      setTimeLeft(duration * 60);
+    } else {
+      console.warn("❗ Essay question duration missing or invalid. Defaulting to 30 minutes.");
+      setTimeLeft(30 * 60);
     }
-  }, [essayQuestions, timeLeft]);
+  }
+}, [essayQuestions]);
+
 
   // 3. Countdown effect
   useEffect(() => {
