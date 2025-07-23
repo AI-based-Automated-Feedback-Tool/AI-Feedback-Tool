@@ -33,3 +33,40 @@ You’ll now be on the **Configure New Exam** page.
 These instructions will be visible to students during the exam.
 
 ---
+
+### 🤖 Grading Configuration
+
+- Under **AI Assessment Guidelines**, the teacher can define how the AI evaluates responses, for example:
+  - Points deduction for late submissions  
+  - Required code documentation  
+
+---
+
+### ❓ Question Type and Count
+
+- **Question Type**: Choose from:
+  - Multiple Choice Questions (MCQ)  
+  - Essay  
+  - Code  
+- **Total Questions**: Enter the number of questions for the exam.
+
+Once everything is filled out, click **“Save & Proceed to Questions.”**
+
+---
+
+### 🔀 Next Step: Question Creation
+
+The next screen varies based on the **question type**:
+
+- For **MCQs**, you’ll be guided to an MCQ entry interface.
+- For **Essay** and **Code** types, you’ll see a simplified interface, since those do not include multiple-choice options.
+
+---
+
+### 📽️ What's Next?
+
+That wraps up the **exam configuration** process!
+
+In the next video, we’ll show you how to **add questions to the exam** based on the selected type.
+
+Thanks for watching, and stay tuned!
