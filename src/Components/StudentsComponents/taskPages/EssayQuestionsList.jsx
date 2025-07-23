@@ -161,8 +161,21 @@ const EssayQuestionsList = () => {
     <div className="container mt-5">
       {/* 🔹 ADDED: Warning Banner */}
       {showWarningBanner && (
-        <div className="alert alert-danger text-center" role="alert">
-          🚨 You switched tabs. This behavior is being monitored.
+        <div 
+         style={{
+      backgroundColor: "#d9534f", // Bootstrap danger red
+      color: "white",
+      fontWeight: "bold",
+      padding: "12px",
+      textAlign: "center",
+      position: "fixed", // 🔹 Keep it on top
+      top: 0,
+      left: 0,
+      width: "100%",
+      zIndex: 9999,
+    }}
+  >
+    ⚠️ You switched tabs. This behavior is being monitored.
         </div>
       )}
 
