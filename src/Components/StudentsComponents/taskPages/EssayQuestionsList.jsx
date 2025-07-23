@@ -21,7 +21,9 @@ const EssayQuestionsList = () => {
   const [reviewMode, setReviewMode] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [timeLeft, setTimeLeft] = useState(null);
+  const [focusLossCount, setFocusLossCount] = useState(0);
   const [showWarningBanner, setShowWarningBanner] = useState(false);
+  
 
 
   //  Fetch essay questions
@@ -70,6 +72,26 @@ const EssayQuestionsList = () => {
 
     return () => clearInterval(timer);
   }, [timeLeft, submitted]);
+
+   //  Tab switch focus loss monitoring
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        setFocusLossCount((prev) => prev + 1);
+        setShowWarningBanner(true);
+
+        setTimeout(() => {
+          setShowWarningBanner(false);
+        }, 3000);
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, []);
+
 
   const formatTime = (seconds) => {
     const mins = Math.floor(seconds / 60);
