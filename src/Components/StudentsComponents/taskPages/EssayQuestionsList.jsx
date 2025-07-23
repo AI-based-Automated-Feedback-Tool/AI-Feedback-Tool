@@ -21,6 +21,8 @@ const EssayQuestionsList = () => {
   const [reviewMode, setReviewMode] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [timeLeft, setTimeLeft] = useState(null);
+  const [showWarningBanner, setShowWarningBanner] = useState(false);
+
 
   //  Fetch essay questions
   useEffect(() => {
