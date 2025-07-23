@@ -19,39 +19,39 @@ const EssayQuestionsList = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [reviewMode, setReviewMode] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(0); // in seconds
-  const [startTime] = useState(new Date()); // optional: exam start time
+  const [timeLeft, setTimeLeft] = useState(null); // Use null to detect uninitialized
 
-  // Fetch questions
+  // 1. Fetch questions on load
   useEffect(() => {
     fetchEssayQuestions(examId);
   }, [examId]);
 
-  // Initialize timer after questions are fetched
+  // 2. Setup timer once questions load
   useEffect(() => {
-    if (essayQuestions.length > 0) {
-      const durationInMinutes = essayQuestions[0]?.duration;
-      if (durationInMinutes && typeof durationInMinutes === "number") {
-        setTimeLeft(durationInMinutes * 60); // convert minutes to seconds
+    if (essayQuestions.length > 0 && timeLeft === null) {
+      const duration = essayQuestions[0]?.duration;
+
+      if (duration && typeof duration === "number" && duration > 0) {
+        setTimeLeft(duration * 60);
       } else {
         console.warn("❗ Essay question duration missing or invalid. Defaulting to 30 minutes.");
-        setTimeLeft(30 * 60); // fallback to 30 minutes
+        setTimeLeft(30 * 60);
       }
     }
-  }, [essayQuestions]);
+  }, [essayQuestions, timeLeft]);
 
-  // Timer countdown with auto-submit
+  // 3. Countdown effect
   useEffect(() => {
-    if (timeLeft <= 0 && !submitted) {
+    if (timeLeft === null || submitted) return;
+
+    if (timeLeft <= 0) {
       console.log("⏰ Time's up! Auto-submitting answers.");
-      (async () => {
-        await handleFinalSubmit();
-      })();
+      handleFinalSubmit();
       return;
     }
 
     const timer = setInterval(() => {
-      setTimeLeft((prev) => prev - 1);
+      setTimeLeft(prev => prev - 1);
     }, 1000);
 
     return () => clearInterval(timer);
@@ -60,7 +60,7 @@ const EssayQuestionsList = () => {
   const formatTime = (seconds) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
-    return `${mins}:${secs < 10 ? "0" : ""}${secs}`;
+    return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
   };
 
   const handleChange = (questionId, text) => {
@@ -80,6 +80,7 @@ const EssayQuestionsList = () => {
     setSubmitted(true);
   };
 
+  // 4. Submission success view
   if (submitted) {
     return (
       <div className="container mt-5 text-center">
@@ -89,6 +90,7 @@ const EssayQuestionsList = () => {
     );
   }
 
+  // 5. Review screen before final submit
   if (reviewMode) {
     return (
       <div className="container mt-5">
@@ -108,17 +110,18 @@ const EssayQuestionsList = () => {
             Back to Questions
           </button>
           <button className="btn btn-success" onClick={handleFinalSubmit}>
-            ✅ Confirm & Submit
+            Confirm & Submit
           </button>
         </div>
       </div>
     );
   }
 
-  if (!essayQuestions.length && !submitted) {
+  // 6. Wait for valid questions
+  if (!essayQuestions.length || timeLeft === null) {
     return (
       <div className="container mt-5 text-center">
-        <div className="spinner-border text-primary" role="status" />
+        <div className="spinner-border text-primary mb-3" />
         <p>Loading essay questions...</p>
       </div>
     );
@@ -128,9 +131,8 @@ const EssayQuestionsList = () => {
 
   return (
     <div className="container mt-5">
-      <h2>📝 Essay Questions</h2>
-      <p><strong>Time Left:</strong> {formatTime(timeLeft)}</p>
-      <p><small>🕒 Exam started at: {startTime.toLocaleTimeString()}</small></p>
+      <h2>Essay Questions</h2>
+      <p><strong>⏳ Time Left:</strong> {formatTime(timeLeft)}</p>
 
       <div className="card mb-3">
         <div className="card-header">
@@ -157,19 +159,13 @@ const EssayQuestionsList = () => {
 
       <div className="d-flex justify-content-between">
         {currentQuestionIndex > 0 && (
-          <button
-            className="btn btn-secondary"
-            onClick={() => setCurrentQuestionIndex(currentQuestionIndex - 1)}
-          >
-            ← Back
+          <button className="btn btn-secondary" onClick={() => setCurrentQuestionIndex(currentQuestionIndex - 1)}>
+            Back
           </button>
         )}
         {currentQuestionIndex < essayQuestions.length - 1 ? (
-          <button
-            className="btn btn-primary ms-auto"
-            onClick={() => setCurrentQuestionIndex(currentQuestionIndex + 1)}
-          >
-            Next →
+          <button className="btn btn-primary ms-auto" onClick={() => setCurrentQuestionIndex(currentQuestionIndex + 1)}>
+            Next
           </button>
         ) : (
           <button className="btn btn-success ms-auto" onClick={handleInitialSubmit}>
