@@ -29,9 +29,16 @@ const EssayQuestionsList = () => {
   // Initialize timer after questions are fetched
   useEffect(() => {
     if (essayQuestions.length > 0) {
+        const durationInMinutes = essayQuestions[0]?.duration;
+        if (durationInMinutes && typeof durationInMinutes === "number") {
       // Assuming the exam duration is the same for all questions
       setTimeLeft(essayQuestions[0].duration * 60); // convert minutes to seconds
+       } else {
+      console.warn("❗ Essay question duration missing or invalid. Defaulting to 30 minutes.");
+      setTimeLeft(30 * 60); // fallback to 30 minutes
     }
+  }
+
   }, [essayQuestions]);
 
   // Timer countdown
