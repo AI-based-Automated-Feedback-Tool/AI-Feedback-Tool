@@ -28,12 +28,12 @@ const EssayQuestionsList = () => {
   const [focusLossCount, setFocusLossCount] = useState(0); // Number of times tab was switched
   const [showWarningBanner, setShowWarningBanner] = useState(false); // Show tab switch warning
 
-  // ✅ Fetch essay questions
+  //  Fetch essay questions
   useEffect(() => {
     fetchEssayQuestions(examId);
   }, [examId]);
 
-  // ✅ Fetch exam duration from "exams" table
+  //  Fetch exam duration from "exams" table
   useEffect(() => {
     const fetchExamDuration = async () => {
       const { data, error } = await supabase
@@ -44,11 +44,11 @@ const EssayQuestionsList = () => {
 
       if (error) {
         console.error("Error fetching exam duration:", error);
-        setTimeLeft(30 * 60);
+        setTimeLeft(30 * 60);  // Default to 30 minutes
       } else {
         const minutes = data?.duration;
         if (typeof minutes === "number") {
-          setTimeLeft(minutes * 60);
+          setTimeLeft(minutes * 60); // Convert to seconds
         } else {
           console.warn("Invalid duration. Defaulting to 30 min.");
           setTimeLeft(30 * 60);
@@ -75,7 +75,7 @@ const EssayQuestionsList = () => {
     return () => clearInterval(timer);
   }, [timeLeft, submitted]);
 
-  // 🔹 ADDED: Tab switch focus loss monitoring
+  // Track when user switches tabs and show warning
   useEffect(() => {
     const handleVisibilityChange = () => {
       if (document.hidden) {
@@ -84,7 +84,7 @@ const EssayQuestionsList = () => {
 
         setTimeout(() => {
           setShowWarningBanner(false);
-        }, 3000);
+        }, 3000); // Show banner for 3 seconds
       }
     };
 
@@ -94,20 +94,24 @@ const EssayQuestionsList = () => {
     };
   }, []);
 
+   // Format remaining time to MM:SS
   const formatTime = (seconds) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${mins}:${secs < 10 ? "0" : ""}${secs}`;
   };
-
+  
+  // Update answer state on text input change
   const handleChange = (questionId, text) => {
     handleEssayAnswerChange(questionId, text);
   };
-
+  
+    // Show review mode before final submission
   const handleInitialSubmit = () => {
     setReviewMode(true);
   };
-
+ 
+   // Submit essay answers to database
   const handleFinalSubmit = async () => {
     await submitEssayAnswers({
       studentId: userId,
@@ -117,6 +121,7 @@ const EssayQuestionsList = () => {
     setSubmitted(true);
   };
 
+   // Display thank you message after submission
   if (submitted) {
     return (
       <div className="container mt-5 text-center">
@@ -126,6 +131,7 @@ const EssayQuestionsList = () => {
     );
   }
 
+  // Review screen for checking answers before final submit
   if (reviewMode) {
     return (
       <div className="container mt-5">
@@ -154,16 +160,16 @@ const EssayQuestionsList = () => {
       </div>
     );
   }
-
+    // Loading state before questions are ready
   if (!essayQuestions.length || timeLeft === null) {
     return <p>Loading essay questions...</p>;
   }
-
+    // Get currently selected question
   const currentQuestion = essayQuestions[currentQuestionIndex];
 
   return (
     <div className="container mt-5">
-      {/* 🔹 ADDED: Warning Banner */}
+         {/* Display tab switch warning banner */}
       {showWarningBanner && (
         <div 
          style={{
@@ -172,7 +178,7 @@ const EssayQuestionsList = () => {
       fontWeight: "bold",
       padding: "12px",
       textAlign: "center",
-      position: "fixed", // 🔹 Keep it on top
+      position: "fixed", //  Keep it on top
       top: 0,
       left: 0,
       width: "100%",
@@ -182,7 +188,7 @@ const EssayQuestionsList = () => {
     ⚠️ You switched tabs. This behavior is being monitored.
         </div>
       )}
-
+       {/* Display question UI */}
       <h2>Essay Questions</h2>
       <p>
         <strong>Time Left:</strong> {formatTime(timeLeft)}
@@ -219,6 +225,7 @@ const EssayQuestionsList = () => {
         </div>
       </div>
 
+        {/* Navigation buttons */}
       <div className="d-flex justify-content-between">
         {currentQuestionIndex > 0 && (
           <button
@@ -242,6 +249,7 @@ const EssayQuestionsList = () => {
         )}
       </div>
 
+      {/* Question Navigator component */}
       <QuestionsNavigator
         questions={essayQuestions}
         questionIndex={currentQuestionIndex}
