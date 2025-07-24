@@ -22,7 +22,6 @@ export const EssayQuestionsProvider = ({ children }) => {
       setMessage("Failed to fetch essay questions.");
     }
   }, []);
-  
 
   /**
    * Update student's essay answer for a question
@@ -34,18 +33,30 @@ export const EssayQuestionsProvider = ({ children }) => {
     }));
   };
 
-   /**
+  /**
    * Submit all essay answers to backend
    */
   const submitEssayAnswers = async ({ studentId, examId, answers }) => {
     try {
+      // Step 1: Create a new submission and get submission_id
+      const createSubmissionRes = await axios.post(
+        "http://localhost:3000/api/student-essay-questions/create-submission",
+        {
+          student_id: studentId,
+          exam_id: examId,
+        }
+      );
+
+      const submissionId = createSubmissionRes.data.submission_id;
+
+      // Step 2: Submit answers using the new submission_id
       const payload = {
         student_id: studentId,
         exam_id: examId,
         submission_id: submissionId,
         answers: Object.entries(answers).map(([questionId, answerText]) => ({
-        question_id: questionId,
-        student_answer: { text: answerText },
+          question_id: questionId,
+          student_answer: { text: answerText },
         })),
       };
 
@@ -72,7 +83,7 @@ export const EssayQuestionsProvider = ({ children }) => {
         studentEssayAnswers,
         handleEssayAnswerChange,
         submitEssayAnswers,
-        message
+        message,
       }}
     >
       {children}
