@@ -42,9 +42,9 @@ export const EssayQuestionsProvider = ({ children }) => {
       const payload = {
         student_id: studentId,
         exam_id: examId,
-        answers: Object.keys(answers).map((questionId) => ({
-          question_id: questionId,
-          student_answer: { text: answers[questionId] },
+         answers: Object.entries(answers).map(([questionId, answerText]) => ({
+        question_id: questionId,
+        student_answer: { text: answerText },
         })),
       };
 
