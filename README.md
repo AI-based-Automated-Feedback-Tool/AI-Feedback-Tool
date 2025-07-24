@@ -462,6 +462,21 @@ The **Configure New Exam** page allows teachers to create and customize a new ex
   <img src="./src/assets/configure-exam.png" alt="Configure Exam Page" width="800"/>
 </div>
 
+## 🎬 Configuring a New Exam – Walkthrough Video
+
+This is the **third video** in the tutorial series for the **AI-Based Automated Feedback Tool**, a group project developed during **Summer 2025**.
+
+📌 In this video, you’ll learn how to:
+
+- Navigate to the **Configure Exam** section
+- Add basic exam details (title, course, duration, schedule)
+- Write student-facing instructions
+- Provide **AI assessment guidelines**
+- Choose the exam type (MCQ, Essay, or Code)
+- Set the total number of questions
+- Proceed to the question entry interface
+
+
 
 ## ❓ Create MCQ Questions
 
