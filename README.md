@@ -476,7 +476,13 @@ This is the **third video** in the tutorial series for the **AI-Based Automated 
 - Set the total number of questions
 - Proceed to the question entry interface
 
+This step is essential for teachers to set up a structured and AI-evaluated exam.
 
+### ▶️ Watch the Video
+
+[![Watch the video](https://img.youtube.com/vi/0Prh4bd8N48/0.jpg)](https://youtu.be/0Prh4bd8N48)
+
+🧭 Up next: We’ll walk through the process of adding questions based on the selected exam type. Stay tuned!
 
 ## ❓ Create MCQ Questions
 
