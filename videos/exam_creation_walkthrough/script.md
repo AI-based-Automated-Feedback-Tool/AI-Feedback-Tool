@@ -24,3 +24,19 @@ Once completed, click **Save Question**.
 The question will be saved to the database and displayed below in a list format.
 
 ---
+
+### 🛠 Managing Questions
+
+- Teachers can continue **adding more questions one by one**.
+- All saved questions are displayed in a **table view below**.
+- You can **edit** or **delete** questions using the provided action buttons.
+
+After all questions are created, clicking **Save All Questions** finalizes the process.
+
+The exam is now fully created and appears in the **teacher’s dashboard**.  
+If the exam’s scheduled start time has passed, it will also appear in the **student dashboard** with a **Start Exam** option.
+
+---
+
+Thanks for watching!  
+In the next video, we’ll explore the student view and how AI-generated feedback is delivered after submitting exams.
