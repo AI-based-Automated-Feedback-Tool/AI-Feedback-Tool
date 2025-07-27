@@ -554,6 +554,17 @@ Below the input form is a **Preview Questions** section, where teachers can revi
 > This modular behavior ensures that each type of question receives the appropriate structure and validation criteria tailored to its nature.
 
 
+
+### ▶️ Watch the Video
+
+<div align="center">
+  <a href="https://youtu.be/NGg9y_cehLw" target="_blank">
+    <img src="https://img.youtube.com/vi/NGg9y_cehLw/0.jpg" alt="Watch the video" width="640">
+  </a>
+</div>
+
+
+
 ## 🧠 AI Feedback - Select Exam
 
 <div align="center">
