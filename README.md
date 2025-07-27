@@ -553,6 +553,26 @@ Below the input form is a **Preview Questions** section, where teachers can revi
 >
 > This modular behavior ensures that each type of question receives the appropriate structure and validation criteria tailored to its nature.
 
+---
+
+## 🎬 Creating MCQ Questions – Walkthrough Video
+
+This is the **fourth video** in the tutorial series for the **AI-Based Automated Feedback Tool**, a group project developed during **Summer 2025**.
+
+📌 In this video, you’ll learn how to:
+
+- Navigate to the **Create MCQ Questions** page
+- Add a question and multiple answer options
+- Specify how many correct answers the question has
+- Select the correct answers from the list
+- Assign **points** to each question
+- Save questions to the database
+- View, edit, or delete saved questions
+- Finalize the exam by clicking **Save All Questions**
+
+After this process, the completed exam will appear in the **Teacher Dashboard**. Once the exam start time begins, students will see it in their view with a **Start Exam** button.
+
+> Although this video focuses on MCQs, the system also supports **Essay** and **Code** questions. The interface adapts based on the selected type, allowing teachers to easily create questions for all formats.
 
 
 ### ▶️ Watch the Video
@@ -563,7 +583,7 @@ Below the input form is a **Preview Questions** section, where teachers can revi
   </a>
 </div>
 
-
+---
 
 ## 🧠 AI Feedback - Select Exam
 
