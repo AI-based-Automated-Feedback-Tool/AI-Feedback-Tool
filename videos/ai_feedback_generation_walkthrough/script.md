@@ -54,3 +54,22 @@ These styles are tailored to the exam type.
 If the **Custom Prompt** option is selected, the teacher can enter their own prompt — giving full control over how the AI responds.
 
 ---
+
+Once the feedback style is chosen, or a custom prompt is written, the teacher clicks **Generate Feedback**.
+
+The system then gathers all relevant data:
+- The selected exam’s metadata  
+- The students’ submitted answers and performance  
+
+It combines this with the selected prompt and sends a request to the chosen AI provider.
+
+After a short wait, the AI-generated feedback is returned — beautifully formatted to maximize clarity and usefulness.
+
+---
+
+Teachers can also refine the feedback by clicking **Modify Prompt**.  
+This brings them back to the generator page, where they can try a different style or adjust their custom prompt to get exactly the insight they need.
+
+There’s also an option to **download the feedback as a .txt file**, using the **Download Feedback** button — great for saving or sharing.
+
+---
