@@ -801,3 +801,19 @@ The AI response is rendered based on the following structure:
   "teachingSuggestions": [ "Reteaching strategies and methods" ],
   "nextSteps": [ "Immediate and long-term actions" ]
 }
+
+```
+
+## 🎬 AI Feedback System – Walkthrough Video
+
+This is the **fifth video** in the tutorial series for the **AI-Based Automated Feedback Tool**.
+
+📌 In this video, you’ll see how teachers can:
+
+- Select a course, exam type, and exam for AI feedback
+- Choose from different feedback styles (or enter a custom prompt)
+- Generate AI-powered insights based on student performance
+- Download results and track API usage
+
+This tool helps automate and enhance feedback generation with minimal effort.
+
