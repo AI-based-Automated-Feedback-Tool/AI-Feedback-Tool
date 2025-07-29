@@ -817,3 +817,14 @@ This is the **fifth video** in the tutorial series for the **AI-Based Automated 
 
 This tool helps automate and enhance feedback generation with minimal effort.
 
+
+### ▶️ Watch the Video
+
+<div align="center">
+  <a href="https://youtu.be/CFbcdeJpT7A" target="_blank">
+    <img src="https://img.youtube.com/vi/CFbcdeJpT7A/0.jpg" alt="Watch the video" width="640">
+  </a>
+</div>
+
+---
+
