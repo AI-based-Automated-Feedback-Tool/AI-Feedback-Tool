@@ -20,15 +20,18 @@ const EssayQuestionsList = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [reviewMode, setReviewMode] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [submissionId, setSubmissionId] = useState(null);
   const [timeLeft, setTimeLeft] = useState(null);
   const [focusLossCount, setFocusLossCount] = useState(0);
   const [showWarningBanner, setShowWarningBanner] = useState(false);
   const [essayFeedback, setEssayFeedback] = useState([]);
 
+  // Fetch questions
   useEffect(() => {
     fetchEssayQuestions(examId);
   }, [examId]);
 
+  // Fetch exam time
   useEffect(() => {
     const fetchExamDuration = async () => {
       const { data, error } = await supabase
@@ -48,6 +51,7 @@ const EssayQuestionsList = () => {
     fetchExamDuration();
   }, [examId]);
 
+  // Timer countdown
   useEffect(() => {
     if (timeLeft === null) return;
     if (timeLeft <= 0 && !submitted) {
@@ -55,11 +59,11 @@ const EssayQuestionsList = () => {
       handleFinalSubmit();
       return;
     }
-
     const timer = setInterval(() => setTimeLeft((prev) => prev - 1), 1000);
     return () => clearInterval(timer);
   }, [timeLeft, submitted]);
 
+  // Focus tracking
   useEffect(() => {
     const handleVisibilityChange = () => {
       if (document.hidden) {
@@ -90,47 +94,39 @@ const EssayQuestionsList = () => {
   };
 
   const handleFinalSubmit = async () => {
-    // Submit the answers and retrieve the submission ID from the context logic
-    const createSubmissionRes = await fetch("http://localhost:3000/api/student-essay-questions/create-submission", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        student_id: userId,
-        exam_id: examId,
-      }),
-    });
-
-    const submissionResult = await createSubmissionRes.json();
-    const submissionId = submissionResult.submission_id;
-
-    await submitEssayAnswers({
+    // 1️⃣ Submit essay answers and get back submissionId
+    const id = await submitEssayAnswers({
       studentId: userId,
       examId,
       answers: studentEssayAnswers,
     });
+    setSubmissionId(id);
 
-    // Generate AI feedback
+    // 2️⃣ Call backend to generate feedback
     try {
-      const feedbackRes = await fetch("http://localhost:3000/api/essay-feedback/generate-essay-feedback", {
+      const res = await fetch("http://localhost:3000/api/essay-feedback/generate-essay-feedback", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ submissionId }),
+        body: JSON.stringify({ submissionId: id }),
       });
 
-      const feedbackResult = await feedbackRes.json();
-      console.log("✅ AI feedback result:", feedbackResult);
+      const result = await res.json();
+      console.log("✅ AI feedback result:", result);
 
-      if (feedbackResult.success) {
+      if (result.success) {
+        // 3️⃣ Fetch updated answers with feedback
         const { data, error } = await supabase
           .from("essay_exam_submissions_answers")
           .select("question_id, student_answer, ai_feedback")
-          .eq("submission_id", submissionId);
+          .eq("submission_id", id);
 
         if (!error) {
           setEssayFeedback(data);
         } else {
           console.error("⚠️ Error fetching saved feedback:", error);
         }
+      } else {
+        console.warn("⚠️ Feedback result:", result.error);
       }
     } catch (err) {
       console.error("❌ Error fetching feedback:", err);
@@ -147,13 +143,12 @@ const EssayQuestionsList = () => {
         <h4 className="mt-5">📌 AI Feedback</h4>
         <ul className="list-group">
           {essayFeedback.map((item, index) => {
-            const parsed = JSON.parse(item.student_answer);
+             const parsed = item.student_answer;
             return (
               <li key={index} className="list-group-item text-start">
                 <strong>Q{index + 1}:</strong> {parsed.text}
                 <br />
-                <strong>AI Feedback:</strong>{" "}
-                {item.ai_feedback?.comment || "No feedback"}
+                <strong>AI Feedback:</strong> {item.ai_feedback?.comment || "No feedback"}
               </li>
             );
           })}
@@ -170,17 +165,12 @@ const EssayQuestionsList = () => {
           {essayQuestions.map((q, idx) => (
             <li key={q.question_id} className="list-group-item">
               <strong>Q{idx + 1}:</strong> {q.question_text}
-              <br />
-              <strong>Your Answer:</strong>
               <p>{studentEssayAnswers[q.question_id] || "Not answered"}</p>
             </li>
           ))}
         </ul>
         <div className="d-flex justify-content-center mt-4">
-          <button
-            className="btn btn-secondary me-3"
-            onClick={() => setReviewMode(false)}
-          >
+          <button className="btn btn-secondary me-3" onClick={() => setReviewMode(false)}>
             Back to Questions
           </button>
           <button className="btn btn-success" onClick={handleFinalSubmit}>
@@ -219,9 +209,7 @@ const EssayQuestionsList = () => {
       )}
 
       <h2>Essay Questions</h2>
-      <p>
-        <strong>Time Left:</strong> {formatTime(timeLeft)}
-      </p>
+      <p><strong>Time Left:</strong> {formatTime(timeLeft)}</p>
 
       <div className="card mb-3">
         <div className="card-header">
@@ -229,21 +217,15 @@ const EssayQuestionsList = () => {
         </div>
         <div className="card-body">
           <p>{currentQuestion.question_text}</p>
-          <p>
-            <strong>Word Limit:</strong> {currentQuestion.word_limit}
-          </p>
-          <p>
-            <strong>Grading Note:</strong> {currentQuestion.grading_note}
-          </p>
+          <p><strong>Word Limit:</strong> {currentQuestion.word_limit}</p>
+          <p><strong>Grading Note:</strong> {currentQuestion.grading_note}</p>
 
           <textarea
             rows={10}
             className="form-control"
             placeholder="Write your answer here..."
             value={studentEssayAnswers[currentQuestion.question_id] || ""}
-            onChange={(e) =>
-              handleChange(currentQuestion.question_id, e.target.value)
-            }
+            onChange={(e) => handleChange(currentQuestion.question_id, e.target.value)}
           />
 
           <div className="mt-3">
