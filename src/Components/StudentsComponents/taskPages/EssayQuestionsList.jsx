@@ -23,7 +23,7 @@ const EssayQuestionsList = () => {
   const [timeLeft, setTimeLeft] = useState(null);
   const [focusLossCount, setFocusLossCount] = useState(0);
   const [showWarningBanner, setShowWarningBanner] = useState(false);
-  const [essayFeedback, setEssayFeedback] = useState([]); // ✅ NEW STATE
+  const [essayFeedback, setEssayFeedback] = useState([]);
 
   useEffect(() => {
     fetchEssayQuestions(examId);
@@ -90,34 +90,47 @@ const EssayQuestionsList = () => {
   };
 
   const handleFinalSubmit = async () => {
-    // 1️⃣ Save answers to DB
+    // Submit the answers and retrieve the submission ID from the context logic
+    const createSubmissionRes = await fetch("http://localhost:3000/api/student-essay-questions/create-submission", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        student_id: userId,
+        exam_id: examId,
+      }),
+    });
+
+    const submissionResult = await createSubmissionRes.json();
+    const submissionId = submissionResult.submission_id;
+
     await submitEssayAnswers({
       studentId: userId,
       examId,
       answers: studentEssayAnswers,
     });
 
-    // 2️⃣ Request AI feedback from backend
+    // Generate AI feedback
     try {
-     const res = await fetch("http://localhost:3000/api/essay-feedback/generate-essay-feedback", {
-
+      const feedbackRes = await fetch("http://localhost:3000/api/essay-feedback/generate-essay-feedback", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ submissionId: examId }),
+        body: JSON.stringify({ submissionId }),
       });
 
-      const result = await res.json();
-      console.log("✅ AI feedback result:", result);
+      const feedbackResult = await feedbackRes.json();
+      console.log("✅ AI feedback result:", feedbackResult);
 
-      if (result.success) {
-        // 3️⃣ Re-fetch answers (with feedback) from Supabase
+      if (feedbackResult.success) {
         const { data, error } = await supabase
           .from("essay_exam_submissions_answers")
           .select("question_id, student_answer, ai_feedback")
-          .eq("submission_id", examId);
+          .eq("submission_id", submissionId);
 
-        if (!error) setEssayFeedback(data);
-        else console.error("⚠️ Error fetching saved feedback:", error);
+        if (!error) {
+          setEssayFeedback(data);
+        } else {
+          console.error("⚠️ Error fetching saved feedback:", error);
+        }
       }
     } catch (err) {
       console.error("❌ Error fetching feedback:", err);
@@ -126,13 +139,11 @@ const EssayQuestionsList = () => {
     setSubmitted(true);
   };
 
-  // ✅ After submission — show feedback
   if (submitted) {
     return (
       <div className="container mt-5 text-center">
         <h2 className="text-success mb-4">Submission Successful</h2>
         <p>Thank you for submitting your essay answers.</p>
-
         <h4 className="mt-5">📌 AI Feedback</h4>
         <ul className="list-group">
           {essayFeedback.map((item, index) => {
