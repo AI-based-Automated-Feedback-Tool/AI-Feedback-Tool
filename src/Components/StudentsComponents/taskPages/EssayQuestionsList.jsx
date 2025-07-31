@@ -27,7 +27,7 @@ const EssayQuestionsList = () => {
   const [timeLeft, setTimeLeft] = useState(null);
   const [focusLossCount, setFocusLossCount] = useState(0); // Number of times tab was switched
   const [showWarningBanner, setShowWarningBanner] = useState(false); // Show tab switch warning
-
+  const [feedbackList, setFeedbackList] = useState([]);
   //  Fetch essay questions
   useEffect(() => {
     fetchEssayQuestions(examId);
