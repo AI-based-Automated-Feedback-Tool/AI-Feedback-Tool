@@ -9,7 +9,7 @@
     // Fetch once when submissionId changes
     useEffect(() => {
       if (submissionId) {
-        fetchReviewData(submissionId,"essay");
+        fetchReviewData(submissionId);
       }
     }, [fetchReviewData, submissionId]);
 
