@@ -34,7 +34,7 @@ import { useContext } from "react";
 import { CodeQuestionsProvider } from "./Context/QuestionsContext/CodeContext.jsx";
 import CodeQuestions from "./Components/StudentsComponents/taskPages/CodeQuestions.jsx";
 import { ApiCallCountProvider } from './Context/ApiCallCountContext';
-import RegisterCourseContent from "./Components/registerCourse/registerCourseContent.jsx";
+import RegisterCourseContent from "./Components/registerCourse/RegisterCourseContent.jsx";
 import ExamsContent from "./Components/Exams/ExamsContent.jsx";
 
 //  Essay Context and List
