@@ -168,7 +168,7 @@ export const TaskProvider = ({ children }) => {
         total_score: 0,
         time_taken: timeTaken,
         focus_loss_count: focusLossCount,
-        feedback_summery: null,
+        
       };
 
       const { data: submissionData, error: submissionError } = await supabase
@@ -226,20 +226,15 @@ export const TaskProvider = ({ children }) => {
         .eq("id", submissionId);
 
         // Trigger AI MCQ feedback generation
-        try {
-              await fetch("http://localhost:3000/api/mcq-feedback", {
-              method: "POST",
-              headers: {
-             "Content-Type": "application/json",
-         },
-              body: JSON.stringify({ submissionId }),
-           });
-             console.log(" AI MCQ feedback triggered.");
-          } catch (err) {
-             console.error("Error triggering AI MCQ feedback:", err);
-            }
-
-
+       fetch("http://localhost:3000/api/mcq-feedback", {
+       method: "POST",
+       headers: {
+       "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ submissionId }),
+   })
+      .then(() => console.log("AI MCQ feedback triggered."))
+      .catch((err) => console.error("Error triggering AI MCQ feedback:", err));
       setUserScore(totalScore);
       setPopupMessage(`Exam submitted! Your score is ${totalScore}.`);
       setShowPopup(true);

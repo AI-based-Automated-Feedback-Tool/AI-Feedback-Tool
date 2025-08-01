@@ -1,3 +1,4 @@
+// ✅ EssayContext.jsx
 import { createContext, useContext, useState, useCallback } from "react";
 import axios from "axios";
 
@@ -8,13 +9,9 @@ export const EssayQuestionsProvider = ({ children }) => {
   const [studentEssayAnswers, setStudentEssayAnswers] = useState({});
   const [message, setMessage] = useState("");
 
-  /**
-   * Fetch essay questions by examId
-   */
   const fetchEssayQuestions = useCallback(async (examId) => {
     try {
       const res = await axios.get(`http://localhost:3000/api/student-essay-questions/${examId}`);
-      console.log("Fetched essay questions:", res.data);
       setEssayQuestions(res.data);
     } catch (error) {
       console.error("Error fetching essay questions:", error);
@@ -23,9 +20,6 @@ export const EssayQuestionsProvider = ({ children }) => {
     }
   }, []);
 
-  /**
-   * Update student's essay answer for a question
-   */
   const handleEssayAnswerChange = (questionId, answerText) => {
     setStudentEssayAnswers((prev) => ({
       ...prev,
@@ -33,23 +27,14 @@ export const EssayQuestionsProvider = ({ children }) => {
     }));
   };
 
-  /**
-   * Submit all essay answers to backend
-   */
   const submitEssayAnswers = async ({ studentId, examId, answers }) => {
     try {
-      // Step 1: Create a new submission and get submission_id
       const createSubmissionRes = await axios.post(
         "http://localhost:3000/api/student-essay-questions/create-submission",
-        {
-          student_id: studentId,
-          exam_id: examId,
-        }
+        { student_id: studentId, exam_id: examId }
       );
-
       const submissionId = createSubmissionRes.data.submission_id;
 
-      // Step 2: Submit answers using the new submission_id
       const payload = {
         student_id: studentId,
         exam_id: examId,
@@ -60,18 +45,14 @@ export const EssayQuestionsProvider = ({ children }) => {
         })),
       };
 
-      console.log("Submitting essay answers:", payload);
+      await axios.post("http://localhost:3000/api/student-essay-questions/submit", payload);
 
-      const res = await axios.post(
-        "http://localhost:3000/api/student-essay-questions/submit",
-        payload
-      );
-
-      console.log("Essay submission response:", res.data);
       setMessage("Essay answers submitted successfully.");
+      return submissionId; // ✅ Return submissionId
     } catch (error) {
       console.error("Error submitting essay answers:", error);
       setMessage("Failed to submit essay answers.");
+      return null;
     }
   };
 
@@ -91,5 +72,4 @@ export const EssayQuestionsProvider = ({ children }) => {
   );
 };
 
-// Custom hook
 export const useEssayQuestions = () => useContext(EssayQuestionsContext);
