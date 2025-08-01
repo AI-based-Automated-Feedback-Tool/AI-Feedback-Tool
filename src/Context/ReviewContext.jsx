@@ -11,6 +11,20 @@ export const ReviewProvider = ({ children }) => {
   //to store error messages
   const [error, setError] = useState(null);
 
+  const getExamTypeForSubmission = async (submissionId) => {
+  const { data, error } = await supabase
+    .from("exam_submissions")
+    .select("exam_id, exams(type)")
+    .eq("id", submissionId)
+    .single();
+
+  if (error) {
+    throw new Error("Could not determine exam type: " + error.message);
+  }
+
+  return data.exams.type;
+};
+
   //fun to fetch review data based on submission ID
 const fetchReviewData = useCallback(async (submissionId, type = "mcq") => {
   if (!submissionId) {
