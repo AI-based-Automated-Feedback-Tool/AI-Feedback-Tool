@@ -9,7 +9,7 @@ const Review = () => {
   // Fetch once when submissionId changes
   useEffect(() => {
     if (submissionId) {
-      fetchReviewData(submissionId);
+      fetchReviewData(submissionId,"essay");
     }
   }, [fetchReviewData, submissionId]);
 
@@ -23,7 +23,7 @@ const Review = () => {
 
       {/* Manual refresh button */}
       <button
-        onClick={() => fetchReviewData(submissionId)}
+        onClick={() => fetchReviewData(submissionId, "essay")}
         disabled={loading}
         className={`${
           loading ? "bg-gray-400" : "bg-blue-500 hover:bg-blue-600"
