@@ -12,44 +12,54 @@ export const ReviewProvider = ({ children }) => {
   const [error, setError] = useState(null);
 
   //fun to fetch review data based on submission ID
-  const fetchReviewData = useCallback(async (submissionId) => {
-    //validate submission id
-    if (!submissionId) {
-      console.error("Invalid submissionId:", submissionId);
-      setError("Invalid submission ID");
-      return;
-    }
+const fetchReviewData = useCallback(async (submissionId, type = "mcq") => {
+  if (!submissionId) {
+    console.error("Invalid submissionId:", submissionId);
+    setError("Invalid submission ID");
+    return;
+  }
 
-    console.log("Fetching review data for submissionId:", submissionId);
-    setLoading(true);
-    setError(null);
+  console.log("Fetching review data for submissionId:", submissionId);
+  setLoading(true);
+  setError(null);
 
-    //query Supabase to fetch review data
-    const { data, error } = await supabase
-      .from("exam_submissions_answers")
-      .select(
+  try {
+    let data;
+
+    if (type === "essay") {
+      const response = await fetch(
+        `http://localhost:3000/api/essay-feedback/review/${submissionId}`
+      );
+      data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Essay review failed");
+    } else {
+      const { data: mcqData, error } = await supabase
+        .from("exam_submissions_answers")
+        .select(
+          `
+          *,
+          mcq_questions (
+            question_text,
+            options,
+            answers
+          )
         `
-        *,
-        mcq_questions (
-          question_text,
-          options,
-          answers
         )
-      `
-      )
-      .eq("submission_id", submissionId);
+        .eq("submission_id", submissionId);
 
-    console.log("Data:", data, "Error:", error);
-
-    if (error) {
-      setError(error.message || "Something went wrong");
-      setLoading(false);
-      return;
+      if (error) throw new Error(error.message);
+      data = mcqData;
     }
-    //update state with fetched data
+
     setReviewData(data);
+  } catch (err) {
+    console.error("Error fetching review:", err.message);
+    setError(err.message);
+  } finally {
     setLoading(false);
-  }, []);
+  }
+}, []);
+
 
   return (
     <ReviewContext.Provider
