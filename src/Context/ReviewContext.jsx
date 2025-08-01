@@ -26,7 +26,7 @@ export const ReviewProvider = ({ children }) => {
 };
 
   //fun to fetch review data based on submission ID
-const fetchReviewData = useCallback(async (submissionId, type = "mcq") => {
+const fetchReviewData = useCallback(async (submissionId) => {
   if (!submissionId) {
     console.error("Invalid submissionId:", submissionId);
     setError("Invalid submission ID");
@@ -38,6 +38,7 @@ const fetchReviewData = useCallback(async (submissionId, type = "mcq") => {
   setError(null);
 
   try {
+    const type = await getExamTypeForSubmission(submissionId);
     let data;
 
     if (type === "essay") {
