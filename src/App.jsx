@@ -15,7 +15,7 @@ import Profile from "./Components/Profile";
 import CourseExamsPage from "./Components/TeachersComponents/CourseExamsPage";
 import ProfilePage from "./Components/TeachersComponents/ProfilePage";
 import StudentLayout from "./Components/StudentsComponents/StudentLayout";
-import { UserProvider, UserContext } from "./Context/userContext.jsx";
+import { UserProvider, UserContext } from "./Context/UserContext.jsx";
 import TeacherReportContent from "./Components/TeacherReport/TeacherReportContent.jsx";
 import Result from "./Components/StudentsComponents/Result.jsx";
 import AIFeedbackPage from "./Components/TeachersComponents/AIFeedback/AIFeedbackPage.jsx";
