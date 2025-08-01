@@ -1,6 +1,6 @@
   import React, { useEffect, useState } from "react";
   import { useParams } from "react-router-dom";
-  import { useReview } from "../../Context/reviewContext";
+  import { useReview } from "../../Context/ReviewContext";
 
   const Review = () => {
     const { submissionId } = useParams();
