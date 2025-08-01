@@ -833,3 +833,5 @@ This tool helps automate and enhance feedback generation with minimal effort.
 This prototype project was developed by students of **Oulu University of Applied Sciences** during **Summer 2025**.
 
 It is licensed under the [MIT License](./LICENSE.md).
+
+---
