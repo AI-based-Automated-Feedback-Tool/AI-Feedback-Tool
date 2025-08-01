@@ -25,7 +25,7 @@ import { CourseProvider } from "./Context/courseContext.jsx";
 import { ExamProvider } from "./Context/examContext.jsx";
 import { TaskProvider } from "./Context/taskContext.jsx";
 import Review from "./Components/StudentsComponents/Review.jsx";
-import { ReviewProvider } from "./Context/ReviewContext.jsx";
+import { ReviewProvider } from "./Context/reviewContext.jsx";
 import FeedbackSelector from "./Components/TeachersComponents/AIFeedback/FeedbackSelector.jsx";
 import PromptSelector from "./Components/TeachersComponents/AIFeedback/PromptSelector.jsx";
 import CreateQuestions from "./Components/CreateQuestions/CreateQuestions.jsx";
