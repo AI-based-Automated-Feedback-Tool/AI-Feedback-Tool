@@ -33,59 +33,93 @@ const Review = () => {
       </button>
 
       {reviewData.map((entry, index) => {
-        const q = entry.mcq_questions;
-        return (
-          <div key={entry.id} className="p-4 border rounded-lg shadow">
-            <h3 className="text-lg font-semibold">
-              {index + 1}. {q.question_text}
-            </h3>
+        // Detect if this is an MCQ question by checking if mcq_questions exists
+        const isMcq = !!entry.mcq_questions;
 
-            <ul className="my-2 space-y-1">
-              {q.options.map((opt, i) => (
-                <li
-                  key={i}
-                  className={`list-group-item ${
-                    entry.student_answer?.includes(opt)
-                      ? entry.is_correct
-                        ? "list-group-item-success"
-                        : "list-group-item-danger"
-                      : ""
-                  }`}
-                >
-                  {opt}
-                  {q.answers.includes(opt) && (
-                    <span className="badge bg-success ms-2">(Correct)</span>
-                  )}
-                </li>
-              ))}
-            </ul>
+        if (isMcq) {
+          const q = entry.mcq_questions;
+          return (
+            <div key={entry.id} className="p-4 border rounded-lg shadow">
+              <h3 className="text-lg font-semibold">
+                {index + 1}. {q.question_text}
+              </h3>
 
-            <div className="mt-2 space-y-1">
+              <ul className="my-2 space-y-1">
+                {q.options.map((opt, i) => (
+                  <li
+                    key={i}
+                    className={`list-group-item ${
+                      entry.student_answer?.includes(opt)
+                        ? entry.is_correct
+                          ? "list-group-item-success"
+                          : "list-group-item-danger"
+                        : ""
+                    }`}
+                  >
+                    {opt}
+                    {q.answers.includes(opt) && (
+                      <span className="badge bg-success ms-2">(Correct)</span>
+                    )}
+                  </li>
+                ))}
+              </ul>
+
+              <div className="mt-2 space-y-1">
+                <p>
+                  <strong>Your Answer:</strong>{" "}
+                  {entry.student_answer?.join(", ")}
+                </p>
+                <p>
+                  <strong>Correct:</strong> {entry.is_correct ? "Yes" : "No"}
+                </p>
+                <p>
+                  <strong>Score:</strong> {entry.score}
+                </p>
+                <p>
+                  <strong>Model Answer (Basic):</strong>{" "}
+                  {entry.model_answer_basic || "N/A"}
+                </p>
+                <p>
+                  <strong>Model Answer (Advanced):</strong>{" "}
+                  {entry.model_answer_advance || "N/A"}
+                </p>
+                <p>
+                  <strong>AI Feedback:</strong>{" "}
+                  {entry.ai_feedback || "Pending AI feedback generation"}
+                </p>
+              </div>
+            </div>
+          );
+        } else {
+          // Essay answer section
+          const parsedAnswer = typeof entry.student_answer === "string"
+            ? JSON.parse(entry.student_answer)
+            : entry.student_answer;
+
+          return (
+            <div key={entry.id} className="p-4 border rounded-lg shadow">
+              <h3 className="text-lg font-semibold">Essay {index + 1}</h3>
+
               <p>
-                <strong>Your Answer:</strong>{" "}
-                {entry.student_answer?.join(", ")}
+                <strong>Student Answer:</strong>{" "}
+                {parsedAnswer?.text || "No answer submitted"}
               </p>
-              <p>
-                <strong>Correct:</strong> {entry.is_correct ? "Yes" : "No"}
-              </p>
-              <p>
-                <strong>Score:</strong> {entry.score}
-              </p>
-              <p>
-                <strong>Model Answer (Basic):</strong>{" "}
-                {entry.model_answer_basic || "N/A"}
-              </p>
-              <p>
-                <strong>Model Answer (Advanced):</strong>{" "}
-                {entry.model_answer_advance || "N/A"}
-              </p>
+
               <p>
                 <strong>AI Feedback:</strong>{" "}
-                {entry.ai_feedback || "Pending AI feedback generation"}
+                {entry.ai_feedback?.comment || "Pending AI feedback"}
+              </p>
+
+              <p>
+                <strong>Correct:</strong> {entry.is_correct ? "✅ Yes" : "❌ No"}
+              </p>
+
+              <p>
+                <strong>Score:</strong> {entry.score} / 10
               </p>
             </div>
-          </div>
-        );
+          );
+        }
       })}
     </div>
   );
