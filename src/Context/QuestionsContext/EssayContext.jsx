@@ -13,6 +13,8 @@ export const EssayQuestionsProvider = ({ children }) => {
     try {
       const res = await axios.get(`http://localhost:3000/api/student-essay-questions/${examId}`);
       setEssayQuestions(res.data);
+      setStudentEssayAnswers({});
+      
     } catch (error) {
       console.error("Error fetching essay questions:", error);
       setEssayQuestions([]);

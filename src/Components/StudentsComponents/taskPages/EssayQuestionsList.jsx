@@ -3,7 +3,9 @@ import { useParams } from "react-router-dom";
 import { useEssayQuestions } from "../../../Context/QuestionsContext/EssayContext";
 import { UserContext } from "../../../Context/UserContext";
 import QuestionsNavigator from "../features/QuestionsNavigator";
-import supabase from "../../../supabaseClient";
+import { supabase } from '../../../SupabaseAuth/supabaseClient';
+
+
 
 const EssayQuestionsList = () => {
   const { id: examId } = useParams();
