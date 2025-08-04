@@ -102,8 +102,13 @@ export const TaskProvider = ({ children }) => {
         .select("question_id, question_text, options, answers")
         .eq("exam_id", id);
 
+      if (questionsError) {
+      console.error(" Error fetching MCQ questions:", questionsError);
+      return;
+   }
+
       if (questionsError || !questionsData || questionsData.length === 0) {
-        console.error("Questions not found", questionsError);
+        console.warn(" No MCQ questions found. Possibly a code or essay exam.");
         return;
       }
 
