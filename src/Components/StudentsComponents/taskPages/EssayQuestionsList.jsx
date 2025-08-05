@@ -8,9 +8,13 @@ import { supabase } from '../../../SupabaseAuth/supabaseClient';
 
 
 const EssayQuestionsList = () => {
+  // Get the exam ID from the URL params
   const { id: examId } = useParams();
+
+   // Get the logged-in user ID from context
   const { userId } = useContext(UserContext);
 
+   // Extract state and functions from EssayContext
   const {
     fetchEssayQuestions,
     essayQuestions = [],
@@ -19,6 +23,7 @@ const EssayQuestionsList = () => {
     submitEssayAnswers,
   } = useEssayQuestions();
 
+   // Local states for managing the UI
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [reviewMode, setReviewMode] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -28,12 +33,12 @@ const EssayQuestionsList = () => {
   const [showWarningBanner, setShowWarningBanner] = useState(false);
   const [essayFeedback, setEssayFeedback] = useState([]);
 
-  // Fetch questions
+  //  Fetch essay questions when component mounts
   useEffect(() => {
     fetchEssayQuestions(examId);
   }, [examId]);
 
-  // Fetch exam time
+  //  Fetch the exam duration (in minutes) from Supabase
   useEffect(() => {
     const fetchExamDuration = async () => {
       const { data, error } = await supabase
@@ -44,7 +49,7 @@ const EssayQuestionsList = () => {
 
       if (error) {
         console.error("Error fetching exam duration:", error);
-        setTimeLeft(30 * 60);
+        setTimeLeft(30 * 60);  // fallback to 30 mins
       } else {
         const minutes = data?.duration;
         setTimeLeft(typeof minutes === "number" ? minutes * 60 : 30 * 60);
@@ -53,7 +58,7 @@ const EssayQuestionsList = () => {
     fetchExamDuration();
   }, [examId]);
 
-  // Timer countdown
+  //  Countdown timer that auto-submits when time is up
   useEffect(() => {
     if (timeLeft === null) return;
     if (timeLeft <= 0 && !submitted) {
@@ -65,7 +70,7 @@ const EssayQuestionsList = () => {
     return () => clearInterval(timer);
   }, [timeLeft, submitted]);
 
-  // Focus tracking
+   // Track if student switches browser tab
   useEffect(() => {
     const handleVisibilityChange = () => {
       if (document.hidden) {
@@ -81,22 +86,23 @@ const EssayQuestionsList = () => {
     };
   }, []);
 
+  //  Format timer from seconds to MM:SS
   const formatTime = (seconds) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${mins}:${secs < 10 ? "0" : ""}${secs}`;
   };
-
+  //  Handle input change for each question
   const handleChange = (questionId, text) => {
     handleEssayAnswerChange(questionId, text);
   };
-
+   //  Trigger review mode before final submission
   const handleInitialSubmit = () => {
     setReviewMode(true);
   };
-
+    //  Submit answers and request AI feedback
   const handleFinalSubmit = async () => {
-    // 1️⃣ Submit essay answers and get back submissionId
+    // Submit essay answers and get back submissionId
     const id = await submitEssayAnswers({
       studentId: userId,
       examId,
@@ -104,7 +110,7 @@ const EssayQuestionsList = () => {
     });
     setSubmissionId(id);
 
-    // 2️⃣ Call backend to generate feedback
+    //  Call backend to generate feedback
     try {
       const res = await fetch("http://localhost:3000/api/essay-feedback/generate-essay-feedback", {
         method: "POST",
@@ -113,10 +119,10 @@ const EssayQuestionsList = () => {
       });
 
       const result = await res.json();
-      console.log("✅ AI feedback result:", result);
+      console.log(" AI feedback result:", result);
 
       if (result.success) {
-        // 3️⃣ Fetch updated answers with feedback
+        // Fetch updated answers with feedback
         const { data, error } = await supabase
           .from("essay_exam_submissions_answers")
           .select("question_id, student_answer, ai_feedback")
@@ -125,13 +131,13 @@ const EssayQuestionsList = () => {
         if (!error) {
           setEssayFeedback(data);
         } else {
-          console.error("⚠️ Error fetching saved feedback:", error);
+          console.error(" Error fetching saved feedback:", error);
         }
       } else {
-        console.warn("⚠️ Feedback result:", result.error);
+        console.warn(" Feedback result:", result.error);
       }
     } catch (err) {
-      console.error("❌ Error fetching feedback:", err);
+      console.error(" Error fetching feedback:", err);
     }
 
     setSubmitted(true);
@@ -158,7 +164,7 @@ const EssayQuestionsList = () => {
       </div>
     );
   }
-
+    //  Review screen before final submit
   if (reviewMode) {
     return (
       <div className="container mt-5">
@@ -182,13 +188,13 @@ const EssayQuestionsList = () => {
       </div>
     );
   }
-
+  //  Loading state before data is ready
   if (!essayQuestions.length || timeLeft === null) {
     return <p>Loading essay questions...</p>;
   }
 
   const currentQuestion = essayQuestions[currentQuestionIndex];
-
+   //  Main essay question UI
   return (
     <div className="container mt-5">
       {showWarningBanner && (
