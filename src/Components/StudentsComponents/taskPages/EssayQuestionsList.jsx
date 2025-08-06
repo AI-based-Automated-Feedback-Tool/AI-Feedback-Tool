@@ -110,6 +110,14 @@ const EssayQuestionsList = () => {
     });
     setSubmissionId(id);
 
+    console.log("Focus loss count submitted:", focusLossCount);
+
+     // ➕ Save focus loss count to exam_submissions
+     await supabase
+    .from("exam_submissions")
+    .update({ focus_loss_count: focusLossCount })
+    .eq("id", id);
+
     //  Call backend to generate feedback
     try {
       const res = await fetch("http://localhost:3000/api/essay-feedback/generate-essay-feedback", {
