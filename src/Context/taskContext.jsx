@@ -7,6 +7,8 @@ import React, {
   useEffect,
 } from "react";
 import { supabase } from "../SupabaseAuth/supabaseClient";
+import { generateFeedbackSummary } from "../Components/StudentsComponents/Feedback/generateFeedbackSummary";
+
 
 const TaskContext = createContext();
 
@@ -240,6 +242,10 @@ export const TaskProvider = ({ children }) => {
    })
       .then(() => console.log("AI MCQ feedback triggered."))
       .catch((err) => console.error("Error triggering AI MCQ feedback:", err));
+
+      // ✅ Generate feedback summary after triggering AI
+      await generateFeedbackSummary(submissionId);
+      
       setUserScore(totalScore);
       setPopupMessage(`Exam submitted! Your score is ${totalScore}.`);
       setShowPopup(true);
