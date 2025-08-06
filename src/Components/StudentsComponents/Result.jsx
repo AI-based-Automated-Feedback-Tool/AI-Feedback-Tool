@@ -40,7 +40,22 @@ const Result = () => {
                 </td>
                 <td>{Math.round(r.time_taken / 60)}</td>
                 <td>{r.focus_loss_count}</td>
-                <td>{r.feedback_summery?.slice(0, 60)}...</td>
+                <td>  {r.feedback_summary?.mcq || r.feedback_summary?.essay || r.feedback_summary?.code ? (
+                     <ul style={{ paddingLeft: "1rem", margin: 0 }}>
+                     {r.feedback_summary.mcq && (
+                     <li><strong>MCQ:</strong> {r.feedback_summary.mcq.slice(0, 60)}...</li>
+                    )}
+                     {r.feedback_summary.essay && (
+                      <li><strong>Essay:</strong> {r.feedback_summary.essay.slice(0, 60)}...</li>
+                  )}
+                     {r.feedback_summary.code && (
+                     <li><strong>Code:</strong> {r.feedback_summary.code.slice(0, 60)}...</li>
+           )} 
+                     </ul>
+                    ) : (
+                      "⏳ AI feedback is being generated..."
+      )}
+                </td>
               </tr>
             ))}
           </tbody>

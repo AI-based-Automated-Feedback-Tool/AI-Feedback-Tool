@@ -1,18 +1,18 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { supabase } from "../SupabaseAuth/supabaseClient";
 
-//create context
+// Create context
 const ResultContext = createContext();
 
-//provider component
+// Provider component
 export const ResultProvider = ({ children, studentId }) => {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  //to fetch results whenever studentId changes
+  // Fetch results on studentId change
   useEffect(() => {
     if (!studentId) return;
-    //fetch results from the Supabase databas
+
     const fetchResults = async () => {
       setLoading(true);
       const { data, error } = await supabase
@@ -26,6 +26,7 @@ export const ResultProvider = ({ children, studentId }) => {
       } else {
         setResults(data);
       }
+
       setLoading(false);
     };
 
@@ -39,5 +40,5 @@ export const ResultProvider = ({ children, studentId }) => {
   );
 };
 
-//custom hook for consuming context
+// Custom hook for consuming context
 export const useResults = () => useContext(ResultContext);
