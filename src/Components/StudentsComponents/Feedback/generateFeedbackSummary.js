@@ -20,8 +20,8 @@ export const generateFeedbackSummary = async (submissionId) => {
       .select("ai_feedback")
       .eq("submission_id", submissionId);
 
-    // 4. Helper to extract feedback strings
-    const extractFeedback = (entries, label) =>
+    // Extract plain feedback text
+    const extractPlain = (entries) =>
       entries
         .map((entry) =>
           typeof entry.ai_feedback === "object"
@@ -29,27 +29,27 @@ export const generateFeedbackSummary = async (submissionId) => {
             : entry.ai_feedback
         )
         .filter(Boolean)
-        .map((fb) => `🔹 ${label}: ${fb}`);
+        .join("\n\n");
 
-    const allFeedbacks = [
-      ...extractFeedback(mcq || [], "MCQ Feedback"),
-      ...extractFeedback(essay || [], "Essay Feedback"),
-      ...extractFeedback(code || [], "Code Feedback"),
-    ];
+    const mcqFeedback = extractPlain(mcq || []);
+    const essayFeedback = extractPlain(essay || []);
+    const codeFeedback = extractPlain(code || []);
 
-    const summary = allFeedbacks.length
-      ? allFeedbacks.join("\n\n")
-      : "No AI feedback generated yet.";
-
-    // 5. Update exam_submissions.feedback_summary
+    // 4. Update exam_submissions.feedback_summary
     const { error: updateError } = await supabase
       .from("exam_submissions")
-      .update({ feedback_summary: {summary} })
+      .update({
+        feedback_summary: {
+          mcq: mcqFeedback || null,
+          essay: essayFeedback || null,
+          code: codeFeedback || null,
+        },
+      })
       .eq("id", submissionId);
 
     if (updateError) throw updateError;
 
-    console.log(` Feedback summary saved for ${submissionId}`);
+    console.log(`Feedback summary saved for ${submissionId}`);
   } catch (err) {
     console.error(" Error generating feedback summary:", err.message);
   }
