@@ -25,11 +25,32 @@ export const ResultProvider = ({ children, studentId }) => {
         console.error("Error fetching results:", error);
       } else {
         setResults(data);
+        //  Check if any submission has pending feedback
+      const hasPending = data.some((r) =>
+        r.feedback_summary?.includes("Pending AI feedback")
+      );
+
+      //  If there is pending feedback, poll every 5 seconds
+      if (hasPending) {
+        if (!pollingInterval) {
+          pollingInterval = setInterval(fetchResults, 5000);
+        }
+      } else {
+        //  Stop polling once all feedback is ready
+        clearInterval(pollingInterval);
       }
-      setLoading(false);
-    };
+    }
+    setLoading(false);
+  };
+
 
     fetchResults();
+    //  Clear interval when component unmounts or studentId changes
+  return () => {
+    if (pollingInterval) {
+      clearInterval(pollingInterval);
+    }
+  };
   }, [studentId]);
 
   return (
