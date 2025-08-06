@@ -44,13 +44,13 @@ export const generateFeedbackSummary = async (submissionId) => {
     // 5. Update exam_submissions.feedback_summary
     const { error: updateError } = await supabase
       .from("exam_submissions")
-      .update({ feedback_summary: summary })
+      .update({ feedback_summary: {summary} })
       .eq("id", submissionId);
 
     if (updateError) throw updateError;
 
-    console.log(`✅ Feedback summary saved for ${submissionId}`);
+    console.log(` Feedback summary saved for ${submissionId}`);
   } catch (err) {
-    console.error("❌ Error generating feedback summary:", err.message);
+    console.error(" Error generating feedback summary:", err.message);
   }
 };

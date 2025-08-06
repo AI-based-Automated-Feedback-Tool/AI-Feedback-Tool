@@ -29,7 +29,7 @@ export const ResultProvider = ({ children, studentId }) => {
         setResults(data);
         //  Check if any submission has pending feedback
       const hasPending = data.some((r) =>
-        r.feedback_summary?.includes("Pending AI feedback")
+        JSON.stringify(r.feedback_summary || "").includes("Pending AI feedback")
       );
 
       //  If there is pending feedback, poll every 5 seconds
