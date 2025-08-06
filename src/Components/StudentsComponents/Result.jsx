@@ -40,7 +40,9 @@ const Result = () => {
                 </td>
                 <td>{Math.round(r.time_taken / 60)}</td>
                 <td>{r.focus_loss_count}</td>
-                <td>{r.feedback_summary?.slice(0, 60)}...</td>
+                <td>{r.feedback_summary?.toLowerCase().includes("pending")
+                     ? "⏳ AI feedback is being generated..."
+                     : r.feedback_summary?.slice(0, 60) + "..."}</td>
               </tr>
             ))}
           </tbody>
