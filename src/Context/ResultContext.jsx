@@ -12,6 +12,8 @@ export const ResultProvider = ({ children, studentId }) => {
   //to fetch results whenever studentId changes
   useEffect(() => {
     if (!studentId) return;
+
+     let pollingInterval; 
     //fetch results from the Supabase databas
     const fetchResults = async () => {
       setLoading(true);
