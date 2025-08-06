@@ -62,7 +62,7 @@ const TaskPage = () => {
     );
   }
 
-   // ✅ Render EssayQuestionsList if task type is essay
+   //  Render EssayQuestionsList if task type is essay
   if (task.task_type === "essay") {
     return <EssayQuestionsList />;
   }
