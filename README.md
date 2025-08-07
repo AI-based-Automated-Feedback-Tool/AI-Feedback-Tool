@@ -828,6 +828,63 @@ This tool helps automate and enhance feedback generation with minimal effort.
 
 ---
 
+## 👨‍🎓 Student Experience & Features
+
+The student view of the AI Feedback Tool is designed for simplicity, clarity, and personalized feedback delivery. Here's what students see and do within the platform.
+
+---
+
+### 🏠 Student Dashboard
+
+After logging in, students land on a personalized dashboard with access to all available courses.
+
+![Student Dashboard](./src/assets/student_images/student-dashboard.png)
+
+- 📚 Browse available or enrolled courses
+- 🔍 Use the search bar to filter courses
+- 🟢 Click **Enroll to Course** to register
+- 🧭 Sidebar includes Dashboard, Results, and Profile
+
+---
+
+### 📊 Results Page
+
+The Results section helps students monitor their performance and understand how they’re doing over time.
+
+![Student Results](./src/assets/student_images/student-results.png)
+
+Each row in the results table shows:
+
+| Field           | Description                              |
+|----------------|------------------------------------------|
+| Exam ID         | Unique identifier of each exam attempt   |
+| Submitted At    | Date and time of submission              |
+| Score           | Displayed as percentage                  |
+| Time Taken      | Duration of exam in minutes              |
+| Focus Losses    | Count of tab switches during the exam    |
+| Feedback Summary| AI-generated insights (summary placeholder) |
+
+---
+
+### 👤 Profile Management
+
+Students can view and update their profile from the **Profile** section.
+
+#### 🔹 View Mode
+![Profile View](./src/assets/student_images/student-profile-view.png)
+
+- Displays Name, Email, and Role
+- Includes **Edit** button
+
+#### 🔧 Edit Mode
+![Edit Profile](./src/assets/student_images/student-profile-edit.png)
+
+- Students can edit their name
+- Email remains read-only
+- Save and Cancel buttons for updates
+
+---
+
 ## 📄 License
 
 This prototype project was developed by students of **Oulu University of Applied Sciences** during **Summer 2025**.
