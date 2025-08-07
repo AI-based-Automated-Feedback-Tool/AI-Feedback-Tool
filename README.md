@@ -903,7 +903,7 @@ Each interface is clean and exam-specific.
 📸 _Exam Interface Example:_  
 <img src="src/assets/student_images/student-exam-interface.png" alt="Start Exam Interface" width="600" />
 
-- View **Pending Exams**, **Completed Exams**, and **Closed Exams** in separate tabs
+- View **Open Exams**, **Closed Exams**, and **Completed Exams** in separate tabs
 - Access each exam with a single click
 - See important exam details such as start time, duration, and status
 
@@ -912,7 +912,7 @@ Each interface is clean and exam-specific.
 #### ⏱️ Live Time Counter
 
 <div align="center">
-  <img src="src/assets/student_images/Browser Tracking feature.png" alt="Exam Interface with Timer" width="600" />
+  <img src="src/assets/student_images/mcq_exam-interface with timer.png" alt="Exam Interface with Timer" width="600" />
 </div>
 
 A built-in timer ensures students stay aware of the remaining time throughout the exam.
