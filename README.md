@@ -838,7 +838,7 @@ The student view of the AI Feedback Tool is designed for simplicity, clarity, an
 
 After logging in, students land on a personalized dashboard with access to all available courses.
 
-![Student Dashboard](./src/assets/student_images/student-dashboard.png)
+![Student Dashboard](src/assets/student_images/student-dashboard.png)
 
 - 📚 Browse available or enrolled courses
 - 🔍 Use the search bar to filter courses
@@ -851,7 +851,7 @@ After logging in, students land on a personalized dashboard with access to all a
 
 The Results section helps students monitor their performance and understand how they’re doing over time.
 
-![Student Results](./src/assets/student_images/student-results.png)
+![Student Results](src/assets/student_images/student-results.png)
 
 Each row in the results table shows:
 
@@ -871,13 +871,13 @@ Each row in the results table shows:
 Students can view and update their profile from the **Profile** section.
 
 #### 🔹 View Mode
-![Profile View](./src/assets/student_images/student-profile-view.png)
+![Profile View](src/assets/student_images/student-profile-view.png)
 
 - Displays Name, Email, and Role
 - Includes **Edit** button
 
 #### 🔧 Edit Mode
-![Edit Profile](./src/assets/student_images/student-profile-edit.png)
+![Edit Profile](src/assets/student_images/student-profile-edit.png)
 
 - Students can edit their name
 - Email remains read-only
