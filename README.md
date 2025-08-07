@@ -885,6 +885,104 @@ Students can view and update their profile from the **Profile** section.
 
 ---
 
+### 🎯 Key Features for Students
+
+Our exam system is built not just for answering questions — but to **track performance, enforce discipline, and deliver insights** through AI.
+
+---
+
+### 🧪 Exam Types & Interface
+
+Students can take:
+- 📘 Multiple Choice Exams
+- 💻 Code-Based Exams
+- 📝 Essay Exams
+
+Each interface is clean and exam-specific.  
+
+📸 _Exam Interface Example:_  
+<img src="src/assets/student_images/student-exam-interface.png" alt="Start Exam Interface" width="600" />
+
+- View **Pending Exams**, **Completed Exams**, and **Closed Exams** in separate tabs
+- Access each exam with a single click
+- See important exam details such as start time, duration, and status
+
+---
+
+#### ⏱️ Live Time Counter
+
+<div align="center">
+  <img src="src/assets/student_images/Browser Tracking feature.png" alt="Exam Interface with Timer" width="600" />
+</div>
+
+A built-in timer ensures students stay aware of the remaining time throughout the exam.
+
+📌 The timer:
+- Starts automatically when the exam begins
+- Prevents late submission after the deadline
+
+📸 _Visible in top bar of the exam interface._
+
+---
+
+#### 👁️ Browser Focus Tracking
+
+<div align="center">
+  <img src="src/assets/student_images/Browser Tracking feature.png" alt="Exam Interface with Timer" width="600" />
+</div>
+
+To maintain exam integrity, the system tracks tab switches and browser focus loss.
+
+📌 Students see:
+- Alert if they leave the tab
+- Focus loss count is recorded and shown in results
+
+📸 _Focus count shown in Results Page (see earlier section)_
+
+---
+
+#### 🤖 AI-Powered Feedback Generator
+
+After submission, AI analyzes the answers and delivers customized feedback.
+
+<img src="./src/assets/student_images/ai-feedback-generator.png" alt="AI Feedback Generator" width="600" />
+
+Key components:
+- ✅ Overall performance summary
+- 🔍 Missed questions breakdown
+- 💡 Suggested improvements
+- 📘 Teaching/learning recommendations
+
+---
+
+#### 🧾 AI Feedback Review Page
+
+Students can revisit submitted exams with AI comments and performance breakdown.
+
+<img src="./src/assets/student_images/ai-feedback-page.png" alt="AI Feedback Review Page" width="600" />
+
+Includes:
+- Question-by-question insights
+- Correct/incorrect answers
+- AI-generated explanation
+
+---
+
+
+#### 🧠 Smart Exam Summary
+
+Post-exam, students can access:
+- Score
+- Time taken
+- Focus loss count
+- Feedback summary
+
+All visible in the **Results Page**.
+
+---
+
+
+
 ## 📄 License
 
 This prototype project was developed by students of **Oulu University of Applied Sciences** during **Summer 2025**.
