@@ -948,7 +948,7 @@ To maintain exam integrity, the system tracks tab switches and browser focus los
 
 After submission, AI analyzes the answers and delivers customized feedback.
 
-<img src="./src/assets/student_images/ai-feedback-generator.png" alt="AI Feedback Generator" width="600" />
+<img src="src/assets/student_images/essay-after-submit-AIFeedback.png" alt="AI Feedback Generator" width="600" />
 
 Key components:
 - ✅ Overall performance summary
@@ -962,12 +962,17 @@ Key components:
 
 Students can revisit submitted exams with AI comments and performance breakdown.
 
-<img src="./src/assets/student_images/ai-feedback-page.png" alt="AI Feedback Review Page" width="600" />
+📸 _Example: MCQ Review Page_  
+<img src="src/assets/student_images/mcq_AIfeedback.png" alt="MCQ AI Feedback Review Page" width="600" />
+
+📸 _Example: Essay Review Page_  
+<img src="src/assets/student_images/essay-AIfeedback.png" alt="Essay AI Feedback Review Page" width="600" />
 
 Includes:
 - Question-by-question insights
 - Correct/incorrect answers
 - AI-generated explanation
+- Scores
 
 ---
 
