@@ -907,6 +907,9 @@ Each interface is clean and exam-specific.
 - Access each exam with a single click
 - See important exam details such as start time, duration, and status
 
+📸 Interfaces for Each Exam Type
+<div align="center"> <img src="src/assets/student_images/mcq_exam-interface with timer.png" alt="Multiple Choice Exam Start" width="600" /> </div> <div align="center"> <img src="src/assets/student_images/Code-exam-interface.png" alt="Code-Based Exam Start" width="600" /> </div> <div align="center"> <img src="src/assets/student_images/essay-exam-interface.png" alt="Essay Exam Start" width="600" /> </div>
+
 ---
 
 #### ⏱️ Live Time Counter
