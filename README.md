@@ -989,6 +989,11 @@ All visible in the **Results Page**.
 
 ---
 
+### 🎥 Student Walkthrough Video
+
+Here’s a complete walkthrough of the student dashboard, exams, and key features.
+
+[![Watch the Student Walkthrough Video](https://img.youtube.com/vi/92lcdEirbNY/0.jpg)](https://youtu.be/92lcdEirbNY)
 
 
 ## 📄 License
