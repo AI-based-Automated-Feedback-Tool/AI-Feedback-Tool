@@ -84,9 +84,39 @@ export default function StudentReportCard({ studentReportData, examType }) {
                     <Card className="text-start border-0 shadow-sm bg-light">
                         <CardBody>
                             <h5>
-                                <span className="text-muted mb-1">💬 Overall Feedback: </span>
-                                <span className="fw-bold text-primary">{studentReportData[0].feedback_summary ? studentReportData[0].feedback_summary : "No feedback available"}</span>
+                                <span className="text-muted mb-3">💬 Overall Feedback: </span>
                             </h5>
+                            {studentReportData[0].feedback_summary ? (
+                                typeof studentReportData[0].feedback_summary === "string" ? (
+                                <p className="fw-normal text-dark ms-4">
+                                    {studentReportData[0].feedback_summary}
+                                </p>
+                                ) : (
+                                <div className="ms-4">
+                                    {studentReportData[0].feedback_summary.summary && (
+                                    <p className="fw-normal text-dark">
+                                        {studentReportData[0].feedback_summary.summary}
+                                    </p>
+                                    )}
+
+                                    {studentReportData[0].feedback_summary.areas_of_strength && (
+                                    <p className="fw-normal text-dark">
+                                        <strong>Strengths:</strong>{" "}
+                                        {studentReportData[0].feedback_summary.areas_of_strength.join(", ")}
+                                    </p>
+                                    )}
+
+                                    {studentReportData[0].feedback_summary.areas_for_improvement && (
+                                    <p className="fw-normal text-dark">
+                                        <strong>Improvements:</strong>{" "}
+                                        {studentReportData[0].feedback_summary.areas_for_improvement.join(", ")}
+                                    </p>
+                                    )}
+                                </div>
+                                )
+                            ) : (
+                                <span className="fw-normal text-dark ms-4">No feedback available</span>
+                            )}
                         </CardBody>
                     </Card>
                 </Row>
