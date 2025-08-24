@@ -149,6 +149,10 @@ export const TaskProvider = ({ children }) => {
 
   const handleSubmit = useCallback(
     async (navigate) => {
+      if (!task || !timeLeft) {
+        alert("Task data is not available. Please try again later.");
+        return;
+      }
       const {
         data: { user },
       } = await supabase.auth.getUser();
