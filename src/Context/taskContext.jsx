@@ -7,43 +7,31 @@ import React, {
   useEffect,
 } from "react";
 import { supabase } from "../SupabaseAuth/supabaseClient";
-import { generateFeedbackSummary } from "../Components/StudentsComponents/Feedback/generateFeedbackSummary";
 
-// Create context to hold MCQ task-related state and actions
 const TaskContext = createContext();
 
-// Provider component for MCQ exam logic
 export const TaskProvider = ({ children }) => {
-
-  // Exam-related state
   const [task, setTask] = useState(null);
   const [loading, setLoading] = useState(true);
   const [questionIndex, setQuestionIndex] = useState(0);
-
-   // Student answer state
   const [answers, setAnswers] = useState([]);
   const [reviewMode, setReviewMode] = useState(false);
   const [alreadySubmitted, setAlreadySubmitted] = useState(false);
   const [userScore, setUserScore] = useState(null);
-
-  // Focus loss and time tracking
   const [focusLossCount, setFocusLossCount] = useState(0);
   const [showPopup, setShowPopup] = useState(false);
-
-  // UI popups
   const [popupMessage, setPopupMessage] = useState("");
 
   const [timeLeft, setTimeLeft] = useState(null);
 
-
-  // Initialize countdown timer based on exam duration
+  // initialize timer when task duration is available
   useEffect(() => {
     if (task?.duration) {
       setTimeLeft(task.duration * 60);
     }
   }, [task]);
 
-  // Countdown and auto-submit on timeout
+  // countdown timer
   useEffect(() => {
     if (timeLeft === null || alreadySubmitted || loading) return;
 
@@ -51,7 +39,7 @@ export const TaskProvider = ({ children }) => {
       setTimeLeft((prev) => {
         if (prev <= 1) {
           clearInterval(timer);
-          handleSubmit();  // Auto-submit when time is up
+          handleSubmit();
           return 0;
         }
         return prev - 1;
@@ -61,14 +49,14 @@ export const TaskProvider = ({ children }) => {
     return () => clearInterval(timer);
   }, [timeLeft, alreadySubmitted, loading]);
 
-  // Helper to format timer (MM:SS)
+  // format timer into MM:SS
   const formatTime = (seconds) => {
     const m = Math.floor(seconds / 60);
     const s = seconds % 60;
     return `${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
   };
 
-  // Focus loss detection on tab switch
+  // track tab focus loss
   useEffect(() => {
     const handleFocus = () => console.log("Tab focused");
     const handleBlur = () => {
@@ -85,17 +73,15 @@ export const TaskProvider = ({ children }) => {
     };
   }, []);
 
-   // Fetch exam and questions by exam ID
+  // fetch exam and its questions (supports both MCQ & Code)
   const fetchExamWithQuestions = useCallback(async (id) => {
     setLoading(true);
-
-    // Get current user ID
     const {
       data: { user },
     } = await supabase.auth.getUser();
     const userId = user?.id;
 
-    // Check if already submitted
+    // check if already submitted
     const { data: existingSubmissions } = await supabase
       .from("exam_submissions")
       .select("id")
@@ -106,7 +92,7 @@ export const TaskProvider = ({ children }) => {
     setAlreadySubmitted(existingSubmissions?.length > 0);
 
     try {
-       // Fetch exam metadata
+      // fetch exam meta data
       const { data: examData, error: examError } = await supabase
         .from("exams")
         .select("*")
@@ -118,48 +104,61 @@ export const TaskProvider = ({ children }) => {
         return;
       }
 
-       // Fetch MCQ questions
-      const { data: questionsData, error: questionsError } = await supabase
+      // fetch both mcq and code questions
+      const { data: mcqData } = await supabase
         .from("mcq_questions")
         .select("question_id, question_text, options, answers")
         .eq("exam_id", id);
 
-      if (questionsError) {
-      console.error(" Error fetching MCQ questions:", questionsError);
-      return;
-   }
+      const { data: codeData } = await supabase
+        .from("code_questions")
+        .select("question_id, question_description, function_signature, test_cases")
+        .eq("exam_id", id);
 
-      if (questionsError || !questionsData || questionsData.length === 0) {
-        console.warn(" No MCQ questions found. Possibly a code or essay exam.");
-        return;
-      }
-      // Format questions for easier access
-      const formattedQuestions = questionsData.map((q) => ({
+      // format mcq questions
+      const formattedMcqs = (mcqData || []).map((q) => ({
         id: q.question_id,
+        type: "mcq",
         question: q.question_text,
         options: Array.isArray(q.options) ? q.options : [],
         correctAnswers: q.answers,
       }));
 
-       // Set exam task and initialize answers
+      // format code questions
+      const formattedCodes = (codeData || []).map((q) => ({
+        id: q.question_id,
+        type: "code",
+        question_description: q.question_description,
+        function_signature: q.function_signature,
+        test_cases: q.test_cases,
+      }));
 
+      // merge both types
+      const allQuestions = [...formattedMcqs, ...formattedCodes];
+
+      if (allQuestions.length === 0) {
+        console.error("No questions found for exam");
+        return;
+      }
+
+      // set task data
       setTask({
         exam_id: examData.exam_id,
         course_id: examData.course_id,
         ...examData,
-        questions: formattedQuestions,
+        questions: allQuestions,
       });
 
-      setAnswers(new Array(formattedQuestions.length).fill(null));
+      // init answers array
+      setAnswers(new Array(allQuestions.length).fill(null));
     } catch (error) {
       console.error("Unexpected error:", error);
     } finally {
       setLoading(false);
     }
   }, []);
-  
-    // Select answer for a question
 
+  // handle mcq answer selection
   const handleAnswerSelect = useCallback((index, answer) => {
     setAnswers((prevAnswers) => {
       const updated = [...prevAnswers];
@@ -167,7 +166,8 @@ export const TaskProvider = ({ children }) => {
       return updated;
     });
   }, []);
-  // Handle next and back navigation in questions
+
+  // handle navigation next/back
   const handleNext = useCallback(() => {
     setQuestionIndex((prev) =>
       Math.min(prev + 1, task.questions.length - 1)
@@ -178,7 +178,7 @@ export const TaskProvider = ({ children }) => {
     setQuestionIndex((prev) => Math.max(prev - 1, 0));
   }, []);
 
-  // Handle exam submission
+  // submit exam (works for MCQ, Code handled separately in CodeQuestionsList)
   const handleSubmit = useCallback(
     async (navigate) => {
       if (!task || !timeLeft) {
@@ -196,8 +196,7 @@ export const TaskProvider = ({ children }) => {
 
       const totalDurationInSeconds = task.duration * 60;
       const timeTaken = totalDurationInSeconds - (timeLeft ?? 0);
-      
-       // Insert exam submission entry
+
       const submissionPayload = {
         submitted_at: new Date().toISOString(),
         student_id: userId,
@@ -205,7 +204,7 @@ export const TaskProvider = ({ children }) => {
         total_score: 0,
         time_taken: timeTaken,
         focus_loss_count: focusLossCount,
-        
+        feedback_summery: null,
       };
 
       const { data: submissionData, error: submissionError } = await supabase
@@ -221,9 +220,10 @@ export const TaskProvider = ({ children }) => {
 
       const submissionId = submissionData[0].id;
       let totalScore = 0;
-      
-      // Prepare individual answers for submission
+
+      // only evaluate mcqs here
       const answersPayload = task.questions
+        .filter((q) => q.type === "mcq")
         .map((question, index) => {
           const selectedAnswer = answers[index];
           if (!selectedAnswer) return null;
@@ -238,60 +238,55 @@ export const TaskProvider = ({ children }) => {
             question_id: question.id,
             submission_id: submissionId,
             model_answer_basic: question.correctAnswers?.[0] ?? "N/A",
-            model_answer_advanced: "To be added later"
+            model_answer_advanced: "To be added later",
           };
         })
         .filter(Boolean);
 
-      if (answersPayload.length === 0) {
-        alert("You must answer at least one question.");
-        return;
+      if (answersPayload.length > 0) {
+        const { error: answersError } = await supabase
+          .from("exam_submissions_answers")
+          .insert(answersPayload);
+
+        if (answersError) {
+          console.error("Error saving responses:", answersError);
+          alert("Failed to save answers. Please try again.");
+          return;
+        }
+
+        await supabase
+          .from("exam_submissions")
+          .update({ total_score: totalScore })
+          .eq("id", submissionId);
       }
-      
-      // Insert student answers
-      const { error: answersError } = await supabase
-        .from("exam_submissions_answers")
-        .insert(answersPayload);
 
-      if (answersError) {
-        console.error("Error saving responses:", answersError);
-        alert("Failed to save answers. Please try again.");
-        return;
+      // trigger AI feedback for mcq
+      try {
+        await fetch("http://localhost:3000/api/mcq-feedback", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ submissionId }),
+        });
+        console.log(" AI MCQ feedback triggered.");
+      } catch (err) {
+        console.error("Error triggering AI MCQ feedback:", err);
       }
-      
-       // Update score in exam_submissions table
-      await supabase
-        .from("exam_submissions")
-        .update({ total_score: totalScore })
-        .eq("id", submissionId);
 
-        // Trigger AI MCQ feedback generation
-       fetch("http://localhost:3000/api/mcq-feedback", {
-       method: "POST",
-       headers: {
-       "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ submissionId }),
-   })
-      .then(() => console.log("AI MCQ feedback triggered."))
-      .catch((err) => console.error("Error triggering AI MCQ feedback:", err));
-
-      //  Generate feedback summary after triggering AI
-      await generateFeedbackSummary(submissionId);
-      
-      //Notify user
       setUserScore(totalScore);
       setPopupMessage(`Exam submitted! Your score is ${totalScore}.`);
       setShowPopup(true);
-      
-      //Navigate back to course exams after delay
-      setTimeout(() => {
-        navigate(`/student/courses/${userId}/${task.course_id}/exams`);
-      }, 3000);
+
+      if (navigate) {
+        setTimeout(() => {
+          navigate(`/student/courses/${userId}/${task.course_id}/exams`);
+        }, 3000);
+      }
     },
     [task, answers, timeLeft]
   );
-  // Context value to expose
+
   const contextValue = useMemo(
     () => ({
       task,
@@ -331,7 +326,7 @@ export const TaskProvider = ({ children }) => {
       showPopup,
       popupMessage,
       setShowPopup,
-      timeLeft
+      timeLeft,
     ]
   );
 
