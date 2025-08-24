@@ -89,15 +89,20 @@ const CodeQuestionsList = () => {
       alert("You must be logged in to submit.");
       return;
     }
-
+  
+    if (!task || !task.duration) {
+      alert("Task data is not available. Please try again later.");
+      return;
+    }
+  
     const timeTaken = task.duration * 60 - timeLeft;
-
+  
     await submitAllAnswers({
       userId,
       timeTaken,
       focusLossCount: 0,
     });
-
+  
     setSubmitted(true);
   };
 
