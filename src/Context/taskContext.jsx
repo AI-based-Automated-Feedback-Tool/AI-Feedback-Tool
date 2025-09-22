@@ -204,7 +204,7 @@ export const TaskProvider = ({ children }) => {
         total_score: 0,
         time_taken: timeTaken,
         focus_loss_count: focusLossCount,
-        feedback_summery: null,
+        feedback_summary: null,
       };
 
       const { data: submissionData, error: submissionError } = await supabase
