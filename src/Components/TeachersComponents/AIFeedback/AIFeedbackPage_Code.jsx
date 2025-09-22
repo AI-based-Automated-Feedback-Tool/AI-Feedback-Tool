@@ -122,7 +122,13 @@ const AIFeedbackPage_Code = () => {
 
         let parsedFeedback;
         try {
-          parsedFeedback = JSON.parse(data.result);
+          // Clean result to remove markdown code fences if present
+          let cleanResult = data.result
+            .replace(/```json\s*/g, '')  // remove ```json
+            .replace(/```/g, '')         // remove closing ```
+            .trim();
+
+          parsedFeedback = JSON.parse(cleanResult);
         } catch {
           parsedFeedback = {
             overallSummary: data.result,
