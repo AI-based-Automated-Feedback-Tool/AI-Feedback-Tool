@@ -16,7 +16,16 @@ Essay Question:
 Student Response:
 [SUBMISSIONS]
 
-Provide feedback on content strength, missing points, and logical organization.`,
+Provide feedback in **strict JSON format** with the following keys:
+{
+  "overallSummary": "string summarizing overall content and relevance",
+  "keyStrengths": ["list of strengths"],
+  "mostMissedQuestions": ["list of missing or weak points"],
+  "teachingSuggestions": ["suggestions for improvement"],
+  "nextSteps": ["actionable steps for student"]
+}
+
+Do **not** include any text outside the JSON.`
 };
 
 export default EssayContentPrompt;

@@ -1,16 +1,31 @@
 const EssayCustomPrompt = {
   label: 'Custom Prompt',
-  prompt: `You can create your own custom prompt for essay-related assessments here.
+  prompt: `You are evaluating a student essay based on custom criteria.
 
-You may include instructions like:
-- Evaluate writing style, grammar, or content
-- Provide suggestions for improvement or praise for strengths
-- Focus on structure, tone, or argumentation
+Instructions may include:
+- Writing style, grammar, or content evaluation
+- Suggestions for improvement or praise
+- Structure, tone, or argumentation
 
-Use the following placeholders:
-- [GUIDELINES]
-- [QUESTIONS] – array of essay questions
-- [SUBMISSIONS] – array of student answers`,
+Assessment guideline:
+[GUIDELINES]
+
+Essay Question:
+[QUESTIONS]
+
+Student Response:
+[SUBMISSIONS]
+
+Provide feedback in **strict JSON format** with these keys:
+{
+  "overallSummary": "string summarizing overall performance",
+  "keyStrengths": ["list of strengths"],
+  "mostMissedQuestions": ["list of missing or weak points"],
+  "teachingSuggestions": ["suggestions for improvement"],
+  "nextSteps": ["actionable steps for student"]
+}
+
+Respond only with JSON.`
 };
 
 export default EssayCustomPrompt;
