@@ -197,11 +197,15 @@ export const TaskProvider = ({ children }) => {
       const totalDurationInSeconds = task.duration * 60;
       const timeTaken = totalDurationInSeconds - (timeLeft ?? 0);
 
+      // number of MCQ questions in this exam
+      const totalMcq = (task.questions || []).filter(q => q.type === "mcq").length;
+
       const submissionPayload = {
         submitted_at: new Date().toISOString(),
         student_id: userId,
         exam_id: task.exam_id,
-        total_score: 0,
+        total_score: 0,        // raw count of correct MCQs
+        score_percent: 0,      // we will update after grading
         time_taken: timeTaken,
         focus_loss_count: focusLossCount,
         feedback_summary: null,
@@ -254,9 +258,12 @@ export const TaskProvider = ({ children }) => {
           return;
         }
 
+        // convert raw score to 0–100% (e.g., 1 correct out of 2 => 50)
+        const scorePercent = totalMcq ? Math.round((totalScore / totalMcq) * 100) : 0;
+
         await supabase
           .from("exam_submissions")
-          .update({ total_score: totalScore })
+          .update({ total_score: totalScore, score_percent: scorePercent })
           .eq("id", submissionId);
       }
 
@@ -274,9 +281,11 @@ export const TaskProvider = ({ children }) => {
         console.error("Error triggering AI MCQ feedback:", err);
       }
 
-      setUserScore(totalScore);
-      setPopupMessage(`Exam submitted! Your score is ${totalScore}.`);
-      setShowPopup(true);
+     // keep both raw and percent in state if you want
+     setUserScore(totalScore);
+     const scorePercent = totalMcq ? Math.round((totalScore / totalMcq) * 100) : 0;
+     setPopupMessage(`Exam submitted! Score: ${scorePercent}% (${totalScore}/${totalMcq}).`);
+     setShowPopup(true);
 
       if (navigate) {
         setTimeout(() => {
