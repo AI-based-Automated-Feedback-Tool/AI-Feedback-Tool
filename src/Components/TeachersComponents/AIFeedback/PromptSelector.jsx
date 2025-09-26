@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
-import { Container, Card, Form, Button, Row, Col, Alert } from 'react-bootstrap';
+import { Container, Card, Form, Button, Row, Col, Alert, Modal } from 'react-bootstrap';
 import HeaderWithApiCount from './HeaderWithApiCount';
 import StandardAnalysis from './Prompts/StandardAnalysis';
 import QuickInsights from './Prompts/QuickInsights';
@@ -79,6 +79,7 @@ const PromptSelector = () => {
   const [selectedProvider, setSelectedProvider] = useState(aiProviders[0].id);
   const [customPrompt, setCustomPrompt] = useState('');
   const [isCustomPrompt, setIsCustomPrompt] = useState(false);
+  const [showDynamicPromptModal, setShowDynamicPromptModal] = useState(false);
   const { count, MAX_CALLS_PER_DAY } = useContext(ApiCallCountContext);
   const isLimitReached = count >= MAX_CALLS_PER_DAY;
 
@@ -134,9 +135,7 @@ const PromptSelector = () => {
   };
 
   const handleDynamicPromptGeneration = () => {
-    // TODO: Implement dynamic prompt generation logic
-    console.log('Dynamic prompt generation clicked');
-    alert('Dynamic prompt generation feature coming soon!');
+    setShowDynamicPromptModal(true);
   };
 
   return (
@@ -228,6 +227,19 @@ const PromptSelector = () => {
           </div>
         </Card.Body>
       </Card>
+
+      {/* Dynamic Prompt Generation Modal */}
+      <Modal show={showDynamicPromptModal} onHide={() => setShowDynamicPromptModal(false)} size="lg">
+        <Modal.Header closeButton className="bg-primary text-white">
+          <Modal.Title>🤖 Dynamic Prompt Generation</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {/* Empty body for now */}
+          <p className="text-muted text-center p-4">
+            Dynamic prompt generation content will be implemented here.
+          </p>
+        </Modal.Body>
+      </Modal>
     </Container>
   );
 };
