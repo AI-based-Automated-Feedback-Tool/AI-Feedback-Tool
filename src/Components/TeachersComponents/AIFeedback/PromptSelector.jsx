@@ -133,6 +133,12 @@ const PromptSelector = () => {
     }
   };
 
+  const handleDynamicPromptGeneration = () => {
+    // TODO: Implement dynamic prompt generation logic
+    console.log('Dynamic prompt generation clicked');
+    alert('Dynamic prompt generation feature coming soon!');
+  };
+
   return (
     <Container className="mt-4">
       <Card className="shadow-sm">
