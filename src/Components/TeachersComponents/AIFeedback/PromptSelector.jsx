@@ -103,6 +103,7 @@ const PromptSelector = () => {
   const [customPrompt, setCustomPrompt] = useState('');
   const [isCustomPrompt, setIsCustomPrompt] = useState(false);
   const [showDynamicPromptModal, setShowDynamicPromptModal] = useState(false);
+  const [selectedDynamicOptions, setSelectedDynamicOptions] = useState([]);
   const { count, MAX_CALLS_PER_DAY } = useContext(ApiCallCountContext);
   const isLimitReached = count >= MAX_CALLS_PER_DAY;
 
@@ -159,6 +160,46 @@ const PromptSelector = () => {
 
   const handleDynamicPromptGeneration = () => {
     setShowDynamicPromptModal(true);
+  };
+
+  const handleDynamicOptionChange = (optionId) => {
+    setSelectedDynamicOptions(prev => {
+      if (prev.includes(optionId)) {
+        return prev.filter(id => id !== optionId);
+      } else {
+        return [...prev, optionId];
+      }
+    });
+  };
+
+  const generateDynamicPrompt = () => {
+    if (selectedDynamicOptions.length === 0) {
+      alert('Please select at least one option to generate a dynamic prompt.');
+      return;
+    }
+
+    const selectedOptionsDetails = dynamicPromptOptions.filter(option => 
+      selectedDynamicOptions.includes(option.id)
+    );
+
+    let dynamicPrompt = `Based on the exam results and student submissions, please provide analysis focusing on the following aspects:\n\n`;
+    
+    selectedOptionsDetails.forEach((option, index) => {
+      dynamicPrompt += `${index + 1}. ${option.label}:\n   ${option.description}\n\n`;
+    });
+
+    dynamicPrompt += `Please analyze the provided data: [QUESTIONS], [SUBMISSIONS], and [ANSWERS] to deliver insights for each selected focus area above.`;
+
+    setCustomPrompt(dynamicPrompt);
+    setIsCustomPrompt(true);
+    setSelectedLabel('Dynamic Generated Prompt');
+    setShowDynamicPromptModal(false);
+    setSelectedDynamicOptions([]); // Reset selections
+  };
+
+  const closeDynamicModal = () => {
+    setShowDynamicPromptModal(false);
+    setSelectedDynamicOptions([]); // Reset selections when closing
   };
 
   return (
