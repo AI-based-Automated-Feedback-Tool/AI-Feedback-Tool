@@ -252,15 +252,45 @@ const PromptSelector = () => {
       </Card>
 
       {/* Dynamic Prompt Generation Modal */}
-      <Modal show={showDynamicPromptModal} onHide={() => setShowDynamicPromptModal(false)} size="lg">
+      <Modal show={showDynamicPromptModal} onHide={closeDynamicModal} size="lg">
         <Modal.Header closeButton className="bg-primary text-white">
           <Modal.Title>🤖 Dynamic Prompt Generation</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {/* Empty body for now */}
-          <p className="text-muted text-center p-4">
-            Dynamic prompt generation content will be implemented here.
-          </p>
+          <div className="mb-3">
+            <p className="text-muted">
+              Select one or more focus areas for your AI feedback analysis. The system will generate a customized prompt based on your selections.
+            </p>
+          </div>
+          
+          <Form>
+            {dynamicPromptOptions.map((option) => (
+              <Card key={option.id} className={`mb-3 ${selectedDynamicOptions.includes(option.id) ? 'border-primary' : ''}`}>
+                <Card.Body>
+                  <Form.Check
+                    type="checkbox"
+                    id={`dynamic-option-${option.id}`}
+                    checked={selectedDynamicOptions.includes(option.id)}
+                    onChange={() => handleDynamicOptionChange(option.id)}
+                    label={
+                      <div>
+                        <strong>{option.label}</strong>
+                        <br />
+                        <small className="text-muted">{option.description}</small>
+                      </div>
+                    }
+                    className="h-100"
+                  />
+                </Card.Body>
+              </Card>
+            ))}
+          </Form>
+
+          {selectedDynamicOptions.length > 0 && (
+            <Alert variant="info">
+              <strong>Selected Options:</strong> {selectedDynamicOptions.length} of {dynamicPromptOptions.length}
+            </Alert>
+          )}
         </Modal.Body>
       </Modal>
     </Container>
