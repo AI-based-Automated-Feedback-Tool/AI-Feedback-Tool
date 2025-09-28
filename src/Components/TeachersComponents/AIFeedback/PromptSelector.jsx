@@ -292,6 +292,18 @@ const PromptSelector = () => {
             </Alert>
           )}
         </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={closeDynamicModal}>
+            Cancel
+          </Button>
+          <Button 
+            variant="primary" 
+            onClick={generateDynamicPrompt}
+            disabled={selectedDynamicOptions.length === 0}
+          >
+            Generate Prompt ({selectedDynamicOptions.length} selected)
+          </Button>
+        </Modal.Footer>
       </Modal>
     </Container>
   );
