@@ -26,6 +26,15 @@ export default function McqQuestionForm({onSave, warning, disabled}) {
                         AI-Assisted Question
                     </button>
                 </div>
+
+                <div className="mt-4">
+                    {activeTab === 'manual' && (
+                        <ManualMcqQuestionCreation onSave={onSave} warning={warning} disabled={disabled} />
+                    )}
+                    {activeTab === 'ai' && (
+                        <McqQuestionGenerationForm onSave={onSave} warning={warning} disabled={disabled} />
+                    )}
+                </div>
             </div>
         </Card.Body>
     </Card>
