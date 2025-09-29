@@ -1,7 +1,9 @@
 import { Card} from "react-bootstrap";
 import { useState } from 'react';
+import { Nav } from "react-bootstrap";
 import ManualMcqQuestionCreation from './ManualMcqQuestionCreation';
 import McqQuestionGenerationForm from "./McqQuestionGenerationForm";
+import '../../../css/questionCreation.css';
 
 export default function McqQuestionForm({onSave, warning, disabled}) {     
     const [activeTab, setActiveTab] = useState('manual'); // 'manual' or 'ai'
@@ -13,18 +15,18 @@ export default function McqQuestionForm({onSave, warning, disabled}) {
         <Card.Body>
             <div>
                 <div className="flex border-b">
-                    <button
-                        className={`p-2 ${activeTab === 'manual' ? 'border-b-2 border-blue-500' : ''}`}
-                        onClick={() => setActiveTab('manual')}
-                    >
-                        Manual Question
-                    </button>
-                    <button
-                        className={`p-2 ${activeTab === 'ai' ? 'border-b-2 border-blue-500' : ''}`}
-                        onClick={() => setActiveTab('ai')}
-                    >
-                        AI-Assisted Question
-                    </button>
+                    <Nav variant="tabs" activeKey={activeTab} onSelect={(k) => setActiveTab(k)}>
+                        <Nav.Item>
+                            <Nav.Link eventKey="manual" className={activeTab === 'manual' ? 'bg-primary text-white' : ''}>
+                                Manual Question Creation
+                            </Nav.Link>
+                        </Nav.Item>
+                        <Nav.Item>
+                            <Nav.Link eventKey="ai" className={activeTab === 'ai' ? 'bg-primary text-white' : ''}>
+                                AI-Assisted Question Creation
+                            </Nav.Link>
+                        </Nav.Item>
+                        </Nav>
                 </div>
 
                 <div className="mt-4">
