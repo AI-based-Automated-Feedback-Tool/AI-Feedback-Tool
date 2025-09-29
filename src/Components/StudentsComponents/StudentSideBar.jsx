@@ -60,6 +60,18 @@ const StudentSideBar = ({ show, onHide }) => {
                 <i className="fas fa-home me-2"></i> Dashboard
               </Link>
             </Nav.Item>
+            {/* Navigation Item for Exams timeline */}
+            <Nav.Item>
+              <Link
+                className={`nav-link d-flex align-items-center ${
+                  isActive(`/student/courses/${userId}/exams`) ? "active" : "text-white"
+                }`}
+                to={`/student/courses/${userId}/exams`}
+                style={{ fontSize: "1.2rem" }}
+              >
+                <i className="fas fa-calendar-alt me-2"></i> My Exams
+              </Link>
+            </Nav.Item>
             <Nav.Item>
               <Link
                 className={`nav-link d-flex align-items-center ${
@@ -126,6 +138,18 @@ const StudentSideBar = ({ show, onHide }) => {
               style={{ fontSize: "1.2rem" }}
             >
               <i className="fas fa-home me-2"></i> Dashboard
+            </Link>
+          </li>
+          {/* Navigation Item for Exams timeline */}
+          <li className="nav-item mb-2">
+            <Link
+              className={`nav-link d-flex align-items-center ${
+                isActive(`/student/courses/${userId}/exams`) ? "active" : "text-white"
+              }`}
+              to={`/student/courses/${userId}/exams`}
+              style={{ fontSize: "1.2rem" }}
+            >
+              <i className="fas fa-calendar-alt me-2"></i> My Exams
             </Link>
           </li>
 
