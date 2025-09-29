@@ -96,7 +96,7 @@ function AppContent() {
                       <Route index element={<Courses />} />
                       <Route path="profile" element={<Profile />} />
                       <Route path="results" element={<Result />} />
-                      <Route path="/student/courses/:userId/exams" element={<ExamEventsPage />} />
+                      <Route path="/student/courses/:userId/exams" element={<ExamEventsPage />} /> 
                       <Route path=":courseId/exams" element={<ExamsPage />} />
                       <Route
                         path=":courseId/exams/reviews/:submissionId"

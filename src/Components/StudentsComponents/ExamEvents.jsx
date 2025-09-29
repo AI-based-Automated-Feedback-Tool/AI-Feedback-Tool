@@ -1,9 +1,10 @@
+import React from 'react';
 import { Container, Row, Col, Card, Badge, Alert } from 'react-bootstrap';
+//import { useParams } from 'react-router-dom';
 
-
-
-
-
+const ExamEventsPage = () => {
+    
+  return (
     <Container className="my-5">
       <Row className="mb-4">
         <Col>
@@ -16,7 +17,7 @@ import { Container, Row, Col, Card, Badge, Alert } from 'react-bootstrap';
 
       
     </Container>
+  );
+};
 
-
-
-
+export default ExamEventsPage;
