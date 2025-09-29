@@ -7,6 +7,12 @@ const useMcqQuestionForm = (onSave) => {
     const [numOfAnswers, setNumOfAnswers] = useState(1);
     const [points, setPoints] = useState("");
     const [errors, setErrors] = useState({});
+    const [questionTopic, setQuestionTopic] = useState("");
+    const [questionNo, setQuestionNo] = useState("");
+    const [questionDifficulty, setQuestionDifficulty] = useState("Easy");
+    const [guidance, setGuidance] = useState("");
+    const [keyConcepts, setKeyConcepts] = useState("");
+    const [doNotInclude, setDoNotInclude] = useState("");
 
     // Set answer options
     const handleAnswerOptionsChange = (e, index) => {
@@ -69,6 +75,11 @@ const useMcqQuestionForm = (onSave) => {
             }   
         }
     }
+
+    // Function to generate questions using AI
+    const generateQuestion = () => {
+        const newErrors = {};
+    }
     return {
         questionText, setQuestionText,
         answerOptions, setAnswerOptions,
@@ -79,7 +90,20 @@ const useMcqQuestionForm = (onSave) => {
         handleAddQuestion,
         handleAnswerOptionsChange,
         handleCheckboxChange,
-        handleNumOfAnswersChange
+        handleNumOfAnswersChange,
+        questionTopic, 
+        setQuestionTopic,
+        questionNo, 
+        setQuestionNo,
+        questionDifficulty, 
+        setQuestionDifficulty,
+        guidance, 
+        setGuidance,
+        keyConcepts, 
+        setKeyConcepts,
+        doNotInclude, 
+        setDoNotInclude,
+        generateQuestion
     }
 }
 
