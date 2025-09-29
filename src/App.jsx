@@ -36,6 +36,8 @@ import CodeQuestions from "./Components/StudentsComponents/taskPages/CodeQuestio
 import { ApiCallCountProvider } from './Context/ApiCallCountContext';
 import RegisterCourseContent from "./Components/registerCourse/registerCourseContent.jsx";
 import ExamsContent from "./Components/Exams/ExamsContent.jsx";
+import ExamEventsPage from "./Components/StudentsComponents/ExamEvents.jsx";
+
 
 //  Essay Context and List
 import { EssayQuestionsProvider } from './Context/QuestionsContext/EssayContext.jsx';
@@ -94,6 +96,7 @@ function AppContent() {
                       <Route index element={<Courses />} />
                       <Route path="profile" element={<Profile />} />
                       <Route path="results" element={<Result />} />
+                      <Route path="/student/courses/:userId/exams" element={<ExamEventsPage />} />
                       <Route path=":courseId/exams" element={<ExamsPage />} />
                       <Route
                         path=":courseId/exams/reviews/:submissionId"
