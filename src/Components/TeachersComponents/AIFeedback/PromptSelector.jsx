@@ -393,15 +393,24 @@ const PromptSelector = () => {
               </Form>
 
               {selectedDynamicOptions.length > 0 && (
-            <Alert variant="info">
-              <strong>Selected Options:</strong> {selectedDynamicOptions.length} of {dynamicPromptOptions.length}
+                <Alert variant="success">
+                  <strong>Selected Options:</strong> {selectedDynamicOptions.length} of {dynamicOptions.length}
                 </Alert>
+              )}
+
+              {dynamicOptions.length === 0 && !loadingDynamicOptions && (
+                <Alert variant="warning">
+                  No options could be generated. Please try again or contact support if the issue persists.
+                </Alert>
+              )}
+            </>
           )}
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={closeDynamicModal}>
             Cancel
           </Button>
+          {!loadingDynamicOptions && (
             <Button 
               variant="primary" 
               onClick={generateDynamicPrompt}
@@ -409,6 +418,7 @@ const PromptSelector = () => {
             >
               Generate Prompt ({selectedDynamicOptions.length} selected)
             </Button>
+          )}
         </Modal.Footer>
       </Modal>
     </Container>
