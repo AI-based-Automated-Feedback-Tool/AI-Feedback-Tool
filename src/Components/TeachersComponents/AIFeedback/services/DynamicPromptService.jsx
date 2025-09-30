@@ -139,5 +139,65 @@ export class DynamicPromptService {
     ];
   }
 
+  /**
+   * Fetches exam data needed for analysis
+   * @param {string} examId - The exam ID
+   * @param {Object} supabase - Supabase client instance
+   * @returns {Promise<Object>} Exam data object
+   */
+  async fetchExamData(examId, supabase) {
+    try {
+      // Fetch exam title
+      const { data: examData, error: examError } = await supabase
+        .from('exams')
+        .select('title')
+        .eq('exam_id', examId)
+        .single();
+
+      if (examError) throw new Error('Failed to fetch exam title');
+
+      // Fetch exam questions
+      const { data: questions, error: questionsError } = await supabase
+        .from('mcq_questions')
+        .select('question_id, question_text, options, answers')
+        .eq('exam_id', examId);
+
+      if (questionsError) throw new Error('Failed to fetch questions');
+
+      // Fetch exam submissions
+      const { data: submissions, error: submissionsError } = await supabase
+        .from('exam_submissions')
+        .select('student_id, exam_id, total_score, time_taken, id')
+        .eq('exam_id', examId);
+
+      if (submissionsError) throw new Error('Failed to fetch submissions');
+
+      // Fetch submission answers
+      const submissionIds = submissions.map((sub) => sub.id);
+      let answers = [];
+      
+      if (submissionIds.length > 0) {
+        const { data: answersData, error: answersError } = await supabase
+          .from('exam_submissions_answers')
+          .select('student_answer, is_correct, score, question_id')
+          .in('submission_id', submissionIds);
+
+        if (answersError) throw new Error('Failed to fetch submission answers');
+        answers = answersData;
+      }
+
+      return {
+        examTitle: examData?.title || 'Unknown Exam',
+        questions: questions || [],
+        submissions: submissions || [],
+        answers: answers || []
+      };
+
+    } catch (error) {
+      console.error('Error fetching exam data:', error);
+      throw error;
+    }
+  }
 }
+
 export default new DynamicPromptService();
