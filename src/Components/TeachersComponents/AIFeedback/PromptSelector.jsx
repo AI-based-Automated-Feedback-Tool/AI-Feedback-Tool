@@ -333,14 +333,44 @@ const PromptSelector = () => {
           <Modal.Title>🤖 Dynamic Prompt Generation</Modal.Title>
         </Modal.Header>
         <Modal.Body>
+          {loadingDynamicOptions ? (
+            <div className="text-center py-4">
+              <Spinner animation="border" variant="primary" />
+              <p className="mt-3 text-muted">
+                Analyzing exam data to generate personalized prompt options...
+              </p>
+              <small className="text-muted">
+                This may take a few moments as we analyze your exam questions, student submissions, and performance patterns.
+              </small>
+            </div>
+          ) : dynamicOptionsError ? (
+            <Alert variant="warning">
+              <Alert.Heading>Unable to Generate Dynamic Options</Alert.Heading>
+              <p>{dynamicOptionsError}</p>
+              <p>Using fallback options below. You can still select from these general analysis areas:</p>
+            </Alert>
+          ) : (
             <div className="mb-3">
+              <Alert variant="info">
+                <div className="d-flex align-items-center">
+                  <i className="fas fa-info-circle me-2"></i>
+                  <div>
+                    <strong>AI-Generated Options:</strong> These focus areas have been specifically tailored to your exam based on question types, student performance patterns, and submission data.
+                    <br />
+                    <small className="text-muted">Note: This feature uses 1 API call to analyze your exam data.</small>
+                  </div>
+                </div>
+              </Alert>
               <p className="text-muted">
                 Select one or more focus areas for your AI feedback analysis. The system will generate a customized prompt based on your selections.
               </p>
             </div>
+          )}
           
+          {!loadingDynamicOptions && (
+            <>
               <Form>
-            {dynamicPromptOptions.map((option) => (
+                {dynamicOptions.map((option) => (
                   <Card key={option.id} className={`mb-3 ${selectedDynamicOptions.includes(option.id) ? 'border-primary' : ''}`}>
                     <Card.Body>
                       <Form.Check
