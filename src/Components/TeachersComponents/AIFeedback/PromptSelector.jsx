@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
-import { Container, Card, Form, Button, Row, Col, Alert, Modal } from 'react-bootstrap';
+import { Container, Card, Form, Button, Row, Col, Alert, Modal, Spinner } from 'react-bootstrap';
 import HeaderWithApiCount from './HeaderWithApiCount';
 import StandardAnalysis from './Prompts/StandardAnalysis';
 import QuickInsights from './Prompts/QuickInsights';
@@ -15,6 +15,8 @@ import EssayGeneralPrompt from './Prompts/EssayGeneralPrompt';
 import EssayCustomPrompt from './Prompts/EssayCustomPrompt';
 import EssayTechnicalPrompt from './Prompts/EssayTechnicalPrompt';
 import { ApiCallCountContext } from '../../../Context/ApiCallCountContext';
+import { supabase } from '../../../SupabaseAuth/supabaseClient';
+import DynamicPromptService from './services/DynamicPromptService';
 
 
 const MCQpredefinedPrompts = [
@@ -104,7 +106,10 @@ const PromptSelector = () => {
   const [isCustomPrompt, setIsCustomPrompt] = useState(false);
   const [showDynamicPromptModal, setShowDynamicPromptModal] = useState(false);
   const [selectedDynamicOptions, setSelectedDynamicOptions] = useState([]);
-  const { count, MAX_CALLS_PER_DAY } = useContext(ApiCallCountContext);
+  const [dynamicOptions, setDynamicOptions] = useState(dynamicPromptOptions);
+  const [loadingDynamicOptions, setLoadingDynamicOptions] = useState(false);
+  const [dynamicOptionsError, setDynamicOptionsError] = useState(null);
+  const { count, MAX_CALLS_PER_DAY, incrementCount } = useContext(ApiCallCountContext);
   const isLimitReached = count >= MAX_CALLS_PER_DAY;
 
   const handleSubmit = () => {
@@ -158,8 +163,36 @@ const PromptSelector = () => {
     }
   };
 
-  const handleDynamicPromptGeneration = () => {
+  const handleDynamicPromptGeneration = async () => {
     setShowDynamicPromptModal(true);
+    setLoadingDynamicOptions(true);
+    setDynamicOptionsError(null);
+
+    try {
+      // Check API limit before making call
+      if (count >= MAX_CALLS_PER_DAY) {
+        throw new Error(`You have reached your daily API usage limit (${MAX_CALLS_PER_DAY} calls).`);
+      }
+
+      // Fetch exam data and generate dynamic options
+      const examData = await DynamicPromptService.fetchExamData(examId, supabase);
+      const generatedOptions = await DynamicPromptService.generateDynamicOptions(
+        examData, 
+        selectedProvider
+      );
+
+      // Increment API call count
+      incrementCount();
+
+      setDynamicOptions(generatedOptions);
+    } catch (error) {
+      console.error('Error generating dynamic options:', error);
+      setDynamicOptionsError(error.message);
+      // Fall back to static options on error
+      setDynamicOptions(dynamicPromptOptions);
+    } finally {
+      setLoadingDynamicOptions(false);
+    }
   };
 
   const handleDynamicOptionChange = (optionId) => {
@@ -178,7 +211,7 @@ const PromptSelector = () => {
       return;
     }
 
-    const selectedOptionsDetails = dynamicPromptOptions.filter(option => 
+    const selectedOptionsDetails = dynamicOptions.filter(option => 
       selectedDynamicOptions.includes(option.id)
     );
 
@@ -200,6 +233,7 @@ const PromptSelector = () => {
   const closeDynamicModal = () => {
     setShowDynamicPromptModal(false);
     setSelectedDynamicOptions([]); // Reset selections when closing
+    setDynamicOptionsError(null);
   };
 
   return (
@@ -214,8 +248,9 @@ const PromptSelector = () => {
               variant="light"
               size="sm"
               onClick={handleDynamicPromptGeneration}
+              disabled={isLimitReached}
             >
-              🤖 Dynamic Prompt Generation
+              🤖 AI-Powered Prompt Options
             </Button>
             <HeaderWithApiCount />
           </div>
@@ -298,52 +333,92 @@ const PromptSelector = () => {
           <Modal.Title>🤖 Dynamic Prompt Generation</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <div className="mb-3">
-            <p className="text-muted">
-              Select one or more focus areas for your AI feedback analysis. The system will generate a customized prompt based on your selections.
-            </p>
-          </div>
-          
-          <Form>
-            {dynamicPromptOptions.map((option) => (
-              <Card key={option.id} className={`mb-3 ${selectedDynamicOptions.includes(option.id) ? 'border-primary' : ''}`}>
-                <Card.Body>
-                  <Form.Check
-                    type="checkbox"
-                    id={`dynamic-option-${option.id}`}
-                    checked={selectedDynamicOptions.includes(option.id)}
-                    onChange={() => handleDynamicOptionChange(option.id)}
-                    label={
-                      <div>
-                        <strong>{option.label}</strong>
-                        <br />
-                        <small className="text-muted">{option.description}</small>
-                      </div>
-                    }
-                    className="h-100"
-                  />
-                </Card.Body>
-              </Card>
-            ))}
-          </Form>
-
-          {selectedDynamicOptions.length > 0 && (
-            <Alert variant="info">
-              <strong>Selected Options:</strong> {selectedDynamicOptions.length} of {dynamicPromptOptions.length}
+          {loadingDynamicOptions ? (
+            <div className="text-center py-4">
+              <Spinner animation="border" variant="primary" />
+              <p className="mt-3 text-muted">
+                Analyzing exam data to generate personalized prompt options...
+              </p>
+              <small className="text-muted">
+                This may take a few moments as we analyze your exam questions, student submissions, and performance patterns.
+              </small>
+            </div>
+          ) : dynamicOptionsError ? (
+            <Alert variant="warning">
+              <Alert.Heading>Unable to Generate Dynamic Options</Alert.Heading>
+              <p>{dynamicOptionsError}</p>
+              <p>Using fallback options below. You can still select from these general analysis areas:</p>
             </Alert>
+          ) : (
+            <div className="mb-3">
+              <Alert variant="info">
+                <div className="d-flex align-items-center">
+                  <i className="fas fa-info-circle me-2"></i>
+                  <div>
+                    <strong>AI-Generated Options:</strong> These focus areas have been specifically tailored to your exam based on question types, student performance patterns, and submission data.
+                    <br />
+                    <small className="text-muted">Note: This feature uses 1 API call to analyze your exam data.</small>
+                  </div>
+                </div>
+              </Alert>
+              <p className="text-muted">
+                Select one or more focus areas for your AI feedback analysis. The system will generate a customized prompt based on your selections.
+              </p>
+            </div>
+          )}
+          
+          {!loadingDynamicOptions && (
+            <>
+              <Form>
+                {dynamicOptions.map((option) => (
+                  <Card key={option.id} className={`mb-3 ${selectedDynamicOptions.includes(option.id) ? 'border-primary' : ''}`}>
+                    <Card.Body>
+                      <Form.Check
+                        type="checkbox"
+                        id={`dynamic-option-${option.id}`}
+                        checked={selectedDynamicOptions.includes(option.id)}
+                        onChange={() => handleDynamicOptionChange(option.id)}
+                        label={
+                          <div>
+                            <strong>{option.label}</strong>
+                            <br />
+                            <small className="text-muted">{option.description}</small>
+                          </div>
+                        }
+                        className="h-100"
+                      />
+                    </Card.Body>
+                  </Card>
+                ))}
+              </Form>
+
+              {selectedDynamicOptions.length > 0 && (
+                <Alert variant="success">
+                  <strong>Selected Options:</strong> {selectedDynamicOptions.length} of {dynamicOptions.length}
+                </Alert>
+              )}
+
+              {dynamicOptions.length === 0 && !loadingDynamicOptions && (
+                <Alert variant="warning">
+                  No options could be generated. Please try again or contact support if the issue persists.
+                </Alert>
+              )}
+            </>
           )}
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={closeDynamicModal}>
             Cancel
           </Button>
-          <Button 
-            variant="primary" 
-            onClick={generateDynamicPrompt}
-            disabled={selectedDynamicOptions.length === 0}
-          >
-            Generate Prompt ({selectedDynamicOptions.length} selected)
-          </Button>
+          {!loadingDynamicOptions && (
+            <Button 
+              variant="primary" 
+              onClick={generateDynamicPrompt}
+              disabled={selectedDynamicOptions.length === 0}
+            >
+              Generate Prompt ({selectedDynamicOptions.length} selected)
+            </Button>
+          )}
         </Modal.Footer>
       </Modal>
     </Container>
