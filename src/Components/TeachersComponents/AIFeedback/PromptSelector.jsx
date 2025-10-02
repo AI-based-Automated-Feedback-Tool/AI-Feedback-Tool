@@ -259,10 +259,22 @@ Please provide detailed analysis for each of the following selected areas:
 `;
     
     selectedOptionsDetails.forEach((option, index) => {
-      dynamicPrompt += `${index + 1}. ${option.label}:\n   ${option.description}\n\n`;
+      dynamicPrompt += `${index + 1}. **${option.label}:**\n   ${option.description}\n\n`;
     });
 
-    dynamicPrompt += `Please analyze the provided data: [QUESTIONS], [SUBMISSIONS], and [ANSWERS] to deliver insights for each selected focus area above.`;
+    dynamicPrompt += `
+IMPORTANT INSTRUCTIONS:
+- Use question numbers (e.g. Q1, Q2) or short titles from the Questions array for references.
+- DO NOT use internal IDs or UUIDs in the response.
+- Return ONLY valid JSON with the exact keys shown in the structure above.
+- For "overallSummary" and "keyStrengths": Provide general analysis as usual.
+- For the custom sections (${selectedOptionsDetails.map(o => `"${o.label}"`).join(', ')}): Provide specific analysis for each selected focus area.
+- Each custom section should contain 2-4 relevant insights, findings, or recommendations.
+- Make sure each custom section directly addresses its corresponding focus area.
+
+Questions: [QUESTIONS]
+Submissions: [SUBMISSIONS]
+Answers: [ANSWERS]`;
 
     setCustomPrompt(dynamicPrompt);
     setIsCustomPrompt(true);
