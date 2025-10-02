@@ -215,7 +215,48 @@ const PromptSelector = () => {
       selectedDynamicOptions.includes(option.id)
     );
 
-    let dynamicPrompt = `Based on the exam results and student submissions, please provide analysis focusing on the following aspects:\n\n`;
+    // Create dynamic JSON structure based on selected options
+    let jsonStructure = `{
+  "overallSummary": "Brief 2-3 sentence summary of class performance with focus on the selected analysis areas",
+  "keyStrengths": [
+    "List 3-5 concepts students mastered well",
+    "Include specific question numbers or short titles as evidence (avoid internal IDs or UUIDs)"
+  ],`;
+
+    // Add dynamic sections based on selected options
+    selectedOptionsDetails.forEach((option, index) => {
+      // Convert option label to a camelCase key for JSON
+      const sectionKey = option.label
+        .replace(/[^a-zA-Z0-9\s]/g, '') // Remove special characters
+        .split(' ')
+        .map((word, i) => i === 0 ? word.toLowerCase() : word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+        .join('');
+
+      jsonStructure += `
+  "${sectionKey}": [
+    "Analysis and insights for: ${option.label}",
+    "Specific findings related to: ${option.description}",
+    "Actionable recommendations based on this focus area"
+  ]`;
+      
+      // Add comma if not the last item
+      if (index < selectedOptionsDetails.length - 1) {
+        jsonStructure += ',';
+      }
+    });
+
+    jsonStructure += `
+}`;
+
+    // Create the full prompt
+    let dynamicPrompt = `Analyze these exam results and provide feedback in this exact JSON structure:
+
+${jsonStructure}
+
+ANALYSIS FOCUS AREAS:
+Please provide detailed analysis for each of the following selected areas:
+
+`;
     
     selectedOptionsDetails.forEach((option, index) => {
       dynamicPrompt += `${index + 1}. ${option.label}:\n   ${option.description}\n\n`;
