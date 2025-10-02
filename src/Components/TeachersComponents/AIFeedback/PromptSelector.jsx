@@ -16,7 +16,7 @@ import EssayCustomPrompt from './Prompts/EssayCustomPrompt';
 import EssayTechnicalPrompt from './Prompts/EssayTechnicalPrompt';
 import { ApiCallCountContext } from '../../../Context/ApiCallCountContext';
 import { supabase } from '../../../SupabaseAuth/supabaseClient';
-import DynamicPromptService from './services/DynamicPromptService';
+import DynamicPromptService from './services/DynamicPromptService.jsx';
 
 
 const MCQpredefinedPrompts = [
@@ -47,24 +47,24 @@ const aiProviders = [
 
 const dynamicPromptOptions = [
   {
-    id: 'easy-questions',
-    label: 'Focus on what questions are easy for students',
-    description: 'Analyze questions that students consistently answer correctly to understand their strengths'
+    id: 'easy-questions-analysis',
+    label: 'Easy Questions Performance Analysis',
+    description: 'Analyze questions that students consistently answer correctly to understand their strengths and mastered concepts'
   },
   {
-    id: 'difficult-questions',
-    label: 'Check what questions are difficult for students',
-    description: 'Identify questions with low success rates to highlight learning gaps'
+    id: 'difficult-questions-insights',
+    label: 'Difficult Questions Insights',
+    description: 'Identify questions with low success rates to highlight learning gaps and common misconceptions'
   },
   {
-    id: 'focus-areas',
-    label: 'What areas teacher needs to focus on next exam',
-    description: 'Provide recommendations for curriculum emphasis based on performance patterns'
+    id: 'teaching-focus-recommendations',
+    label: 'Teaching Focus Recommendations',
+    description: 'Provide specific recommendations for curriculum emphasis and areas to focus on in future lessons'
   },
   {
-    id: 'teaching-guidance',
-    label: 'Teaching guidance using exam results',
-    description: 'Generate actionable teaching strategies based on student performance data'
+    id: 'performance-patterns-analysis',
+    label: 'Student Performance Patterns',
+    description: 'Analyze overall performance trends and patterns to guide teaching strategies and student support'
   }
 ];
 
