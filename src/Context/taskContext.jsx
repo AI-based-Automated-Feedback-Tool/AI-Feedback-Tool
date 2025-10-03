@@ -89,6 +89,11 @@ useEffect(() => {
   // fetch exam and its questions (supports both MCQ & Code)
   const fetchExamWithQuestions = useCallback(async (id) => {
     setLoading(true);
+
+    //  Reset state for a new exam attempt
+  setFocusLossCount(0);
+  setQuestionIndex(0);
+  setReviewMode(false);
     const {
       data: { user },
     } = await supabase.auth.getUser();
