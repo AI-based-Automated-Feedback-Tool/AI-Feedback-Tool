@@ -4,6 +4,8 @@ import { useTask } from "../../../Context/taskContext.jsx";
 import PopUp from "../PopUp.jsx";
 import QuestionsNavigator from "../features/QuestionsNavigator.jsx";
 import EssayQuestionsList from "./EssayQuestionsList.jsx"; 
+import McqHintSection from "../StudentsComponents/McqHintSection.jsx";
+
 
 const TaskPage = () => {
   const [showTabWarning, setShowTabWarning] = useState(false);
@@ -181,7 +183,17 @@ const TaskPage = () => {
                     </div>
                   ))}
 
-                  <div className="d-flex justify-content-between mt-4">
+                  {/* AI Hint (MCQ only) */}
+                  {currentQuestion.type === "mcq" && (
+                   <McqHintSection
+                     examId={task.exam_id}
+                     question={currentQuestion}
+                     selectedAnswer={answers[questionIndex]}
+                    />
+                 )}
+
+
+                 <div className="d-flex justify-content-between mt-4">
                     <button
                       className="btn btn-secondary"
                       onClick={handleBack}
