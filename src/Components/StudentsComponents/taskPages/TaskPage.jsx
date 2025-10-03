@@ -4,7 +4,8 @@ import { useTask } from "../../../Context/taskContext.jsx";
 import PopUp from "../PopUp.jsx";
 import QuestionsNavigator from "../features/QuestionsNavigator.jsx";
 import EssayQuestionsList from "./EssayQuestionsList.jsx"; 
-import McqHintSection from "../StudentsComponents/McqHintSection.jsx";
+import McqHintSection from "../McqHintSection.jsx";
+
 
 
 const TaskPage = () => {
