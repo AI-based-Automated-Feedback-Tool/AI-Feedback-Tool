@@ -37,6 +37,8 @@ import { ApiCallCountProvider } from './Context/ApiCallCountContext';
 import RegisterCourseContent from "./Components/registerCourse/registerCourseContent.jsx";
 import ExamsContent from "./Components/Exams/ExamsContent.jsx";
 import ExamEventsPage from "./Components/StudentsComponents/ExamEvents.jsx";
+import MockExam from "./Components/StudentsComponents/mockExam/MockExam.jsx";
+
 
 
 //  Essay Context and List
@@ -98,6 +100,7 @@ function AppContent() {
                       <Route path="results" element={<Result />} />
                       <Route path="/student/courses/:userId/exams" element={<ExamEventsPage />} /> 
                       <Route path=":courseId/exams" element={<ExamsPage />} />
+                       <Route path="mock-exam" element={<MockExam />} /> 
                       <Route
                         path=":courseId/exams/reviews/:submissionId"
                         element={
