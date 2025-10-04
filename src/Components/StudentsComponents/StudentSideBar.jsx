@@ -6,6 +6,7 @@ import "../../css/studentSideBar.css";
 import { UserContext } from "../../Context/userContext";
 import { useContext, useEffect } from "react";
 
+
 const StudentSideBar = ({ show, onHide }) => {
   const { userId, setUserId } = useContext(UserContext);
   //get the current route
@@ -72,6 +73,7 @@ const StudentSideBar = ({ show, onHide }) => {
                 <i className="fas fa-calendar-alt me-2"></i> My Exams
               </Link>
             </Nav.Item>
+            
             <Nav.Item>
               <Link
                 className={`nav-link d-flex align-items-center ${
@@ -81,6 +83,18 @@ const StudentSideBar = ({ show, onHide }) => {
                 style={{ fontSize: "1.2rem" }}
               >
                 <i className="fas fa-chart-bar me-2"></i> Results
+              </Link>
+            </Nav.Item>
+              {/* ✅ Mock Exam Link for mobile */}
+            <Nav.Item>
+              <Link
+                className={`nav-link d-flex align-items-center ${
+                  isActive(`/student/courses/${userId}/mock-exam`) ? "active" : "text-white"
+                }`}
+                to={`/student/courses/${userId}/mock-exam`}
+                style={{ fontSize: "1.2rem" }}
+              >
+                <i className="fas fa-lightbulb me-2"></i> Mock Exam
               </Link>
             </Nav.Item>
             <Nav.Item>
@@ -109,6 +123,17 @@ const StudentSideBar = ({ show, onHide }) => {
 </Nav.Item>
 
           </Nav>
+          <Nav.Item>
+  <Link
+    className={`nav-link d-flex align-items-center ${
+      isActive(`/student/courses/${userId}/mock-exam`) ? "active" : "text-white"
+    }`}
+    to={`/student/courses/${userId}/mock-exam`}
+    style={{ fontSize: "1.2rem" }}
+  >
+    <i className="fas fa-lightbulb me-2"></i> Mock Exam
+  </Link>
+</Nav.Item>
 
           {/*logout btn*/}
           <div className="d-lg-none text-white mt-4 mx-4 ">
@@ -164,7 +189,18 @@ const StudentSideBar = ({ show, onHide }) => {
               <i className="fas fa-calendar-alt me-2"></i> My Exams
             </Link>
           </li>
-
+          {/* ✅ Mock Exam Link for desktop */}
+          <li className="nav-item mb-2">
+            <Link
+              className={`nav-link d-flex align-items-center ${
+                isActive(`/student/courses/${userId}/mock-exam`) ? "active" : "text-white"
+              }`}
+              to={`/student/courses/${userId}/mock-exam`}
+              style={{ fontSize: "1.2rem" }}
+            >
+              <i className="fas fa-lightbulb me-2"></i> Mock Exam
+            </Link>
+          </li>
           <li className="nav-item mb-2">
             <Link
               className={`nav-link d-flex align-items-center ${
