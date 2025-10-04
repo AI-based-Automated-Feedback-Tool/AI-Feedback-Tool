@@ -16,7 +16,7 @@ import EssayCustomPrompt from './Prompts/EssayCustomPrompt';
 import EssayTechnicalPrompt from './Prompts/EssayTechnicalPrompt';
 import { ApiCallCountContext } from '../../../Context/ApiCallCountContext';
 import { supabase } from '../../../SupabaseAuth/supabaseClient';
-import DynamicPromptService from './services/DynamicPromptService';
+import DynamicPromptService from './services/DynamicPromptService.jsx';
 
 
 const MCQpredefinedPrompts = [
@@ -47,24 +47,24 @@ const aiProviders = [
 
 const dynamicPromptOptions = [
   {
-    id: 'easy-questions',
-    label: 'Focus on what questions are easy for students',
-    description: 'Analyze questions that students consistently answer correctly to understand their strengths'
+    id: 'easy-questions-analysis',
+    label: 'Easy Questions Performance Analysis',
+    description: 'Analyze questions that students consistently answer correctly to understand their strengths and mastered concepts'
   },
   {
-    id: 'difficult-questions',
-    label: 'Check what questions are difficult for students',
-    description: 'Identify questions with low success rates to highlight learning gaps'
+    id: 'difficult-questions-insights',
+    label: 'Difficult Questions Insights',
+    description: 'Identify questions with low success rates to highlight learning gaps and common misconceptions'
   },
   {
-    id: 'focus-areas',
-    label: 'What areas teacher needs to focus on next exam',
-    description: 'Provide recommendations for curriculum emphasis based on performance patterns'
+    id: 'teaching-focus-recommendations',
+    label: 'Teaching Focus Recommendations',
+    description: 'Provide specific recommendations for curriculum emphasis and areas to focus on in future lessons'
   },
   {
-    id: 'teaching-guidance',
-    label: 'Teaching guidance using exam results',
-    description: 'Generate actionable teaching strategies based on student performance data'
+    id: 'performance-patterns-analysis',
+    label: 'Student Performance Patterns',
+    description: 'Analyze overall performance trends and patterns to guide teaching strategies and student support'
   }
 ];
 
@@ -215,13 +215,66 @@ const PromptSelector = () => {
       selectedDynamicOptions.includes(option.id)
     );
 
-    let dynamicPrompt = `Based on the exam results and student submissions, please provide analysis focusing on the following aspects:\n\n`;
-    
+    // Create dynamic JSON structure based on selected options
+    let jsonStructure = `{
+  "overallSummary": "Brief 2-3 sentence summary of class performance with focus on the selected analysis areas",
+  "keyStrengths": [
+    "List 3-5 concepts students mastered well",
+    "Include specific question numbers or short titles as evidence (avoid internal IDs or UUIDs)"
+  ],`;
+
+    // Add dynamic sections based on selected options
     selectedOptionsDetails.forEach((option, index) => {
-      dynamicPrompt += `${index + 1}. ${option.label}:\n   ${option.description}\n\n`;
+      // Convert option label to a camelCase key for JSON
+      const sectionKey = option.label
+        .replace(/[^a-zA-Z0-9\s]/g, '') // Remove special characters
+        .split(' ')
+        .map((word, i) => i === 0 ? word.toLowerCase() : word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+        .join('');
+
+      jsonStructure += `
+  "${sectionKey}": [
+    "Analysis and insights for: ${option.label}",
+    "Specific findings related to: ${option.description}",
+    "Actionable recommendations based on this focus area"
+  ]`;
+      
+      // Add comma if not the last item
+      if (index < selectedOptionsDetails.length - 1) {
+        jsonStructure += ',';
+      }
     });
 
-    dynamicPrompt += `Please analyze the provided data: [QUESTIONS], [SUBMISSIONS], and [ANSWERS] to deliver insights for each selected focus area above.`;
+    jsonStructure += `
+}`;
+
+    // Create the full prompt
+    let dynamicPrompt = `Analyze these exam results and provide feedback in this exact JSON structure:
+
+${jsonStructure}
+
+ANALYSIS FOCUS AREAS:
+Please provide detailed analysis for each of the following selected areas:
+
+`;
+    
+    selectedOptionsDetails.forEach((option, index) => {
+      dynamicPrompt += `${index + 1}. **${option.label}:**\n   ${option.description}\n\n`;
+    });
+
+    dynamicPrompt += `
+IMPORTANT INSTRUCTIONS:
+- Use question numbers (e.g. Q1, Q2) or short titles from the Questions array for references.
+- DO NOT use internal IDs or UUIDs in the response.
+- Return ONLY valid JSON with the exact keys shown in the structure above.
+- For "overallSummary" and "keyStrengths": Provide general analysis as usual.
+- For the custom sections (${selectedOptionsDetails.map(o => `"${o.label}"`).join(', ')}): Provide specific analysis for each selected focus area.
+- Each custom section should contain 2-4 relevant insights, findings, or recommendations.
+- Make sure each custom section directly addresses its corresponding focus area.
+
+Questions: [QUESTIONS]
+Submissions: [SUBMISSIONS]
+Answers: [ANSWERS]`;
 
     setCustomPrompt(dynamicPrompt);
     setIsCustomPrompt(true);

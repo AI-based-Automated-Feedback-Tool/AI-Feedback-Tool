@@ -41,6 +41,10 @@ import MockExam from "./Components/StudentsComponents/mockExam/MockExam.jsx";
 
 
 
+import MockExam from "./Components/MockExams/MockExam.jsx";
+ // Import MockExam component
+
+
 //  Essay Context and List
 import { EssayQuestionsProvider } from './Context/QuestionsContext/EssayContext.jsx';
 import EssayQuestionsList from './Components/StudentsComponents/taskPages/EssayQuestionsList.jsx';
@@ -87,6 +91,8 @@ function AppContent() {
                   <Route path="/dashboard" element={<ProtectedRoute />}>
                     <Route path="task/:id" element={<TaskPage />} />
                     <Route path="code/:id" element={<CodeQuestions/>} />
+                 
+                    
                      {/*  Added EssayQuestionsList Route */}
                     <Route path="essay/:id" element={<EssayQuestionsList />} />
                   </Route>
@@ -98,6 +104,8 @@ function AppContent() {
                       <Route index element={<Courses />} />
                       <Route path="profile" element={<Profile />} />
                       <Route path="results" element={<Result />} />
+                      <Route path="mock-exam" element={<MockExam />} /> {/* Mock Exam Route */}
+
                       <Route path="/student/courses/:userId/exams" element={<ExamEventsPage />} /> 
                       <Route path=":courseId/exams" element={<ExamsPage />} />
                        <Route path="mock-exam" element={<MockExam />} /> 
