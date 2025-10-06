@@ -110,30 +110,10 @@ const StudentSideBar = ({ show, onHide }) => {
                 <i className="fas fa-user me-2"></i> Profile
               </Link>
             </Nav.Item>
-            <Nav.Item>
-  <Link
-    className={`nav-link d-flex align-items-center ${
-      isActive(`/student/courses/${userId}/mock-exam`) ? "active" : "text-white"
-    }`}
-    to={`/student/courses/${userId}/mock-exam`}
-    style={{ fontSize: "1.2rem" }}
-  >
-    <i className="fas fa-lightbulb me-2"></i> Mock Exam
-  </Link>
-</Nav.Item>
+
 
           </Nav>
-          <Nav.Item>
-  <Link
-    className={`nav-link d-flex align-items-center ${
-      isActive(`/student/courses/${userId}/mock-exam`) ? "active" : "text-white"
-    }`}
-    to={`/student/courses/${userId}/mock-exam`}
-    style={{ fontSize: "1.2rem" }}
-  >
-    <i className="fas fa-lightbulb me-2"></i> Mock Exam
-  </Link>
-</Nav.Item>
+       
 
           {/*logout btn*/}
           <div className="d-lg-none text-white mt-4 mx-4 ">
@@ -227,15 +207,7 @@ const StudentSideBar = ({ show, onHide }) => {
             </Link>
           </li>
           <li className="nav-item mb-2">
-  <Link
-    className={`nav-link d-flex align-items-center ${
-      isActive(`/student/courses/${userId}/mock-exam`) ? "active" : "text-white"
-    }`}
-    to={`/student/courses/${userId}/mock-exam`}
-    style={{ fontSize: "1.2rem" }}
-  >
-    <i className="fas fa-lightbulb me-2"></i> Mock Exam
-  </Link>
+  
 </li>
 
         </ul>

@@ -41,10 +41,6 @@ import MockExam from "./Components/StudentsComponents/mockExam/MockExam.jsx";
 
 
 
-import MockExam from "./Components/MockExams/MockExam.jsx";
- // Import MockExam component
-
-
 //  Essay Context and List
 import { EssayQuestionsProvider } from './Context/QuestionsContext/EssayContext.jsx';
 import EssayQuestionsList from './Components/StudentsComponents/taskPages/EssayQuestionsList.jsx';
