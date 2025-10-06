@@ -80,6 +80,18 @@ const getDynamicSectionTitle = (key) => {
   return `${icon} ${title}`;
 };
 
+// Helper function to check if feedback has dynamic sections
+const hasDynamicSections = (feedback) => {
+  const standardKeys = ['overallSummary', 'keyStrengths', 'mostMissedQuestions', 'teachingSuggestions', 'nextSteps'];
+  return Object.keys(feedback).some(key => !standardKeys.includes(key) && feedback[key] && 
+    (Array.isArray(feedback[key]) ? feedback[key].length > 0 : true));
+};
+
+// Helper function to check if a key is a standard static prompt key
+const isStandardKey = (key) => {
+  const standardKeys = ['overallSummary', 'keyStrengths', 'mostMissedQuestions', 'teachingSuggestions', 'nextSteps'];
+  return standardKeys.includes(key);
+};
 
 const AIFeedbackPage_Essay = () => {
   const { examId } = useParams();
