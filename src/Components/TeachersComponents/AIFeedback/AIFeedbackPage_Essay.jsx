@@ -19,6 +19,68 @@ Generate a comprehensive feedback summary including overall performance, strengt
   }
 ];
 
+// Helper function to convert camelCase keys to readable titles with icons
+const getDynamicSectionTitle = (key) => {
+  // Define icon mapping for common concepts (essay-specific)
+  const iconMap = {
+    'easy': '✅',
+    'difficult': '⚠️',
+    'focus': '🎯',
+    'teaching': '💡',
+    'guidance': '🧭',
+    'areas': '📍',
+    'questions': '❓',
+    'time': '⏱️',
+    'management': '⏰',
+    'performance': '📊',
+    'analysis': '🔍',
+    'patterns': '📈',
+    'strategies': '💭',
+    'recommendations': '🚀',
+    'insights': '💎',
+    'suggestions': '💡',
+    'next': '➡️',
+    'steps': '🚀',
+    'improvement': '⬆️',
+    'strengths': '💪',
+    'weaknesses': '🔴',
+    'missed': '❌',
+    'correct': '✔️',
+    'essay': '📝',
+    'writing': '✍️',
+    'content': '📜',
+    'structure': '🏢',
+    'grammar': '📚',
+    'style': '🎨',
+    'argument': '💬',
+    'evidence': '🔍',
+    'critical': '🧠',
+    'thinking': '🧠',
+    'creativity': '🎨',
+    'clarity': '🔎',
+    'coherence': '🔗',
+    'organization': '🗂'
+  };
+
+  // Convert camelCase to space-separated words
+  const words = key.replace(/([A-Z])/g, ' $1').trim().toLowerCase().split(' ');
+  
+  // Capitalize first letter of each word
+  const title = words.map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+  
+  // Find appropriate icon based on keywords
+  let icon = '📝'; // default icon for essays
+  for (const [keyword, emoji] of Object.entries(iconMap)) {
+    if (words.some(word => word.includes(keyword))) {
+      icon = emoji;
+      break;
+    }
+  }
+  
+  return `${icon} ${title}`;
+};
+
+
 const AIFeedbackPage_Essay = () => {
   const { examId } = useParams();
   const location = useLocation();
@@ -220,14 +282,14 @@ const AIFeedbackPage_Essay = () => {
             {feedback.keyStrengths?.length > 0 && (
               <Section title="✅ Key Strengths" items={feedback.keyStrengths} />
             )}
-            {feedback.mostMissedQuestions?.length > 0 && (
-              <Section title="⚠️ Most Missed Questions" items={feedback.mostMissedQuestions} />
-            )}
-            {feedback.teachingSuggestions?.length > 0 && (
-              <Section title="💡 Teaching Suggestions" items={feedback.teachingSuggestions} />
-            )}
-            {feedback.nextSteps?.length > 0 && (
-              <Section title="🚀 Actionable Next Steps" items={feedback.nextSteps} />
+                {feedback.mostMissedQuestions?.length > 0 && (
+                  <Section title="⚠️ Most Missed Questions" items={feedback.mostMissedQuestions} />
+                )}
+                {feedback.teachingSuggestions?.length > 0 && (
+                  <Section title="💡 Teaching Suggestions" items={feedback.teachingSuggestions} />
+                )}
+                {feedback.nextSteps?.length > 0 && (
+                  <Section title="🚀 Actionable Next Steps" items={feedback.nextSteps} />
             )}
           </Card.Body>
         </Card>
