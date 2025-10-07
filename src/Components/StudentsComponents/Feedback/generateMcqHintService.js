@@ -15,7 +15,7 @@ export async function generateMcqHint({
   studentAnswer = "",
   hintTier =  "Nudge",
 }) {
-  const res = await fetch("/api/hints/mcq", {
+  const res = await fetch(`${API}/api/hints/mcq`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
