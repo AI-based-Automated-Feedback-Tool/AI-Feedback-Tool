@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";    
+import { useState, useEffect } from "react"; 
+import { generateMcqQuestion } from "../service/aiQuestionGenerationService"; 
 
 const useMcqQuestionForm = (onSave) => {
     const [questionText, setQuestionText] = useState("");
@@ -77,8 +78,28 @@ const useMcqQuestionForm = (onSave) => {
     }
 
     // Function to generate questions using AI
-    const generateQuestion = () => {
-        const newErrors = {};
+    const generateQuestion = async () => {
+        try {
+            const params = {
+                topic: questionTopic,
+                numQuestions: questionNo,
+                difficulty: questionDifficulty,
+                guidance: guidance,
+                keyConcepts: keyConcepts,
+                doNotInclude: doNotInclude,
+                questionType: "multiple choice"
+            };
+            const data = await generateMcqQuestion(params);
+            
+            //for just now print questions in console
+            if(data.questions && data.questions.length > 0){
+                const generateMcqQuestions = data.questions;
+                console.log("Generated MCQ Questions:", generateMcqQuestions);
+            }
+        } catch (error) {
+            console.error("Error generating question:", error);
+            //needed to show error to user in UI later
+        }
     }
     return {
         questionText, setQuestionText,
