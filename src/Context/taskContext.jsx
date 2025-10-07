@@ -56,26 +56,44 @@ export const TaskProvider = ({ children }) => {
     return `${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
   };
 
-  // track tab focus loss
-  useEffect(() => {
-    const handleFocus = () => console.log("Tab focused");
-    const handleBlur = () => {
-      console.log("Tab lost focus");
-      setFocusLossCount((prev) => prev + 1);
-    };
+  // track tab focus loss (counts once per hide->show cycle)
+useEffect(() => {
+  let lost = false;       // whether we’re currently hidden
+  let last = 0;           // last timestamp counted
+  const MIN_GAP = 800;    // ms, to avoid double increments from blur+visibilitychange spam
 
-    window.addEventListener("focus", handleFocus);
-    window.addEventListener("blur", handleBlur);
+  const onVisChange = () => {
+    const now = Date.now();
 
-    return () => {
-      window.removeEventListener("focus", handleFocus);
-      window.removeEventListener("blur", handleBlur);
-    };
-  }, []);
+    if (document.visibilityState === "hidden") {
+      if (!lost && now - last > MIN_GAP) {
+        setFocusLossCount((prev) => prev + 1);
+        last = now;
+        lost = true;
+        console.log("Tab lost focus (counted)");
+      }
+    } else {
+      lost = false;
+      console.log("Tab focused");
+    }
+  };
+
+  document.addEventListener("visibilitychange", onVisChange);
+
+  return () => {
+    document.removeEventListener("visibilitychange", onVisChange);
+  };
+}, []);
+
 
   // fetch exam and its questions (supports both MCQ & Code)
   const fetchExamWithQuestions = useCallback(async (id) => {
     setLoading(true);
+
+    //  Reset state for a new exam attempt
+  setFocusLossCount(0);
+  setQuestionIndex(0);
+  setReviewMode(false);
     const {
       data: { user },
     } = await supabase.auth.getUser();

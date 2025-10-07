@@ -16,6 +16,76 @@ const defaultPrompts = [
   }
 ];
 
+// Helper function to convert camelCase keys to readable titles with icons
+const getDynamicSectionTitle = (key) => {
+  // Define icon mapping for common concepts
+  const iconMap = {
+    'easy': '✅',
+    'difficult': '⚠️',
+    'focus': '🎯',
+    'teaching': '💡',
+    'guidance': '🧭',
+    'areas': '📍',
+    'questions': '❓',
+    'time': '⏱️',
+    'management': '⏰',
+    'performance': '📊',
+    'analysis': '🔍',
+    'patterns': '📈',
+    'strategies': '💭',
+    'recommendations': '🚀',
+    'insights': '💎',
+    'suggestions': '💡',
+    'next': '➡️',
+    'steps': '🚀',
+    'improvement': '⬆️',
+    'strengths': '💪',
+    'weaknesses': '🔴',
+    'missed': '❌',
+    'correct': '✔️',
+    'code': '💻',
+    'programming': '💻',
+    'algorithm': '🧮',
+    'syntax': '📝',
+    'logic': '🧠',
+    'debugging': '🐛',
+    'optimization': '⚡',
+    'style': '🎨',
+    'errors': '❌',
+    'solutions': '✅'
+  };
+
+  // Convert camelCase to space-separated words
+  const words = key.replace(/([A-Z])/g, ' $1').trim().toLowerCase().split(' ');
+  
+  // Capitalize first letter of each word
+  const title = words.map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+  
+  // Find appropriate icon based on keywords
+  let icon = '💻'; // default icon for code
+  for (const [keyword, emoji] of Object.entries(iconMap)) {
+    if (words.some(word => word.includes(keyword))) {
+      icon = emoji;
+      break;
+    }
+  }
+  
+  return `${icon} ${title}`;
+};
+
+// Helper function to check if feedback has dynamic sections
+const hasDynamicSections = (feedback) => {
+  const standardKeys = ['overallSummary', 'keyStrengths', 'mostMissedQuestions', 'teachingSuggestions', 'nextSteps'];
+  return Object.keys(feedback).some(key => !standardKeys.includes(key) && feedback[key] && 
+    (Array.isArray(feedback[key]) ? feedback[key].length > 0 : true));
+};
+
+// Helper function to check if a key is a standard static prompt key
+const isStandardKey = (key) => {
+  const standardKeys = ['overallSummary', 'keyStrengths', 'mostMissedQuestions', 'teachingSuggestions', 'nextSteps'];
+  return standardKeys.includes(key);
+};
+
 const AIFeedbackPage_Code = () => {
   const { examId } = useParams();
   const location = useLocation();
@@ -219,14 +289,45 @@ const AIFeedbackPage_Code = () => {
             {feedback.keyStrengths?.length > 0 && (
               <Section title="✅ Key Strengths" items={feedback.keyStrengths} />
             )}
-            {feedback.mostMissedQuestions?.length > 0 && (
-              <Section title="⚠️ Most Missed Questions" items={feedback.mostMissedQuestions} />
-            )}
-            {feedback.teachingSuggestions?.length > 0 && (
-              <Section title="💡 Teaching Suggestions" items={feedback.teachingSuggestions} />
-            )}
-            {feedback.nextSteps?.length > 0 && (
-              <Section title="🚀 Actionable Next Steps" items={feedback.nextSteps} />
+            
+            {/* Check if we have dynamic sections (non-standard keys) */}
+            {hasDynamicSections(feedback) ? (
+              /* Render dynamic sections */
+              Object.keys(feedback).map(key => {
+                // Skip the standard sections we've already rendered
+                if (['overallSummary', 'keyStrengths'].includes(key)) return null;
+                
+                // Skip standard static keys (they should not appear in dynamic prompts)
+                if (isStandardKey(key)) return null;
+                
+                // Skip empty arrays or undefined values
+                if (!feedback[key] || (Array.isArray(feedback[key]) && feedback[key].length === 0)) return null;
+                
+                // Convert camelCase keys back to readable titles with appropriate icons
+                const title = getDynamicSectionTitle(key);
+                
+                return (
+                  <Section 
+                    key={key}
+                    title={title} 
+                    items={Array.isArray(feedback[key]) ? feedback[key] : []}
+                    text={typeof feedback[key] === 'string' ? feedback[key] : ''}
+                  />
+                );
+              })
+            ) : (
+              /* Render standard static prompt sections */
+              <>
+                {feedback.mostMissedQuestions?.length > 0 && (
+                  <Section title="⚠️ Most Missed Questions" items={feedback.mostMissedQuestions} />
+                )}
+                {feedback.teachingSuggestions?.length > 0 && (
+                  <Section title="💡 Teaching Suggestions" items={feedback.teachingSuggestions} />
+                )}
+                {feedback.nextSteps?.length > 0 && (
+                  <Section title="🚀 Actionable Next Steps" items={feedback.nextSteps} />
+                )}
+              </>
             )}
           </Card.Body>
         </Card>
