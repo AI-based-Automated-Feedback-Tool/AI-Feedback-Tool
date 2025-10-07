@@ -1,6 +1,11 @@
+// frontend/Feedback/generateMcqHintService.js
+
+const API = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000";
+
+
+
 /**
  * Ask backend for an AI-generated *hint* for an MCQ (no answer leakage).
- * Uses same-origin /api path via Vite proxy.
  */
 export async function generateMcqHint({
   examId,
@@ -8,9 +13,9 @@ export async function generateMcqHint({
   questionText,
   choices,
   studentAnswer = "",
-  hintTier = 1,
+  hintTier =  "Nudge",
 }) {
-  const res = await fetch("/api/hints/mcq", {
+  const res = await fetch(`${API}/api/hints/mcq`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({

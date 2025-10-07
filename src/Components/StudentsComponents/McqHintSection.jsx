@@ -8,6 +8,8 @@ export default function McqHintSection({ examId, question, selectedAnswer }) {
   const [cooldown, setCooldown] = useState(0);
   const [error, setError] = useState("");
 
+   const tierLabels = { 1: "Nudge", 2: "Scaffold", 3: "Targeted" };
+
   // Cooldown timer
   useEffect(() => {
     if (!cooldown) return;
@@ -19,14 +21,21 @@ export default function McqHintSection({ examId, question, selectedAnswer }) {
     setLoading(true);
     setError("");
     setHint("");
+
     try {
+       // Ensure options are strings
+      const choiceTexts = (question.options || []).map((o) =>
+        typeof o === "string"
+          ? o
+          : o.text ?? o.label ?? String(o)
+      );
       const res = await generateMcqHint({
         examId,
         questionId: question.id,
         questionText: question.question,
-        choices: question.options,
+        choices: choiceTexts,
         studentAnswer: selectedAnswer || "",
-        hintTier: tier,
+        hintTier: tierLabels[tier], 
       });
       setHint(res.hintText);
       setCooldown(res.cooldownSeconds || 0);
