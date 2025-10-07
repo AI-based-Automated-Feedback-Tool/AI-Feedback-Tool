@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { supabase } from "../../../SupabaseAuth/supabaseClient";
 
 // If your backend runs elsewhere, change this:
@@ -21,11 +21,11 @@ function computeCorrectIndex(options = [], rawAnswer = "") {
   const optsNorm = options.map((o) => stripPunct(o));
   const ans = stripPunct(rawAnswer);
 
-  // 1) Exact text match to an option
+  // 1) Exact text match
   let idx = optsNorm.findIndex((o) => o === ans);
   if (idx !== -1) return idx;
 
-  // 2) If the answer contains an option's text (e.g., "Correct answer: transform")
+  // 2) Answer text contains option text
   idx = optsNorm.findIndex((o) => ans.includes(o));
   if (idx !== -1) return idx;
 
@@ -36,7 +36,7 @@ function computeCorrectIndex(options = [], rawAnswer = "") {
     if (j >= 0 && j < options.length) return j;
   }
 
-  // 4) Formats like "A)", "C.", "answer: B", "option d"
+  // 4) Formats like "A)", "answer: C"
   const mLetterAny = ans.match(/\b(?:answer|option)?\s*([a-h])\b/i);
   if (mLetterAny) {
     const j = mLetterAny[1].toUpperCase().charCodeAt(0) - 65;
@@ -50,8 +50,16 @@ function computeCorrectIndex(options = [], rawAnswer = "") {
     if (j >= 0 && j < options.length) return j;
   }
 
-  // Fallback: no reliable match
   return -1;
+}
+
+function formatTime(totalSeconds) {
+  const s = Math.max(0, totalSeconds | 0);
+  const h = Math.floor(s / 3600);
+  const m = Math.floor((s % 3600) / 60);
+  const sec = s % 60;
+  if (h > 0) return `${String(h)}:${String(m).padStart(2, "0")}:${String(sec).padStart(2, "0")}`;
+  return `${String(m).padStart(2, "0")}:${String(sec).padStart(2, "0")}`;
 }
 
 export default function MockExam() {
@@ -67,23 +75,27 @@ export default function MockExam() {
   const [loadingGenerate, setLoadingGenerate] = useState(false);
   const [error, setError] = useState("");
 
-  // NOTE: answers now store the **selected option index** per question
-  const [questions, setQuestions] = useState([]); // [{id, question, options:[], answer, correctIndex}]
-  const [answers, setAnswers] = useState({});     // { [qid]: number }
+  // Questions & answers
+  const [questions, setQuestions] = useState([]);   // [{id, question, options:[], answer, correctIndex}]
+  const [answers, setAnswers] = useState({});       // { [qid]: number }
 
+  // Results
   const [submitted, setSubmitted] = useState(false);
   const [results, setResults] = useState({
-    total: 0,
-    correct: 0,
-    incorrect: 0,
-    unanswered: 0,
-    percent: 0,
+    total: 0, correct: 0, incorrect: 0, unanswered: 0, percent: 0,
     perQuestion: {}, // { [qid]: { isCorrect, selectedIndex, correctIndex } }
   });
 
+  // === Timer state ===
+  const [presetMinutes, setPresetMinutes] = useState("60"); // "45" | "60" | "120" | "custom"
+  const [customMinutes, setCustomMinutes] = useState(60);   // used when presetMinutes === "custom"
+  const [remainingSeconds, setRemainingSeconds] = useState(0);
+  const [timerActive, setTimerActive] = useState(false);
+  const intervalRef = useRef(null);
+
+  // Get user & courses
   useEffect(() => {
     let alive = true;
-
     async function init() {
       try {
         setError("");
@@ -105,10 +117,45 @@ export default function MockExam() {
         if (alive) setLoadingCourses(false);
       }
     }
-
     init();
     return () => { alive = false; };
   }, []);
+
+  // Timer tick
+  useEffect(() => {
+    if (!timerActive || submitted || questions.length === 0) return;
+    if (intervalRef.current) clearInterval(intervalRef.current);
+
+    intervalRef.current = setInterval(() => {
+      setRemainingSeconds((prev) => {
+        if (prev <= 1) {
+          clearInterval(intervalRef.current);
+          intervalRef.current = null;
+          setTimerActive(false);
+          // Auto-submit when time is up
+          setTimeout(() => handleSubmit(true), 0);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [timerActive, submitted, questions.length]);
+
+  function getSelectedMinutes() {
+    if (presetMinutes === "custom") {
+      const val = Number(customMinutes) || 0;
+      return Math.max(1, Math.min(300, val)); // clamp 1..300 mins
+    }
+    return Number(presetMinutes);
+  }
 
   async function handleGenerate() {
     if (!selectedCourseId) {
@@ -123,6 +170,11 @@ export default function MockExam() {
       total: 0, correct: 0, incorrect: 0, unanswered: 0, percent: 0, perQuestion: {},
     });
     setError("");
+
+    // Prepare timer
+    const mins = getSelectedMinutes();
+    setRemainingSeconds(mins * 60);
+    setTimerActive(false); // will activate after questions load
 
     try {
       const res = await fetch(`${API_BASE}/generate`, {
@@ -148,6 +200,8 @@ export default function MockExam() {
       });
 
       setQuestions(qs);
+      // Start countdown once questions are ready
+      setTimerActive(true);
     } catch (e) {
       setError(e?.message || "Error generating questions");
     } finally {
@@ -160,8 +214,8 @@ export default function MockExam() {
     setAnswers((prev) => ({ ...prev, [qid]: optionIndex }));
   }
 
-  function handleSubmit() {
-    if (questions.length === 0) return;
+  function handleSubmit(auto = false) {
+    if (questions.length === 0 || submitted) return;
 
     const total = questions.length;
     let correct = 0, incorrect = 0, unanswered = 0;
@@ -170,7 +224,6 @@ export default function MockExam() {
     questions.forEach((q) => {
       const qid = q.id;
       const selectedIndex = answers[qid];
-      // Ensure we always have a correctIndex even if backend answer format varies
       const correctIndex = q.correctIndex ?? computeCorrectIndex(q.options, q.answer);
 
       if (selectedIndex === undefined) {
@@ -188,6 +241,20 @@ export default function MockExam() {
 
     setResults({ total, correct, incorrect, unanswered, percent, perQuestion });
     setSubmitted(true);
+    setTimerActive(false);
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+
+    if (auto) {
+      // Optional: toast/alert when auto-submitted
+      // eslint-disable-next-line no-alert
+      alert("⏰ Time is up! Your answers have been auto-submitted.");
+    }
+
+    // OPTIONAL: Persist submission to backend/Supabase here
+    // fetch(`${API_BASE}/submit`, {...})
   }
 
   function handleResetAnswers() {
@@ -196,26 +263,34 @@ export default function MockExam() {
     setResults({
       total: 0, correct: 0, incorrect: 0, unanswered: 0, percent: 0, perQuestion: {},
     });
+    // Reset timer to the chosen minutes (but not started until Regenerate)
+    const mins = getSelectedMinutes();
+    setRemainingSeconds(mins * 60);
+    setTimerActive(false);
   }
+
+  const totalAnswered = Object.keys(answers).length;
+  const minsChosen = getSelectedMinutes();
+  const warn = remainingSeconds <= 5 * 60 && timerActive && !submitted; // < 5 min
 
   return (
     <div className="container py-3">
       <h2 className="mb-3">Mock Exam (AI-Generated MCQs)</h2>
       <p className="text-muted">
-        Select a registered course and generate a 25-question mock exam.
+        Select a registered course, choose a time limit, and generate a 25-question mock exam.
       </p>
 
       {error && <div className="alert alert-danger" role="alert">{error}</div>}
 
-      {/* Course selector */}
+      {/* Course & Timer controls */}
       <div className="row g-2 align-items-end mb-3">
-        <div className="col-12 col-md-6">
+        <div className="col-12 col-md-4">
           <label className="form-label">Your registered courses</label>
           <select
             className="form-select"
             value={selectedCourseId}
             onChange={(e) => setSelectedCourseId(e.target.value)}
-            disabled={loadingCourses || courses.length === 0 || submitted}
+            disabled={loadingCourses || courses.length === 0 || submitted || timerActive}
           >
             <option value="">{loadingCourses ? "Loading..." : "-- Select a course --"}</option>
             {courses.map((c) => (
@@ -224,23 +299,62 @@ export default function MockExam() {
           </select>
         </div>
 
+        <div className="col-6 col-md-3">
+          <label className="form-label">Time limit</label>
+          <select
+            className="form-select"
+            value={presetMinutes}
+            onChange={(e) => setPresetMinutes(e.target.value)}
+            disabled={timerActive || submitted}
+          >
+            <option value="45">45 minutes</option>
+            <option value="60">1 hour</option>
+            <option value="120">2 hours</option>
+            <option value="custom">Custom…</option>
+          </select>
+        </div>
+
+        <div className="col-6 col-md-2">
+          <label className="form-label">Custom (mins)</label>
+          <input
+            type="number"
+            min={1}
+            max={300}
+            className="form-control"
+            value={customMinutes}
+            onChange={(e) => setCustomMinutes(Number(e.target.value))}
+            disabled={presetMinutes !== "custom" || timerActive || submitted}
+          />
+        </div>
+
         <div className="col-12 col-md-auto">
           <button
             className="btn btn-primary"
             onClick={handleGenerate}
-            disabled={loadingCourses || !selectedCourseId || loadingGenerate || submitted}
+            disabled={loadingCourses || !selectedCourseId || loadingGenerate || submitted || timerActive}
           >
             {loadingGenerate ? "Generating…" : "Generate Mock Exam"}
           </button>
         </div>
       </div>
 
-      {/* Results summary */}
-      {submitted && (
-        <div className="alert alert-info d-flex flex-wrap gap-3" role="status">
-          <div><strong>Score:</strong> {results.correct} / {results.total} ({results.percent}%)</div>
-          <div><strong>Incorrect:</strong> {results.incorrect}</div>
-          <div><strong>Unanswered:</strong> {results.unanswered}</div>
+      {/* Timer & progress */}
+      {(questions.length > 0) && (
+        <div className={`alert ${submitted ? "alert-success" : warn ? "alert-warning" : "alert-info"} d-flex flex-wrap gap-3`} role="status">
+          <div>
+            <strong>Time:</strong>{" "}
+            {formatTime(remainingSeconds)}{" "}
+            {!submitted && timerActive && <span className="text-muted">(of {minsChosen} min)</span>}
+          </div>
+          <div><strong>Score:</strong> {submitted ? `${results.correct} / ${results.total} (${results.percent}%)` : "—"}</div>
+          <div><strong>Answered:</strong> {totalAnswered}/{questions.length}</div>
+          {!submitted && (
+            <div className="ms-auto">
+              <button className="btn btn-outline-danger btn-sm" onClick={() => handleSubmit(false)}>
+                Submit Now
+              </button>
+            </div>
+          )}
         </div>
       )}
 
@@ -250,7 +364,7 @@ export default function MockExam() {
           <div className="d-flex justify-content-between align-items-center mb-2">
             <strong className="me-2">Course: {selectedCourse?.title || "Selected course"}</strong>
             <span className={`badge ${submitted ? "bg-success" : "bg-secondary"}`}>
-              {Object.keys(answers).length}/{questions.length} answered
+              {totalAnswered}/{questions.length} answered
             </span>
           </div>
 
@@ -344,11 +458,14 @@ export default function MockExam() {
                     setAnswers({});
                     setSubmitted(false);
                     setResults({ total: 0, correct: 0, incorrect: 0, unanswered: 0, percent: 0, perQuestion: {} });
+                    setTimerActive(false);
+                    const mins = getSelectedMinutes();
+                    setRemainingSeconds(mins * 60);
                   }}
                 >
                   Clear
                 </button>
-                <button className="btn btn-success ms-auto" onClick={handleSubmit}>
+                <button className="btn btn-success ms-auto" onClick={() => handleSubmit(false)}>
                   Submit Answers
                 </button>
               </>
@@ -375,7 +492,7 @@ export default function MockExam() {
         <div className="text-muted">
           {courses.length === 0
             ? "No registered courses found for your account."
-            : "Pick a course and click Generate Mock Exam."}
+            : "Pick a course, choose time, and click Generate Mock Exam."}
         </div>
       )}
     </div>
