@@ -93,7 +93,7 @@ const useMcqQuestionForm = (onSave) => {
             
             //for just now print questions in console
             if(data.questions && data.questions.length > 0){
-                const generateMcqQuestions = data.questions[0];
+                const generateMcqQuestions = data.questions;
                 console.log("Generated MCQ Questions:", generateMcqQuestions);
             }
         } catch (error) {
