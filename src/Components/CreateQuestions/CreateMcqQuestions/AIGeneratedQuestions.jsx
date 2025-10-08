@@ -1,5 +1,5 @@
 import React from 'react'
-import { Row, Card, CardBody, Col } from "react-bootstrap";
+import { Row, Card, CardBody, Col, Form } from "react-bootstrap";
 import '../../../css/aiQuestionGeneration.css';
 
 export default function AIGeneratedQuestions({ questions }) {
@@ -15,7 +15,12 @@ export default function AIGeneratedQuestions({ questions }) {
       
       {
         questions.map((q, index) => (
-          <Card className="mb-3" key={index} >
+          <div key={index} className="d-flex align-items-start mb-3">
+            <Form.Check
+              type="checkbox"
+              className="me-2 mt-2"
+            />
+          <Card className="flex-grow-1" >
             <CardBody>
               <div className="fw-bold">{q.question}</div>
               <Row className="mt-2">
@@ -27,9 +32,10 @@ export default function AIGeneratedQuestions({ questions }) {
                   </Col>
                 ))}
               </Row>
-              <div className="text-muted">{q.correct_answer}</div>
+              <div className="text-muted">Correct Answer: {q.correct_answer}</div>
             </CardBody>
           </Card>
+          </div>
         ))
       }
     </Row>
