@@ -7,3 +7,8 @@
 .choice-card {
   border-radius: 8px;
 }
+/* change color of correct choice */
+.choice-correct {
+  background-color: #b7e4c7; /* pastel green */
+  color: #000; /* black text for readability */
+}

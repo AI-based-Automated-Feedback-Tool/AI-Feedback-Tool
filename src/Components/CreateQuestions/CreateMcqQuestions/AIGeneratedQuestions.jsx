@@ -25,8 +25,8 @@ export default function AIGeneratedQuestions({ questions }) {
               <div className="fw-bold">{q.question}</div>
               <Row className="mt-2">
                 {q.choices.map((choice, idx) => (
-                  <Col key={idx}  md={6} xs={12} className='mb-2'>
-                    <Card className="p-2 border choice-card">
+                  <Col key={idx} md={6} xs={12} className='mb-2'>
+                    <Card className={`p-2 border choice-card ${choice === q.correct_answer ? 'choice-correct' : ''}`}>
                       {choice}
                     </Card>
                   </Col>
