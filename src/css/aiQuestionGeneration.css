@@ -1,0 +1,9 @@
+/* change color of generated question card */
+.main-row-bg {
+  background-color: #e6eaec;
+  padding: 20px; /* optional spacing inside row */
+}
+/*make changes to choice card border*/
+.choice-card {
+  border-radius: 8px;
+}
