@@ -14,6 +14,7 @@ const useMcqQuestionForm = (onSave) => {
     const [guidance, setGuidance] = useState("");
     const [keyConcepts, setKeyConcepts] = useState("");
     const [doNotInclude, setDoNotInclude] = useState("");
+    const [generatedQuestions, setGeneratedQuestions] = useState([]);
 
     // Set answer options
     const handleAnswerOptionsChange = (e, index) => {
@@ -93,8 +94,8 @@ const useMcqQuestionForm = (onSave) => {
             
             //for just now print questions in console
             if(data.questions && data.questions.length > 0){
-                const generateMcqQuestions = data.questions;
-                console.log("Generated MCQ Questions:", generateMcqQuestions);
+                setGeneratedQuestions(data.questions);
+                console.log("Generated MCQ Questions:", data.questions);
             }
         } catch (error) {
             console.error("Error generating question:", error);
@@ -124,7 +125,8 @@ const useMcqQuestionForm = (onSave) => {
         setKeyConcepts,
         doNotInclude, 
         setDoNotInclude,
-        generateQuestion
+        generateQuestion,
+        generatedQuestions
     }
 }
 
