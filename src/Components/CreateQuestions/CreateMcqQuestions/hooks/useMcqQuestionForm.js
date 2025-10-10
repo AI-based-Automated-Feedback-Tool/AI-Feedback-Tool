@@ -15,6 +15,10 @@ const useMcqQuestionForm = (onSave) => {
     const [keyConcepts, setKeyConcepts] = useState("");
     const [doNotInclude, setDoNotInclude] = useState("");
     const [generatedQuestions, setGeneratedQuestions] = useState([]);
+    // State to track which questions are checked
+    const [checkedAIQuestions, setCheckedAIQuestions] = useState([]);
+    // State to track the generated questions
+    const [generatedAndSelectedQuestions, setGeneratedAndSelectedQuestions] = useState([]);
 
     // Set answer options
     const handleAnswerOptionsChange = (e, index) => {
@@ -102,6 +106,21 @@ const useMcqQuestionForm = (onSave) => {
             //needed to show error to user in UI later
         }
     }
+
+    // Handle checkbox change
+    const handleCheckboxChangeAIQ = (index) => {
+        setCheckedAIQuestions((prev) => ({
+        ...prev,
+        [index]: !prev[index],
+        }));
+    }
+
+    // Function to save checked questions
+    const saveCheckedQuestions = () => {
+        const selectedQuestions = questions.filter((q, index) => checkedAIQuestions[index]);
+        setGeneratedAndSelectedQuestions(selectedQuestions);
+    }
+    
     return {
         questionText, setQuestionText,
         answerOptions, setAnswerOptions,
@@ -126,7 +145,11 @@ const useMcqQuestionForm = (onSave) => {
         doNotInclude, 
         setDoNotInclude,
         generateQuestion,
-        generatedQuestions
+        generatedQuestions,
+        checkedAIQuestions,
+        handleCheckboxChangeAIQ,
+        saveCheckedQuestions,
+        generatedAndSelectedQuestions
     }
 }
 

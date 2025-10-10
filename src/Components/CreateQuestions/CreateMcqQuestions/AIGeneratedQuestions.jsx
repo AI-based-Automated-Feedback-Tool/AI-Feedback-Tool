@@ -3,25 +3,7 @@ import {useState} from 'react'
 import { Row, Card, CardBody, Col, Form } from "react-bootstrap";
 import '../../../css/aiQuestionGeneration.css';
 
-export default function AIGeneratedQuestions({ questions }) {
-  // State to track which questions are checked
-  const [checkedQuestions, setCheckedQuestions] = useState([]);
-  // State to track the generated questions
-  const [generatedQuestions, setGeneratedQuestions] = useState([]);
-
-  // Handle checkbox change
-  const handleCheckboxChange = (index) => {
-    setCheckedQuestions((prev) => ({
-      ...prev,
-      [index]: !prev[index],
-    }));
-  }
-
-  // Function to save checked questions
-  const saveCheckedQuestions = () => {
-    const selectedQuestions = questions.filter((q, index) => checkedQuestions[index]);
-    setGeneratedQuestions(selectedQuestions);
-  }
+export default function AIGeneratedQuestions({ questions, checkedQuestions, onCheck, onSaveChecked }) {
   
   return (
     <Row className="mb-4 mt-4 mx-1 main-row-bg">
@@ -32,15 +14,15 @@ export default function AIGeneratedQuestions({ questions }) {
           </h5>                    
         </CardBody>
       </Card>
-      
-      {
+
+      {questions &&
         questions.map((q, index) => (
           <div key={index} className="d-flex align-items-start mb-3">
             <Form.Check
               type="checkbox"
               className="me-2 mt-2"
               checked={!!checkedQuestions[index]}
-              onChange={() => handleCheckboxChange(index)}
+              onChange={() => onCheck(index)}
 
             />
             <Card className="flex-grow-1" >
@@ -63,7 +45,7 @@ export default function AIGeneratedQuestions({ questions }) {
       }
 
       {/* Generate Button */}
-      <div className="d-flex justify-content-end" onClick={saveCheckedQuestions}>
+      <div className="d-flex justify-content-end" onClick={onSaveChecked}>
         <Button variant="primary" >
           ➕ Save Questions
         </Button>
