@@ -1,9 +1,10 @@
 import React, { useEffect, useState, useContext } from "react";
-import { Container, Card, Form, Row, Col, Button, Spinner, Alert } from "react-bootstrap";
+import { Container, Card, Form, Row, Col, Button, Spinner, Alert, Badge } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../../../SupabaseAuth/supabaseClient";
 import HeaderWithApiCount from './HeaderWithApiCount';
 import { ApiCallCountContext } from "../../../Context/ApiCallCountContext";
+import './FeedbackSelector.css'; // We'll create this CSS file
 
 const FeedbackSelector = () => {
   const navigate = useNavigate();
@@ -128,16 +129,46 @@ const FeedbackSelector = () => {
   };
 
   return (
-    <Container className="my-4">
-      <Card>
-        
-        <Card.Header className="bg-primary text-white d-flex justify-content-between align-items-center">
-          <h4 className="mb-0">🤖 AI Feedback - Select Exam</h4>
+    <Container className="my-5">
+      {/* Hero Section */}
+      <div className="feedback-selector-hero mb-5">
+        <div className="hero-content text-center">
+          <div className="hero-icon mb-3">
+            <i className="fas fa-robot fa-3x text-primary"></i>
+          </div>
+          <h1 className="hero-title mb-3">
+            <span className="gradient-text">AI-Powered Feedback</span>
+          </h1>
+          <p className="hero-subtitle text-muted mb-4">
+            Generate intelligent insights and recommendations for your exams using advanced AI analysis
+          </p>
           <HeaderWithApiCount />
+        </div>
+      </div>
+
+      {error && (
+        <Alert variant="danger" className="modern-alert mb-4">
+          <i className="fas fa-exclamation-triangle me-2"></i>
+          {error}
+        </Alert>
+      )}
+
+      {/* Main Selection Card */}
+      <Card className="main-selection-card border-0 shadow-lg">
+        <Card.Header className="modern-card-header">
+          <div className="d-flex align-items-center">
+            <div className="header-icon me-3">
+              <i className="fas fa-clipboard-list"></i>
+            </div>
+            <div>
+              <h4 className="mb-1 text-white">Select Your Exam</h4>
+              <small className="text-white-50">Choose the course, type, and specific exam for AI analysis</small>
+            </div>
+          </div>
         </Card.Header>
         <Card.Body>
           {error && <Alert variant="danger">{error}</Alert>}
-
+        
           <Form>
             <Card className="mb-4 border-0 shadow-sm">
               <Card.Header className="bg-light">
@@ -145,7 +176,7 @@ const FeedbackSelector = () => {
               </Card.Header>
               <Card.Body>
                 <Row className="mb-3">
-                  <Col md={6}>
+                <Col md={6}>
                     <Form.Group>
                       <Form.Label className="fw-bold">Select Course</Form.Label>
                       <Form.Select
@@ -164,12 +195,12 @@ const FeedbackSelector = () => {
                           </option>
                         ))}
                       </Form.Select>
-                      {courses.length === 0 && !loading && (
+                    {courses.length === 0 && !loading && (
                         <Form.Text className="text-muted">No courses available</Form.Text>
-                      )}
+                    )}
                     </Form.Group>
-                  </Col>
-                  <Col md={6}>
+                </Col>
+                <Col md={6}>
                     <Form.Group>
                       <Form.Label className="fw-bold">Select Exam Type</Form.Label>
                       <Form.Select
@@ -188,25 +219,25 @@ const FeedbackSelector = () => {
                         ))}
                       </Form.Select>
                     </Form.Group>
-                  </Col>
-                </Row>
+                </Col>
+              </Row>
 
                 <Row>
                   <Col md={12}>
                     <Form.Group>
                       <Form.Label className="fw-bold">Select Exam</Form.Label>
-                      <Form.Select
-                        value={selectedExam}
-                        onChange={(e) => setSelectedExam(e.target.value)}
-                        disabled={!exams.length}
-                      >
+                        <Form.Select
+                          value={selectedExam}
+                          onChange={(e) => setSelectedExam(e.target.value)}
+                          disabled={!exams.length}
+                        >
                         <option value="">-- Choose an Exam --</option>
-                        {exams.map((exam) => (
-                          <option key={exam.exam_id} value={exam.exam_id}>
+                          {exams.map((exam) => (
+                            <option key={exam.exam_id} value={exam.exam_id}>
                             {exam.title}
-                          </option>
-                        ))}
-                      </Form.Select>
+                            </option>
+                          ))}
+                        </Form.Select>
                     </Form.Group>
                   </Col>
                 </Row>
@@ -230,20 +261,20 @@ const FeedbackSelector = () => {
                   <p><strong>Questions:</strong> {examDetails.question_count}</p>
                   <p><strong>Type:</strong> {examDetails.type.toUpperCase()}</p>
                   <p><strong>Instructions:</strong> {examDetails.instructions || "N/A"}</p>
-                </Card.Body>
-              </Card>
+                  </Card.Body>
+                </Card>
             )}
 
             <div className="d-flex justify-content-end">
-              <Button
+                <Button
                 variant={isLimitReached ? "secondary" : "primary"}
-                size="lg"
-                onClick={handleAIFeedbackClick}
-                disabled={!selectedExam || loading || isLimitReached}
-              >
+                  size="lg"
+                  onClick={handleAIFeedbackClick}
+                  disabled={!selectedExam || loading || isLimitReached}
+                >
                 Proceed to AI Feedback
-              </Button>
-            </div>
+                </Button>
+              </div>
 
             {isLimitReached && (
               <p className="text-danger mt-3 text-end fw-bold">
