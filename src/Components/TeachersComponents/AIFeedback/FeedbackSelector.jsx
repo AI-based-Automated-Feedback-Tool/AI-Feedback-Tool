@@ -293,36 +293,86 @@ const FeedbackSelector = () => {
 
             {/* Exam Details Preview */}
             {examDetails && (
-              <Card className="mb-4 border-0 shadow-sm">
-                <Card.Header className="bg-light">
-                  <h5 className="mb-0">Exam Details</h5>
-                </Card.Header>
-                <Card.Body>
-                  <p><strong>Title:</strong> {examDetails.title}</p>
-                  <p><strong>Duration:</strong> {examDetails.duration} mins</p>
-                  <p><strong>Questions:</strong> {examDetails.question_count}</p>
-                  <p><strong>Type:</strong> {examDetails.type.toUpperCase()}</p>
-                  <p><strong>Instructions:</strong> {examDetails.instructions || "N/A"}</p>
+              <div className="exam-details-section">
+                <div className="section-header mb-3">
+                  <h5 className="section-title">
+                    <i className="fas fa-info-circle me-2 text-success"></i>
+                    Exam Preview
+                  </h5>
+                </div>
+                
+                <Card className="exam-details-card border-0">
+                  <Card.Body className="p-4">
+                    <div className="exam-header mb-3">
+                      <h6 className="exam-title text-primary">{examDetails.title}</h6>
+                      <Badge bg="primary" className="exam-type-badge">
+                        {examDetails.type.toUpperCase()}
+                      </Badge>
+                    </div>
+                    
+                    <Row className="exam-stats">
+                      <Col md={3}>
+                        <div className="stat-item">
+                          <div className="stat-icon">
+                            <i className="fas fa-clock text-warning"></i>
+                          </div>
+                          <div className="stat-content">
+                            <span className="stat-value">{examDetails.duration}</span>
+                            <span className="stat-label">Minutes</span>
+                          </div>
+                        </div>
+                      </Col>
+                      <Col md={3}>
+                        <div className="stat-item">
+                          <div className="stat-icon">
+                            <i className="fas fa-question-circle text-info"></i>
+                          </div>
+                          <div className="stat-content">
+                            <span className="stat-value">{examDetails.question_count}</span>
+                            <span className="stat-label">Questions</span>
+                          </div>
+                        </div>
+                      </Col>
+                      <Col md={6}>
+                        <div className="exam-instructions">
+                          <strong>Instructions:</strong>
+                          <p className="text-muted mb-0 mt-1">
+                            {examDetails.instructions || "No special instructions provided"}
+                          </p>
+                        </div>
+                      </Col>
+                    </Row>
                   </Card.Body>
                 </Card>
+              </div>
             )}
 
-            <div className="d-flex justify-content-end">
+            {/* Action Section */}
+            <div className="action-section mt-5">
+              <div className="d-flex justify-content-between align-items-center">
+                <div className="action-info">
+                  {isLimitReached && (
+                    <div className="limit-warning">
+                      <i className="fas fa-exclamation-triangle text-danger me-2"></i>
+                      <span className="text-danger fw-bold">
+                        Daily limit reached. Try again tomorrow.
+                      </span>
+                    </div>
+                  )}
+                </div>
+                
                 <Button
-                variant={isLimitReached ? "secondary" : "primary"}
+                  className={`modern-action-btn ${!selectedExam || loading || isLimitReached ? 'disabled' : ''}`}
                   size="lg"
                   onClick={handleAIFeedbackClick}
                   disabled={!selectedExam || loading || isLimitReached}
                 >
-                Proceed to AI Feedback
+                  <i className="fas fa-robot me-2"></i>
+                  <span>Generate AI Feedback</span>
+                  <i className="fas fa-arrow-right ms-2"></i>
                 </Button>
               </div>
-
-            {isLimitReached && (
-              <p className="text-danger mt-3 text-end fw-bold">
-                You have reached the daily limit of AI feedback requests. Please try again tomorrow.
-              </p>
-            )}
+            </div>
           </Form>
         </Card.Body>
       </Card>
