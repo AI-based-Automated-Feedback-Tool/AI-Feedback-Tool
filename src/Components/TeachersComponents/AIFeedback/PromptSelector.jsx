@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
-import { Container, Card, Form, Button, Row, Col, Alert, Modal, Spinner } from 'react-bootstrap';
+import { Container, Card, Form, Button, Row, Col, Alert, Modal, Spinner, Badge } from 'react-bootstrap';
 import HeaderWithApiCount from './HeaderWithApiCount';
 import StandardAnalysis from './Prompts/StandardAnalysis';
 import QuickInsights from './Prompts/QuickInsights';
@@ -17,6 +17,7 @@ import EssayTechnicalPrompt from './Prompts/EssayTechnicalPrompt';
 import { ApiCallCountContext } from '../../../Context/ApiCallCountContext';
 import { supabase } from '../../../SupabaseAuth/supabaseClient';
 import DynamicPromptService from './services/DynamicPromptService.jsx';
+import './PromptSelector.css'; // We'll create this CSS file
 
 
 const MCQpredefinedPrompts = [
@@ -290,188 +291,355 @@ Answers: [ANSWERS]`;
   };
 
   return (
-    <Container className="mt-4">
-      <Card className="shadow-sm">
-        <Card.Header className="bg-primary text-white d-flex justify-content-between align-items-center">
-          <div>
-            <h4 className="mb-0">AI Feedback Generator</h4>
+    <Container className="my-5">
+      {/* Hero Section */}
+      <div className="prompt-selector-hero mb-5">
+        <div className="hero-content text-center">
+          <div className="hero-icon mb-3">
+            <i className="fas fa-brain fa-3x"></i>
           </div>
-          <div className="d-flex gap-2">
+          <h1 className="hero-title mb-3">
+            <span className="gradient-text">AI Feedback Generator</span>
+          </h1>
+          <p className="hero-subtitle mb-4">
+            Customize your AI analysis with advanced prompt engineering and dynamic options
+          </p>
+          <div className="exam-type-indicator mb-3">
+            <Badge className="exam-type-badge">
+              <i className="fas fa-tag me-1"></i>
+              {questionTypes.join(', ').toUpperCase()} EXAM
+            </Badge>
+          </div>
+          <HeaderWithApiCount />
+        </div>
+      </div>
+
+      {/* Limit Warning */}
+      {isLimitReached && (
+        <Alert variant="danger" className="modern-alert mb-4">
+          <div className="d-flex align-items-center">
+            <i className="fas fa-exclamation-triangle me-2"></i>
+            <div>
+              <strong>Daily Limit Reached</strong>
+              <br />
+              You have reached your daily API usage limit ({MAX_CALLS_PER_DAY} calls).
+            </div>
+          </div>
+        </Alert>
+      )}
+
+      {/* Main Configuration Card */}
+      <Card className="main-config-card border-0 shadow-lg">
+        <Card.Header className="modern-card-header">
+          <div className="d-flex align-items-center justify-content-between">
+            <div className="d-flex align-items-center">
+              <div className="header-icon me-3">
+                <i className="fas fa-cogs"></i>
+              </div>
+              <div>
+                <h4 className="mb-1 text-white">Configure Your AI Prompt</h4>
+                <small className="text-white-50">Choose your AI provider, feedback style, and customize your analysis</small>
+              </div>
+            </div>
             <Button
-              variant="light"
+              className="dynamic-prompt-btn"
               size="sm"
               onClick={handleDynamicPromptGeneration}
               disabled={isLimitReached}
             >
-              🤖 AI-Powered Prompt Options
+              <i className="fas fa-magic me-2"></i>
+              AI-Powered Options
             </Button>
-            <HeaderWithApiCount />
           </div>
         </Card.Header>
-        <Card.Body>
-          {isLimitReached && (
-            <Alert variant="danger" className="text-center">
-              You have reached your daily API usage limit ({MAX_CALLS_PER_DAY} calls).
-            </Alert>
-          )}
+        
+        <Card.Body className="p-4">
+          {/* Provider & Style Selection */}
+          <div className="config-section mb-4">
+            <div className="section-header mb-4">
+              <h5 className="section-title">
+                <i className="fas fa-sliders-h me-2 text-primary"></i>
+                Basic Configuration
+              </h5>
+              <p className="section-subtitle text-muted">
+                Select your preferred AI provider and feedback analysis style
+              </p>
+            </div>
 
-          <Alert variant="info" className="text-center">
-            This exam contains: <strong>{questionTypes.join(', ').toUpperCase()}</strong> questions.
-          </Alert>
+            <Row className="g-4">
+              <Col md={6}>
+                <div className="modern-form-group">
+                  <label className="modern-label">
+                    <i className="fas fa-robot me-2 text-primary"></i>
+                    AI Feedback Provider
+                  </label>
+                  <div className="modern-select-wrapper">
+                    <Form.Select 
+                      className="modern-select"
+                      value={selectedProvider} 
+                      onChange={(e) => setSelectedProvider(e.target.value)}
+                    >
+                      {aiProviders.map((provider) => (
+                        <option key={provider.id} value={provider.id}>
+                          🤖 {provider.name}
+                        </option>
+                      ))}
+                    </Form.Select>
+                    <div className="select-icon">
+                      <i className="fas fa-chevron-down"></i>
+                    </div>
+                  </div>
+                </div>
+              </Col>
+              
+              <Col md={6}>
+                <div className="modern-form-group">
+                  <label className="modern-label">
+                    <i className="fas fa-palette me-2 text-primary"></i>
+                    Feedback Style
+                  </label>
+                  <div className="modern-select-wrapper">
+                    <Form.Select 
+                      className="modern-select"
+                      value={selectedLabel} 
+                      onChange={(e) => handlePromptChange(e.target.value)}
+                    >
+                      {promptsList.map((p, idx) => (
+                        <option key={idx} value={p.label}>
+                          📊 {p.label}
+                        </option>
+                      ))}
+                    </Form.Select>
+                    <div className="select-icon">
+                      <i className="fas fa-chevron-down"></i>
+                    </div>
+                  </div>
+                </div>
+              </Col>
+            </Row>
+          </div>
 
-          <Row className="mb-3">
-            <Col md={6}>
-              <Form.Group>
-                <Form.Label>AI Feedback Provider</Form.Label>
-                <Form.Select value={selectedProvider} onChange={(e) => setSelectedProvider(e.target.value)}>
-                  {aiProviders.map((provider) => (
-                    <option key={provider.id} value={provider.id}>
-                      {provider.name}
-                    </option>
-                  ))}
-                </Form.Select>
-              </Form.Group>
-            </Col>
-            <Col md={6}>
-              <Form.Group>
-                <Form.Label>Feedback Style</Form.Label>
-                <Form.Select value={selectedLabel} onChange={(e) => handlePromptChange(e.target.value)}>
-                  {promptsList.map((p, idx) => (
-                    <option key={idx} value={p.label}>
-                      {p.label}
-                    </option>
-                  ))}
-                </Form.Select>
-              </Form.Group>
-            </Col>
-          </Row>
+          {/* Prompt Configuration */}
+          <div className="prompt-section">
+            <div className="section-header mb-4">
+              <h5 className="section-title">
+                <i className="fas fa-code me-2 text-success"></i>
+                Prompt {isCustomPrompt ? 'Editor' : 'Preview'}
+              </h5>
+              <p className="section-subtitle text-muted">
+                {isCustomPrompt 
+                  ? 'Customize your prompt to get exactly the feedback you need'
+                  : 'Preview the selected prompt template that will be used for analysis'
+                }
+              </p>
+            </div>
 
-          <Form.Group className="mb-3">
-            <Form.Label>Prompt {isCustomPrompt ? 'Editor' : 'Preview'}</Form.Label>
-            {isCustomPrompt ? (
-              <Form.Control
-                as="textarea"
-                rows={10}
-                value={customPrompt}
-                onChange={(e) => setCustomPrompt(e.target.value)}
-                className="font-monospace"
-              />
-            ) : (
-              <Card body className="bg-light">
-                <pre style={{ whiteSpace: 'pre-wrap' }}>{selectedPrompt}</pre>
-              </Card>
-            )}
-            {isCustomPrompt && (
-              <Form.Text className="text-muted">
-                Tip: Use [QUESTIONS], [SUBMISSIONS], and [ANSWERS] placeholders to reference exam data
-              </Form.Text>
-            )}
-          </Form.Group>
+            <div className="prompt-container">
+              {isCustomPrompt ? (
+                <div className="custom-prompt-editor">
+                  <Form.Control
+                    as="textarea"
+                    rows={12}
+                    value={customPrompt}
+                    onChange={(e) => setCustomPrompt(e.target.value)}
+                    className="modern-textarea"
+                    placeholder="Enter your custom prompt here..."
+                  />
+                  <div className="editor-footer">
+                    <div className="editor-tips">
+                      <i className="fas fa-lightbulb me-2 text-warning"></i>
+                      <span className="tip-text">
+                        Tip: Use [QUESTIONS], [SUBMISSIONS], and [ANSWERS] placeholders to reference exam data
+                      </span>
+                    </div>
+                    <div className="character-count">
+                      {customPrompt.length} characters
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <Card className="prompt-preview-card border-0">
+                  <Card.Header className="preview-header">
+                    <i className="fas fa-eye me-2"></i>
+                    Prompt Preview
+                  </Card.Header>
+                  <Card.Body className="preview-body">
+                    <pre className="prompt-content">{selectedPrompt}</pre>
+                  </Card.Body>
+                </Card>
+              )}
+            </div>
+          </div>
 
-          <div className="d-grid">
-            <Button
-              variant="primary"
-              onClick={handleSubmit}
-              disabled={(isCustomPrompt && !customPrompt.trim()) || isLimitReached}
-            >
-              Generate Feedback
-            </Button>
+          {/* Generate Button */}
+          <div className="action-section mt-5">
+            <div className="d-flex justify-content-center">
+              <Button
+                className={`generate-btn ${(isCustomPrompt && !customPrompt.trim()) || isLimitReached ? 'disabled' : ''}`}
+                size="lg"
+                onClick={handleSubmit}
+                disabled={(isCustomPrompt && !customPrompt.trim()) || isLimitReached}
+              >
+                <i className="fas fa-rocket me-2"></i>
+                <span>Generate AI Feedback</span>
+                <i className="fas fa-arrow-right ms-2"></i>
+              </Button>
+            </div>
           </div>
         </Card.Body>
       </Card>
 
-      {/* Dynamic Prompt Generation Modal */}
-      <Modal show={showDynamicPromptModal} onHide={closeDynamicModal} size="lg">
-        <Modal.Header closeButton className="bg-primary text-white">
-          <Modal.Title>🤖 Dynamic Prompt Generation</Modal.Title>
+      {/* Enhanced Dynamic Prompt Modal */}
+      <Modal show={showDynamicPromptModal} onHide={closeDynamicModal} size="lg" className="dynamic-modal">
+        <Modal.Header closeButton className="modern-modal-header">
+          <Modal.Title className="d-flex align-items-center">
+            <div className="modal-icon me-3">
+              <i className="fas fa-magic"></i>
+            </div>
+            <div>
+              <span>AI-Powered Prompt Generation</span>
+              <br />
+              <small className="text-white-50">Intelligent analysis options tailored to your exam</small>
+            </div>
+          </Modal.Title>
         </Modal.Header>
-        <Modal.Body>
+        
+        <Modal.Body className="p-4">
           {loadingDynamicOptions ? (
-            <div className="text-center py-4">
-              <Spinner animation="border" variant="primary" />
-              <p className="mt-3 text-muted">
-                Analyzing exam data to generate personalized prompt options...
-              </p>
-              <small className="text-muted">
-                This may take a few moments as we analyze your exam questions, student submissions, and performance patterns.
-              </small>
+            <div className="loading-section text-center py-5">
+              <div className="modern-spinner-container">
+                <div className="spinner-wrapper">
+                  <Spinner animation="border" variant="primary" className="modern-spinner" />
+                  <div className="spinner-glow"></div>
+                </div>
+                <h5 className="loading-title mt-4">Analyzing Your Exam</h5>
+                <p className="loading-subtitle text-muted">
+                  Generating personalized prompt options based on your exam data...
+                </p>
+                <div className="loading-steps mt-3">
+                  <div className="step active">
+                    <i className="fas fa-search me-2"></i>
+                    Analyzing questions
+                  </div>
+                  <div className="step active">
+                    <i className="fas fa-chart-bar me-2"></i>
+                    Processing submissions
+                  </div>
+                  <div className="step active">
+                    <i className="fas fa-brain me-2"></i>
+                    Generating insights
+                  </div>
+                </div>
+              </div>
             </div>
           ) : dynamicOptionsError ? (
-            <Alert variant="warning">
-              <Alert.Heading>Unable to Generate Dynamic Options</Alert.Heading>
-              <p>{dynamicOptionsError}</p>
-              <p>Using fallback options below. You can still select from these general analysis areas:</p>
+            <Alert variant="warning" className="modern-alert">
+              <div className="d-flex align-items-start">
+                <i className="fas fa-exclamation-triangle me-3 mt-1"></i>
+                <div>
+                  <h6>Unable to Generate Dynamic Options</h6>
+                  <p className="mb-2">{dynamicOptionsError}</p>
+                  <p className="mb-0">Using fallback options below. You can still select from these general analysis areas:</p>
+                </div>
+              </div>
             </Alert>
           ) : (
-            <div className="mb-3">
-              <Alert variant="info">
-                <div className="d-flex align-items-center">
-                  <i className="fas fa-info-circle me-2"></i>
+            <div className="options-intro mb-4">
+              <Alert variant="info" className="modern-info-alert">
+                <div className="d-flex align-items-start">
+                  <i className="fas fa-sparkles me-3 mt-1"></i>
                   <div>
-                    <strong>AI-Generated Options:</strong> These focus areas have been specifically tailored to your exam based on question types, student performance patterns, and submission data.
-                    <br />
-                    <small className="text-muted">Note: This feature uses 1 API call to analyze your exam data.</small>
+                    <h6 className="mb-2">AI-Generated Focus Areas</h6>
+                    <p className="mb-2">These options have been specifically tailored to your exam based on question types, student performance patterns, and submission data.</p>
+                    <small className="text-muted">
+                      <i className="fas fa-info-circle me-1"></i>
+                      This feature uses 1 API call to analyze your exam data.
+                    </small>
                   </div>
                 </div>
               </Alert>
-              <p className="text-muted">
-                Select one or more focus areas for your AI feedback analysis. The system will generate a customized prompt based on your selections.
+              <p className="selection-instruction text-muted text-center">
+                Select one or more focus areas to generate a customized analysis prompt
               </p>
             </div>
           )}
           
           {!loadingDynamicOptions && (
             <>
-              <Form>
+              <div className="options-grid">
                 {dynamicOptions.map((option) => (
-                  <Card key={option.id} className={`mb-3 ${selectedDynamicOptions.includes(option.id) ? 'border-primary' : ''}`}>
-                    <Card.Body>
-                      <Form.Check
-                        type="checkbox"
-                        id={`dynamic-option-${option.id}`}
-                        checked={selectedDynamicOptions.includes(option.id)}
-                        onChange={() => handleDynamicOptionChange(option.id)}
-                        label={
-                          <div>
-                            <strong>{option.label}</strong>
-                            <br />
-                            <small className="text-muted">{option.description}</small>
-                          </div>
-                        }
-                        className="h-100"
-                      />
+                  <Card 
+                    key={option.id} 
+                    className={`option-card ${selectedDynamicOptions.includes(option.id) ? 'selected' : ''}`}
+                    onClick={() => handleDynamicOptionChange(option.id)}
+                  >
+                    <Card.Body className="p-3">
+                      <div className="option-header mb-2">
+                        <Form.Check
+                          type="checkbox"
+                          id={`dynamic-option-${option.id}`}
+                          checked={selectedDynamicOptions.includes(option.id)}
+                          onChange={() => handleDynamicOptionChange(option.id)}
+                          className="option-checkbox"
+                        />
+                        <h6 className="option-title mb-0">{option.label}</h6>
+                      </div>
+                      <p className="option-description text-muted mb-0">
+                        {option.description}
+                      </p>
+                      <div className="option-overlay">
+                        <i className="fas fa-check-circle"></i>
+                      </div>
                     </Card.Body>
                   </Card>
                 ))}
-              </Form>
+              </div>
 
               {selectedDynamicOptions.length > 0 && (
-                <Alert variant="success">
-                  <strong>Selected Options:</strong> {selectedDynamicOptions.length} of {dynamicOptions.length}
-                </Alert>
+                <div className="selection-summary mt-4">
+                  <Alert variant="success" className="modern-success-alert">
+                    <div className="d-flex align-items-center justify-content-between">
+                      <div className="d-flex align-items-center">
+                        <i className="fas fa-check-circle me-2"></i>
+                        <span>
+                          <strong>{selectedDynamicOptions.length}</strong> focus area{selectedDynamicOptions.length > 1 ? 's' : ''} selected
+                        </span>
+                      </div>
+                      <Badge bg="success" className="selection-badge">
+                        Ready to generate
+                      </Badge>
+                    </div>
+                  </Alert>
+                </div>
               )}
 
               {dynamicOptions.length === 0 && !loadingDynamicOptions && (
-                <Alert variant="warning">
+                <Alert variant="warning" className="modern-alert text-center">
+                  <i className="fas fa-exclamation-triangle me-2"></i>
                   No options could be generated. Please try again or contact support if the issue persists.
                 </Alert>
               )}
             </>
           )}
         </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={closeDynamicModal}>
-            Cancel
-          </Button>
-          {!loadingDynamicOptions && (
-            <Button 
-              variant="primary" 
-              onClick={generateDynamicPrompt}
-              disabled={selectedDynamicOptions.length === 0}
-            >
-              Generate Prompt ({selectedDynamicOptions.length} selected)
+        
+        <Modal.Footer className="modern-modal-footer">
+          <div className="d-flex justify-content-between align-items-center w-100">
+            <Button variant="outline-secondary" onClick={closeDynamicModal} className="cancel-btn">
+              <i className="fas fa-times me-2"></i>
+              Cancel
             </Button>
-          )}
+            {!loadingDynamicOptions && (
+              <Button 
+                className={`generate-prompt-btn ${selectedDynamicOptions.length === 0 ? 'disabled' : ''}`}
+                onClick={generateDynamicPrompt}
+                disabled={selectedDynamicOptions.length === 0}
+              >
+                <i className="fas fa-magic me-2"></i>
+                Generate Prompt ({selectedDynamicOptions.length} selected)
+              </Button>
+            )}
+          </div>
         </Modal.Footer>
       </Modal>
     </Container>
