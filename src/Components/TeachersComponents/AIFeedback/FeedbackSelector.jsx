@@ -166,20 +166,31 @@ const FeedbackSelector = () => {
             </div>
           </div>
         </Card.Header>
-        <Card.Body>
-          {error && <Alert variant="danger">{error}</Alert>}
         
+        <Card.Body className="p-4">
           <Form>
-            <Card className="mb-4 border-0 shadow-sm">
-              <Card.Header className="bg-light">
-                <h5 className="mb-0">Filter Exams</h5>                
-              </Card.Header>
-              <Card.Body>
-                <Row className="mb-3">
+            {/* Filter Section */}
+            <div className="filter-section mb-4">
+              <div className="section-header mb-4">
+                <h5 className="section-title">
+                  <i className="fas fa-filter me-2 text-primary"></i>
+                  Filter Options
+                </h5>
+                <p className="section-subtitle text-muted">
+                  Narrow down your exam selection by course and type
+                </p>
+              </div>
+
+              <Row className="g-4">
                 <Col md={6}>
-                    <Form.Group>
-                      <Form.Label className="fw-bold">Select Course</Form.Label>
+                  <div className="modern-form-group">
+                    <label className="modern-label">
+                      <i className="fas fa-graduation-cap me-2 text-primary"></i>
+                      Select Course
+                    </label>
+                    <div className="modern-select-wrapper">
                       <Form.Select
+                        className="modern-select"
                         value={selectedCourse}
                         onChange={(e) => {
                           setSelectedCourse(e.target.value);
@@ -188,22 +199,35 @@ const FeedbackSelector = () => {
                         }}
                         disabled={loading || courses.length === 0}
                       >
-                        <option value="">-- Choose a Course --</option>
+                        <option value="">🎯 Choose a Course</option>
                         {courses.map((course) => (
                           <option key={course.course_id} value={course.course_id}>
-                            {course.course_code} - {course.title}
+                            📚 {course.course_code} - {course.title}
                           </option>
                         ))}
                       </Form.Select>
+                      <div className="select-icon">
+                        <i className="fas fa-chevron-down"></i>
+                      </div>
+                    </div>
                     {courses.length === 0 && !loading && (
-                        <Form.Text className="text-muted">No courses available</Form.Text>
+                      <div className="form-feedback">
+                        <i className="fas fa-info-circle me-1"></i>
+                        No courses available
+                      </div>
                     )}
-                    </Form.Group>
+                  </div>
                 </Col>
+                
                 <Col md={6}>
-                    <Form.Group>
-                      <Form.Label className="fw-bold">Select Exam Type</Form.Label>
+                  <div className="modern-form-group">
+                    <label className="modern-label">
+                      <i className="fas fa-tasks me-2 text-primary"></i>
+                      Select Exam Type
+                    </label>
+                    <div className="modern-select-wrapper">
                       <Form.Select
+                        className="modern-select"
                         value={selectedType}
                         onChange={(e) => {
                           setSelectedType(e.target.value);
@@ -211,45 +235,63 @@ const FeedbackSelector = () => {
                           setExamDetails(null);
                         }}
                       >
-                        <option value="">-- Choose Exam Type --</option>
-                        {examTypes.map((type) => (
-                          <option key={type} value={type}>
-                            {type.toUpperCase()}
-                          </option>
-                        ))}
+                        <option value="">📝 Choose Exam Type</option>
+                        <option value="mcq">🔘 Multiple Choice Questions</option>
+                        <option value="code">💻 Programming/Code</option>
+                        <option value="essay">📄 Essay/Written</option>
                       </Form.Select>
-                    </Form.Group>
+                      <div className="select-icon">
+                        <i className="fas fa-chevron-down"></i>
+                      </div>
+                    </div>
+                  </div>
                 </Col>
               </Row>
 
-                <Row>
+              {/* Exam Selection */}
+              {selectedCourse && selectedType && (
+                <Row className="mt-4">
                   <Col md={12}>
-                    <Form.Group>
-                      <Form.Label className="fw-bold">Select Exam</Form.Label>
+                    <div className="modern-form-group exam-selection">
+                      <label className="modern-label">
+                        <i className="fas fa-file-alt me-2 text-primary"></i>
+                        Select Specific Exam
+                      </label>
+                      <div className="modern-select-wrapper">
                         <Form.Select
+                          className="modern-select"
                           value={selectedExam}
                           onChange={(e) => setSelectedExam(e.target.value)}
                           disabled={!exams.length}
                         >
-                        <option value="">-- Choose an Exam --</option>
+                          <option value="">📋 Choose an Exam</option>
                           {exams.map((exam) => (
                             <option key={exam.exam_id} value={exam.exam_id}>
-                            {exam.title}
+                              📊 {exam.title}
                             </option>
                           ))}
                         </Form.Select>
-                    </Form.Group>
+                        <div className="select-icon">
+                          <i className="fas fa-chevron-down"></i>
+                        </div>
+                      </div>
+                    </div>
                   </Col>
                 </Row>
-              </Card.Body>
-            </Card>
+              )}
+            </div>
 
+            {/* Loading State */}
             {loading && (
-              <div className="text-center mb-4">
-                <Spinner animation="border" variant="primary" />
+              <div className="loading-section text-center py-4">
+                <div className="modern-spinner">
+                  <Spinner animation="border" variant="primary" className="me-3" />
+                  <span className="loading-text">Loading exam data...</span>
+                </div>
               </div>
             )}
 
+            {/* Exam Details Preview */}
             {examDetails && (
               <Card className="mb-4 border-0 shadow-sm">
                 <Card.Header className="bg-light">
