@@ -117,8 +117,20 @@ const useMcqQuestionForm = (onSave) => {
 
     // Function to save checked questions
     const saveCheckedQuestions = () => {
-        const selectedQuestions = questions.filter((q, index) => checkedAIQuestions[index]);
+        const selectedQuestions = generatedQuestions.filter((q, index) => checkedAIQuestions[index]);
         setGeneratedAndSelectedQuestions(selectedQuestions);
+
+        //add questions to main questions list
+        selectedQuestions.forEach((q) => {
+            const formattedQuestion = {
+                question: q.question,
+                answers: q.choices,
+                numOfAnswers: 1,
+                correctAnswers: [q.correct_answer],
+                points: 1 //default points
+            }
+            onSave(formattedQuestion);
+        })
     }
     
     return {

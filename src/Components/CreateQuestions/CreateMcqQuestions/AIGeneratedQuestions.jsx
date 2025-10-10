@@ -1,6 +1,6 @@
 import React from 'react'
 import {useState} from 'react'
-import { Row, Card, CardBody, Col, Form } from "react-bootstrap";
+import { Row, Card, CardBody, Col, Form, Button } from "react-bootstrap";
 import '../../../css/aiQuestionGeneration.css';
 
 export default function AIGeneratedQuestions({ questions, checkedQuestions, onCheck, onSaveChecked }) {
@@ -47,7 +47,7 @@ export default function AIGeneratedQuestions({ questions, checkedQuestions, onCh
       {/* Generate Button */}
       <div className="d-flex justify-content-end" onClick={onSaveChecked}>
         <Button variant="primary" >
-          ➕ Save Questions
+          ➕ Add Questions to the Exam
         </Button>
       </div>
     </Row>
