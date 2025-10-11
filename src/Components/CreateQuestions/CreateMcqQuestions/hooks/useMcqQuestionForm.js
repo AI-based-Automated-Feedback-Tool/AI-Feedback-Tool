@@ -19,6 +19,7 @@ const useMcqQuestionForm = (onSave, questionCount, noOfQuestions) => {
     const [checkedAIQuestions, setCheckedAIQuestions] = useState([]);
     // State to track the generated questions
     const [generatedAndSelectedQuestions, setGeneratedAndSelectedQuestions] = useState([]);
+    const [isGenerating, setIsGenerating] = useState(false);
 
     // Set answer options
     const handleAnswerOptionsChange = (e, index) => {
@@ -95,6 +96,7 @@ const useMcqQuestionForm = (onSave, questionCount, noOfQuestions) => {
         setErrors(newErrors);   
 
         if (Object.keys(newErrors).length === 0) {
+            setIsGenerating(true);
             try {
                 const params = {
                     topic: questionTopic,
@@ -114,6 +116,7 @@ const useMcqQuestionForm = (onSave, questionCount, noOfQuestions) => {
                 console.error("Error generating question:", error);
                 //needed to show error to user in UI later
             }
+            setIsGenerating(false);
         }
     }
 
@@ -204,7 +207,8 @@ const useMcqQuestionForm = (onSave, questionCount, noOfQuestions) => {
         checkedAIQuestions,
         handleCheckboxChangeAIQ,
         saveCheckedQuestions,
-        generatedAndSelectedQuestions
+        generatedAndSelectedQuestions,
+        isGenerating
     }
 }
 

@@ -21,7 +21,8 @@ export default function McqQuestionGenerationForm({onSave, warning, disabled, no
         checkedAIQuestions,
         handleCheckboxChangeAIQ,
         saveCheckedQuestions,
-        generatedAndSelectedQuestions
+        generatedAndSelectedQuestions,
+        isGenerating,
     } = useMcqQuestionForm(onSave, questionCount, noOfQuestions);
 
   return (
@@ -111,9 +112,20 @@ export default function McqQuestionGenerationForm({onSave, warning, disabled, no
             </Form.Group>
 
             {/* Generate Button */}
-            <div className="d-flex justify-content-end" onClick={generateQuestion}>
-                <Button variant="primary" >
-                    ➕ Generate Questions
+            <div className="d-flex justify-content-end">
+                <Button 
+                    variant="primary"
+                    onClick={generateQuestion}
+                    disabled={isGenerating}
+                > 
+                    {isGenerating ? (
+                        <>
+                            <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                            Generating...
+                        </>
+                    ) : (
+                        "➕ Generate Questions"
+                    )}
                 </Button>
             </div>          
         </Form>
