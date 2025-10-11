@@ -1,7 +1,7 @@
 import { Form, Button, Row, Col, Card, Alert } from "react-bootstrap";
 import useMcqQuestionForm from "./hooks/useMcqQuestionForm";
 import AIGeneratedQuestions from "./AIGeneratedQuestions.jsx";
-export default function McqQuestionGenerationForm({onSave, warning, disabled}) {
+export default function McqQuestionGenerationForm({onSave, warning, disabled, noOfQuestions, questionCount}) {
     const {
         errors,
         questionTopic, 
@@ -22,7 +22,7 @@ export default function McqQuestionGenerationForm({onSave, warning, disabled}) {
         handleCheckboxChangeAIQ,
         saveCheckedQuestions,
         generatedAndSelectedQuestions
-    } = useMcqQuestionForm(onSave);
+    } = useMcqQuestionForm(onSave, questionCount, noOfQuestions);
 
   return (
     <>
@@ -125,6 +125,7 @@ export default function McqQuestionGenerationForm({onSave, warning, disabled}) {
                 checkedQuestions={checkedAIQuestions}
                 onCheck={handleCheckboxChangeAIQ}
                 onSaveChecked={saveCheckedQuestions}
+                errors={errors}
             />
         )}
     </>

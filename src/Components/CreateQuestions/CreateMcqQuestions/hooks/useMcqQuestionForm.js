@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"; 
 import { generateMcqQuestion } from "../service/aiQuestionGenerationService"; 
 
-const useMcqQuestionForm = (onSave) => {
+const useMcqQuestionForm = (onSave, questionCount, noOfQuestions) => {
     const [questionText, setQuestionText] = useState("");
     const [answerOptions, setAnswerOptions] = useState(["","","",""])
     const [correctAnswers, setCorrectAnswers] = useState([]);
@@ -127,6 +127,24 @@ const useMcqQuestionForm = (onSave) => {
 
     // Function to save checked questions
     const saveCheckedQuestions = () => {
+        //check if user has selected more than required number of questions
+        const newErrors = {};
+        setErrors(newErrors);
+
+        const selectedCount = Object.values(checkedAIQuestions).filter(Boolean).length;
+
+        if (selectedCount > questionCount - noOfQuestions) {
+            newErrors.aiQuestionsCount = `You can only select more than ${questionCount - noOfQuestions} question(s).`;
+            setErrors(newErrors);
+            return;
+        } else if (selectedCount === 0) {
+            newErrors.aiQuestionsCount = "Select at least one question to add.";
+            setErrors(newErrors);
+            return;
+        } else {
+            setErrors({});
+        }
+
         const selectedQuestions = generatedQuestions.filter((q, index) => checkedAIQuestions[index]);
         setGeneratedAndSelectedQuestions(selectedQuestions);
 
@@ -154,6 +172,8 @@ const useMcqQuestionForm = (onSave) => {
         setGeneratedQuestions([]);
         setCheckedAIQuestions([]);
         setGeneratedAndSelectedQuestions([]);
+        setErrors({});
+        
     }
     
     return {

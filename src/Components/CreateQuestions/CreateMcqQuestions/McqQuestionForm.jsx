@@ -5,7 +5,7 @@ import ManualMcqQuestionCreation from './ManualMcqQuestionCreation';
 import McqQuestionGenerationForm from "./McqQuestionGenerationForm";
 import '../../../css/questionCreation.css';
 
-export default function McqQuestionForm({onSave, warning, disabled}) {     
+export default function McqQuestionForm({onSave, warning, disabled, noOfQuestions, questionCount}) {     
     const [activeTab, setActiveTab] = useState('manual'); // 'manual' or 'ai'
   return ( 
     <Card>
@@ -31,10 +31,20 @@ export default function McqQuestionForm({onSave, warning, disabled}) {
 
                 <div className="mt-4">
                     {activeTab === 'manual' && (
-                        <ManualMcqQuestionCreation onSave={onSave} warning={warning} disabled={disabled} />
+                        <ManualMcqQuestionCreation 
+                            onSave={onSave} 
+                            warning={warning} 
+                            disabled={disabled} 
+                        />
                     )}
                     {activeTab === 'ai' && (
-                        <McqQuestionGenerationForm onSave={onSave} warning={warning} disabled={disabled} />
+                        <McqQuestionGenerationForm 
+                            onSave={onSave} 
+                            warning={warning} 
+                            disabled={disabled} 
+                            noOfQuestions={noOfQuestions} 
+                            questionCount={questionCount}
+                        />
                     )}
                 </div>
             </div>

@@ -3,7 +3,7 @@ import {useState} from 'react'
 import { Row, Card, CardBody, Col, Form, Button } from "react-bootstrap";
 import '../../../css/aiQuestionGeneration.css';
 
-export default function AIGeneratedQuestions({ questions, checkedQuestions, onCheck, onSaveChecked }) {
+export default function AIGeneratedQuestions({ questions, checkedQuestions, onCheck, onSaveChecked, errors }) {
   
   return (
     <Row className="mb-4 mt-4 mx-1 main-row-bg">
@@ -50,6 +50,8 @@ export default function AIGeneratedQuestions({ questions, checkedQuestions, onCh
           ➕ Add Questions to the Exam
         </Button>
       </div>
+      {errors.aiQuestionsCount && <div className="text-danger small">{errors.aiQuestionsCount}</div>}
+
     </Row>
   )
 }
