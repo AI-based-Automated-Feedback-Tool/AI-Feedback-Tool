@@ -1,9 +1,10 @@
 import React, { useEffect, useState, useContext } from "react";
-import { Container, Card, Form, Row, Col, Button, Spinner, Alert } from "react-bootstrap";
+import { Container, Card, Form, Row, Col, Button, Spinner, Alert, Badge } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../../../SupabaseAuth/supabaseClient";
 import HeaderWithApiCount from './HeaderWithApiCount';
 import { ApiCallCountContext } from "../../../Context/ApiCallCountContext";
+import './FeedbackSelector.css'; // We'll create this CSS file
 
 const FeedbackSelector = () => {
   const navigate = useNavigate();
@@ -128,27 +129,68 @@ const FeedbackSelector = () => {
   };
 
   return (
-    <Container className="my-4">
-      <Card>
-        
-        <Card.Header className="bg-primary text-white d-flex justify-content-between align-items-center">
-          <h4 className="mb-0">🤖 AI Feedback - Select Exam</h4>
+    <Container className="my-5">
+      {/* Hero Section */}
+      <div className="feedback-selector-hero mb-5">
+        <div className="hero-content text-center">
+          <div className="hero-icon mb-3">
+            <i className="fas fa-robot fa-3x text-primary"></i>
+          </div>
+          <h1 className="hero-title mb-3">
+            <span className="gradient-text">AI-Powered Feedback</span>
+          </h1>
+          <p className="hero-subtitle text-muted mb-4">
+            Generate intelligent insights and recommendations for your exams using advanced AI analysis
+          </p>
           <HeaderWithApiCount />
-        </Card.Header>
-        <Card.Body>
-          {error && <Alert variant="danger">{error}</Alert>}
+        </div>
+      </div>
 
+      {error && (
+        <Alert variant="danger" className="modern-alert mb-4">
+          <i className="fas fa-exclamation-triangle me-2"></i>
+          {error}
+        </Alert>
+      )}
+
+      {/* Main Selection Card */}
+      <Card className="main-selection-card border-0 shadow-lg">
+        <Card.Header className="modern-card-header">
+          <div className="d-flex align-items-center">
+            <div className="header-icon me-3">
+              <i className="fas fa-clipboard-list"></i>
+            </div>
+            <div>
+              <h4 className="mb-1 text-white">Select Your Exam</h4>
+              <small className="text-white-50">Choose the course, type, and specific exam for AI analysis</small>
+            </div>
+          </div>
+        </Card.Header>
+        
+        <Card.Body className="p-4">
           <Form>
-            <Card className="mb-4 border-0 shadow-sm">
-              <Card.Header className="bg-light">
-                <h5 className="mb-0">Filter Exams</h5>                
-              </Card.Header>
-              <Card.Body>
-                <Row className="mb-3">
-                  <Col md={6}>
-                    <Form.Group>
-                      <Form.Label className="fw-bold">Select Course</Form.Label>
+            {/* Filter Section */}
+            <div className="filter-section mb-4">
+              <div className="section-header mb-4">
+                <h5 className="section-title">
+                  <i className="fas fa-filter me-2 text-primary"></i>
+                  Filter Options
+                </h5>
+                <p className="section-subtitle text-muted">
+                  Narrow down your exam selection by course and type
+                </p>
+              </div>
+
+              <Row className="g-4">
+                <Col md={6}>
+                  <div className="modern-form-group">
+                    <label className="modern-label">
+                      <i className="fas fa-graduation-cap me-2 text-primary"></i>
+                      Select Course
+                    </label>
+                    <div className="modern-select-wrapper">
                       <Form.Select
+                        className="modern-select"
                         value={selectedCourse}
                         onChange={(e) => {
                           setSelectedCourse(e.target.value);
@@ -157,22 +199,35 @@ const FeedbackSelector = () => {
                         }}
                         disabled={loading || courses.length === 0}
                       >
-                        <option value="">-- Choose a Course --</option>
+                        <option value="">🎯 Choose a Course</option>
                         {courses.map((course) => (
                           <option key={course.course_id} value={course.course_id}>
-                            {course.course_code} - {course.title}
+                            📚 {course.course_code} - {course.title}
                           </option>
                         ))}
                       </Form.Select>
-                      {courses.length === 0 && !loading && (
-                        <Form.Text className="text-muted">No courses available</Form.Text>
-                      )}
-                    </Form.Group>
-                  </Col>
-                  <Col md={6}>
-                    <Form.Group>
-                      <Form.Label className="fw-bold">Select Exam Type</Form.Label>
+                      <div className="select-icon">
+                        <i className="fas fa-chevron-down"></i>
+                      </div>
+                    </div>
+                    {courses.length === 0 && !loading && (
+                      <div className="form-feedback">
+                        <i className="fas fa-info-circle me-1"></i>
+                        No courses available
+                      </div>
+                    )}
+                  </div>
+                </Col>
+                
+                <Col md={6}>
+                  <div className="modern-form-group">
+                    <label className="modern-label">
+                      <i className="fas fa-tasks me-2 text-primary"></i>
+                      Select Exam Type
+                    </label>
+                    <div className="modern-select-wrapper">
                       <Form.Select
+                        className="modern-select"
                         value={selectedType}
                         onChange={(e) => {
                           setSelectedType(e.target.value);
@@ -180,76 +235,144 @@ const FeedbackSelector = () => {
                           setExamDetails(null);
                         }}
                       >
-                        <option value="">-- Choose Exam Type --</option>
-                        {examTypes.map((type) => (
-                          <option key={type} value={type}>
-                            {type.toUpperCase()}
-                          </option>
-                        ))}
+                        <option value="">📝 Choose Exam Type</option>
+                        <option value="mcq">🔘 Multiple Choice Questions</option>
+                        <option value="code">💻 Programming/Code</option>
+                        <option value="essay">📄 Essay/Written</option>
                       </Form.Select>
-                    </Form.Group>
-                  </Col>
-                </Row>
+                      <div className="select-icon">
+                        <i className="fas fa-chevron-down"></i>
+                      </div>
+                    </div>
+                  </div>
+                </Col>
+              </Row>
 
-                <Row>
+              {/* Exam Selection */}
+              {selectedCourse && selectedType && (
+                <Row className="mt-4">
                   <Col md={12}>
-                    <Form.Group>
-                      <Form.Label className="fw-bold">Select Exam</Form.Label>
-                      <Form.Select
-                        value={selectedExam}
-                        onChange={(e) => setSelectedExam(e.target.value)}
-                        disabled={!exams.length}
-                      >
-                        <option value="">-- Choose an Exam --</option>
-                        {exams.map((exam) => (
-                          <option key={exam.exam_id} value={exam.exam_id}>
-                            {exam.title}
-                          </option>
-                        ))}
-                      </Form.Select>
-                    </Form.Group>
+                    <div className="modern-form-group exam-selection">
+                      <label className="modern-label">
+                        <i className="fas fa-file-alt me-2 text-primary"></i>
+                        Select Specific Exam
+                      </label>
+                      <div className="modern-select-wrapper">
+                        <Form.Select
+                          className="modern-select"
+                          value={selectedExam}
+                          onChange={(e) => setSelectedExam(e.target.value)}
+                          disabled={!exams.length}
+                        >
+                          <option value="">📋 Choose an Exam</option>
+                          {exams.map((exam) => (
+                            <option key={exam.exam_id} value={exam.exam_id}>
+                              📊 {exam.title}
+                            </option>
+                          ))}
+                        </Form.Select>
+                        <div className="select-icon">
+                          <i className="fas fa-chevron-down"></i>
+                        </div>
+                      </div>
+                    </div>
                   </Col>
                 </Row>
-              </Card.Body>
-            </Card>
+              )}
+            </div>
 
+            {/* Loading State */}
             {loading && (
-              <div className="text-center mb-4">
-                <Spinner animation="border" variant="primary" />
+              <div className="loading-section text-center py-4">
+                <div className="modern-spinner">
+                  <Spinner animation="border" variant="primary" className="me-3" />
+                  <span className="loading-text">Loading exam data...</span>
+                </div>
               </div>
             )}
 
+            {/* Exam Details Preview */}
             {examDetails && (
-              <Card className="mb-4 border-0 shadow-sm">
-                <Card.Header className="bg-light">
-                  <h5 className="mb-0">Exam Details</h5>
-                </Card.Header>
-                <Card.Body>
-                  <p><strong>Title:</strong> {examDetails.title}</p>
-                  <p><strong>Duration:</strong> {examDetails.duration} mins</p>
-                  <p><strong>Questions:</strong> {examDetails.question_count}</p>
-                  <p><strong>Type:</strong> {examDetails.type.toUpperCase()}</p>
-                  <p><strong>Instructions:</strong> {examDetails.instructions || "N/A"}</p>
-                </Card.Body>
-              </Card>
+              <div className="exam-details-section">
+                <div className="section-header mb-3">
+                  <h5 className="section-title">
+                    <i className="fas fa-info-circle me-2 text-success"></i>
+                    Exam Preview
+                  </h5>
+                </div>
+                
+                <Card className="exam-details-card border-0">
+                  <Card.Body className="p-4">
+                    <div className="exam-header mb-3">
+                      <h6 className="exam-title text-primary">{examDetails.title}</h6>
+                      <Badge bg="primary" className="exam-type-badge">
+                        {examDetails.type.toUpperCase()}
+                      </Badge>
+                    </div>
+                    
+                    <Row className="exam-stats">
+                      <Col md={3}>
+                        <div className="stat-item">
+                          <div className="stat-icon">
+                            <i className="fas fa-clock text-warning"></i>
+                          </div>
+                          <div className="stat-content">
+                            <span className="stat-value">{examDetails.duration}</span>
+                            <span className="stat-label">Minutes</span>
+                          </div>
+                        </div>
+                      </Col>
+                      <Col md={3}>
+                        <div className="stat-item">
+                          <div className="stat-icon">
+                            <i className="fas fa-question-circle text-info"></i>
+                          </div>
+                          <div className="stat-content">
+                            <span className="stat-value">{examDetails.question_count}</span>
+                            <span className="stat-label">Questions</span>
+                          </div>
+                        </div>
+                      </Col>
+                      <Col md={6}>
+                        <div className="exam-instructions">
+                          <strong>Instructions:</strong>
+                          <p className="text-muted mb-0 mt-1">
+                            {examDetails.instructions || "No special instructions provided"}
+                          </p>
+                        </div>
+                      </Col>
+                    </Row>
+                  </Card.Body>
+                </Card>
+              </div>
             )}
 
-            <div className="d-flex justify-content-end">
-              <Button
-                variant={isLimitReached ? "secondary" : "primary"}
-                size="lg"
-                onClick={handleAIFeedbackClick}
-                disabled={!selectedExam || loading || isLimitReached}
-              >
-                Proceed to AI Feedback
-              </Button>
+            {/* Action Section */}
+            <div className="action-section mt-5">
+              <div className="d-flex justify-content-between align-items-center">
+                <div className="action-info">
+                  {isLimitReached && (
+                    <div className="limit-warning">
+                      <i className="fas fa-exclamation-triangle text-danger me-2"></i>
+                      <span className="text-danger fw-bold">
+                        Daily limit reached. Try again tomorrow.
+                      </span>
+                    </div>
+                  )}
+                </div>
+                
+                <Button
+                  className={`modern-action-btn ${!selectedExam || loading || isLimitReached ? 'disabled' : ''}`}
+                  size="lg"
+                  onClick={handleAIFeedbackClick}
+                  disabled={!selectedExam || loading || isLimitReached}
+                >
+                  <i className="fas fa-robot me-2"></i>
+                  <span>Generate AI Feedback</span>
+                  <i className="fas fa-arrow-right ms-2"></i>
+                </Button>
+              </div>
             </div>
-
-            {isLimitReached && (
-              <p className="text-danger mt-3 text-end fw-bold">
-                You have reached the daily limit of AI feedback requests. Please try again tomorrow.
-              </p>
-            )}
           </Form>
         </Card.Body>
       </Card>

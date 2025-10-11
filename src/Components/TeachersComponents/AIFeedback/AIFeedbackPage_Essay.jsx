@@ -294,6 +294,35 @@ const AIFeedbackPage_Essay = () => {
             {feedback.keyStrengths?.length > 0 && (
               <Section title="✅ Key Strengths" items={feedback.keyStrengths} />
             )}
+            
+            {/* Check if we have dynamic sections (non-standard keys) */}
+            {hasDynamicSections(feedback) ? (
+              /* Render dynamic sections */
+              Object.keys(feedback).map(key => {
+                // Skip the standard sections we've already rendered
+                if (['overallSummary', 'keyStrengths'].includes(key)) return null;
+                
+                // Skip standard static keys (they should not appear in dynamic prompts)
+                if (isStandardKey(key)) return null;
+                
+                // Skip empty arrays or undefined values
+                if (!feedback[key] || (Array.isArray(feedback[key]) && feedback[key].length === 0)) return null;
+                
+                // Convert camelCase keys back to readable titles with appropriate icons
+                const title = getDynamicSectionTitle(key);
+                
+                return (
+                  <Section 
+                    key={key}
+                    title={title} 
+                    items={Array.isArray(feedback[key]) ? feedback[key] : []}
+                    text={typeof feedback[key] === 'string' ? feedback[key] : ''}
+                  />
+                );
+              })
+            ) : (
+              /* Render standard static prompt sections */
+              <>
                 {feedback.mostMissedQuestions?.length > 0 && (
                   <Section title="⚠️ Most Missed Questions" items={feedback.mostMissedQuestions} />
                 )}
@@ -302,6 +331,8 @@ const AIFeedbackPage_Essay = () => {
                 )}
                 {feedback.nextSteps?.length > 0 && (
                   <Section title="🚀 Actionable Next Steps" items={feedback.nextSteps} />
+                )}
+              </>
             )}
           </Card.Body>
         </Card>
