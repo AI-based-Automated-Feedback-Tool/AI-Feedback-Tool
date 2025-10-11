@@ -131,6 +131,19 @@ const useMcqQuestionForm = (onSave) => {
             }
             onSave(formattedQuestion);
         })
+
+        // Clear question generation form 
+        setQuestionTopic("");
+        setQuestionNo("");
+        setQuestionDifficulty("Easy");
+        setGuidance("");
+        setKeyConcepts("");
+        setDoNotInclude("");
+
+        // Clear generated questions and selections
+        setGeneratedQuestions([]);
+        setCheckedAIQuestions([]);
+        setGeneratedAndSelectedQuestions([]);
     }
     
     return {

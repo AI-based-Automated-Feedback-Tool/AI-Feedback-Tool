@@ -44,7 +44,7 @@ export default function AIGeneratedQuestions({ questions, checkedQuestions, onCh
         ))
       }
 
-      {/* Generate Button */}
+      {/* Add Questions Button */}
       <div className="d-flex justify-content-end" onClick={onSaveChecked}>
         <Button variant="primary" >
           ➕ Add Questions to the Exam

@@ -116,12 +116,16 @@ export default function McqQuestionGenerationForm({onSave, warning, disabled}) {
                 </Button>
             </div>          
         </Form>
-        <AIGeneratedQuestions 
-            questions={generatedQuestions} 
-            checkedQuestions={checkedAIQuestions}
-            onCheck={handleCheckboxChangeAIQ}
-            onSaveChecked={saveCheckedQuestions}
-        />
+        
+        {/* Display AI Generated Questions */}
+        {generatedQuestions.length > 0 && (
+            <AIGeneratedQuestions 
+                questions={generatedQuestions} 
+                checkedQuestions={checkedAIQuestions}
+                onCheck={handleCheckboxChangeAIQ}
+                onSaveChecked={saveCheckedQuestions}
+            />
+        )}
     </>
   )
 }
