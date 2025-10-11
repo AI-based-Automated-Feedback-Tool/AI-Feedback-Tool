@@ -19,7 +19,7 @@ const ExamEventsPage = () => {
       courseCode: 'CS101',
       courseName: 'Introduction to Computer Science',
       examType: 'Midterm',
-      date: '2024-12-15',
+      date: '2025-10-20',
       time: '9:00 AM - 11:00 AM',
       duration: '2 hours',
       location: 'Building A, Room 101',
@@ -35,7 +35,7 @@ const ExamEventsPage = () => {
       courseCode: 'MATH202',
       courseName: 'Calculus II',
       examType: 'Final',
-      date: '2024-12-20',
+      date: '2025-10-11',
       time: '1:00 PM - 4:00 PM',
       duration: '3 hours',
       location: 'Building B, Room 205',
@@ -51,7 +51,7 @@ const ExamEventsPage = () => {
       courseCode: 'PHY101',
       courseName: 'Physics Fundamentals',
       examType: 'Quiz',
-      date: '2024-12-10',
+      date: '2025-12-10',
       time: '10:30 AM - 11:30 AM',
       duration: '1 hour',
       location: 'Science Building, Lab 3',
@@ -127,8 +127,8 @@ const ExamEventsPage = () => {
     return exams.map(exam => ({
       id: exam.id,
       title: `${exam.courseCode} - ${exam.examType}`,
-      start: new Date(exam.date),
-      end: new Date(exam.date),
+      start: moment(exam.date, 'YYYY-MM-DD').toDate(),
+      end: moment(exam.date, 'YYYY-MM-DD').add(1, 'days').toDate( ), // All-day event
       allDay: true,
       resource: exam,
     }));
@@ -136,20 +136,33 @@ const ExamEventsPage = () => {
   
   //Add event styling function
   const eventStyleGetter = (event) => {
-    const backgroundColor = event.resource.status === 'completed' ? '#28a745' :
-                            event.resource.preparationStatus === 'in-progress' ? '#ffc107' : '#dc3545';
-    return {
-      style: {
-        backgroundColor:backgroundColor,
-        borderRadius: '4px',
-        border: 'none',
-        fontSize: '12px',
-        padding: '2px 5px',
-        cursor : 'pointer',
-        color: 'white',
-      }
-    };
+  console.log('Event being styled:', event); 
+  
+  let backgroundColor;
+  if (event.resource.status === 'completed') {
+    backgroundColor = '#28a745';
+  } else if (event.resource.preparationStatus === 'in-progress') {
+    backgroundColor = '#ffc107';
+  } else if (event.resource.preparationStatus === 'completed') {
+    backgroundColor = '#28a745';
+  } else {
+    backgroundColor = '#dc3545'; // not-started
+  }
+  
+  return {
+    style: {
+      backgroundColor: backgroundColor,
+      borderRadius: '4px',
+      border: 'none',
+      fontSize: '12px',
+      padding: '2px 5px',
+      cursor: 'pointer',
+      color: 'white',
+      opacity: 1, // 🔥 ADD THIS
+      fontWeight: 'bold' // 🔥 ADD THIS
+    }
   };
+};
 
   return (
     <Container className="my-5">
