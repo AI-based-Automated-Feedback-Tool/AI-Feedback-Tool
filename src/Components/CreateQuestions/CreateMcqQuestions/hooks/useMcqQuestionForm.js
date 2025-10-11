@@ -137,7 +137,7 @@ const useMcqQuestionForm = (onSave, questionCount, noOfQuestions) => {
         const selectedCount = Object.values(checkedAIQuestions).filter(Boolean).length;
 
         if (selectedCount > questionCount - noOfQuestions) {
-            newErrors.aiQuestionsCount = `You can only select more than ${questionCount - noOfQuestions} question(s).`;
+            newErrors.aiQuestionsCount = `You can't select more than ${questionCount - noOfQuestions} question(s).`;
             setErrors(newErrors);
             return;
         } else if (selectedCount === 0) {

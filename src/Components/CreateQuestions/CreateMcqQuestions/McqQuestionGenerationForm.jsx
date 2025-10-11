@@ -1,6 +1,6 @@
 import { Form, Button, Row, Col, Card, Alert } from "react-bootstrap";
 import useMcqQuestionForm from "./hooks/useMcqQuestionForm";
-import AIGeneratedQuestions from "./AIGeneratedQuestions.jsx";
+import AIGeneratedQuestions from "./AIGeneratedQuestions";
 export default function McqQuestionGenerationForm({onSave, warning, disabled, noOfQuestions, questionCount}) {
     const {
         errors,
