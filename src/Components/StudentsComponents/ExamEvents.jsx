@@ -1,10 +1,16 @@
 import React, {useState} from 'react';
+import {Calendar, momentLocalizer} from 'react-big-calendar';
+import moment from 'moment';
+import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { Container, Row, Col, Card, Badge, Alert } from 'react-bootstrap';
 //import { useParams } from 'react-router-dom';
 
+const localizer = momentLocalizer(moment);
 const ExamEventsPage = () => {
      //const {userId} = useParams();
 
+  //Add calender view state
+  const [calendarView, setCalendarView] = useState('month');
 
   // Dummy data for enrolled exams
   const [exams, setExams] = useState([
@@ -116,8 +122,35 @@ const ExamEventsPage = () => {
     return diffDays;
   };
 
-
+  //Add calender events function
+  const getCalendarEvents = () => {
+    return exams.map(exam => ({
+      id: exam.id,
+      title: `${exam.courseCode} - ${exam.examType}`,
+      start: new Date(exam.date),
+      end: new Date(exam.date),
+      allDay: true,
+      resource: exam,
+    }));
+  };
   
+  //Add event styling function
+  const eventStyleGetter = (event) => {
+    const backgroundColor = event.resource.status === 'completed' ? '#28a745' :
+                            event.resource.preparationStatus === 'in-progress' ? '#ffc107' : '#dc3545';
+    return {
+      style: {
+        backgroundColor:backgroundColor,
+        borderRadius: '4px',
+        border: 'none',
+        fontSize: '12px',
+        padding: '2px 5px',
+        cursor : 'pointer',
+        color: 'white',
+      }
+    };
+  };
+
   return (
     <Container className="my-5">
       <Row className="mb-4">
@@ -160,6 +193,46 @@ const ExamEventsPage = () => {
             <Card.Body>
               <Card.Title>{exams.filter(e => e.preparationStatus === 'not-started').length}</Card.Title>
               <Card.Text>Not Started</Card.Text>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+
+      {/*Calendar component*/}
+      <Row className="mb-4">
+        <Col>
+          <Card>
+            <Card.Header>
+              <h5 className="mb-0">Exam Calendar View</h5>
+              <small className="text-muted">Click on events to see exam details</small>
+            </Card.Header>
+            <Card.Body>
+              <div style={{ height: '500px' }}>
+                <Calendar
+                  localizer={localizer}
+                  events={getCalendarEvents()}
+                  startAccessor="start"
+                  endAccessor="end"
+                  views={['month', 'week', 'day']}
+                  view={calendarView}
+                  onView={view => setCalendarView(view)}
+                  onSelectEvent={event => {
+                    // Optional: You can add functionality here to show exam details when clicked
+                    console.log('Selected exam:', event.resource);
+                    alert(`Selected: ${event.resource.courseCode} - ${event.resource.examType}\nDate: ${event.resource.date}\nStatus: ${event.resource.preparationStatus}`);
+                  }}
+                  eventPropGetter={eventStyleGetter}
+                  popup
+                  showMultiDayTimes
+                />
+              </div>
+              <div className="mt-3">
+                <small className="text-muted">
+                  <Badge bg="success" className="me-2">Completed</Badge>
+                  <Badge bg="warning" className="me-2">In Progress</Badge>
+                  <Badge bg="danger">Not Started</Badge>
+                </small>
+              </div>
             </Card.Body>
           </Card>
         </Col>
