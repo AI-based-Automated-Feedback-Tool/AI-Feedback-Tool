@@ -84,26 +84,36 @@ const useMcqQuestionForm = (onSave) => {
 
     // Function to generate questions using AI
     const generateQuestion = async () => {
-        try {
-            const params = {
-                topic: questionTopic,
-                numQuestions: questionNo,
-                difficulty: questionDifficulty,
-                guidance: guidance,
-                keyConcepts: keyConcepts,
-                doNotInclude: doNotInclude,
-                questionType: "multiple choice"
-            };
-            const data = await generateMcqQuestion(params);
-            
-            //for just now print questions in console
-            if(data.questions && data.questions.length > 0){
-                setGeneratedQuestions(data.questions);
-                console.log("Generated MCQ Questions:", data.questions);
+        // Basic validation
+        const newErrors = {};
+        if (!questionTopic.trim())
+            newErrors.questionTopic = "Question topic is required.";
+        if (!questionNo || isNaN(questionNo) || parseInt(questionNo) < 1)
+            newErrors.questionNo = "Enter a valid number of questions.";
+        if (!guidance.trim())
+            newErrors.guidance = "Guidance is required.";   
+        setErrors(newErrors);   
+
+        if (Object.keys(newErrors).length === 0) {
+            try {
+                const params = {
+                    topic: questionTopic,
+                    numQuestions: questionNo,
+                    difficulty: questionDifficulty,
+                    guidance: guidance,
+                    keyConcepts: keyConcepts,
+                    doNotInclude: doNotInclude,
+                    questionType: "multiple choice"
+                };
+                const data = await generateMcqQuestion(params);
+                
+                if(data.questions && data.questions.length > 0){
+                    setGeneratedQuestions(data.questions);
+                }
+            } catch (error) {
+                console.error("Error generating question:", error);
+                //needed to show error to user in UI later
             }
-        } catch (error) {
-            console.error("Error generating question:", error);
-            //needed to show error to user in UI later
         }
     }
 

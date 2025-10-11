@@ -38,7 +38,7 @@ export default function McqQuestionGenerationForm({onSave, warning, disabled}) {
                     onChange={e => setQuestionTopic(e.target.value)}
                     placeholder='Enter the topic of the question here...'
                 />
-                {errors.question && <div className="text-danger small">{errors.question}</div>}
+                {errors.questionTopic && <div className="text-danger small">{errors.questionTopic}</div>}
             </Form.Group>
 
             {/* No of questions required */}
@@ -66,7 +66,7 @@ export default function McqQuestionGenerationForm({onSave, warning, disabled}) {
                         </Form.Select>
                     </Col>                      
                 </Row>
-                {errors.answers && <div className="text-danger small">{errors.answers}</div>}
+                {errors.questionNo && <div className="text-danger small">{errors.questionNo}</div>}
             </Form.Group>
 
             {/* Describe about the topic for guidance */}
@@ -79,6 +79,7 @@ export default function McqQuestionGenerationForm({onSave, warning, disabled}) {
                     onChange={e => setGuidance(e.target.value)}
                     placeholder='Describe here about your topic'
                 />
+                {errors.guidance && <div className="text-danger small">{errors.guidance}</div>}
             </Form.Group>  
 
             {/* Extra Guidance */}            
@@ -116,7 +117,7 @@ export default function McqQuestionGenerationForm({onSave, warning, disabled}) {
                 </Button>
             </div>          
         </Form>
-        
+
         {/* Display AI Generated Questions */}
         {generatedQuestions.length > 0 && (
             <AIGeneratedQuestions 
