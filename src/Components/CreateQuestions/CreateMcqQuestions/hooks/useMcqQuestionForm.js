@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"; 
 import { generateMcqQuestion } from "../service/aiQuestionGenerationService"; 
 
-const useMcqQuestionForm = (onSave) => {
+const useMcqQuestionForm = (onSave, questionCount, noOfQuestions) => {
     const [questionText, setQuestionText] = useState("");
     const [answerOptions, setAnswerOptions] = useState(["","","",""])
     const [correctAnswers, setCorrectAnswers] = useState([]);
@@ -14,6 +14,12 @@ const useMcqQuestionForm = (onSave) => {
     const [guidance, setGuidance] = useState("");
     const [keyConcepts, setKeyConcepts] = useState("");
     const [doNotInclude, setDoNotInclude] = useState("");
+    const [generatedQuestions, setGeneratedQuestions] = useState([]);
+    // State to track which questions are checked
+    const [checkedAIQuestions, setCheckedAIQuestions] = useState([]);
+    // State to track the generated questions
+    const [generatedAndSelectedQuestions, setGeneratedAndSelectedQuestions] = useState([]);
+    const [isGenerating, setIsGenerating] = useState(false);
 
     // Set answer options
     const handleAnswerOptionsChange = (e, index) => {
@@ -79,28 +85,100 @@ const useMcqQuestionForm = (onSave) => {
 
     // Function to generate questions using AI
     const generateQuestion = async () => {
-        try {
-            const params = {
-                topic: questionTopic,
-                numQuestions: questionNo,
-                difficulty: questionDifficulty,
-                guidance: guidance,
-                keyConcepts: keyConcepts,
-                doNotInclude: doNotInclude,
-                questionType: "multiple choice"
-            };
-            const data = await generateMcqQuestion(params);
-            
-            //for just now print questions in console
-            if(data.questions && data.questions.length > 0){
-                const generateMcqQuestions = data.questions;
-                console.log("Generated MCQ Questions:", generateMcqQuestions);
+        // Basic validation
+        const newErrors = {};
+        if (!questionTopic.trim())
+            newErrors.questionTopic = "Question topic is required.";
+        if (!questionNo || isNaN(questionNo) || parseInt(questionNo) < 1)
+            newErrors.questionNo = "Enter a valid number of questions.";
+        if (!guidance.trim())
+            newErrors.guidance = "Guidance is required.";   
+        setErrors(newErrors);   
+
+        if (Object.keys(newErrors).length === 0) {
+            setIsGenerating(true);
+            try {
+                const params = {
+                    topic: questionTopic,
+                    numQuestions: questionNo,
+                    difficulty: questionDifficulty,
+                    guidance: guidance,
+                    keyConcepts: keyConcepts,
+                    doNotInclude: doNotInclude,
+                    questionType: "multiple choice"
+                };
+                const data = await generateMcqQuestion(params);
+                
+                if(data.questions && data.questions.length > 0){
+                    setGeneratedQuestions(data.questions);
+                }
+            } catch (error) {
+                console.error("Error generating question:", error);
+                //needed to show error to user in UI later
             }
-        } catch (error) {
-            console.error("Error generating question:", error);
-            //needed to show error to user in UI later
+            setIsGenerating(false);
         }
     }
+
+    // Handle checkbox change
+    const handleCheckboxChangeAIQ = (index) => {
+        setCheckedAIQuestions((prev) => ({
+        ...prev,
+        [index]: !prev[index],
+        }));
+    }
+
+    // Function to save checked questions
+    const saveCheckedQuestions = () => {
+        //check if user has selected more than required number of questions
+        const newErrors = {};
+        setErrors(newErrors);
+
+        const selectedCount = Object.values(checkedAIQuestions).filter(Boolean).length;
+
+        if (selectedCount > questionCount - noOfQuestions) {
+            newErrors.aiQuestionsCount = `You can't select more than ${questionCount - noOfQuestions} question(s).`;
+            setErrors(newErrors);
+            return;
+        } else if (selectedCount === 0) {
+            newErrors.aiQuestionsCount = "Select at least one question to add.";
+            setErrors(newErrors);
+            return;
+        } else {
+            setErrors({});
+        }
+
+        const selectedQuestions = generatedQuestions.filter((q, index) => checkedAIQuestions[index]);
+        setGeneratedAndSelectedQuestions(selectedQuestions);
+
+        //add questions to main questions list
+        selectedQuestions.forEach((q) => {
+            const formattedQuestion = {
+                question: q.question,
+                answers: q.choices,
+                numOfAnswers: 1,
+                correctAnswers: [q.correct_answer],
+                points: 1 //default points
+            }
+            onSave(formattedQuestion);
+        })
+
+        // Clear question generation form 
+        setQuestionTopic("");
+        setQuestionNo("");
+        setQuestionDifficulty("Easy");
+        setGuidance("");
+        setKeyConcepts("");
+        setDoNotInclude("");
+
+        // Clear generated questions and selections
+        setGeneratedQuestions([]);
+        setCheckedAIQuestions([]);
+        setGeneratedAndSelectedQuestions([]);
+        setErrors({});
+        
+    }
+    
     return {
         questionText, setQuestionText,
         answerOptions, setAnswerOptions,
@@ -124,7 +202,13 @@ const useMcqQuestionForm = (onSave) => {
         setKeyConcepts,
         doNotInclude, 
         setDoNotInclude,
-        generateQuestion
+        generateQuestion,
+        generatedQuestions,
+        checkedAIQuestions,
+        handleCheckboxChangeAIQ,
+        saveCheckedQuestions,
+        generatedAndSelectedQuestions,
+        isGenerating
     }
 }
 

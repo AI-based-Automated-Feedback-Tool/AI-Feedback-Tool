@@ -49,7 +49,13 @@ export default function CreateMcqQuestionsContent({examId, question_count}) {
     <>               
             {/* Main content area */}
             <Col className="w-100">
-                <McqQuestionForm onSave={addQuestion} warning={warning} disabled={isDisabled()}/>
+                <McqQuestionForm 
+                    onSave={addQuestion} 
+                    warning={warning} 
+                    disabled={isDisabled()} 
+                    noOfQuestions={questions.length} 
+                    questionCount={question_count}
+                />
                 {questions.length > 0 && (
                     <Card className="mt-4">
                         <CardHeader className='bg-primary text-white '>

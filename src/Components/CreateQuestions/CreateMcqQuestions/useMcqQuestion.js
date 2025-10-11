@@ -27,19 +27,21 @@ export const useMcqQuestion = (examId, question_count) => {
 
     // Add question from child form
     const addQuestion = (newQuestion) => {
-        if (questions.length >= parseInt(question_count)) {
-            setWarning(`You can only add ${question_count} questions.`);
-            return false;
-        }
-        const newQuestionsList = [...questions, newQuestion]
-        setQuestions(newQuestionsList);
-        
-        // Show warning if limit reached now
-        if (newQuestionsList.length === parseInt(question_count)) {
-            setWarning(`You have reached the limit of ${question_count} questions.`);
-        } else {
-            setWarning(null);
-        }
+        setQuestions((prevQuestions) => {
+            if (prevQuestions.length >= parseInt(question_count)) {
+                setWarning(`You can only add ${question_count} questions.`);
+                return prevQuestions;
+            }
+            const newQuestionsList = [...prevQuestions, newQuestion]
+            
+            // Show warning if limit reached now
+            if (newQuestionsList.length === parseInt(question_count)) {
+                setWarning(`You have reached the limit of ${question_count} questions.`);
+            } else {
+                setWarning(null);
+            }
+            return newQuestionsList;
+        });
         return true;
     };
 
