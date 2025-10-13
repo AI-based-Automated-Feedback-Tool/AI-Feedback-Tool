@@ -360,10 +360,11 @@ const AIFeedbackPage = () => {
 
 // Reusable section component for displaying feedback categories
 const Section = ({ title, items = [], text = '' }) => (
-  <div className="mb-4">
-    <h5 className="text-secondary">{title}</h5>
+  <div className="feedback-section">
+    <h5 className="feedback-section-title">{title}</h5>
+    <div className="feedback-section-content">
       {items.length > 0 ? (
-      <ul>
+        <ul className="feedback-section-list">
           {items.map((item, index) => (
             <li key={index}>{item}</li>
           ))}
@@ -371,6 +372,7 @@ const Section = ({ title, items = [], text = '' }) => (
       ) : (
         <p>{text}</p>
       )}
+    </div>
   </div>
 );
 
