@@ -34,8 +34,29 @@ export default function CreateCodeQuestionsContent({examId, question_count}) {
     resetForm,
     setPoints,
     points,
-    warning
-  } = useCodeQuestionForm(examId, question_count); 
+    warning,
+    aiformSelectedLanguage,
+    setAiformSelectedLanguage,
+    difficulty,
+    setDifficulty,
+    subQuestionType,
+    setSubQuestionType,
+    guidance,
+    setGuidance,
+    keyConcepts,
+    setKeyConcepts,
+    doNotInclude,
+    setDoNotInclude,
+    questionNo,
+    setQuestionNo,
+    expectedFunctionSignature,
+    setExpectedFunctionSignature,
+    gradingDescription,
+    setGradingDescription,
+    topicDescription,
+    setTopicDescription,
+    handleGenerateQuestions
+  } = useCodeQuestionForm(examId, question_count);
 
   const isDisabled = () =>{
         if (questions.length >= parseInt(question_count)) {
@@ -74,7 +95,28 @@ export default function CreateCodeQuestionsContent({examId, question_count}) {
               errors,
               setErrors,
               validate,
-              resetForm
+              resetForm,
+              aiformSelectedLanguage,
+              setAiformSelectedLanguage,
+              difficulty,
+              setDifficulty,
+              subQuestionType,
+              setSubQuestionType,
+              guidance,
+              setGuidance,
+              keyConcepts,
+              setKeyConcepts,
+              doNotInclude,
+              setDoNotInclude,
+              questionNo,
+              setQuestionNo,
+              expectedFunctionSignature,
+              setExpectedFunctionSignature,
+              gradingDescription,
+              setGradingDescription,
+              topicDescription,
+              setTopicDescription,
+              handleGenerateQuestions
             }}
             disabled={isDisabled()}
       />

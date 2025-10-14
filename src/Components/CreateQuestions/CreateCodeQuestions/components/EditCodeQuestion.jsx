@@ -1,6 +1,5 @@
 import React from 'react'
-import { Modal, Form, Button, Row, Col } from 'react-bootstrap'
-import { useState } from 'react';
+import { Modal, Form, Button, Row, Col } from 'react-bootstrap';
 import useFetchLanguages from '../hooks/useFetchLanguages';
 import { useEffect } from 'react';
 import useCodeQuestionForm from '../hooks/useCodeQuestionForm';

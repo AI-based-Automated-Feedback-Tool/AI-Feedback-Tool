@@ -18,6 +18,18 @@ export default function useCodeQuestionForm( examId, question_count, initialQues
     const [editQuestionIndex, setEditQuestionIndex] = useState(null);
     const [warning, setWarning] = useState(null)
 
+    //for ai code question generation
+    const [aiformSelectedLanguage, setAiformSelectedLanguage] = useState(null);
+    const [difficulty, setDifficulty] = useState('Easy');
+    const [subQuestionType, setSubQuestionType] = useState(''); // 'Coding', 'Debugging', 'Algorithm Design'
+    const [guidance, setGuidance] = useState("");
+    const [keyConcepts, setKeyConcepts] = useState("");
+    const [doNotInclude, setDoNotInclude] = useState("");
+    const [questionNo, setQuestionNo] = useState(1);
+    const [expectedFunctionSignature, setExpectedFunctionSignature] = useState("");
+    const [gradingDescription, setGradingDescription] = useState("");    
+    const [topicDescription, setTopicDescription] = useState('');
+
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -162,7 +174,10 @@ export default function useCodeQuestionForm( examId, question_count, initialQues
         }
     }
 
-    
+    // Function to handle AI question generation 
+    const handleGenerateQuestions = async () => {
+
+    }
     return {
         testCases,
         selectedLanguage,
@@ -195,6 +210,27 @@ export default function useCodeQuestionForm( examId, question_count, initialQues
         handleEditQuestion,
         saveAllQuestions,
         warning,
+        aiformSelectedLanguage,
+        setAiformSelectedLanguage,
+        difficulty,
+        setDifficulty,
+        subQuestionType,
+        setSubQuestionType,
+        guidance,
+        setGuidance,
+        keyConcepts,
+        setKeyConcepts,
+        doNotInclude,
+        setDoNotInclude,
+        questionNo,
+        setQuestionNo,
+        expectedFunctionSignature,
+        setExpectedFunctionSignature,
+        gradingDescription,
+        setGradingDescription,
+        topicDescription,
+        setTopicDescription,
+        handleGenerateQuestions
     };
 
 } 
