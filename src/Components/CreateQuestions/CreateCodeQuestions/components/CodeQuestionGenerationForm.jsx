@@ -24,7 +24,13 @@ export default function CodeQuestionGenerationForm({formState}) {
         difficulty,
         setDifficulty,
         subQuestionType,
-        setSubQuestionType
+        setSubQuestionType,
+        guidance,
+        setGuidance,
+        keyConcepts,
+        setKeyConcepts,
+        doNotInclude,
+        setDoNotInclude
     } = formState;
 
     const {languages, loading} = useFetchLanguages(setErrors);
@@ -43,52 +49,82 @@ export default function CodeQuestionGenerationForm({formState}) {
             placeholder='Eg: Recursion, Array, Dynamic Programming, etc.'
           />
 
-        <Form.Label className="fw-bold">Programming Language *</Form.Label>
-        <Form.Select
-          value={aiformSelectedLanguage?.id || ""}
-          onChange={(e) => {
-            const selectedLang = languages.find(lang => String(lang.id) === e.target.value);
-            setAiformSelectedLanguage(selectedLang);
-          }}
-        >
-          {languages.map((language) => (
-            <option key={language.id} value={language.id}>
-              {language.language_name}
-            </option>
-          ))}
-        </Form.Select>
+          <Form.Label className="fw-bold">Programming Language *</Form.Label>
+          <Form.Select
+            value={aiformSelectedLanguage?.id || ""}
+            onChange={(e) => {
+              const selectedLang = languages.find(lang => String(lang.id) === e.target.value);
+              setAiformSelectedLanguage(selectedLang);
+            }}
+          >
+            {languages.map((language) => (
+              <option key={language.id} value={language.id}>
+                {language.language_name}
+              </option>
+            ))}
+          </Form.Select>
 
-        <Row className="align-items-center mt-3">
-          <Col md={6}>
-            <Form.Label className="fw-bold">Difficulty Level *</Form.Label>
-            <ButtonGroup className="d-flex">
-              {difficultyLevels.map((level) => (
-                <ToggleButton
-                  key={level}
-                  id={`difficulty-${level}`}
-                  type="radio"
-                  variant={difficulty === level ? 'primary' : 'outline-secondary'}
-                  name="difficulty"
-                  value={level}
-                  checked={difficulty === level}
-                  onChange={(e) => setDifficulty(e.currentTarget.value)}
-                >
-                  {level}
-                </ToggleButton>
-              ))}
-            </ButtonGroup>            
-          </Col>
+          <Row className="align-items-center mt-3">
+            <Col md={6}>
+              <Form.Label className="fw-bold">Difficulty Level *</Form.Label>
+              <ButtonGroup className="d-flex">
+                {difficultyLevels.map((level) => (
+                  <ToggleButton
+                    key={level}
+                    id={`difficulty-${level}`}
+                    type="radio"
+                    variant={difficulty === level ? 'primary' : 'outline-secondary'}
+                    name="difficulty"
+                    value={level}
+                    checked={difficulty === level}
+                    onChange={(e) => setDifficulty(e.currentTarget.value)}
+                  >
+                    {level}
+                  </ToggleButton>
+                ))}
+              </ButtonGroup>            
+            </Col>
 
-          <Col md={6}>
-            <Form.Label className="fw-bold">Question Type *</Form.Label>
-            <Form.Control 
-              type="text" 
-              value={subQuestionType} 
-              onChange={(e) => setSubQuestionType(e.target.value)}
-              placeholder='E.g. function implementation, debugging, algorithm design'
-            />
-          </Col>
-        </Row>
+            <Col md={6}>
+              <Form.Label className="fw-bold">Question Type *</Form.Label>
+              <Form.Control 
+                type="text" 
+                value={subQuestionType} 
+                onChange={(e) => setSubQuestionType(e.target.value)}
+                placeholder='E.g. function implementation, debugging, algorithm design'
+              />
+            </Col>
+          </Row>
+        </Card>
+
+        <Form.Label className="fw-bold mt-4">Guidance & Customization</Form.Label>
+        <Card className='p-3'>
+          <Form.Label className='fw-bold'>Guidance / Prompt for AI *</Form.Label>
+          <Form.Control
+            as="textarea"
+            rows={2}
+            value={guidance}
+            onChange={(e) => setGuidance(e.target.value)}
+            placeholder='Provide guidance or context for the AI / Tell the AI what kind of question to generate...'
+          />
+
+          <Form.Label className='fw-bold mt-3'>Key concepts to include </Form.Label>
+          <Form.Control
+            as="textarea"
+            rows={1}
+            value={keyConcepts}
+            onChange={(e) => setKeyConcepts(e.target.value)}
+            placeholder='E.g.- If you want to focus on some key concepts, list them here...'
+          />
+
+          <Form.Label className='fw-bold mt-3'>Do not include / Avoid </Form.Label>
+          <Form.Control
+            as="textarea"
+            rows={1}
+            value={doNotInclude}
+            onChange={(e) => setDoNotInclude(e.target.value)}
+            placeholder='E.g.- If there are specific things you want to avoid, list them here...'
+          />
         </Card>
       </Form.Group>
     </Form>

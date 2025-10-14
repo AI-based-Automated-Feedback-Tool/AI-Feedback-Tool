@@ -40,8 +40,14 @@ export default function CreateCodeQuestionsContent({examId, question_count}) {
     difficulty,
     setDifficulty,
     subQuestionType,
-    setSubQuestionType
-  } = useCodeQuestionForm(examId, question_count); 
+    setSubQuestionType,
+    guidance,
+    setGuidance,
+    keyConcepts,
+    setKeyConcepts,
+    doNotInclude,
+    setDoNotInclude
+  } = useCodeQuestionForm(examId, question_count);
 
   const isDisabled = () =>{
         if (questions.length >= parseInt(question_count)) {
@@ -86,7 +92,13 @@ export default function CreateCodeQuestionsContent({examId, question_count}) {
               difficulty,
               setDifficulty,
               subQuestionType,
-              setSubQuestionType
+              setSubQuestionType,
+              guidance,
+              setGuidance,
+              keyConcepts,
+              setKeyConcepts,
+              doNotInclude,
+              setDoNotInclude
             }}
             disabled={isDisabled()}
       />

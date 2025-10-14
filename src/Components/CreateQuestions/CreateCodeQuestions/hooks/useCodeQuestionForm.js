@@ -22,7 +22,9 @@ export default function useCodeQuestionForm( examId, question_count, initialQues
     const [aiformSelectedLanguage, setAiformSelectedLanguage] = useState(null);
     const [difficulty, setDifficulty] = useState('Easy');
     const [subQuestionType, setSubQuestionType] = useState(''); // 'Coding', 'Debugging', 'Algorithm Design'
-
+    const [guidance, setGuidance] = useState("");
+    const [keyConcepts, setKeyConcepts] = useState("");
+    const [doNotInclude, setDoNotInclude] = useState("");
 
     const navigate = useNavigate();
 
@@ -206,7 +208,13 @@ export default function useCodeQuestionForm( examId, question_count, initialQues
         difficulty,
         setDifficulty,
         subQuestionType,
-        setSubQuestionType
+        setSubQuestionType,
+        guidance,
+        setGuidance,
+        keyConcepts,
+        setKeyConcepts,
+        doNotInclude,
+        setDoNotInclude
     };
 
 } 
