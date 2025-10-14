@@ -40,7 +40,9 @@ export default function CodeQuestionForm({setError, onAddQuestion, formState, di
                         />
                     )}
                     {activeTab === 'ai' && (
-                        <CodeQuestionGenerationForm/>
+                        <CodeQuestionGenerationForm
+                            formState={formState}
+                        />
                     )}
                 </div>
             </div>        

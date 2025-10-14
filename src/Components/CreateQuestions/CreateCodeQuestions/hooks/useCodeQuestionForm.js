@@ -18,6 +18,9 @@ export default function useCodeQuestionForm( examId, question_count, initialQues
     const [editQuestionIndex, setEditQuestionIndex] = useState(null);
     const [warning, setWarning] = useState(null)
 
+    //for ai code question generation
+    const [aiformSelectedLanguage, setAiformSelectedLanguage] = useState(null);
+
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -195,6 +198,8 @@ export default function useCodeQuestionForm( examId, question_count, initialQues
         handleEditQuestion,
         saveAllQuestions,
         warning,
+        aiformSelectedLanguage,
+        setAiformSelectedLanguage
     };
 
 } 
