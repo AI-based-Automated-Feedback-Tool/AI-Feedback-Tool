@@ -22,11 +22,12 @@ export default function CodeQuestionGenerationForm({formState}) {
         aiformSelectedLanguage,
         setAiformSelectedLanguage,
         difficulty,
-        setDifficulty
+        setDifficulty,
+        subQuestionType,
+        setSubQuestionType
     } = formState;
 
     const {languages, loading} = useFetchLanguages(setErrors);
-
     const difficultyLevels = ['Easy', 'Medium', 'Hard'];
     
 
@@ -66,7 +67,7 @@ export default function CodeQuestionGenerationForm({formState}) {
                   key={level}
                   id={`difficulty-${level}`}
                   type="radio"
-                  variant={difficulty === level ? 'primary' : 'outline-primary'}
+                  variant={difficulty === level ? 'primary' : 'outline-secondary'}
                   name="difficulty"
                   value={level}
                   checked={difficulty === level}
@@ -75,8 +76,17 @@ export default function CodeQuestionGenerationForm({formState}) {
                   {level}
                 </ToggleButton>
               ))}
-            </ButtonGroup>
-            
+            </ButtonGroup>            
+          </Col>
+
+          <Col md={6}>
+            <Form.Label className="fw-bold">Question Type *</Form.Label>
+            <Form.Control 
+              type="text" 
+              value={subQuestionType} 
+              onChange={(e) => setSubQuestionType(e.target.value)}
+              placeholder='E.g. function implementation, debugging, algorithm design'
+            />
           </Col>
         </Row>
         </Card>

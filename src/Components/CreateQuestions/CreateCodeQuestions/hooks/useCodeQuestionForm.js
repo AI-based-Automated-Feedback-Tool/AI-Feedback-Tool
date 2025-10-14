@@ -21,6 +21,8 @@ export default function useCodeQuestionForm( examId, question_count, initialQues
     //for ai code question generation
     const [aiformSelectedLanguage, setAiformSelectedLanguage] = useState(null);
     const [difficulty, setDifficulty] = useState('Easy');
+    const [subQuestionType, setSubQuestionType] = useState(''); // 'Coding', 'Debugging', 'Algorithm Design'
+
 
     const navigate = useNavigate();
 
@@ -202,7 +204,9 @@ export default function useCodeQuestionForm( examId, question_count, initialQues
         aiformSelectedLanguage,
         setAiformSelectedLanguage,
         difficulty,
-        setDifficulty
+        setDifficulty,
+        subQuestionType,
+        setSubQuestionType
     };
 
 } 
