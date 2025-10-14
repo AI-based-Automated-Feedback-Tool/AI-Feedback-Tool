@@ -25,6 +25,10 @@ export default function useCodeQuestionForm( examId, question_count, initialQues
     const [guidance, setGuidance] = useState("");
     const [keyConcepts, setKeyConcepts] = useState("");
     const [doNotInclude, setDoNotInclude] = useState("");
+    const [questionNo, setQuestionNo] = useState(1);
+    const [expectedFunctionSignature, setExpectedFunctionSignature] = useState("");
+    const [gradingDescription, setGradingDescription] = useState("");    
+    const [topicDescription, setTopicDescription] = useState('');
 
     const navigate = useNavigate();
 
@@ -170,7 +174,10 @@ export default function useCodeQuestionForm( examId, question_count, initialQues
         }
     }
 
-    
+    // Function to handle AI question generation 
+    const handleGenerateQuestions = async () => {
+
+    }
     return {
         testCases,
         selectedLanguage,
@@ -214,7 +221,16 @@ export default function useCodeQuestionForm( examId, question_count, initialQues
         keyConcepts,
         setKeyConcepts,
         doNotInclude,
-        setDoNotInclude
+        setDoNotInclude,
+        questionNo,
+        setQuestionNo,
+        expectedFunctionSignature,
+        setExpectedFunctionSignature,
+        gradingDescription,
+        setGradingDescription,
+        topicDescription,
+        setTopicDescription,
+        handleGenerateQuestions
     };
 
 } 

@@ -1,36 +1,33 @@
-import { ButtonGroup, Card, Col, Form, Row, ToggleButton } from 'react-bootstrap'
+import { ButtonGroup, Card, Col, Form, Row, ToggleButton, Button } from 'react-bootstrap'
 import useFetchLanguages from "../hooks/useFetchLanguages";
 import { useState } from 'react';
+import '../../../../css/aiQuestionGeneration.css';
 
 export default function CodeQuestionGenerationForm({formState}) {
   const {
-    questionDescription, 
-        setQuestionDescription, 
-        functionSignature, 
-        setFunctionSignature, 
-        wrapperCode, 
-        setWrapperCode, 
-        testCases, 
-        setTestCases,
-        points,
-        setPoints,
-        addTestCase,
-        errors,
-        setErrors,
-        validate,
-        resetForm,
-        aiformSelectedLanguage,
-        setAiformSelectedLanguage,
-        difficulty,
-        setDifficulty,
-        subQuestionType,
-        setSubQuestionType,
-        guidance,
-        setGuidance,
-        keyConcepts,
-        setKeyConcepts,
-        doNotInclude,
-        setDoNotInclude
+      errors,
+      setErrors,
+      aiformSelectedLanguage,
+      setAiformSelectedLanguage,
+      difficulty,
+      setDifficulty,
+      subQuestionType,
+      setSubQuestionType,
+      guidance,
+      setGuidance,
+      keyConcepts,
+      setKeyConcepts,
+      doNotInclude,
+      setDoNotInclude,
+      questionNo,
+      setQuestionNo,
+      expectedFunctionSignature,  
+      setExpectedFunctionSignature,
+      gradingDescription,
+      setGradingDescription,
+      topicDescription,
+      setTopicDescription,
+      handleGenerateQuestions
     } = formState;
 
     const {languages, loading} = useFetchLanguages(setErrors);
@@ -38,15 +35,17 @@ export default function CodeQuestionGenerationForm({formState}) {
     
 
   return (
-    <Form>
+    <Form className="mx-3 mx-md-5">
       <Form.Group className="mb-3">
-        <Form.Label className="fw-bold">Question Setup</Form.Label>
+        <Form.Label className="outside-card-label mt-4">Question Setup</Form.Label>
         <Card className='p-3'>
           <Form.Label className='fw-bold'>Topic / Concept *</Form.Label>
           <Form.Control 
             as="textarea" 
             rows={2} className="fs-6"
-            placeholder='Eg: Recursion, Array, Dynamic Programming, etc.'
+            value={topicDescription}
+            onChange={(e) => setTopicDescription(e.target.value)}
+            placeholder='E.g.: Arrays, Linked Lists, Recursion, Dynamic Programming, etc.'
           />
 
           <Form.Label className="fw-bold">Programming Language *</Form.Label>
@@ -97,7 +96,7 @@ export default function CodeQuestionGenerationForm({formState}) {
           </Row>
         </Card>
 
-        <Form.Label className="fw-bold mt-4">Guidance & Customization</Form.Label>
+        <Form.Label className="outside-card-label mt-4">Guidance & Customization</Form.Label>
         <Card className='p-3'>
           <Form.Label className='fw-bold'>Guidance / Prompt for AI *</Form.Label>
           <Form.Control
@@ -126,6 +125,45 @@ export default function CodeQuestionGenerationForm({formState}) {
             placeholder='E.g.- If there are specific things you want to avoid, list them here...'
           />
         </Card>
+
+        <Form.Label className="outside-card-label mt-4">Question count / Grading & Output</Form.Label>
+        <Card className='p-3'>
+          <Form.Label className='fw-bold'>No of Questions to generate *</Form.Label>
+          <Form.Control
+            type="number"
+            value={questionNo}
+            onChange={(e) => setQuestionNo(e.target.value)}
+            placeholder='Enter the number of questions to generate'
+          />
+
+          <Form.Label className='fw-bold mt-3'>Excepted function signature format </Form.Label>
+          <Form.Control
+            as="textarea"
+            rows={1}
+            value={expectedFunctionSignature}
+            onChange={(e) => setExpectedFunctionSignature(e.target.value)}
+            placeholder='E.g.- def function_name(params):'
+          />
+
+          <Form.Label className='fw-bold mt-3'>Describe about grading * </Form.Label>
+          <Form.Control
+            as="textarea"
+            rows={1}
+            value={gradingDescription}
+            onChange={(e) => setGradingDescription(e.target.value)}
+            placeholder='Describe how much points to be awarded for each question... E.g.- Four 10 points questions and two 5 points questions'
+          />
+        </Card>
+
+        {/* Generate Button */}
+        <div className="d-flex justify-content-end mt-3">
+          <Button 
+            variant="primary"
+            onClick={handleGenerateQuestions}
+          >
+            Generate Questions
+          </Button>
+        </div>
       </Form.Group>
     </Form>
   )
