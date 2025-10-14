@@ -20,6 +20,7 @@ export default function useCodeQuestionForm( examId, question_count, initialQues
 
     //for ai code question generation
     const [aiformSelectedLanguage, setAiformSelectedLanguage] = useState(null);
+    const [difficulty, setDifficulty] = useState('Easy');
 
     const navigate = useNavigate();
 
@@ -199,7 +200,9 @@ export default function useCodeQuestionForm( examId, question_count, initialQues
         saveAllQuestions,
         warning,
         aiformSelectedLanguage,
-        setAiformSelectedLanguage
+        setAiformSelectedLanguage,
+        difficulty,
+        setDifficulty
     };
 
 } 

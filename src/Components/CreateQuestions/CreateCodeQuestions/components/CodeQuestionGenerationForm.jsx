@@ -1,5 +1,6 @@
-import { Card, Col, Form, Row } from 'react-bootstrap'
+import { ButtonGroup, Card, Col, Form, Row, ToggleButton } from 'react-bootstrap'
 import useFetchLanguages from "../hooks/useFetchLanguages";
+import { useState } from 'react';
 
 export default function CodeQuestionGenerationForm({formState}) {
   const {
@@ -19,10 +20,15 @@ export default function CodeQuestionGenerationForm({formState}) {
         validate,
         resetForm,
         aiformSelectedLanguage,
-        setAiformSelectedLanguage
+        setAiformSelectedLanguage,
+        difficulty,
+        setDifficulty
     } = formState;
 
     const {languages, loading} = useFetchLanguages(setErrors);
+
+    const difficultyLevels = ['Easy', 'Medium', 'Hard'];
+    
 
   return (
     <Form>
@@ -51,10 +57,25 @@ export default function CodeQuestionGenerationForm({formState}) {
           ))}
         </Form.Select>
 
-        <Row>
-          <Col className="text-end mt-3">
-            {/*Radio buttons to select difficulty level*/}
+        <Row className="align-items-center mt-3">
+          <Col md={6}>
             <Form.Label className="fw-bold">Difficulty Level *</Form.Label>
+            <ButtonGroup className="d-flex">
+              {difficultyLevels.map((level) => (
+                <ToggleButton
+                  key={level}
+                  id={`difficulty-${level}`}
+                  type="radio"
+                  variant={difficulty === level ? 'primary' : 'outline-primary'}
+                  name="difficulty"
+                  value={level}
+                  checked={difficulty === level}
+                  onChange={(e) => setDifficulty(e.currentTarget.value)}
+                >
+                  {level}
+                </ToggleButton>
+              ))}
+            </ButtonGroup>
             
           </Col>
         </Row>

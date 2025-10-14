@@ -36,7 +36,9 @@ export default function CreateCodeQuestionsContent({examId, question_count}) {
     points,
     warning,
     aiformSelectedLanguage,
-    setAiformSelectedLanguage
+    setAiformSelectedLanguage,
+    difficulty,
+    setDifficulty
   } = useCodeQuestionForm(examId, question_count); 
 
   const isDisabled = () =>{
@@ -78,7 +80,9 @@ export default function CreateCodeQuestionsContent({examId, question_count}) {
               validate,
               resetForm,
               aiformSelectedLanguage,
-              setAiformSelectedLanguage
+              setAiformSelectedLanguage,
+              difficulty,
+              setDifficulty
             }}
             disabled={isDisabled()}
       />
