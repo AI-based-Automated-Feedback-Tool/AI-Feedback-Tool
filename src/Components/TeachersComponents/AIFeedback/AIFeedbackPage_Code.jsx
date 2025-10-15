@@ -224,9 +224,12 @@ const AIFeedbackPage_Code = () => {
 
   if (loading) {
     return (
-      <div className="text-center my-5">
-        <Spinner animation="border" />
-        <p>Generating AI feedback...</p>
+      <div className="feedback-loading-container">
+        <div className="feedback-loading-spinner"></div>
+        <div className="feedback-loading-text">Generating Code Analysis</div>
+        <div className="feedback-loading-subtext">
+          💻 Analyzing code submissions and creating detailed feedback...
+        </div>
       </div>
     );
   }
