@@ -47,6 +47,7 @@ export default function CodeQuestionGenerationForm({formState}) {
             onChange={(e) => setTopicDescription(e.target.value)}
             placeholder='E.g.: Arrays, Linked Lists, Recursion, Dynamic Programming, etc.'
           />
+          {errors.topicDescription && <div className="text-danger">{errors.topicDescription}</div>}
 
           <Form.Label className="fw-bold">Programming Language *</Form.Label>
           <Form.Select
@@ -62,6 +63,7 @@ export default function CodeQuestionGenerationForm({formState}) {
               </option>
             ))}
           </Form.Select>
+          {errors.aiformSelectedLanguage && <div className="text-danger">{errors.aiformSelectedLanguage}</div>}
 
           <Row className="align-items-center mt-3">
             <Col md={6}>
@@ -81,8 +83,10 @@ export default function CodeQuestionGenerationForm({formState}) {
                     {level}
                   </ToggleButton>
                 ))}
-              </ButtonGroup>            
+              </ButtonGroup> 
+              {errors.difficulty && <div className="text-danger">{errors.difficulty}</div>}           
             </Col>
+
 
             <Col md={6}>
               <Form.Label className="fw-bold">Question Type *</Form.Label>
@@ -93,6 +97,7 @@ export default function CodeQuestionGenerationForm({formState}) {
                 placeholder='E.g. function implementation, debugging, algorithm design'
               />
             </Col>
+            {errors.subQuestionType && <div className="text-danger">{errors.subQuestionType}</div>}
           </Row>
         </Card>
 
@@ -106,6 +111,7 @@ export default function CodeQuestionGenerationForm({formState}) {
             onChange={(e) => setGuidance(e.target.value)}
             placeholder='Provide guidance or context for the AI / Tell the AI what kind of question to generate...'
           />
+          {errors.guidance && <div className="text-danger">{errors.guidance}</div>}
 
           <Form.Label className='fw-bold mt-3'>Key concepts to include </Form.Label>
           <Form.Control
@@ -135,6 +141,7 @@ export default function CodeQuestionGenerationForm({formState}) {
             onChange={(e) => setQuestionNo(e.target.value)}
             placeholder='Enter the number of questions to generate'
           />
+          {errors.questionNo && <div className="text-danger">{errors.questionNo}</div>}
 
           <Form.Label className='fw-bold mt-3'>Excepted function signature format </Form.Label>
           <Form.Control
@@ -153,6 +160,7 @@ export default function CodeQuestionGenerationForm({formState}) {
             onChange={(e) => setGradingDescription(e.target.value)}
             placeholder='Describe how much points to be awarded for each question... E.g.- Four 10 points questions and two 5 points questions'
           />
+          {errors.gradingDescription && <div className="text-danger">{errors.gradingDescription}</div>}
         </Card>
 
         {/* Generate Button */}

@@ -179,28 +179,46 @@ export default function useCodeQuestionForm( examId, question_count, initialQues
 
     // Function to handle AI question generation 
     const handleGenerateQuestions = async () => {
-        try {
-            const params = {
-                topicDescription: topicDescription,
-                aiformSelectedLanguageName: aiformSelectedLanguage ? aiformSelectedLanguage.name : "",
-                aiformSelectedLanguageID: aiformSelectedLanguage ? aiformSelectedLanguage.id : null,
-                subQuestionType: subQuestionType,
-                guidance: guidance,
-                keyConcepts: keyConcepts,
-                doNotInclude: doNotInclude,
-                questionNo: questionNo,
-                expectedFunctionSignature: expectedFunctionSignature,
-                gradingDescription: gradingDescription
-            };
-            const data = await generateCodeQuestion(params);
-                
-            if(data.questions && data.questions.length > 0){
-                setGeneratedCodeQuestions(data.questions);
-                console.log("Generated Questions:", data.questions);
+        // Basic validation
+        const newErrors = {};
+        if (!topicDescription.trim())
+            newErrors.topicDescription = "Topic description is required.";
+        if (!aiformSelectedLanguage)
+            newErrors.aiformSelectedLanguage = "Please select a programming language.";
+        if (!subQuestionType)
+            newErrors.subQuestionType = "Please select a sub-question type.";
+        if (!guidance.trim())
+            newErrors.guidance = "Guidance is required.";
+        if (!questionNo || isNaN(questionNo) || parseInt(questionNo) < 1)
+            newErrors.questionNo = "Enter a valid number of questions.";
+        if (!gradingDescription.trim())
+            newErrors.gradingDescription = "Grading description is required.";
+        setErrors(newErrors);
+
+        if (Object.keys(newErrors).length === 0) {
+            try {
+                const params = {
+                    topicDescription: topicDescription,
+                    aiformSelectedLanguageName: aiformSelectedLanguage ? aiformSelectedLanguage.name : "",
+                    aiformSelectedLanguageID: aiformSelectedLanguage ? aiformSelectedLanguage.id : null,
+                    subQuestionType: subQuestionType,
+                    guidance: guidance,
+                    keyConcepts: keyConcepts,
+                    doNotInclude: doNotInclude,
+                    questionNo: questionNo,
+                    expectedFunctionSignature: expectedFunctionSignature,
+                    gradingDescription: gradingDescription
+                };
+                const data = await generateCodeQuestion(params);
+                    
+                if(data.questions && data.questions.length > 0){
+                    setGeneratedCodeQuestions(data.questions);
+                    console.log("Generated Questions:", data.questions);
+                }
+            } catch (error) {
+                console.error("Error generating question:", error);
+                //needed to show error to user in UI later
             }
-        } catch (error) {
-            console.error("Error generating question:", error);
-            //needed to show error to user in UI later
         }
     }
     return {
