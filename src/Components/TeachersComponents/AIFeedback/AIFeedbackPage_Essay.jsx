@@ -240,39 +240,75 @@ const AIFeedbackPage_Essay = () => {
   }
 
   return (
-    <Container className="mt-4">
-      <Modal show={showLimitModal} onHide={() => navigate('/teacher')} centered>
+    <div className="ai-feedback-page">
+      {/* Hero Section */}
+      <div className="feedback-hero-section">
+        <Container>
+          <div className="feedback-hero-content">
+            <h1 className="feedback-hero-title">
+              📝 Essay Writing Insights
+            </h1>
+            <p className="feedback-hero-subtitle">
+              Advanced writing assessment and comprehensive feedback for enhanced learning
+            </p>
+            {examTitle && (
+              <div className="feedback-exam-badge">
+                ✍️ {examTitle}
+              </div>
+            )}
+          </div>
+        </Container>
+      </div>
+
+      <div className="feedback-content-container">
+        <Container>
+          {/* Modal for API limit reached */}
+          <Modal 
+            show={showLimitModal} 
+            onHide={() => navigate('/teacher')} 
+            centered
+            className="feedback-modal"
+          >
             <Modal.Header closeButton>
-          <Modal.Title>Daily Limit Reached</Modal.Title>
+              <Modal.Title>⚠️ Daily Limit Reached</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-          <p>You've reached your daily limit of feedback generations.</p>
-          <p>Please try again tomorrow.</p>
+              <p className="mb-3">You've reached your daily limit of feedback generations.</p>
+              <p className="mb-0">Please try again tomorrow. This limit helps us keep things running smoothly for everyone 😊</p>
             </Modal.Body>
             <Modal.Footer>
-          <Button variant="primary" onClick={() => navigate('/teacher')}>
+              <Button 
+                variant="primary" 
+                onClick={() => navigate('/teacher')}
+                className="btn-primary"
+              >
                 Back to Dashboard
               </Button>
             </Modal.Footer>
           </Modal>
 
           {error && !showLimitModal && (
-        <Alert variant="danger">
-          <strong>Error:</strong> {error}
+            <Alert className="feedback-error-alert">
+              <strong>⚠️ Error:</strong> {error}
             </Alert>
           )}
 
           {feedback && !showLimitModal && (
-        <Card className="shadow-sm mb-4">
-          <Card.Header className="bg-primary text-white d-flex justify-content-between align-items-center">
-            <div>
-              <h4 className="mb-0">AI-Generated Feedback for Essay Exam</h4>
-              <span className="small">Exam Name: {examTitle}</span>
+            <Card className="feedback-main-card">
+              <Card.Header className="feedback-card-header">
+                <div className="feedback-header-content">
+                  <div className="feedback-header-title">
+                    📝 AI-Generated Essay Assessment
                   </div>
-            <div className="d-flex gap-2">
+                  <div className="feedback-header-subtitle">
+                    Comprehensive writing analysis and improvement recommendations
+                  </div>
+                  
+                  <div className="feedback-actions">
                     <Button
                       variant="light"
                       size="sm"
+                      className="feedback-action-btn"
                       onClick={() =>
                         navigate(`/teacher/exams/${examId}/prompt-selector`, {
                           state: {
@@ -285,13 +321,22 @@ const AIFeedbackPage_Essay = () => {
                     >
                       🔄 Modify Prompt
                     </Button>
-              <Button variant="light" size="sm" onClick={() => downloadAsTextFile(feedback)}>
-                📄 Download .TXT
+                    
+                    <Button 
+                      variant="light" 
+                      size="sm" 
+                      className="feedback-action-btn"
+                      onClick={() => downloadAsTextFile(feedback)}
+                    >
+                      📄 Download Report
                     </Button>
+                    
                     <HeaderWithApiCount />
+                  </div>
                 </div>
               </Card.Header>
-          <Card.Body>
+              
+              <Card.Body className="feedback-card-body">
                 {feedback.overallSummary && (
                   <Section title="📊 Overall Summary" text={feedback.overallSummary} />
                 )}
@@ -343,11 +388,17 @@ const AIFeedbackPage_Essay = () => {
           )}
 
           {!showLimitModal && (
-        <Alert variant="info">
-          <i className="bi bi-robot"></i> Feedback generated using custom AI analysis.
+            <Alert className="feedback-info-alert">
+              <div className="feedback-robot-icon">🤖</div>
+              <div>
+                <strong>Essay Analysis Complete</strong><br />
+                Writing feedback generated using advanced AI analysis for comprehensive assessment.
+              </div>
             </Alert>
           )}
         </Container>
+      </div>
+    </div>
   );
 };
 
