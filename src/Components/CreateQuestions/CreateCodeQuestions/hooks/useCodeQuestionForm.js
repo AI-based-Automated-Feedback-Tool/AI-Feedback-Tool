@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { createCodeQuestion } from "../service/createCodeQuestionService";
 import { supabase } from "../../../../SupabaseAuth/supabaseClient"; 
 import { useNavigate } from 'react-router-dom';
+import { generateCodeQuestion } from "../service/createCodeQuestionService";    
 
 export default function useCodeQuestionForm( examId, question_count, initialQuestion = null  ) {
     const [userId, setUserId] = useState(null);
@@ -29,6 +30,8 @@ export default function useCodeQuestionForm( examId, question_count, initialQues
     const [expectedFunctionSignature, setExpectedFunctionSignature] = useState("");
     const [gradingDescription, setGradingDescription] = useState("");    
     const [topicDescription, setTopicDescription] = useState('');
+    const [generatedCodeQuestions, setGeneratedCodeQuestions] = useState([]);
+
 
     const navigate = useNavigate();
 
@@ -176,7 +179,29 @@ export default function useCodeQuestionForm( examId, question_count, initialQues
 
     // Function to handle AI question generation 
     const handleGenerateQuestions = async () => {
-
+        try {
+            const params = {
+                topicDescription: topicDescription,
+                aiformSelectedLanguageName: aiformSelectedLanguage ? aiformSelectedLanguage.name : "",
+                aiformSelectedLanguageID: aiformSelectedLanguage ? aiformSelectedLanguage.id : null,
+                subQuestionType: subQuestionType,
+                guidance: guidance,
+                keyConcepts: keyConcepts,
+                doNotInclude: doNotInclude,
+                questionNo: questionNo,
+                expectedFunctionSignature: expectedFunctionSignature,
+                gradingDescription: gradingDescription
+            };
+            const data = await generateCodeQuestion(params);
+                
+            if(data.questions && data.questions.length > 0){
+                setGeneratedCodeQuestions(data.questions);
+                console.log("Generated Questions:", data.questions);
+            }
+        } catch (error) {
+            console.error("Error generating question:", error);
+            //needed to show error to user in UI later
+        }
     }
     return {
         testCases,
