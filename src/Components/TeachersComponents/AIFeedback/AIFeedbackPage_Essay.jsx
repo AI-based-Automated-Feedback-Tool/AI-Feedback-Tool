@@ -5,6 +5,7 @@ import { supabase } from '../../../SupabaseAuth/supabaseClient';
 import { downloadAsTextFile } from '../../../utils/downloadTextUtils';
 import { ApiCallCountContext } from "../../../Context/ApiCallCountContext";
 import HeaderWithApiCount from './HeaderWithApiCount';
+import './AIFeedbackPage.css';
 
 const defaultPrompts = [
   {
@@ -228,9 +229,12 @@ const AIFeedbackPage_Essay = () => {
 
   if (loading) {
     return (
-      <div className="text-center my-5">
-        <Spinner animation="border" />
-        <p>Generating AI feedback...</p>
+      <div className="feedback-loading-container">
+        <div className="feedback-loading-spinner"></div>
+        <div className="feedback-loading-text">Generating Essay Analysis</div>
+        <div className="feedback-loading-subtext">
+          📝 Analyzing essay submissions and creating detailed writing feedback...
+        </div>
       </div>
     );
   }
@@ -238,127 +242,129 @@ const AIFeedbackPage_Essay = () => {
   return (
     <Container className="mt-4">
       <Modal show={showLimitModal} onHide={() => navigate('/teacher')} centered>
-        <Modal.Header closeButton>
+            <Modal.Header closeButton>
           <Modal.Title>Daily Limit Reached</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
+            </Modal.Header>
+            <Modal.Body>
           <p>You've reached your daily limit of feedback generations.</p>
           <p>Please try again tomorrow.</p>
-        </Modal.Body>
-        <Modal.Footer>
+            </Modal.Body>
+            <Modal.Footer>
           <Button variant="primary" onClick={() => navigate('/teacher')}>
-            Back to Dashboard
-          </Button>
-        </Modal.Footer>
-      </Modal>
+                Back to Dashboard
+              </Button>
+            </Modal.Footer>
+          </Modal>
 
-      {error && !showLimitModal && (
+          {error && !showLimitModal && (
         <Alert variant="danger">
           <strong>Error:</strong> {error}
-        </Alert>
-      )}
+            </Alert>
+          )}
 
-      {feedback && !showLimitModal && (
+          {feedback && !showLimitModal && (
         <Card className="shadow-sm mb-4">
           <Card.Header className="bg-primary text-white d-flex justify-content-between align-items-center">
             <div>
               <h4 className="mb-0">AI-Generated Feedback for Essay Exam</h4>
               <span className="small">Exam Name: {examTitle}</span>
-            </div>
+                  </div>
             <div className="d-flex gap-2">
-              <Button
-                variant="light"
-                size="sm"
-                onClick={() =>
-                  navigate(`/teacher/exams/${examId}/prompt-selector`, {
-                    state: {
-                      prompt: location.state?.prompt || '',
-                      aiProvider: location.state?.aiProvider || 'cohere',
-                      questionType: 'essay'
-                    }
-                  })
-                }
-              >
-                🔄 Modify Prompt
-              </Button>
+                    <Button
+                      variant="light"
+                      size="sm"
+                      onClick={() =>
+                        navigate(`/teacher/exams/${examId}/prompt-selector`, {
+                          state: {
+                            prompt: location.state?.prompt || '',
+                            aiProvider: location.state?.aiProvider || 'cohere',
+                            questionType: 'essay'
+                          }
+                        })
+                      }
+                    >
+                      🔄 Modify Prompt
+                    </Button>
               <Button variant="light" size="sm" onClick={() => downloadAsTextFile(feedback)}>
                 📄 Download .TXT
-              </Button>
-              <HeaderWithApiCount />
-            </div>
-          </Card.Header>
+                    </Button>
+                    <HeaderWithApiCount />
+                </div>
+              </Card.Header>
           <Card.Body>
-            {feedback.overallSummary && (
-              <Section title="📊 Overall Summary" text={feedback.overallSummary} />
-            )}
-            {feedback.keyStrengths?.length > 0 && (
-              <Section title="✅ Key Strengths" items={feedback.keyStrengths} />
-            )}
-            
-            {/* Check if we have dynamic sections (non-standard keys) */}
-            {hasDynamicSections(feedback) ? (
-              /* Render dynamic sections */
-              Object.keys(feedback).map(key => {
-                // Skip the standard sections we've already rendered
-                if (['overallSummary', 'keyStrengths'].includes(key)) return null;
-                
-                // Skip standard static keys (they should not appear in dynamic prompts)
-                if (isStandardKey(key)) return null;
-                
-                // Skip empty arrays or undefined values
-                if (!feedback[key] || (Array.isArray(feedback[key]) && feedback[key].length === 0)) return null;
-                
-                // Convert camelCase keys back to readable titles with appropriate icons
-                const title = getDynamicSectionTitle(key);
-                
-                return (
-                  <Section 
-                    key={key}
-                    title={title} 
-                    items={Array.isArray(feedback[key]) ? feedback[key] : []}
-                    text={typeof feedback[key] === 'string' ? feedback[key] : ''}
-                  />
-                );
-              })
-            ) : (
-              /* Render standard static prompt sections */
-              <>
-                {feedback.mostMissedQuestions?.length > 0 && (
-                  <Section title="⚠️ Most Missed Questions" items={feedback.mostMissedQuestions} />
+                {feedback.overallSummary && (
+                  <Section title="📊 Overall Summary" text={feedback.overallSummary} />
                 )}
-                {feedback.teachingSuggestions?.length > 0 && (
-                  <Section title="💡 Teaching Suggestions" items={feedback.teachingSuggestions} />
+                {feedback.keyStrengths?.length > 0 && (
+                  <Section title="✅ Key Strengths" items={feedback.keyStrengths} />
                 )}
-                {feedback.nextSteps?.length > 0 && (
-                  <Section title="🚀 Actionable Next Steps" items={feedback.nextSteps} />
+                
+                {/* Check if we have dynamic sections (non-standard keys) */}
+                {hasDynamicSections(feedback) ? (
+                  /* Render dynamic sections */
+                  Object.keys(feedback).map(key => {
+                    // Skip the standard sections we've already rendered
+                    if (['overallSummary', 'keyStrengths'].includes(key)) return null;
+                    
+                    // Skip standard static keys (they should not appear in dynamic prompts)
+                    if (isStandardKey(key)) return null;
+                    
+                    // Skip empty arrays or undefined values
+                    if (!feedback[key] || (Array.isArray(feedback[key]) && feedback[key].length === 0)) return null;
+                    
+                    // Convert camelCase keys back to readable titles with appropriate icons
+                    const title = getDynamicSectionTitle(key);
+                    
+                    return (
+                      <Section 
+                        key={key}
+                        title={title} 
+                        items={Array.isArray(feedback[key]) ? feedback[key] : []}
+                        text={typeof feedback[key] === 'string' ? feedback[key] : ''}
+                      />
+                    );
+                  })
+                ) : (
+                  /* Render standard static prompt sections */
+                  <>
+                    {feedback.mostMissedQuestions?.length > 0 && (
+                      <Section title="⚠️ Most Missed Questions" items={feedback.mostMissedQuestions} />
+                    )}
+                    {feedback.teachingSuggestions?.length > 0 && (
+                      <Section title="💡 Teaching Suggestions" items={feedback.teachingSuggestions} />
+                    )}
+                    {feedback.nextSteps?.length > 0 && (
+                      <Section title="🚀 Actionable Next Steps" items={feedback.nextSteps} />
+                    )}
+                  </>
                 )}
-              </>
-            )}
-          </Card.Body>
-        </Card>
-      )}
+              </Card.Body>
+            </Card>
+          )}
 
-      {!showLimitModal && (
+          {!showLimitModal && (
         <Alert variant="info">
           <i className="bi bi-robot"></i> Feedback generated using custom AI analysis.
-        </Alert>
-      )}
-    </Container>
+            </Alert>
+          )}
+        </Container>
   );
 };
 
 const Section = ({ title, items = [], text = '' }) => (
-  <div className="mb-4">
-    <h5 className="text-secondary">{title}</h5>
-    {items.length > 0 ? (
-      <ul>
-        {items.map((item, idx) => (
-          <li key={idx}>{item}</li>
-        ))}
-      </ul>
-    ) : (
-      <p>{text}</p>
-    )}
+  <div className="feedback-section">
+    <h5 className="feedback-section-title">{title}</h5>
+    <div className="feedback-section-content">
+      {items.length > 0 ? (
+        <ul className="feedback-section-list">
+          {items.map((item, idx) => (
+            <li key={idx}>{item}</li>
+          ))}
+        </ul>
+      ) : (
+        <p>{text}</p>
+      )}
+    </div>
   </div>
 );
 
