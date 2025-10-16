@@ -31,7 +31,9 @@ export default function CodeQuestionGenerationForm({formState, index, examId, qu
       setTopicDescription,
       handleGenerateQuestions,
       generatedCodeQuestions,
-      setGeneratedCodeQuestions
+      setGeneratedCodeQuestions,
+      isGenerating,
+      setIsGenerating
     } = useCodeQuestionForm(examId, question_count);
 
     const {languages, loading} = useFetchLanguages(setErrors);
@@ -173,13 +175,21 @@ export default function CodeQuestionGenerationForm({formState, index, examId, qu
             <Button 
               variant="primary"
               onClick={handleGenerateQuestions}
-            >
-              Generate Questions
+              disabled={isGenerating}
+            > 
+              {isGenerating ? (
+                <>
+                  <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                  Generating...
+                </>
+              ) : (
+              "Generate Questions"
+              )}
             </Button>
           </div>
         </Form.Group>
       </Form>
-      
+
       {/* Display AI Generated Questions */}
         {generatedCodeQuestions.length > 0 && (
           <AIGeneratedCodeQuestions 

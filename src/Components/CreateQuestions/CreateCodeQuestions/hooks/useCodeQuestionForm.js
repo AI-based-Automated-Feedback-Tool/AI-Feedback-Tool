@@ -32,6 +32,7 @@ export default function useCodeQuestionForm( examId, question_count, initialQues
     const [topicDescription, setTopicDescription] = useState('');
     const [generatedCodeQuestions, setGeneratedCodeQuestions] = useState([]);
 
+    const [isGenerating, setIsGenerating] = useState(false);
 
     const navigate = useNavigate();
 
@@ -196,6 +197,7 @@ export default function useCodeQuestionForm( examId, question_count, initialQues
         setErrors(newErrors);
 
         if (Object.keys(newErrors).length === 0) {
+            setIsGenerating(true);
             try {
                 const params = {
                     topicDescription: topicDescription,
@@ -218,6 +220,7 @@ export default function useCodeQuestionForm( examId, question_count, initialQues
                 console.error("Error generating question:", error);
                 //needed to show error to user in UI later
             }
+            setIsGenerating(false);
         }
     }
     return {
@@ -274,7 +277,9 @@ export default function useCodeQuestionForm( examId, question_count, initialQues
         setTopicDescription,
         handleGenerateQuestions,
         generatedCodeQuestions,
-        setGeneratedCodeQuestions
+        setGeneratedCodeQuestions,
+        isGenerating,
+        setIsGenerating
     };
 
 } 
