@@ -8,8 +8,14 @@ export default function AIGeneratedCodeQuestions({ questions }) {
 
   return (
     <>
-        {questions.map((question) => (
-            <Card className="mb-3 shadow-sm">
+    <Card className="mx-3 mx-md-5 mb-3">
+        <Card.Header className="bg-secondary text-white">
+            <h5>Generated Questions</h5>
+        </Card.Header>
+        <Card.Body>
+    
+        {questions.map((question, index) => (
+            <Card className="mb-3 shadow-sm" key={index}>
                 <Card.Body>
                     <Card.Title>
                         <strong>Question:</strong> {question.question_description}
@@ -56,6 +62,8 @@ export default function AIGeneratedCodeQuestions({ questions }) {
                 </Card.Body>
             </Card>
         ))}
+        </Card.Body>
+    </Card>
     </>
   )
 }
