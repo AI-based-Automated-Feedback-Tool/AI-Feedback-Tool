@@ -36,7 +36,7 @@ export default function CodeQuestionGenerationForm({formState, index, examId, qu
       setIsGenerating,
       checkedAICodeQuestions,
       handleCheckboxChangeCode,
-      question_count: initialQuestionCount
+      saveCheckedQuestions,
     } = useCodeQuestionForm(examId, question_count);
 
     const {languages, loading} = useFetchLanguages(setErrors);
@@ -199,6 +199,7 @@ export default function CodeQuestionGenerationForm({formState, index, examId, qu
             questions={generatedCodeQuestions}
             onCheck={handleCheckboxChangeCode}
             checkedQuestions={checkedAICodeQuestions}
+            onSaveChecked={saveCheckedQuestions}
           />
         )
       }

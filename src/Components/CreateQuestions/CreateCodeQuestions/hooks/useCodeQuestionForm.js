@@ -3,6 +3,7 @@ import { createCodeQuestion } from "../service/createCodeQuestionService";
 import { supabase } from "../../../../SupabaseAuth/supabaseClient"; 
 import { useNavigate } from 'react-router-dom';
 import { generateCodeQuestion } from "../service/createCodeQuestionService";    
+import language from "react-syntax-highlighter/dist/esm/languages/hljs/1c";
 
 export default function useCodeQuestionForm( examId, question_count, initialQuestion = null  ) {
     const [userId, setUserId] = useState(null);
@@ -34,6 +35,7 @@ export default function useCodeQuestionForm( examId, question_count, initialQues
 
     const [isGenerating, setIsGenerating] = useState(false);
     const [checkedAICodeQuestions, setCheckedAICodeQuestions] = useState([]);
+    const [generatedAndSelectedQuestions, setGeneratedAndSelectedQuestions] = useState([]);
 
     const navigate = useNavigate();
 
@@ -232,6 +234,34 @@ export default function useCodeQuestionForm( examId, question_count, initialQues
         [index]: !prev[index],
         }));
     }
+
+    // Function to save checked questions
+    const saveCheckedQuestions = () => {
+
+        const selectedQuestions = generatedCodeQuestions.filter((q, index) => checkedAICodeQuestions[index]);
+        setGeneratedAndSelectedQuestions(selectedQuestions);
+        console.log("Selected Questions:", selectedQuestions);
+
+        if (selectedQuestions.length === 0) {
+            alert("Please select at least one question to add.");
+            return;
+        }
+
+        //add questions to main questions list
+        selectedQuestions.forEach((q) => {
+            console.log("Adding question:", q);
+            const formattedQuestion = {
+                question: q.question,
+                functionSignature: q.functionSignature,
+                wrapperCode: q.wrapperCode,
+                testCases: q.testCases,
+                language: q.language,
+                points: q.points
+            }
+            handleAddQuestion(formattedQuestion);
+        })
+        
+    }
     return {
         testCases,
         selectedLanguage,
@@ -291,6 +321,7 @@ export default function useCodeQuestionForm( examId, question_count, initialQues
         setIsGenerating,
         checkedAICodeQuestions,
         handleCheckboxChangeCode,
+        saveCheckedQuestions,
     };
 
 } 
