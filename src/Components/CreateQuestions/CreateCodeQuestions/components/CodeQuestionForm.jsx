@@ -5,7 +5,7 @@ import { Nav } from "react-bootstrap";
 import ManualCodeQuestionCreationForm from './ManualCodeQuestionCreationForm';
 import CodeQuestionGenerationForm from './CodeQuestionGenerationForm';
 
-export default function CodeQuestionForm({setError, onAddQuestion, formState, disabled, examId, question_count}) {
+export default function CodeQuestionForm({setError, onAddQuestion, formState, disabled}) {
     const [activeTab, setActiveTab] = useState('manual'); // 'manual' or 'ai'
 
     return (
@@ -42,8 +42,6 @@ export default function CodeQuestionForm({setError, onAddQuestion, formState, di
                     {activeTab === 'ai' && (
                         <CodeQuestionGenerationForm
                             formState={formState}
-                            examId={examId}
-                            question_count={question_count}
                         />
                     )}
                 </div>

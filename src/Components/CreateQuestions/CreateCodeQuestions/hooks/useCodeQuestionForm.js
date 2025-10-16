@@ -111,20 +111,20 @@ export default function useCodeQuestionForm( examId, question_count, initialQues
 
     // Function to handle adding a new question
     const handleAddQuestion = (newQuestion) => {
-        if (questions.length >= parseInt(question_count)) {
+        setQuestions(prev => {
+            if (prev.length >= parseInt(question_count)) {
             setWarning(`You can only add ${question_count} questions.`);
-            return false;
-        }
-        const newQuestionsList = [...questions, newQuestion]
-        setQuestions(newQuestionsList);
-
-        // Show warning if limit reached now
-        if (newQuestionsList.length === parseInt(question_count)) {
+            return prev; 
+            }
+            const updated = [...prev, newQuestion];
+            // Show warning if limit reached
+            if (updated.length === parseInt(question_count)) {
             setWarning(`You have reached the limit of ${question_count} questions.`);
-        } else {
+            } else {
             setWarning(null);
-        }
-        return true;
+            }
+            return updated;
+        });
     };
   
     // Function to handle deleting a question
@@ -217,7 +217,15 @@ export default function useCodeQuestionForm( examId, question_count, initialQues
                 const data = await generateCodeQuestion(params);
                     
                 if(data.questions && data.questions.length > 0){
-                    setGeneratedCodeQuestions(data.questions);
+                    // Format test cases to ensure input/output are strings
+                    const formattedQuestions = data.questions.map((q) => ({
+                        ...q,
+                        test_cases: q.test_cases?.map(tc => ({
+                            input: typeof tc.input === "object" ? JSON.stringify(tc.input) : tc.input,
+                            output: typeof tc.output === "object" ? JSON.stringify(tc.output) : tc.output
+                        })) || []
+                    }));
+                    setGeneratedCodeQuestions(formattedQuestions);
                 }
             } catch (error) {
                 console.error("Error generating question:", error);
@@ -240,7 +248,6 @@ export default function useCodeQuestionForm( examId, question_count, initialQues
 
         const selectedQuestions = generatedCodeQuestions.filter((q, index) => checkedAICodeQuestions[index]);
         setGeneratedAndSelectedQuestions(selectedQuestions);
-        console.log("Selected Questions:", selectedQuestions);
 
         if (selectedQuestions.length === 0) {
             alert("Please select at least one question to add.");
@@ -249,17 +256,35 @@ export default function useCodeQuestionForm( examId, question_count, initialQues
 
         //add questions to main questions list
         selectedQuestions.forEach((q) => {
-            console.log("Adding question:", q);
             const formattedQuestion = {
-                question: q.question,
-                functionSignature: q.functionSignature,
-                wrapperCode: q.wrapperCode,
-                testCases: q.testCases,
-                language: q.language,
-                points: q.points
+                question: q.question_description,
+                functionSignature: q.function_signature,
+                wrapperCode: q.wrapper_code,
+                testCases: q.test_cases,    
+                points: q.points,
+                language: q.language || aiformSelectedLanguage
             }
             handleAddQuestion(formattedQuestion);
         })
+
+        // Clear question generation form 
+        setTopicDescription('');
+        setAiformSelectedLanguage(null);
+        setSubQuestionType(''); 
+        setGuidance("");
+        setKeyConcepts("");
+        setDoNotInclude("");
+        setQuestionNo(1);
+        setExpectedFunctionSignature("");
+        setGradingDescription("");
+        setDifficulty('Easy');
+
+        // Clear generated questions and selections
+        setGeneratedCodeQuestions([]);
+        setCheckedAICodeQuestions({});
+        setGeneratedAndSelectedQuestions([]);
+        setErrors({});
+        setIsGenerating(false);
         
     }
     return {
