@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { createCodeQuestion } from "../service/createCodeQuestionService";
 import { supabase } from "../../../../SupabaseAuth/supabaseClient"; 
 import { useNavigate } from 'react-router-dom';
+import { generateCodeQuestion } from "../service/createCodeQuestionService";    
 
 export default function useCodeQuestionForm( examId, question_count, initialQuestion = null  ) {
     const [userId, setUserId] = useState(null);
@@ -29,6 +30,9 @@ export default function useCodeQuestionForm( examId, question_count, initialQues
     const [expectedFunctionSignature, setExpectedFunctionSignature] = useState("");
     const [gradingDescription, setGradingDescription] = useState("");    
     const [topicDescription, setTopicDescription] = useState('');
+    const [generatedCodeQuestions, setGeneratedCodeQuestions] = useState([]);
+
+    const [isGenerating, setIsGenerating] = useState(false);
 
     const navigate = useNavigate();
 
@@ -176,7 +180,48 @@ export default function useCodeQuestionForm( examId, question_count, initialQues
 
     // Function to handle AI question generation 
     const handleGenerateQuestions = async () => {
+        // Basic validation
+        const newErrors = {};
+        if (!topicDescription.trim())
+            newErrors.topicDescription = "Topic description is required.";
+        if (!aiformSelectedLanguage)
+            newErrors.aiformSelectedLanguage = "Please select a programming language.";
+        if (!subQuestionType)
+            newErrors.subQuestionType = "Please select a sub-question type.";
+        if (!guidance.trim())
+            newErrors.guidance = "Guidance is required.";
+        if (!questionNo || isNaN(questionNo) || parseInt(questionNo) < 1)
+            newErrors.questionNo = "Enter a valid number of questions.";
+        if (!gradingDescription.trim())
+            newErrors.gradingDescription = "Grading description is required.";
+        setErrors(newErrors);
 
+        if (Object.keys(newErrors).length === 0) {
+            setIsGenerating(true);
+            try {
+                const params = {
+                    topicDescription: topicDescription,
+                    aiformSelectedLanguageName: aiformSelectedLanguage ? aiformSelectedLanguage.name : "",
+                    aiformSelectedLanguageID: aiformSelectedLanguage ? aiformSelectedLanguage.id : null,
+                    subQuestionType: subQuestionType,
+                    guidance: guidance,
+                    keyConcepts: keyConcepts,
+                    doNotInclude: doNotInclude,
+                    questionNo: questionNo,
+                    expectedFunctionSignature: expectedFunctionSignature,
+                    gradingDescription: gradingDescription
+                };
+                const data = await generateCodeQuestion(params);
+                    
+                if(data.questions && data.questions.length > 0){
+                    setGeneratedCodeQuestions(data.questions);
+                }
+            } catch (error) {
+                console.error("Error generating question:", error);
+                //needed to show error to user in UI later
+            }
+            setIsGenerating(false);
+        }
     }
     return {
         testCases,
@@ -230,7 +275,11 @@ export default function useCodeQuestionForm( examId, question_count, initialQues
         setGradingDescription,
         topicDescription,
         setTopicDescription,
-        handleGenerateQuestions
+        handleGenerateQuestions,
+        generatedCodeQuestions,
+        setGeneratedCodeQuestions,
+        isGenerating,
+        setIsGenerating
     };
 
 } 
