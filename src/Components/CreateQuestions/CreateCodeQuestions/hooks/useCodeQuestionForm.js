@@ -33,6 +33,7 @@ export default function useCodeQuestionForm( examId, question_count, initialQues
     const [generatedCodeQuestions, setGeneratedCodeQuestions] = useState([]);
 
     const [isGenerating, setIsGenerating] = useState(false);
+    const [checkedAICodeQuestions, setCheckedAICodeQuestions] = useState([]);
 
     const navigate = useNavigate();
 
@@ -223,6 +224,14 @@ export default function useCodeQuestionForm( examId, question_count, initialQues
             setIsGenerating(false);
         }
     }
+
+    // Handle checkbox change
+    const handleCheckboxChangeCode = (index) => {
+        setCheckedAICodeQuestions((prev) => ({
+        ...prev,
+        [index]: !prev[index],
+        }));
+    }
     return {
         testCases,
         selectedLanguage,
@@ -279,7 +288,9 @@ export default function useCodeQuestionForm( examId, question_count, initialQues
         generatedCodeQuestions,
         setGeneratedCodeQuestions,
         isGenerating,
-        setIsGenerating
+        setIsGenerating,
+        checkedAICodeQuestions,
+        handleCheckboxChangeCode,
     };
 
 } 

@@ -1,10 +1,11 @@
 import React from "react";
-import { Card, Badge, Collapse, Button } from "react-bootstrap";
+import { Card, Badge, Collapse, Button, Form } from "react-bootstrap";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { coy } from "react-syntax-highlighter/dist/esm/styles/prism";
+import { useState } from "react";
 
-export default function AIGeneratedCodeQuestions({ questions }) {
-  const [showTestCases, setShowTestCases] = React.useState(false);
+export default function AIGeneratedCodeQuestions({ questions, onCheck, checkedQuestions }) {
+  const [showTestCases, setShowTestCases] = useState(false);
 
   return (
     <>
@@ -15,7 +16,15 @@ export default function AIGeneratedCodeQuestions({ questions }) {
         <Card.Body>
     
         {questions.map((question, index) => (
-            <Card className="mb-3 shadow-sm" key={index}>
+            <div key={index} className="d-flex align-items-start mb-3">
+            <Form.Check
+              type="checkbox"
+              className="me-2 mt-2"
+              checked={!!checkedQuestions[index]}
+              onChange={() => onCheck(index)}
+
+            />
+            <Card className="mb-3 shadow-sm">
                 <Card.Body>
                     <Card.Title>
                         <strong>Question:</strong> {question.question_description}
@@ -61,6 +70,7 @@ export default function AIGeneratedCodeQuestions({ questions }) {
                     </Collapse>
                 </Card.Body>
             </Card>
+            </div>
         ))}
         </Card.Body>
     </Card>
