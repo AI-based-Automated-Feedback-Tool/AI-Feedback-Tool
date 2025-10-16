@@ -230,6 +230,9 @@ export default function useCodeQuestionForm( examId, question_count, initialQues
             } catch (error) {
                 console.error("Error generating question:", error);
                 //needed to show error to user in UI later
+                const generateError = {};
+                generateError.topic = "Failed to connect to server. Please check your connection and try again.";
+                setErrors(generateError);
             }
             setIsGenerating(false);
         }
@@ -249,10 +252,18 @@ export default function useCodeQuestionForm( examId, question_count, initialQues
         const selectedQuestions = generatedCodeQuestions.filter((q, index) => checkedAICodeQuestions[index]);
         setGeneratedAndSelectedQuestions(selectedQuestions);
 
+        const newErrors = {};
         if (selectedQuestions.length === 0) {
-            alert("Please select at least one question to add.");
+            newErrors.limit = "Please select at least one question to add.";
+            setErrors(newErrors);       
+            return;
+        } else if(questions.length + selectedQuestions.length > parseInt(question_count )) {      
+            newErrors.limit = `Adding these questions exceeds the limit of ${question_count} questions. Please select fewer questions.`;
+            setErrors(newErrors);
             return;
         }
+
+        
 
         //add questions to main questions list
         selectedQuestions.forEach((q) => {

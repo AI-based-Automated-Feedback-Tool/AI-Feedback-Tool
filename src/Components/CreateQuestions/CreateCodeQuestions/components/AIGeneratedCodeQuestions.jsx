@@ -4,11 +4,12 @@ import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { coy } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { useState } from "react";
 
-export default function AIGeneratedCodeQuestions({ questions, onCheck, checkedQuestions, onSaveChecked, hasReachedLimit ,question_count}) {
+export default function AIGeneratedCodeQuestions({ questions, onCheck, checkedQuestions, onSaveChecked, hasReachedLimit ,question_count, errors}) {
   const [showTestCases, setShowTestCases] = useState(false);
 
   return (
     <>
+    {errors.topic && <div className="text-danger mx-3">{errors.topic}</div>}
     <Card className="mx-3 mx-md-5 mb-3">
         <Card.Header className="bg-secondary text-white">
             <h5>Generated Questions</h5>
@@ -85,16 +86,17 @@ export default function AIGeneratedCodeQuestions({ questions, onCheck, checkedQu
             </Button>
         </div>
         {
-            <p className="text-red-500 mt-2 text-sm mx-3" style={{color: 'green'}}>
+            <p className="text-success mt-2 text-sm mx-3">
                 You can edit the points for each question after adding them to the exam.
             </p>
         }
         {hasReachedLimit && (
-            <p className="text-red-500 mt-2 text-sm mx-3" style={{color: 'red'}}>
+            <p className="text-danger mt-2 text-sm mx-3">
                 You’ve reached the maximum number of questions ({question_count}). 
                 Delete a question to add more.
             </p>
-)}
+        )}
+        {errors.limit && <div className="text-danger mx-3">{errors.limit}</div>}
     </Card>
     </>
   )

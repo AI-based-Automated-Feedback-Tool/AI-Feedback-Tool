@@ -203,6 +203,7 @@ export default function CodeQuestionGenerationForm({formState, question_count}) 
             onSaveChecked={saveCheckedQuestions}
             hasReachedLimit={hasReachedLimit}
             question_count={question_count}
+            errors={errors}
           />
         )
       }
