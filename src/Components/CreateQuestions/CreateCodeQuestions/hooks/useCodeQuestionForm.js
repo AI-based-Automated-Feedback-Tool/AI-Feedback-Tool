@@ -287,6 +287,9 @@ export default function useCodeQuestionForm( examId, question_count, initialQues
         setIsGenerating(false);
         
     }
+
+    const hasReachedLimit = questions.length >= parseInt(question_count || 0);
+
     return {
         testCases,
         selectedLanguage,
@@ -347,6 +350,7 @@ export default function useCodeQuestionForm( examId, question_count, initialQues
         checkedAICodeQuestions,
         handleCheckboxChangeCode,
         saveCheckedQuestions,
+        hasReachedLimit
     };
 
 } 

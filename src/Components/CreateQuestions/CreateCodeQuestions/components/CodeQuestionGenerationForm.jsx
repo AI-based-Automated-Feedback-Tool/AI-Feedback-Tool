@@ -37,6 +37,7 @@ export default function CodeQuestionGenerationForm({formState}) {
       checkedAICodeQuestions,
       handleCheckboxChangeCode,
       saveCheckedQuestions,
+      hasReachedLimit
     } = formState;
 
     const {languages, loading} = useFetchLanguages(setErrors);
@@ -200,6 +201,7 @@ export default function CodeQuestionGenerationForm({formState}) {
             onCheck={handleCheckboxChangeCode}
             checkedQuestions={checkedAICodeQuestions}
             onSaveChecked={saveCheckedQuestions}
+            hasReachedLimit={hasReachedLimit}
           />
         )
       }

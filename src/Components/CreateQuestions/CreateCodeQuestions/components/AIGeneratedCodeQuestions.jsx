@@ -4,7 +4,7 @@ import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { coy } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { useState } from "react";
 
-export default function AIGeneratedCodeQuestions({ questions, onCheck, checkedQuestions, onSaveChecked }) {
+export default function AIGeneratedCodeQuestions({ questions, onCheck, checkedQuestions, onSaveChecked, hasReachedLimit }) {
   const [showTestCases, setShowTestCases] = useState(false);
 
   return (
@@ -75,8 +75,12 @@ export default function AIGeneratedCodeQuestions({ questions, onCheck, checkedQu
         </Card.Body>
 
         {/* Add Questions Button */}
-        <div className="d-flex justify-content-end mb-3 mx-3" onClick={onSaveChecked}>
-            <Button variant="primary" >
+        <div className="d-flex justify-content-end mb-3 mx-3" >
+            <Button 
+                variant="primary"
+                onClick={onSaveChecked} 
+                disabled={questions.length === 0 || !!hasReachedLimit}
+            >
                 ➕ Add Questions to the Exam
             </Button>
         </div>
