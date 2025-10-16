@@ -135,6 +135,7 @@ export default function CreateCodeQuestionsContent({examId, question_count}) {
               hasReachedLimit
             }}
             disabled={isDisabled()}
+            question_count={question_count}
       />
       {questions.length > 0 && (
         <>

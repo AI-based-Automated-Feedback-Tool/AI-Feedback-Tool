@@ -5,7 +5,7 @@ import '../../../../css/aiQuestionGeneration.css';
 import AIGeneratedCodeQuestions from './AIGeneratedCodeQuestions';
 import useCodeQuestionForm from '../hooks/useCodeQuestionForm';
 
-export default function CodeQuestionGenerationForm({formState}) {
+export default function CodeQuestionGenerationForm({formState, question_count}) {
   const {
       errors,
       setErrors,
@@ -202,6 +202,7 @@ export default function CodeQuestionGenerationForm({formState}) {
             checkedQuestions={checkedAICodeQuestions}
             onSaveChecked={saveCheckedQuestions}
             hasReachedLimit={hasReachedLimit}
+            question_count={question_count}
           />
         )
       }

@@ -4,7 +4,7 @@ import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { coy } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { useState } from "react";
 
-export default function AIGeneratedCodeQuestions({ questions, onCheck, checkedQuestions, onSaveChecked, hasReachedLimit }) {
+export default function AIGeneratedCodeQuestions({ questions, onCheck, checkedQuestions, onSaveChecked, hasReachedLimit ,question_count}) {
   const [showTestCases, setShowTestCases] = useState(false);
 
   return (
@@ -84,6 +84,17 @@ export default function AIGeneratedCodeQuestions({ questions, onCheck, checkedQu
                 ➕ Add Questions to the Exam
             </Button>
         </div>
+        {
+            <p className="text-red-500 mt-2 text-sm mx-3" style={{color: 'green'}}>
+                You can edit the points for each question after adding them to the exam.
+            </p>
+        }
+        {hasReachedLimit && (
+            <p className="text-red-500 mt-2 text-sm mx-3" style={{color: 'red'}}>
+                You’ve reached the maximum number of questions ({question_count}). 
+                Delete a question to add more.
+            </p>
+)}
     </Card>
     </>
   )
