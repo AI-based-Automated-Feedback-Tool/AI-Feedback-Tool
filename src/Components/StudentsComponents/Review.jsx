@@ -43,7 +43,10 @@ const Review = () => {
                   <li
                     key={i}
                     className={`list-group-item ${
-                      entry.student_answer?.includes?.(opt)
+                      (Array.isArray(entry.student_answer)
+                      ? entry.student_answer.includes(opt)
+                       : entry.student_answer === opt)
+
                         ? entry.is_correct
                           ? "list-group-item-success"
                           : "list-group-item-danger"
@@ -59,7 +62,13 @@ const Review = () => {
               </ul>
 
               <div className="mt-2 space-y-1">
-                <p><strong>Your Answer:</strong> {entry.student_answer?.join?.(", ") || entry.selected_option}</p>
+               <p>
+                <strong>Your Answer:</strong>{" "}
+                {Array.isArray(entry.student_answer)
+                ? entry.student_answer.join(", ")
+                : String(entry.student_answer ?? "")}
+               </p>
+
                 <p><strong>Correct:</strong> {entry.is_correct ? "Yes" : "No"}</p>
                 <p><strong>Score:</strong> {entry.score}</p>
                 <p><strong>AI Feedback:</strong> {entry.ai_feedback || "Pending AI feedback generation"}</p>

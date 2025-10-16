@@ -16,8 +16,10 @@ export const ReviewProvider = ({ children }) => {
       .single();
 
     if (error) {
+      console.error("[Review] getExamTypeForSubmission error:", error.message);
       throw new Error("Could not determine exam type: " + error.message);
     }
+    console.log("[Review] type for submission", submissionId, "=>", data?.exams?.type);
     return data?.exams?.type; // "mcq" | "essay" | "code"
   };
 
@@ -51,10 +53,11 @@ export const ReviewProvider = ({ children }) => {
             submission_id,
             question_id,
             student_answer,
-            selected_option,
             is_correct,
             score,
             ai_feedback,
+            model_answer_basic,
+            model_answer_advanced,
             mcq_questions (
               question_text,
               options,
