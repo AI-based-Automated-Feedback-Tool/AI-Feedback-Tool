@@ -150,8 +150,17 @@ export default function useCodeQuestionForm( examId, question_count, initialQues
     };
 
     const saveAllQuestions = async () => {
+        const newErrors = {};
+        if (questions.length !== question_count) {
+            newErrors.restriction = "Please add the exact number of questions required.";
+        }
+        if (Object.keys(newErrors).length > 0) {
+            setErrors(newErrors);
+            return;
+        } 
+        setErrors({});
         setLoading(true);
-        setErrors(null)
+        
         try{
             for (const question of questions) {
                 const payload = {

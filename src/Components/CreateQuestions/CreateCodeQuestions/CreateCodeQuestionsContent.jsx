@@ -167,6 +167,11 @@ export default function CreateCodeQuestionsContent({examId, question_count}) {
           </div> 
         </>
       )}
+      {errors?.restriction && 
+        <div className="mt-3">
+          <Alert variant="danger">{errors.restriction}</Alert>
+        </div>
+        }
     </Col>
   )
 }
