@@ -119,6 +119,8 @@ export default function CreateCodeQuestionsContent({examId, question_count}) {
               handleGenerateQuestions
             }}
             disabled={isDisabled()}
+            examId={examId}
+            question_count={question_count}
       />
       
       {questions.length > 0 && (

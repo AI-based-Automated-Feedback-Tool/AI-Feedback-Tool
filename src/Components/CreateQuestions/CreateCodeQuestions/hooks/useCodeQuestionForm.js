@@ -213,7 +213,6 @@ export default function useCodeQuestionForm( examId, question_count, initialQues
                     
                 if(data.questions && data.questions.length > 0){
                     setGeneratedCodeQuestions(data.questions);
-                    console.log("Generated Questions:", data.questions);
                 }
             } catch (error) {
                 console.error("Error generating question:", error);
@@ -273,7 +272,9 @@ export default function useCodeQuestionForm( examId, question_count, initialQues
         setGradingDescription,
         topicDescription,
         setTopicDescription,
-        handleGenerateQuestions
+        handleGenerateQuestions,
+        generatedCodeQuestions,
+        setGeneratedCodeQuestions
     };
 
 } 
