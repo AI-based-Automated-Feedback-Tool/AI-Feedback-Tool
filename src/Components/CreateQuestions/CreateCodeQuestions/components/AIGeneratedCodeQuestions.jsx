@@ -1,13 +1,15 @@
 import React from "react";
-import { Card, Badge, Collapse, Button } from "react-bootstrap";
+import { Card, Badge, Collapse, Button, Form } from "react-bootstrap";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { coy } from "react-syntax-highlighter/dist/esm/styles/prism";
+import { useState } from "react";
 
-export default function AIGeneratedCodeQuestions({ questions }) {
-  const [showTestCases, setShowTestCases] = React.useState(false);
+export default function AIGeneratedCodeQuestions({ questions, onCheck, checkedQuestions, onSaveChecked, hasReachedLimit ,question_count, errors}) {
+  const [showTestCases, setShowTestCases] = useState(false);
 
   return (
     <>
+    {errors.topic && <div className="text-danger mx-3">{errors.topic}</div>}
     <Card className="mx-3 mx-md-5 mb-3">
         <Card.Header className="bg-secondary text-white">
             <h5>Generated Questions</h5>
@@ -15,7 +17,15 @@ export default function AIGeneratedCodeQuestions({ questions }) {
         <Card.Body>
     
         {questions.map((question, index) => (
-            <Card className="mb-3 shadow-sm" key={index}>
+            <div key={index} className="d-flex align-items-start mb-3">
+            <Form.Check
+              type="checkbox"
+              className="me-2 mt-2"
+              checked={!!checkedQuestions[index]}
+              onChange={() => onCheck(index)}
+
+            />
+            <Card className="mb-3 shadow-sm">
                 <Card.Body>
                     <Card.Title>
                         <strong>Question:</strong> {question.question_description}
@@ -61,8 +71,32 @@ export default function AIGeneratedCodeQuestions({ questions }) {
                     </Collapse>
                 </Card.Body>
             </Card>
+            </div>
         ))}
         </Card.Body>
+
+        {/* Add Questions Button */}
+        <div className="d-flex justify-content-end mb-3 mx-3" >
+            <Button 
+                variant="primary"
+                onClick={onSaveChecked} 
+                disabled={questions.length === 0 || !!hasReachedLimit}
+            >
+                ➕ Add Questions to the Exam
+            </Button>
+        </div>
+        {
+            <p className="text-success mt-2 text-sm mx-3">
+                You can edit the points for each question after adding them to the exam.
+            </p>
+        }
+        {hasReachedLimit && (
+            <p className="text-danger mt-2 text-sm mx-3">
+                You’ve reached the maximum number of questions ({question_count}). 
+                Delete a question to add more.
+            </p>
+        )}
+        {errors.limit && <div className="text-danger mx-3">{errors.limit}</div>}
     </Card>
     </>
   )

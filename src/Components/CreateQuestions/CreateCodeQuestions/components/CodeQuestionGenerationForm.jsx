@@ -5,7 +5,7 @@ import '../../../../css/aiQuestionGeneration.css';
 import AIGeneratedCodeQuestions from './AIGeneratedCodeQuestions';
 import useCodeQuestionForm from '../hooks/useCodeQuestionForm';
 
-export default function CodeQuestionGenerationForm({formState, index, examId, question_count}) {
+export default function CodeQuestionGenerationForm({formState, question_count}) {
   const {
       errors,
       setErrors,
@@ -33,8 +33,12 @@ export default function CodeQuestionGenerationForm({formState, index, examId, qu
       generatedCodeQuestions,
       setGeneratedCodeQuestions,
       isGenerating,
-      setIsGenerating
-    } = useCodeQuestionForm(examId, question_count);
+      setIsGenerating,
+      checkedAICodeQuestions,
+      handleCheckboxChangeCode,
+      saveCheckedQuestions,
+      hasReachedLimit
+    } = formState;
 
     const {languages, loading} = useFetchLanguages(setErrors);
     const difficultyLevels = ['Easy', 'Medium', 'Hard'];
@@ -194,6 +198,12 @@ export default function CodeQuestionGenerationForm({formState, index, examId, qu
         {generatedCodeQuestions.length > 0 && (
           <AIGeneratedCodeQuestions 
             questions={generatedCodeQuestions}
+            onCheck={handleCheckboxChangeCode}
+            checkedQuestions={checkedAICodeQuestions}
+            onSaveChecked={saveCheckedQuestions}
+            hasReachedLimit={hasReachedLimit}
+            question_count={question_count}
+            errors={errors}
           />
         )
       }

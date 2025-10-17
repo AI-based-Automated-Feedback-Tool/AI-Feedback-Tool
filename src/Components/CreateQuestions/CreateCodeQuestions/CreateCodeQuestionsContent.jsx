@@ -55,7 +55,15 @@ export default function CreateCodeQuestionsContent({examId, question_count}) {
     setGradingDescription,
     topicDescription,
     setTopicDescription,
-    handleGenerateQuestions
+    handleGenerateQuestions,
+    generatedCodeQuestions,
+    setGeneratedCodeQuestions,
+    isGenerating,
+    setIsGenerating,
+    checkedAICodeQuestions,
+    handleCheckboxChangeCode,
+    saveCheckedQuestions,
+    hasReachedLimit
   } = useCodeQuestionForm(examId, question_count);
 
   const isDisabled = () =>{
@@ -116,13 +124,19 @@ export default function CreateCodeQuestionsContent({examId, question_count}) {
               setGradingDescription,
               topicDescription,
               setTopicDescription,
-              handleGenerateQuestions
+              handleGenerateQuestions,
+              generatedCodeQuestions,
+              setGeneratedCodeQuestions,
+              isGenerating,
+              setIsGenerating,
+              checkedAICodeQuestions,
+              handleCheckboxChangeCode,
+              saveCheckedQuestions,
+              hasReachedLimit
             }}
             disabled={isDisabled()}
-            examId={examId}
             question_count={question_count}
       />
-      
       {questions.length > 0 && (
         <>
           <CodeQuestionTable 
@@ -153,6 +167,11 @@ export default function CreateCodeQuestionsContent({examId, question_count}) {
           </div> 
         </>
       )}
+      {errors?.restriction && 
+        <div className="mt-3">
+          <Alert variant="danger">{errors.restriction}</Alert>
+        </div>
+        }
     </Col>
   )
 }

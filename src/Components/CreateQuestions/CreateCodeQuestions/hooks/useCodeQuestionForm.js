@@ -3,6 +3,7 @@ import { createCodeQuestion } from "../service/createCodeQuestionService";
 import { supabase } from "../../../../SupabaseAuth/supabaseClient"; 
 import { useNavigate } from 'react-router-dom';
 import { generateCodeQuestion } from "../service/createCodeQuestionService";    
+import language from "react-syntax-highlighter/dist/esm/languages/hljs/1c";
 
 export default function useCodeQuestionForm( examId, question_count, initialQuestion = null  ) {
     const [userId, setUserId] = useState(null);
@@ -33,6 +34,8 @@ export default function useCodeQuestionForm( examId, question_count, initialQues
     const [generatedCodeQuestions, setGeneratedCodeQuestions] = useState([]);
 
     const [isGenerating, setIsGenerating] = useState(false);
+    const [checkedAICodeQuestions, setCheckedAICodeQuestions] = useState([]);
+    const [generatedAndSelectedQuestions, setGeneratedAndSelectedQuestions] = useState([]);
 
     const navigate = useNavigate();
 
@@ -108,20 +111,20 @@ export default function useCodeQuestionForm( examId, question_count, initialQues
 
     // Function to handle adding a new question
     const handleAddQuestion = (newQuestion) => {
-        if (questions.length >= parseInt(question_count)) {
+        setQuestions(prev => {
+            if (prev.length >= parseInt(question_count)) {
             setWarning(`You can only add ${question_count} questions.`);
-            return false;
-        }
-        const newQuestionsList = [...questions, newQuestion]
-        setQuestions(newQuestionsList);
-
-        // Show warning if limit reached now
-        if (newQuestionsList.length === parseInt(question_count)) {
+            return prev; 
+            }
+            const updated = [...prev, newQuestion];
+            // Show warning if limit reached
+            if (updated.length === parseInt(question_count)) {
             setWarning(`You have reached the limit of ${question_count} questions.`);
-        } else {
+            } else {
             setWarning(null);
-        }
-        return true;
+            }
+            return updated;
+        });
     };
   
     // Function to handle deleting a question
@@ -147,8 +150,17 @@ export default function useCodeQuestionForm( examId, question_count, initialQues
     };
 
     const saveAllQuestions = async () => {
+        const newErrors = {};
+        if (questions.length != question_count) {
+            newErrors.restriction = "Please add the exact number of questions required.";
+        }
+        if (Object.keys(newErrors).length > 0) {
+            setErrors(newErrors);
+            return;
+        } 
+        setErrors({});
         setLoading(true);
-        setErrors(null)
+        
         try{
             for (const question of questions) {
                 const payload = {
@@ -214,15 +226,90 @@ export default function useCodeQuestionForm( examId, question_count, initialQues
                 const data = await generateCodeQuestion(params);
                     
                 if(data.questions && data.questions.length > 0){
-                    setGeneratedCodeQuestions(data.questions);
+                    // Format test cases to ensure input/output are strings
+                    const formattedQuestions = data.questions.map((q) => ({
+                        ...q,
+                        test_cases: q.test_cases?.map(tc => ({
+                            input: typeof tc.input === "object" ? JSON.stringify(tc.input) : tc.input,
+                            output: typeof tc.output === "object" ? JSON.stringify(tc.output) : tc.output
+                        })) || []
+                    }));
+                    setGeneratedCodeQuestions(formattedQuestions);
                 }
             } catch (error) {
                 console.error("Error generating question:", error);
                 //needed to show error to user in UI later
+                const generateError = {};
+                generateError.topic = "Failed to connect to server. Please check your connection and try again.";
+                setErrors(generateError);
             }
             setIsGenerating(false);
         }
     }
+
+    // Handle checkbox change
+    const handleCheckboxChangeCode = (index) => {
+        setCheckedAICodeQuestions((prev) => ({
+        ...prev,
+        [index]: !prev[index],
+        }));
+    }
+
+    // Function to save checked questions
+    const saveCheckedQuestions = () => {
+
+        const selectedQuestions = generatedCodeQuestions.filter((q, index) => checkedAICodeQuestions[index]);
+        setGeneratedAndSelectedQuestions(selectedQuestions);
+
+        const newErrors = {};
+        if (selectedQuestions.length === 0) {
+            newErrors.limit = "Please select at least one question to add.";
+            setErrors(newErrors);       
+            return;
+        } else if(questions.length + selectedQuestions.length > parseInt(question_count )) {      
+            newErrors.limit = `Adding these questions exceeds the limit of ${question_count} questions. Please select fewer questions.`;
+            setErrors(newErrors);
+            return;
+        }
+
+        
+
+        //add questions to main questions list
+        selectedQuestions.forEach((q) => {
+            const formattedQuestion = {
+                question: q.question_description,
+                functionSignature: q.function_signature,
+                wrapperCode: q.wrapper_code,
+                testCases: q.test_cases,    
+                points: q.points,
+                language: q.language || aiformSelectedLanguage
+            }
+            handleAddQuestion(formattedQuestion);
+        })
+
+        // Clear question generation form 
+        setTopicDescription('');
+        setAiformSelectedLanguage(null);
+        setSubQuestionType(''); 
+        setGuidance("");
+        setKeyConcepts("");
+        setDoNotInclude("");
+        setQuestionNo(1);
+        setExpectedFunctionSignature("");
+        setGradingDescription("");
+        setDifficulty('Easy');
+
+        // Clear generated questions and selections
+        setGeneratedCodeQuestions([]);
+        setCheckedAICodeQuestions({});
+        setGeneratedAndSelectedQuestions([]);
+        setErrors({});
+        setIsGenerating(false);
+        
+    }
+
+    const hasReachedLimit = questions.length >= parseInt(question_count || 0);
+
     return {
         testCases,
         selectedLanguage,
@@ -279,7 +366,11 @@ export default function useCodeQuestionForm( examId, question_count, initialQues
         generatedCodeQuestions,
         setGeneratedCodeQuestions,
         isGenerating,
-        setIsGenerating
+        setIsGenerating,
+        checkedAICodeQuestions,
+        handleCheckboxChangeCode,
+        saveCheckedQuestions,
+        hasReachedLimit
     };
 
 } 
