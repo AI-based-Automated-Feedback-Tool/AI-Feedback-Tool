@@ -121,32 +121,50 @@ const ProfilePage = () => {
                     </div>
                   </div>
 
-                <div className="profile-info" style={{ maxWidth: '500px', margin: '0 auto' }}>
+                  {/* Profile Information */}
+                  <div className="profile-info-section">
                     {isEditing ? (
+                      <div className="profile-form-section">
                         <Form>
-                      <Form.Group className="mb-3">
-                        <Form.Label>Name</Form.Label>
-                        <Form.Control
+                          <div className="profile-form-group">
+                            <label className="profile-form-label">Full Name</label>
+                            <input
                               type="text"
+                              className="profile-form-control"
                               value={newName}
                               onChange={(e) => setNewName(e.target.value)}
                               disabled={updateLoading}
+                              placeholder="Enter your full name"
                             />
-                      </Form.Group>
+                          </div>
                           
-                      <Form.Group className="mb-3">
-                        <Form.Label>Email</Form.Label>
-                        <Form.Control
+                          <div className="profile-form-group">
+                            <label className="profile-form-label">Email Address</label>
+                            <input
                               type="email"
+                              className="profile-form-control"
                               value={userData.email}
                               disabled
                               readOnly
                             />
-                      </Form.Group>
+                            <small className="text-muted">Email cannot be changed</small>
+                          </div>
                           
-                      <div className="d-flex gap-2">
-                        <Button 
-                          variant="primary" 
+                          <div className="profile-form-group">
+                            <label className="profile-form-label">Role</label>
+                            <input
+                              type="text"
+                              className="profile-form-control"
+                              value={userData.role.charAt(0).toUpperCase() + userData.role.slice(1)}
+                              disabled
+                              readOnly
+                            />
+                          </div>
+                          
+                          <div className="profile-form-actions">
+                            <button 
+                              type="button"
+                              className="profile-save-btn"
                               onClick={handleUpdateName}
                               disabled={updateLoading || !newName.trim()}
                             >
@@ -155,35 +173,40 @@ const ProfilePage = () => {
                                   <Spinner animation="border" size="sm" className="me-2" />
                                   Saving...
                                 </>
-                          ) : 'Save Changes'}
-                        </Button>
+                              ) : (
+                                <>💾 Save Changes</>
+                              )}
+                            </button>
                             
-                        <Button 
-                          variant="outline-secondary" 
+                            <button 
+                              type="button"
+                              className="profile-cancel-btn"
                               onClick={() => {
                                 setIsEditing(false);
-                            setNewName(userData.name); // Reset to original name
+                                setNewName(userData.name);
                               }}
                               disabled={updateLoading}
                             >
-                          Cancel
-                        </Button>
+                              ❌ Cancel
+                            </button>
+                          </div>
+                        </Form>
                       </div>
-                    </Form>
                     ) : (
                       <>
-                      <div className="text-center mb-4">
-                        <h3 className="mb-1" style={{ fontWeight: '600' }}>{userData.name}</h3>
-                        <p className="text-muted mb-0" style={{ fontSize: '1.2rem' }}>{userData.email}</p>
+                        <h2 className="profile-name">{userData.name}</h2>
+                        <p className="profile-email">{userData.email}</p>
+                        <div className="profile-role">
+                          🎓 {userData.role.charAt(0).toUpperCase() + userData.role.slice(1)}
                         </div>
                         
-                      <div className="d-flex justify-content-center">
-                        <Button 
-                          variant="outline-primary"
+                        <div className="profile-actions">
+                          <button 
+                            className="profile-edit-btn"
                             onClick={() => setIsEditing(true)}
                           >
-                          Edit Profile
-                        </Button>
+                            ✏️ Edit Profile
+                          </button>
                         </div>
                       </>
                     )}
