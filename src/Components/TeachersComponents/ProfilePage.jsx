@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Card, Container, Spinner, Alert, Button, Form } from 'react-bootstrap';
 import { supabase } from '../../SupabaseAuth/supabaseClient';
+import './ProfilePage.css';
 
 const ProfilePage = () => {
   const [userData, setUserData] = useState(null);
@@ -67,130 +68,133 @@ const ProfilePage = () => {
 
   if (loading) {
     return (
-      <Container className="mt-5 text-center">
-        <Spinner animation="border" role="status">
-          <span className="visually-hidden">Loading profile...</span>
-        </Spinner>
-      </Container>
+      <div className="profile-loading-container">
+        <div className="profile-loading-spinner"></div>
+        <div className="profile-loading-text">Loading Profile</div>
+      </div>
     );
   }
 
   if (error) {
     return (
-      <Container className="mt-5">
-        <Alert variant="danger">
-          <Alert.Heading>Error loading profile</Alert.Heading>
-          <p>{error}</p>
-        </Alert>
-      </Container>
+      <div className="profile-page">
+        <div className="profile-content-container">
+          <Container>
+            <Alert className="profile-error-alert">
+              <strong>⚠️ Error Loading Profile</strong><br />
+              {error}
+            </Alert>
+          </Container>
+        </div>
+      </div>
     );
   }
 
   return (
-    <Container className="mt-4">
-      <Card className="shadow-sm">
-        <Card.Header className="bg-primary text-white d-flex justify-content-between align-items-center">
-          <h4>👤 Teacher Profile</h4>
-          {!isEditing && (
-            <Button 
-              variant="light" 
-              size="sm"
-              onClick={() => setIsEditing(true)}
-            >
-              Edit Profile
-            </Button>
-          )}
-        </Card.Header>
-        <Card.Body>
-          {userData && (
-            <div className="profile-details">
-              <div className="mb-4">
-                <div className="profile-avatar d-flex justify-content-center mb-4">
-                  <div 
-                    className="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" 
-                    style={{ 
-                      width: '100px', 
-                      height: '100px', 
-                      fontSize: '3rem'
-                    }}
-                  >
-                    {userData.name.charAt(0).toUpperCase()}
+    <div className="profile-page">
+      {/* Hero Section */}
+      <div className="profile-hero-section">
+        <Container>
+          <div className="profile-hero-content">
+            <h1 className="profile-hero-title">
+              👤 Teacher Profile
+            </h1>
+            <p className="profile-hero-subtitle">
+              Manage your account information and preferences
+            </p>
+          </div>
+        </Container>
+      </div>
+
+      <div className="profile-content-container">
+        <Container>
+          <Card className="profile-main-card">
+            <Card.Body className="profile-card-body">
+              {userData && (
+                <>
+                  {/* Avatar Section */}
+                  <div className="profile-avatar-section">
+                    <div className="profile-avatar">
+                      <span className="profile-avatar-letter">
+                        {userData.name.charAt(0).toUpperCase()}
+                      </span>
+                    </div>
                   </div>
-                </div>
-                
+
                 <div className="profile-info" style={{ maxWidth: '500px', margin: '0 auto' }}>
-                  {isEditing ? (
-                    <Form>
+                    {isEditing ? (
+                        <Form>
                       <Form.Group className="mb-3">
                         <Form.Label>Name</Form.Label>
                         <Form.Control
-                          type="text"
-                          value={newName}
-                          onChange={(e) => setNewName(e.target.value)}
-                          disabled={updateLoading}
-                        />
+                              type="text"
+                              value={newName}
+                              onChange={(e) => setNewName(e.target.value)}
+                              disabled={updateLoading}
+                            />
                       </Form.Group>
-                      
+                          
                       <Form.Group className="mb-3">
                         <Form.Label>Email</Form.Label>
                         <Form.Control
-                          type="email"
-                          value={userData.email}
-                          disabled
-                          readOnly
-                        />
+                              type="email"
+                              value={userData.email}
+                              disabled
+                              readOnly
+                            />
                       </Form.Group>
-                      
+                          
                       <div className="d-flex gap-2">
                         <Button 
                           variant="primary" 
-                          onClick={handleUpdateName}
-                          disabled={updateLoading || !newName.trim()}
-                        >
-                          {updateLoading ? (
-                            <>
-                              <Spinner animation="border" size="sm" className="me-2" />
-                              Saving...
-                            </>
+                              onClick={handleUpdateName}
+                              disabled={updateLoading || !newName.trim()}
+                            >
+                              {updateLoading ? (
+                                <>
+                                  <Spinner animation="border" size="sm" className="me-2" />
+                                  Saving...
+                                </>
                           ) : 'Save Changes'}
                         </Button>
-                        
+                            
                         <Button 
                           variant="outline-secondary" 
-                          onClick={() => {
-                            setIsEditing(false);
+                              onClick={() => {
+                                setIsEditing(false);
                             setNewName(userData.name); // Reset to original name
-                          }}
-                          disabled={updateLoading}
-                        >
+                              }}
+                              disabled={updateLoading}
+                            >
                           Cancel
                         </Button>
                       </div>
                     </Form>
-                  ) : (
-                    <>
+                    ) : (
+                      <>
                       <div className="text-center mb-4">
                         <h3 className="mb-1" style={{ fontWeight: '600' }}>{userData.name}</h3>
                         <p className="text-muted mb-0" style={{ fontSize: '1.2rem' }}>{userData.email}</p>
-                      </div>
-                      
+                        </div>
+                        
                       <div className="d-flex justify-content-center">
                         <Button 
                           variant="outline-primary"
-                          onClick={() => setIsEditing(true)}
-                        >
+                            onClick={() => setIsEditing(true)}
+                          >
                           Edit Profile
                         </Button>
-                      </div>
-                    </>
-                  )}
-                </div>
-              </div>
-            </div>
-          )}
-        </Card.Body>
-      </Card>
-    </Container>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                </>
+              )}
+            </Card.Body>
+          </Card>
+        </Container>
+      </div>
+    </div>
   );
 };
 
