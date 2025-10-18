@@ -265,7 +265,7 @@ const AIFeedbackPage = () => {
           {/* Modal for API limit reached */}
           <Modal 
             show={showLimitModal} 
-            onHide={() => navigate('/teacher/dashboard')} 
+            onHide={() => navigate('/teacher')} 
             centered
             className="feedback-modal"
           >
@@ -279,7 +279,7 @@ const AIFeedbackPage = () => {
             <Modal.Footer>
               <Button 
                 variant="primary" 
-                onClick={() => navigate('/teacher/dashboard')}
+                onClick={() => navigate('/teacher')}
                 className="btn-primary"
               >
                 Back to Dashboard
