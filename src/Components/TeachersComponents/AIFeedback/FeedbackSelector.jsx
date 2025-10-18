@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "../../../SupabaseAuth/supabaseClient";
 import HeaderWithApiCount from './HeaderWithApiCount';
 import { ApiCallCountContext } from "../../../Context/ApiCallCountContext";
-import './FeedbackSelector.css'; // We'll create this CSS file
+import '../../../css/pages/FeedbackSelector.css';
 
 const FeedbackSelector = () => {
   const navigate = useNavigate();
@@ -129,29 +129,33 @@ const FeedbackSelector = () => {
   };
 
   return (
-    <Container className="my-5">
+    <div className="feedback-selector-page">
       {/* Hero Section */}
-      <div className="feedback-selector-hero mb-5">
-        <div className="hero-content text-center">
-          <div className="hero-icon mb-3">
-            <i className="fas fa-robot fa-3x text-primary"></i>
+      <div className="feedback-selector-hero">
+        <div className="container">
+          <div className="hero-content text-center">
+            <div className="hero-icon mb-3">
+              <i className="fas fa-robot fa-3x text-primary"></i>
+            </div>
+            <h1 className="hero-title mb-3">
+              <span className="gradient-text">AI-Powered Feedback</span>
+            </h1>
+            <p className="hero-subtitle text-muted mb-4">
+              Generate intelligent insights and recommendations for your exams using advanced AI analysis
+            </p>
+            <HeaderWithApiCount />
           </div>
-          <h1 className="hero-title mb-3">
-            <span className="gradient-text">AI-Powered Feedback</span>
-          </h1>
-          <p className="hero-subtitle text-muted mb-4">
-            Generate intelligent insights and recommendations for your exams using advanced AI analysis
-          </p>
-          <HeaderWithApiCount />
         </div>
       </div>
 
-      {error && (
-        <Alert variant="danger" className="modern-alert mb-4">
-          <i className="fas fa-exclamation-triangle me-2"></i>
-          {error}
-        </Alert>
-      )}
+      {/* Main Content */}
+      <div className="container feedback-content-container">
+        {error && (
+          <Alert variant="danger" className="modern-alert mb-4">
+            <i className="fas fa-exclamation-triangle me-2"></i>
+            {error}
+          </Alert>
+        )}
 
       {/* Main Selection Card */}
       <Card className="main-selection-card border-0 shadow-lg">
@@ -376,7 +380,8 @@ const FeedbackSelector = () => {
           </Form>
         </Card.Body>
       </Card>
-    </Container>
+      </div>
+    </div>
   );
 };
 

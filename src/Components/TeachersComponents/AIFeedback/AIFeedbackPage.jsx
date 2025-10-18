@@ -6,7 +6,7 @@ import { downloadAsTextFile } from '../../../utils/downloadTextUtils';
 import { Button } from 'react-bootstrap';
 import { ApiCallCountContext } from "../../../Context/ApiCallCountContext";
 import HeaderWithApiCount from './HeaderWithApiCount';
-import './AIFeedbackPage.css';
+import '../../../css/pages/AIFeedbackPage.css';
 
 
 // Default prompt templates for AI feedback generation
