@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../../SupabaseAuth/supabaseClient";
-import { Spinner, Alert } from "react-bootstrap";
-import "../../css/Courses.css";
+import { Alert } from "react-bootstrap";
+import "./TeacherCourses.css";
 
 const TeacherCourses = () => {
   const [courses, setCourses] = useState([]);
@@ -60,64 +60,113 @@ const TeacherCourses = () => {
     fetchCourses();
   }, []);
 
-  return (
-    <div className="container mt-3">
-      <h4 className="mb-4">Welcome to Teacher Dashboard</h4>
-
-      {error ? (
-        <Alert variant="danger">
-          {error}
-        </Alert>
-      ) : loading ? (
-        <div className="text-center py-4">
-          <Spinner animation="border" />
-          <p className="mt-2">Loading your courses...</p>
+  if (loading) {
+    return (
+      <div className="courses-loading-container">
+        <div className="courses-loading-spinner"></div>
+        <div className="courses-loading-text">
+          Loading your courses...
         </div>
-      ) : (
-        <div className="card shadow p-4">
-          <div className="card-header d-flex align-items-center">
-            <i className="fas fa-book fa-2x me-3 text-primary"></i>
-            <h2 className="mb-0">Your Courses</h2>
+      </div>
+    );
+  }
+
+  return (
+    <div className="teacher-courses-page">
+      {/* Hero Section */}
+      <div className="courses-hero-section">
+        <div className="container">
+          <div className="courses-hero-content">
+            <h1 className="courses-hero-title">
+              <i className="fas fa-graduation-cap me-3"></i>
+              Teacher Dashboard
+            </h1>
+            <p className="courses-hero-subtitle">
+              Manage your courses and create exceptional learning experiences
+            </p>
           </div>
-          <div className="card-body">
-            <div className="row mt-3">
-              {courses.map((course) => (
-                <div
-                  key={course.course_id}
-                  className="col-md-4 col-sm-6 col-12 mb-4"
-                  onClick={() => navigate(`/teacher/courses/${course.course_id}/exams`)}
-                  style={{ cursor: "pointer" }}
-                >
-                  <div className="card h-100 shadow">
-                    <div
-                      className="card-header text-white text-center"
-                      style={{
-                        backgroundColor: "#007bff",
-                        height: "60px",
-                        fontSize: "1.5rem",
-                        fontWeight: "bold",
-                      }}
-                    >
-                      {course.title}
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <div className="container courses-content-container">
+        {error && (
+          <Alert variant="danger" className="courses-error-alert">
+            <i className="fas fa-exclamation-triangle me-2"></i>
+            {error}
+          </Alert>
+        )}
+
+        {/* Courses Header */}
+        <div className="courses-header-section">
+          <h2 className="courses-header-title">
+            <i className="fas fa-book courses-header-icon"></i>
+            Your Courses
+            {courses.length > 0 && (
+              <span className="courses-count-badge">
+                {courses.length} Course{courses.length !== 1 ? 's' : ''}
+              </span>
+            )}
+          </h2>
+        </div>
+
+        {/* Courses Grid */}
+        {courses.length > 0 ? (
+          <div className="courses-grid">
+            {courses.map((course, index) => (
+              <div
+                key={course.course_id}
+                className="course-card"
+                onClick={() => navigate(`/teacher/courses/${course.course_id}/exams`)}
+                style={{ animationDelay: `${index * 0.1}s` }}
+              >
+                <div className="course-card-header">
+                  <h3 className="course-title">{course.title}</h3>
+                </div>
+                <div className="course-card-body">
+                  <div>
+                    <div className="course-code">
+                      <i className="fas fa-tag me-2"></i>
+                      {course.course_code}
                     </div>
-                    <div className="card-body">
-                      <h6 className="text-muted" style={{ fontSize: "0.85rem" }}>
-                        Course Code: {course.course_code}
-                      </h6>
-                      <p className="card-text mt-2">{course.description}</p>
+                    <p className="course-description">
+                      {course.description || "No description available for this course."}
+                    </p>
+                  </div>
+                  <div className="course-stats">
+                    <div className="course-stat">
+                      <i className="fas fa-file-alt"></i>
+                      <span>Exams</span>
                     </div>
+                    <div className="course-stat">
+                      <i className="fas fa-users"></i>
+                      <span>Students</span>
+                    </div>
+                    <i className="fas fa-arrow-right course-action-icon"></i>
                   </div>
                 </div>
-              ))}
-              {courses.length === 0 && (
-                <Alert variant="info" className="text-center">
-                  You haven't created any exams yet. Create an exam to see courses here.
-                </Alert>
-              )}
-            </div>
+              </div>
+            ))}
           </div>
-        </div>
-      )}
+        ) : (
+          <div className="courses-empty-state">
+            <div className="empty-state-icon">
+              <i className="fas fa-book-open"></i>
+            </div>
+            <h3 className="empty-state-title">No Courses Found</h3>
+            <p className="empty-state-description">
+              You haven't created any exams yet. Start by creating your first exam to see courses appear here.
+            </p>
+            <button 
+              className="empty-state-action"
+              onClick={() => navigate('/teacher/configure-exam')}
+            >
+              <i className="fas fa-plus me-2"></i>
+              Create Your First Exam
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
