@@ -1,13 +1,25 @@
 /* ProfilePage Modern Styling */
 
 .profile-page {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #5f27cd 100%);
   min-height: 100vh;
   padding: 0;
+  position: relative;
+}
+
+.profile-page::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, rgba(95, 39, 205, 0.1) 0%, transparent 50%, rgba(118, 75, 162, 0.1) 100%);
+  pointer-events: none;
 }
 
 .profile-hero-section {
-  background: linear-gradient(135deg, rgba(102, 126, 234, 0.9) 0%, rgba(118, 75, 162, 0.9) 100%);
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 50%, #ff9ff3 100%);
   padding: 3rem 0;
   margin-bottom: 2rem;
   color: white;
@@ -82,7 +94,7 @@
 .profile-avatar {
   width: 120px;
   height: 120px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #00d2d3 0%, #54a0ff 50%, #5f27cd 100%);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -131,14 +143,14 @@
 
 .profile-role {
   display: inline-block;
-  background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+  background: linear-gradient(135deg, #00d2d3 0%, #54a0ff 100%);
   color: white;
   padding: 0.5rem 1.5rem;
   border-radius: 25px;
   font-weight: 600;
   font-size: 0.9rem;
   margin-bottom: 2rem;
-  box-shadow: 0 4px 15px rgba(72, 187, 120, 0.3);
+  box-shadow: 0 4px 15px rgba(0, 210, 211, 0.3);
 }
 
 .profile-actions {
@@ -149,14 +161,14 @@
 }
 
 .profile-edit-btn {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #ff6348 0%, #ff4757 50%, #ff3838 100%);
   border: none;
   border-radius: 25px;
   padding: 0.8rem 2rem;
   font-weight: 600;
   color: white;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 4px 15px rgba(255, 99, 72, 0.3);
 }
 
 .profile-edit-btn:hover {
@@ -195,8 +207,8 @@
 }
 
 .profile-form-control:focus {
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  border-color: #00d2d3;
+  box-shadow: 0 0 0 3px rgba(0, 210, 211, 0.1);
   background: white;
 }
 
@@ -213,19 +225,19 @@
 }
 
 .profile-save-btn {
-  background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+  background: linear-gradient(135d, #ff6348 0%, #ff4757 100%);
   border: none;
   border-radius: 25px;
   padding: 0.8rem 2rem;
   font-weight: 600;
   color: white;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(72, 187, 120, 0.3);
+  box-shadow: 0 4px 15px rgba(255, 99, 72, 0.3);
 }
 
 .profile-save-btn:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(72, 187, 120, 0.4);
+  box-shadow: 0 8px 25px rgba(255, 99, 72, 0.4);
   color: white;
 }
 
@@ -251,7 +263,7 @@
 }
 
 .profile-loading-container {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #5f27cd 100%);
   min-height: 100vh;
   display: flex;
   align-items: center;
@@ -289,7 +301,7 @@
 }
 
 .profile-success-feedback {
-  background: linear-gradient(135deg, #68d391 0%, #48bb78 100%);
+  background: linear-gradient(135deg, #00d2d3 0%, #54a0ff 100%);
   border: none;
   border-radius: 15px;
   color: white;
