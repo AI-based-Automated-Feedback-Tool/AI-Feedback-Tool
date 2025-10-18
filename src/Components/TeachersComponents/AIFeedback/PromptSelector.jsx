@@ -17,7 +17,7 @@ import EssayTechnicalPrompt from './Prompts/EssayTechnicalPrompt';
 import { ApiCallCountContext } from '../../../Context/ApiCallCountContext';
 import { supabase } from '../../../SupabaseAuth/supabaseClient';
 import DynamicPromptService from './services/DynamicPromptService.jsx';
-import './PromptSelector.css'; // We'll create this CSS file
+import '../../../css/pages/PromptSelector.css';
 
 
 const MCQpredefinedPrompts = [

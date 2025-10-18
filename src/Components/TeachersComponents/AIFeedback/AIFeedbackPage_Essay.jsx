@@ -5,7 +5,7 @@ import { supabase } from '../../../SupabaseAuth/supabaseClient';
 import { downloadAsTextFile } from '../../../utils/downloadTextUtils';
 import { ApiCallCountContext } from "../../../Context/ApiCallCountContext";
 import HeaderWithApiCount from './HeaderWithApiCount';
-import './AIFeedbackPage.css';
+import '../../../css/pages/AIFeedbackPage.css';
 
 const defaultPrompts = [
   {

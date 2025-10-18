@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../../SupabaseAuth/supabaseClient";
 import { Alert } from "react-bootstrap";
-import "./TeacherCourses.css";
+import "../../css/pages/TeacherCourses.css";
 
 const TeacherCourses = () => {
   const [courses, setCourses] = useState([]);

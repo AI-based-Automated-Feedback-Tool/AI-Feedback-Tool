@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "../../../SupabaseAuth/supabaseClient";
 import HeaderWithApiCount from './HeaderWithApiCount';
 import { ApiCallCountContext } from "../../../Context/ApiCallCountContext";
-import './FeedbackSelector.css'; // We'll create this CSS file
+import '../../../css/pages/FeedbackSelector.css';
 
 const FeedbackSelector = () => {
   const navigate = useNavigate();

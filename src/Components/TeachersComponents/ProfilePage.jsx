@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Card, Container, Spinner, Alert, Button, Form } from 'react-bootstrap';
 import { supabase } from '../../SupabaseAuth/supabaseClient';
-import './ProfilePage.css';
+import '../../css/pages/ProfilePage.css';
 
 const ProfilePage = () => {
   const [userData, setUserData] = useState(null);
