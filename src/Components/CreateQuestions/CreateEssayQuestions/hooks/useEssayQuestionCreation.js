@@ -22,6 +22,13 @@ export default function useEssayQuestionCreation(examId, question_count) {
     //Ai question generation states 
     const [topic, setTopic] = useState("");
     const [difficultyLevel, setDifficultyLevel] = useState("Easy");
+    const [guidance, setGuidance] = useState("");
+    const [keyConcepts, setKeyConcepts] = useState("");
+    const [doNotInclude, setDoNotInclude] = useState("");
+    const [wordLimitAI, setWordLimitAI] = useState("");
+    const [pointsAI, setPointsAI] = useState("");
+    const [noOfQuestion, setNoOfQuestion] = useState("");
+    const [gradingNotesAI, setGradingNotesAI] = useState("");
 
     const fileInputRef = useRef(null);
 
@@ -193,6 +200,10 @@ export default function useEssayQuestionCreation(examId, question_count) {
         return false
     }
 
+    const generateQuestion = () => {
+        // Placeholder for AI question generation logic
+        console.log("Generating questions");
+    }
     return {
         question,
         examId,
@@ -225,6 +236,21 @@ export default function useEssayQuestionCreation(examId, question_count) {
         topic,
         setTopic,
         difficultyLevel,
-        setDifficultyLevel
+        setDifficultyLevel,
+        guidance,
+        setGuidance,
+        keyConcepts,
+        setKeyConcepts,
+        doNotInclude,
+        setDoNotInclude,
+        wordLimitAI,
+        setWordLimitAI,
+        pointsAI,
+        setPointsAI,
+        noOfQuestion,
+        setNoOfQuestion,
+        gradingNotesAI,
+        setGradingNotesAI,
+        generateQuestion
     };
 }
