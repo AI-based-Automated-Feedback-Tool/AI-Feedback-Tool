@@ -19,6 +19,17 @@ export default function useEssayQuestionCreation(examId, question_count) {
     const [loading, setLoading] = useState(false);
     const [warning, setWarning] = useState(null)
 
+    //Ai question generation states 
+    const [topic, setTopic] = useState("");
+    const [difficultyLevel, setDifficultyLevel] = useState("Easy");
+    const [guidance, setGuidance] = useState("");
+    const [keyConcepts, setKeyConcepts] = useState("");
+    const [doNotInclude, setDoNotInclude] = useState("");
+    const [wordLimitAI, setWordLimitAI] = useState("");
+    const [pointsAI, setPointsAI] = useState("");
+    const [noOfQuestion, setNoOfQuestion] = useState("");
+    const [gradingNotesAI, setGradingNotesAI] = useState("");
+
     const fileInputRef = useRef(null);
 
     const navigate = useNavigate();
@@ -189,6 +200,10 @@ export default function useEssayQuestionCreation(examId, question_count) {
         return false
     }
 
+    const generateQuestion = () => {
+        // Placeholder for AI question generation logic
+        console.log("Generating questions");
+    }
     return {
         question,
         examId,
@@ -217,6 +232,25 @@ export default function useEssayQuestionCreation(examId, question_count) {
         saveAllQuestions,
         loading,
         warning,
-        isDisabled
+        isDisabled,
+        topic,
+        setTopic,
+        difficultyLevel,
+        setDifficultyLevel,
+        guidance,
+        setGuidance,
+        keyConcepts,
+        setKeyConcepts,
+        doNotInclude,
+        setDoNotInclude,
+        wordLimitAI,
+        setWordLimitAI,
+        pointsAI,
+        setPointsAI,
+        noOfQuestion,
+        setNoOfQuestion,
+        gradingNotesAI,
+        setGradingNotesAI,
+        generateQuestion
     };
 }
