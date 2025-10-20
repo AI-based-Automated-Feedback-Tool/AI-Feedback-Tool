@@ -46,6 +46,8 @@ const CodeQuestionsList = () => {
   const [runOutput, setRunOutput] = useState("");
   // loading state for run code button
   const [isRunning, setIsRunning] = useState(false);
+  // track tab switching
+  const [focusLossCount, setFocusLossCount] = useState(0);
 
   //load questions and exam data when component mounts or id changes
   useEffect(() => {
@@ -60,19 +62,31 @@ const CodeQuestionsList = () => {
     }
   }, [userId]);
 
-  //monitor tab switching and show warning
-  useEffect(() => {
-    const handleVisibilityChange = () => {
-      if (!document.hidden) {
-        setShowTabWarning(true);
-        setTimeout(() => setShowTabWarning(false), 3000);
-      }
-    };
-    document.addEventListener("visibilitychange", handleVisibilityChange);
-    return () => {
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
-    };
-  }, []);
+
+ // NEW: Count tab switches + show warning
+useEffect(() => {
+  const onVisibilityChange = () => {
+    if (document.hidden) {
+      // user LEFT the tab
+      setFocusLossCount(c => c + 1);
+    } else {
+      // user CAME BACK to tab
+      setShowTabWarning(true);
+      setTimeout(() => setShowTabWarning(false), 3000);
+    }
+  };
+
+  const onBlur = () => setFocusLossCount(c => c + 1);
+
+  document.addEventListener("visibilitychange", onVisibilityChange);
+  window.addEventListener("blur", onBlur);
+
+  return () => {
+    document.removeEventListener("visibilitychange", onVisibilityChange);
+    window.removeEventListener("blur", onBlur);
+  };
+}, []);
+
 
   //update student answer for a question
   const handleChange = (questionId, code) => {
@@ -101,7 +115,7 @@ const CodeQuestionsList = () => {
     await submitAllAnswers({
       userId,
       timeTaken,
-      focusLossCount: 0,
+      focusLossCount,
     });
   
     setSubmitted(true);
