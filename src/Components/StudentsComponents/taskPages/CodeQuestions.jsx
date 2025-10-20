@@ -6,7 +6,7 @@ import { useTask } from "../../../Context/taskContext";
 import "bootstrap/dist/css/bootstrap.min.css";
 import QuestionsNavigator from "../features/QuestionsNavigator";
 import { ApiCallCountContext } from "../../../Context/ApiCallCountContext";
-import CodeHintSection from "../../CodeHintSection.jsx";
+import CodeHintSection from "../CodeHintSection.jsx";
 
 const API_URL = "http://localhost:3000";
 
