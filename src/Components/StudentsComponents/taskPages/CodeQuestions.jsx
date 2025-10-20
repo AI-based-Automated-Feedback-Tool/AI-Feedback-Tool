@@ -6,6 +6,7 @@ import { useTask } from "../../../Context/taskContext";
 import "bootstrap/dist/css/bootstrap.min.css";
 import QuestionsNavigator from "../features/QuestionsNavigator";
 import { ApiCallCountContext } from "../../../Context/ApiCallCountContext";
+import CodeHintSection from "../CodeHintSection.jsx";
 
 const API_URL = "http://localhost:3000";
 
@@ -286,7 +287,29 @@ const CodeQuestionsList = () => {
                       e.target.value
                     )
                   }
-                ></textarea>
+                />
+
+                <CodeHintSection
+                  examId={id}
+                  question={{
+                    id: questions[currentQuestionIndex].question_id,
+                    prompt: questions[currentQuestionIndex].question_description,
+                    language: questions[currentQuestionIndex].language || "javascript",
+                    starterCode: questions[currentQuestionIndex].function_signature || "",
+                    testCases: questions[currentQuestionIndex].test_cases || [],
+                   }}
+                   value={
+                     studentAnswers[questions[currentQuestionIndex].question_id] || ""
+                   }
+                   onChange={(val) =>
+                    handleChange(
+                     questions[currentQuestionIndex].question_id,
+                     val
+                   )
+                  }
+                  />
+
+               
 
                 {/* run code button */}
                 <button
