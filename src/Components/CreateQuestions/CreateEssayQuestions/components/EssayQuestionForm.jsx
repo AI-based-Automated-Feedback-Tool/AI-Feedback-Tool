@@ -1,7 +1,10 @@
-import { Card } from "react-bootstrap";
+import { Card, Nav } from "react-bootstrap";
+import { useState } from "react";
+import ManualMcqQuestionCreation from "./ManualEssayQuestionCreation";
+import EssayQuestionGenerationForm from "./EssayQuestionGenerationForm";
 
 export default function EssayQuestionForm({ formState }) {  
-
+    const [activeTab, setActiveTab] = useState('manual');
   return (
     <Card>
         <Card.Header className='bg-primary text-white'>
@@ -31,12 +34,8 @@ export default function EssayQuestionForm({ formState }) {
                         />
                     )}
                     {activeTab === 'ai' && (
-                        <McqQuestionGenerationForm 
-                            onSave={onSave} 
-                            warning={warning} 
-                            disabled={disabled} 
-                            noOfQuestions={noOfQuestions} 
-                            questionCount={questionCount}
+                        <EssayQuestionGenerationForm 
+                            formState={formState} 
                         />
                     )}
                 </div>

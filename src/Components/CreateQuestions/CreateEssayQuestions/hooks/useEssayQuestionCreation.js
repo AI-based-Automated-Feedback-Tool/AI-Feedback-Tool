@@ -19,6 +19,10 @@ export default function useEssayQuestionCreation(examId, question_count) {
     const [loading, setLoading] = useState(false);
     const [warning, setWarning] = useState(null)
 
+    //Ai question generation states 
+    const [topic, setTopic] = useState("");
+    const [difficultyLevel, setDifficultyLevel] = useState("Easy");
+
     const fileInputRef = useRef(null);
 
     const navigate = useNavigate();
@@ -217,6 +221,10 @@ export default function useEssayQuestionCreation(examId, question_count) {
         saveAllQuestions,
         loading,
         warning,
-        isDisabled
+        isDisabled,
+        topic,
+        setTopic,
+        difficultyLevel,
+        setDifficultyLevel
     };
 }

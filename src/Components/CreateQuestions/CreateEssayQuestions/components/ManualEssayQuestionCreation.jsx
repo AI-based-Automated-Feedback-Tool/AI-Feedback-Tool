@@ -1,6 +1,5 @@
-import { Form, Button, Row, Col } from "react-router-dom";
-
-export default function ManualEssayQuestionCreation() {
+import { Form, Row, Col, Button } from "react-bootstrap";
+export default function ManualEssayQuestionCreation({ formState }) {
 
     const {
         questionText,
@@ -18,7 +17,7 @@ export default function ManualEssayQuestionCreation() {
         fileInputRef,
         isDisabled
     }= formState;
-    
+
   return (
     <Form>
         <Form.Group className='mb-3'>
