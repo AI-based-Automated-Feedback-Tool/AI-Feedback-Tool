@@ -1,0 +1,218 @@
+/* Professional Teacher Sidebar Styling */
+
+/* Base Sidebar Container */
+.teacher-sidebar {
+  background: linear-gradient(
+    180deg,
+    #1e3a5f 0%,
+    #2c5282 25%,
+    #2d3748 75%,
+    #1a202c 100%
+  );
+  border-right: 1px solid #4a5568;
+  box-shadow: 
+    2px 0 10px rgba(0, 0, 0, 0.1),
+    inset 1px 0 0 rgba(255, 255, 255, 0.05);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle Professional Overlay */
+.teacher-sidebar::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.02) 0%,
+    transparent 50%,
+    rgba(0, 0, 0, 0.02) 100%
+  );
+  pointer-events: none;
+}
+
+/* Sidebar Title (Mobile) */
+.teacher-sidebar .offcanvas-title {
+  color: #e2e8f0 !important;
+  font-weight: 600;
+  font-size: 1.4rem;
+  letter-spacing: 0.5px;
+}
+
+/* Navigation Links Container */
+.teacher-sidebar .nav {
+  padding: 0;
+  position: relative;
+  z-index: 1;
+}
+
+/* Individual Navigation Links */
+.teacher-sidebar .nav-link {
+  color: #cbd5e0 !important;
+  padding: 1rem 1.5rem !important;
+  margin: 0.25rem 1rem;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 0.95rem;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  position: relative;
+  border: 1px solid transparent;
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.025em;
+}
+
+/* Link Icon Styling */
+.teacher-sidebar .nav-link .nav-icon {
+  font-size: 1.1rem;
+  margin-right: 0.75rem;
+  transition: color 0.2s ease;
+  color: #a0aec0;
+}
+
+/* Hover Effects */
+.teacher-sidebar .nav-link:hover {
+  color: #f7fafc !important;
+  background: rgba(45, 55, 72, 0.6) !important;
+  border-color: rgba(116, 129, 141, 0.3);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.teacher-sidebar .nav-link:hover .nav-icon {
+  color: #e2e8f0;
+}
+
+/* Active Link Styling */
+.teacher-sidebar .nav-link.active {
+  background: #2b6cb0 !important;
+  color: #ffffff !important;
+  border-color: #3182ce;
+  box-shadow: 
+    0 2px 8px rgba(43, 108, 176, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  font-weight: 600;
+}
+
+.teacher-sidebar .nav-link.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: #63b3ed;
+  border-radius: 0 2px 2px 0;
+}
+
+.teacher-sidebar .nav-link.active .nav-icon {
+  color: #ffffff;
+}
+
+/* Focus States for Accessibility */
+.teacher-sidebar .nav-link:focus {
+  outline: none;
+  box-shadow: 
+    0 0 0 2px rgba(99, 179, 237, 0.6),
+    0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Mobile Offcanvas Header */
+.teacher-sidebar .offcanvas-header {
+  border-bottom: 1px solid #4a5568 !important;
+  padding: 1.5rem;
+  background: rgba(26, 32, 44, 0.95);
+}
+
+.teacher-sidebar .btn-close {
+  filter: brightness(0) invert(1);
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+.teacher-sidebar .btn-close:hover {
+  opacity: 1;
+}
+
+/* Mobile Body */
+.teacher-sidebar .offcanvas-body {
+  padding: 1rem 0;
+}
+
+/* Desktop Sidebar Specific */
+.teacher-sidebar-desktop {
+  min-height: calc(100vh - 56px);
+  position: sticky;
+  top: 56px;
+  padding-top: 1.5rem;
+}
+
+/* Enhanced Responsive Design */
+@media (max-width: 767.98px) {
+  .teacher-sidebar .nav-link {
+    margin: 0.25rem 0.75rem;
+    font-size: 0.95rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .teacher-sidebar-desktop .nav-link {
+    margin: 0.5rem 1.5rem;
+  }
+}
+
+/* Remove overly animated effects for professional look */
+
+/* Professional scrollbar styling */
+.teacher-sidebar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.teacher-sidebar::-webkit-scrollbar-track {
+  background: rgba(74, 85, 104, 0.3);
+  border-radius: 2px;
+}
+
+.teacher-sidebar::-webkit-scrollbar-thumb {
+  background: rgba(160, 174, 192, 0.5);
+  border-radius: 2px;
+}
+
+.teacher-sidebar::-webkit-scrollbar-thumb:hover {
+  background: rgba(160, 174, 192, 0.7);
+}
+
+/* Subtle fade-in animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.teacher-sidebar .nav-link {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Professional notification badge */
+.teacher-sidebar .nav-badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: #e53e3e;
+  color: white;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  font-size: 0.7rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  box-shadow: 0 2px 4px rgba(229, 62, 62, 0.3);
+}
