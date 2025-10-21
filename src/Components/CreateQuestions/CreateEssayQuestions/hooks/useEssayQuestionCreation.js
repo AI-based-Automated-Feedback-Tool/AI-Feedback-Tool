@@ -251,6 +251,7 @@ export default function useEssayQuestionCreation(examId, question_count) {
                 setGeneratedQuestions(data.questions);
             } catch (error) {
                 console.error("Error generating essay questions:", error);
+                // need to set error state here
             }
             setIsGenerating(false);
         }
@@ -278,7 +279,21 @@ export default function useEssayQuestionCreation(examId, question_count) {
                 attachment_url: null
             };
             setQuestion((prevQuestions) => [...prevQuestions, formattedQuestion]);  
-        });       
+        });     
+        //Clear questioin generation form
+        setTopic("");
+        setDifficultyLevel("Easy");
+        setGuidance("");
+        setKeyConcepts("");
+        setDoNotInclude("");
+        setWordLimitAI("");
+        setPointsAI("");
+        setNoOfQuestion("");
+        setGradingNotesAI(""); 
+
+        //Clear generated questions and checked state
+        setGeneratedQuestions([]);
+        setCheckedQuestions([]);
     }
     return {
         question,

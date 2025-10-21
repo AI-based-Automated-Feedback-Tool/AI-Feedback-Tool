@@ -80,7 +80,7 @@ export default function EssayQuestionGenerationForm({formState}) {
                         <Form.Control
                             as="textarea"
                             rows={2}
-                            placeholder="Enter key concepts to be included in the essay..."
+                            placeholder="Eg: critical thinking, analysis, etc..."
                             value={keyConcepts}
                             onChange={(e) => setKeyConcepts(e.target.value)}
                         />
@@ -90,7 +90,7 @@ export default function EssayQuestionGenerationForm({formState}) {
                         <Form.Control
                             as="textarea"
                             rows={2}
-                            placeholder="Enter points or concepts to avoid in the essay..."
+                            placeholder="Eg: political topics, historical events, etc..."
                             value={doNotInclude}
                             onChange={(e) => setDoNotInclude(e.target.value)}
                         />
@@ -136,7 +136,7 @@ export default function EssayQuestionGenerationForm({formState}) {
                 <Form.Control
                     as="textarea"
                     rows={3}
-                    placeholder="Enter any specific instructions for the essay question evaluation..."
+                    placeholder="Eg: Focus on clarity, coherence, argument strength..."
                     value={gradingNotesAI}
                     onChange={(e) => setGradingNotesAI(e.target.value)}
                 />
