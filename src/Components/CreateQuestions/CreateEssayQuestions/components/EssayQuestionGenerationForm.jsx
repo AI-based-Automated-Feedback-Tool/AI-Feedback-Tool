@@ -1,5 +1,6 @@
 import { Col, Row } from "react-bootstrap";
 import {Form, Button} from "react-bootstrap";
+import AIGeneratedEssayQuestions from "./AIGeneratedEssayQuestions";
 
 export default function EssayQuestionGenerationForm({formState}) {
     const {
@@ -23,11 +24,12 @@ export default function EssayQuestionGenerationForm({formState}) {
         setGradingNotesAI,
         generateQuestion,
         error,
-        isDisabled
+        isDisabled,
+        generatedQuestions
     }= formState;
   return (
     <>
-        <Form>
+        <Form className="mx-3 mx-md-5">
             <Form.Group className='mb-3'>
                 <Row>
                     <Col md={6} xs={12}>
@@ -139,6 +141,11 @@ export default function EssayQuestionGenerationForm({formState}) {
                 </Button>
             </div>          
         </Form>
+
+        {/* Show Generated Questions */}
+        {generatedQuestions.length > 0 && (
+            <AIGeneratedEssayQuestions questions={generatedQuestions} />
+        )}
     </>
   )
 }

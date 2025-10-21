@@ -19,3 +19,26 @@
   font-weight: 600;
   font-size: 1.15rem;
 }
+
+.parent-ai-card {
+  border-radius: 1rem;
+  padding: 1.5rem;
+  background-color: #f8f9fa; /* subtle light background */
+}
+
+.parent-card-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #343a40;
+}
+
+.ai-question-card {
+  border-radius: 0.75rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  background: #ffffff;
+}
+
+.ai-question-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.12);
+}

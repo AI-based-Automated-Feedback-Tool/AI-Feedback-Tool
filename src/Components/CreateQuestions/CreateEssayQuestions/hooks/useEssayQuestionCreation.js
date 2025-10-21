@@ -30,6 +30,7 @@ export default function useEssayQuestionCreation(examId, question_count) {
     const [pointsAI, setPointsAI] = useState("");
     const [noOfQuestion, setNoOfQuestion] = useState("");
     const [gradingNotesAI, setGradingNotesAI] = useState("");
+    const [generatedQuestions, setGeneratedQuestions] = useState([]);
 
     const fileInputRef = useRef(null);
 
@@ -216,7 +217,8 @@ export default function useEssayQuestionCreation(examId, question_count) {
                 gradingNotesAI: gradingNotesAI
             };
             const data = await generateEssayQuestion(params);
-            console.log("Generated Essay Questions:", data);
+            console.log("Generated Questions:", data);
+            setGeneratedQuestions(data.questions);
         } catch (error) {
             console.error("Error generating essay questions:", error);
         }
@@ -268,6 +270,7 @@ export default function useEssayQuestionCreation(examId, question_count) {
         setNoOfQuestion,
         gradingNotesAI,
         setGradingNotesAI,
-        generateQuestion
+        generateQuestion,
+        generatedQuestions,
     };
 }

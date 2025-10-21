@@ -52,7 +52,8 @@ export default function CreateEssayQuestionsContent({examId, question_count}) {
     setNoOfQuestion,
     gradingNotesAI,
     setGradingNotesAI,
-    generateQuestion
+    generateQuestion,
+    generatedQuestions
   } = useEssayQuestionCreation(examId, question_count);
     
     
@@ -99,7 +100,8 @@ export default function CreateEssayQuestionsContent({examId, question_count}) {
                 setNoOfQuestion,
                 gradingNotesAI,
                 setGradingNotesAI,
-                generateQuestion
+                generateQuestion,
+                generatedQuestions,
               }}/>                  
         </Col>   
         {question.length > 0 &&
