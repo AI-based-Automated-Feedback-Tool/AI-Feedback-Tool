@@ -8,6 +8,7 @@ import {
   FaUser,
   FaUniversity
 } from "react-icons/fa";
+import '../css/pages/TeacherSidebar.css';
 
 export default function SidebarTeacher({ show, onHide }) {
   const location = useLocation();
@@ -27,26 +28,26 @@ export default function SidebarTeacher({ show, onHide }) {
       <Offcanvas 
         show={show} 
         onHide={onHide} 
-        className="d-md-none"
+        className="d-md-none teacher-sidebar"
         style={{ width: "280px" }}
       >
         <Offcanvas.Header closeButton className="border-bottom pb-3">
-          <Offcanvas.Title className="fw-bold">Menu</Offcanvas.Title>
+          <Offcanvas.Title className="fw-bold">Navigation</Offcanvas.Title>
         </Offcanvas.Header>
         <Offcanvas.Body className="px-0">
           <Nav className="flex-column">
-            {menuItems.map((item) => (
+            {menuItems.map((item, index) => (
               <Nav.Link
                 as={Link}
                 to={item.path}
                 key={item.path}
-                className={`px-4 py-3 ${
-                  location.pathname === item.path 
-                    ? "bg-primary text-white" 
-                    : "text-dark hover-bg-light"
+                onClick={onHide}
+                className={`nav-link ${
+                  location.pathname === item.path ? "active" : ""
                 }`}
+                style={{ animationDelay: `${index * 0.1}s` }}
               >
-                <span className="me-3">{item.icon}</span>
+                <span className="nav-icon">{item.icon}</span>
                 {item.label}
               </Nav.Link>
             ))}
@@ -56,28 +57,24 @@ export default function SidebarTeacher({ show, onHide }) {
 
       {/* Desktop Sidebar */}
       <div
-        className="d-none d-md-block bg-white border-end"
+        className="d-none d-md-block teacher-sidebar teacher-sidebar-desktop"
         style={{
           width: "100%", 
-          maxWidth: "280px", 
-          minHeight: "calc(100vh - 56px)",
-          position: "sticky",
-          top: "56px"
+          maxWidth: "280px"
         }}
       >
-        <Nav className="flex-column pt-3">
-          {menuItems.map((item) => (
+        <Nav className="flex-column">
+          {menuItems.map((item, index) => (
             <Nav.Link
               as={Link}
               to={item.path}
               key={item.path}
-              className={`px-4 py-3 ${
-                location.pathname === item.path
-                  ? "bg-primary text-white"
-                  : "text-dark hover-bg-light"
+              className={`nav-link ${
+                location.pathname === item.path ? "active" : ""
               }`}
+              style={{ animationDelay: `${index * 0.1}s` }}
             >
-              <span className="me-3">{item.icon}</span>
+              <span className="nav-icon">{item.icon}</span>
               {item.label}
             </Nav.Link>
           ))}
