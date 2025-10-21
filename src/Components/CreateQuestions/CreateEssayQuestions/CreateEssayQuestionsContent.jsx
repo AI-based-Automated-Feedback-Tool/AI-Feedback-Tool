@@ -57,7 +57,8 @@ export default function CreateEssayQuestionsContent({examId, question_count}) {
     checkedQuestions,
     setCheckedQuestions,
     handleCheckboxChangeEssay,
-    saveCheckedQuestions
+    saveCheckedQuestions,
+    isGenerating
   } = useEssayQuestionCreation(examId, question_count);
     
     
@@ -109,7 +110,8 @@ export default function CreateEssayQuestionsContent({examId, question_count}) {
                 checkedQuestions,
                 setCheckedQuestions,
                 handleCheckboxChangeEssay,
-                saveCheckedQuestions
+                saveCheckedQuestions,
+                isGenerating
               }}/>                  
         </Col>   
         {question.length > 0 &&

@@ -29,7 +29,8 @@ export default function EssayQuestionGenerationForm({formState}) {
         checkedQuestions,
         setCheckedQuestions,
         handleCheckboxChangeEssay,
-        saveCheckedQuestions
+        saveCheckedQuestions,
+        isGenerating
     }= formState;
   return (
     <>
@@ -147,8 +148,16 @@ export default function EssayQuestionGenerationForm({formState}) {
                 <Button 
                     variant="primary"
                     onClick={generateQuestion}
-                > 
-                        ➕ Generate Questions
+                    disabled={isGenerating}
+                >
+                    {isGenerating ? ( 
+                        <>
+                            <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                  Generating...
+                        </>
+                    ) : (
+                        "➕ Generate Questions"
+                    )}
                 </Button>
             </div>          
         </Form>
