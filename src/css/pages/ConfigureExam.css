@@ -1,0 +1,375 @@
+/* ConfigureExam Modern Styling */
+
+.configure-exam-page {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #5f27cd 100%);
+  min-height: 100vh;
+  padding: 0;
+  position: relative;
+}
+
+.configure-exam-page::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, rgba(95, 39, 205, 0.1) 0%, transparent 50%, rgba(118, 75, 162, 0.1) 100%);
+  pointer-events: none;
+}
+
+.configure-hero-section {
+  background: linear-gradient(135deg, rgba(255, 107, 107, 0.9) 0%, rgba(255, 99, 72, 0.9) 50%, rgba(255, 71, 87, 0.9) 100%);
+  padding: 3rem 0;
+  margin-bottom: 2rem;
+  color: white;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.configure-hero-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+  pointer-events: none;
+}
+
+.configure-hero-content {
+  position: relative;
+  z-index: 2;
+}
+
+.configure-hero-title {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+  animation: slideUp 0.8s ease-out;
+}
+
+.configure-hero-subtitle {
+  font-size: 1.3rem;
+  opacity: 0.9;
+  margin-bottom: 0;
+  animation: slideUp 0.8s ease-out 0.2s both;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Main Configuration Card */
+.configure-exam-page .main-card {
+  background: rgba(45, 55, 72, 0.95);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(74, 85, 104, 0.4);
+  border-radius: 20px;
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(160, 174, 192, 0.1) inset;
+  overflow: hidden;
+  position: relative;
+  z-index: 2;
+}
+
+.configure-exam-page .main-card-header {
+  background: linear-gradient(135deg, #40E0D0 0%, #FF8C00 100%);
+  color: white;
+  padding: 1.5rem;
+  border: none;
+  position: relative;
+}
+
+.configure-exam-page .main-card-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, rgba(255, 255, 255, 0.1) 0%, transparent 50%, rgba(255, 255, 255, 0.1) 100%);
+  pointer-events: none;
+}
+
+.configure-exam-page .main-card-header h4 {
+  margin: 0;
+  font-weight: 600;
+  font-size: 1.8rem;
+  position: relative;
+  z-index: 1;
+}
+
+/* Section Cards */
+.configure-exam-page .section-card {
+  background: rgba(26, 32, 44, 0.8) !important;
+  border: 1px solid rgba(64, 224, 208, 0.3) !important;
+  border-radius: 15px !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2) !important;
+  margin-bottom: 2rem;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.configure-exam-page .section-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(64, 224, 208, 0.25) !important;
+  border-color: rgba(64, 224, 208, 0.5) !important;
+}
+
+.configure-exam-page .section-card-header {
+  background: linear-gradient(135deg, rgba(64, 224, 208, 0.15) 0%, rgba(255, 140, 0, 0.15) 100%) !important;
+  border-bottom: 1px solid rgba(64, 224, 208, 0.3) !important;
+  padding: 1.25rem 1.5rem;
+}
+
+.configure-exam-page .section-card-header h5 {
+  color: #e2e8f0;
+  font-weight: 600;
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+/* Form Controls */
+.configure-exam-page .form-label {
+  color: #cbd5e0;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  font-size: 0.95rem;
+}
+
+.configure-exam-page .form-control,
+.configure-exam-page .form-select {
+  border: 2px solid rgba(74, 85, 104, 0.5);
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  font-size: 0.95rem;
+  background: rgba(45, 55, 72, 0.8);
+  color: #e2e8f0;
+  transition: all 0.3s ease;
+}
+
+.configure-exam-page .form-control:focus,
+.configure-exam-page .form-select:focus {
+  border-color: #40E0D0;
+  box-shadow: 0 0 0 0.2rem rgba(64, 224, 208, 0.25);
+  background: rgba(26, 32, 44, 0.9);
+  color: #f7fafc;
+}
+
+.configure-exam-page .form-control::placeholder {
+  color: #718096;
+  font-style: italic;
+}
+
+/* Textarea Styling */
+.configure-exam-page textarea.form-control {
+  resize: vertical;
+  min-height: 120px;
+  line-height: 1.6;
+}
+
+/* Form Text */
+.configure-exam-page .form-text {
+  color: #a0aec0;
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+}
+
+/* Alert Styling */
+.configure-exam-page .alert-danger {
+  background: linear-gradient(135deg, rgba(254, 178, 178, 0.15) 0%, rgba(252, 129, 129, 0.15) 100%);
+  border: 1px solid rgba(254, 178, 178, 0.4);
+  color: #fed7d7;
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+}
+
+/* Submit Button */
+.configure-exam-page .btn-primary {
+  background: linear-gradient(135deg, #FF8C00 0%, #FF6347 100%);
+  border: none;
+  border-radius: 12px;
+  padding: 0.75rem 2rem;
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: white;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.configure-exam-page .btn-primary::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.configure-exam-page .btn-primary:hover::before {
+  left: 100%;
+}
+
+.configure-exam-page .btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(255, 140, 0, 0.4);
+}
+
+.configure-exam-page .btn-primary:active {
+  transform: translateY(0);
+}
+
+.configure-exam-page .btn-primary:disabled {
+  background: linear-gradient(135deg, #a0aec0 0%, #718096 100%);
+  transform: none;
+  box-shadow: none;
+}
+
+/* Spinner */
+.configure-exam-page .spinner-border-sm {
+  width: 1rem;
+  height: 1rem;
+}
+
+/* Loading state for course select */
+.configure-exam-page .form-text.text-muted {
+  color: #81e6d9 !important;
+  font-weight: 500;
+}
+
+/* Row and Column spacing */
+.configure-exam-page .row .col-md-6 {
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+}
+
+/* Enhanced focus styles */
+.configure-exam-page .form-control:focus,
+.configure-exam-page .form-select:focus {
+  outline: none;
+  border-color: #40E0D0;
+  box-shadow: 
+    0 0 0 0.2rem rgba(64, 224, 208, 0.25),
+    0 4px 12px rgba(64, 224, 208, 0.15);
+}
+
+/* Disabled state styling */
+.configure-exam-page .form-control:disabled,
+.configure-exam-page .form-select:disabled {
+  background-color: rgba(74, 85, 104, 0.3);
+  border-color: rgba(74, 85, 104, 0.5);
+  color: #a0aec0;
+}
+
+/* Card Body Padding */
+.configure-exam-page .card-body {
+  padding: 1.5rem;
+}
+
+/* Container Spacing */
+.configure-exam-page .container {
+  position: relative;
+  z-index: 1;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .configure-hero-title {
+    font-size: 2.5rem;
+  }
+  
+  .configure-hero-subtitle {
+    font-size: 1.1rem;
+  }
+  
+  .configure-exam-page .main-card {
+    border-radius: 15px;
+    margin: 0 0.5rem;
+  }
+  
+  .configure-exam-page .section-card {
+    border-radius: 12px !important;
+  }
+  
+  .configure-exam-page .row .col-md-6 {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    margin-bottom: 1rem;
+  }
+}
+
+/* Animation for form sections */
+.configure-exam-page .section-card {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.configure-exam-page .section-card:nth-child(1) { animation-delay: 0.1s; }
+.configure-exam-page .section-card:nth-child(2) { animation-delay: 0.2s; }
+.configure-exam-page .section-card:nth-child(3) { animation-delay: 0.3s; }
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Enhanced visual hierarchy */
+.configure-exam-page .fw-bold {
+  font-weight: 600 !important;
+}
+
+/* Form validation styling */
+.configure-exam-page .form-control:valid {
+  border-color: rgba(104, 211, 145, 0.6);
+}
+
+.configure-exam-page .form-control:invalid {
+  border-color: rgba(254, 178, 178, 0.6);
+}
+
+/* Select dropdown styling for dark theme */
+.configure-exam-page .form-select option {
+  background-color: #2d3748;
+  color: #e2e8f0;
+}
+
+/* Card body text color */
+.configure-exam-page .card-body {
+  color: #e2e8f0;
+}
+
+/* Required field indicator */
+.configure-exam-page .form-label::after {
+  content: '';
+}
+
+.configure-exam-page .form-label:has-text('*')::after {
+  content: ' *';
+  color: #fed7d7;
+}
+
+/* Textarea specific styling */
+.configure-exam-page textarea.form-control {
+  line-height: 1.6;
+  font-family: inherit;
+}

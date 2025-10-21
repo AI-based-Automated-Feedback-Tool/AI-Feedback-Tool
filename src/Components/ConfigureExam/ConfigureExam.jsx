@@ -3,6 +3,7 @@ import { Form, Button, Container, Row, Col, Card, Alert } from "react-bootstrap"
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { supabase } from "../../SupabaseAuth/supabaseClient";
+import '../../css/pages/ConfigureExam.css';
 
 const ConfigureExam = () => {
     const navigate = useNavigate();
@@ -126,17 +127,28 @@ const ConfigureExam = () => {
     };
 
     return (
-        <Container className="my-4">
-            <Card>
-                <Card.Header className="bg-primary text-white">
-                    <h4>📝 Configure New Exam</h4>
-                </Card.Header>
-                <Card.Body>
+        <div className="configure-exam-page">
+            {/* Hero Section */}
+            <div className="configure-hero-section">
+                <Container>
+                    <div className="configure-hero-content">
+                        <h1 className="configure-hero-title">📝 Configure New Exam</h1>
+                        <p className="configure-hero-subtitle">Set up comprehensive exam parameters and grading criteria</p>
+                    </div>
+                </Container>
+            </div>
+
+            <Container className="my-4">
+                <Card className="main-card">
+                    <Card.Header className="main-card-header">
+                        <h4>Exam Configuration</h4>
+                    </Card.Header>
+                    <Card.Body>
                     {error && <Alert variant="danger">{error}</Alert>}
                     <Form onSubmit={handleSubmit}>
                         {/* Basic Information Section */}
-                        <Card className="mb-4 border-0 shadow-sm">
-                            <Card.Header className="bg-light">
+                        <Card className="section-card">
+                            <Card.Header className="section-card-header">
                                 <h5 className="mb-0">Basic Information</h5>
                             </Card.Header>
                             <Card.Body>
@@ -221,8 +233,8 @@ const ConfigureExam = () => {
                         </Card>
                         
                         {/* Exam Rules Section */}
-                        <Card className="mb-4 border-0 shadow-sm">
-                            <Card.Header className="bg-light">
+                        <Card className="section-card">
+                            <Card.Header className="section-card-header">
                                 <h5 className="mb-0">Exam Rules & Instructions</h5>
                             </Card.Header>
                             <Card.Body>
@@ -247,8 +259,8 @@ const ConfigureExam = () => {
                         </Card>
 
                         {/* Grading Criteria Section */}
-                        <Card className="mb-4 border-0 shadow-sm">
-                            <Card.Header className="bg-light">
+                        <Card className="section-card">
+                            <Card.Header className="section-card-header">
                                 <h5 className="mb-0">Grading Configuration</h5>
                             </Card.Header>
                             <Card.Body>
@@ -325,6 +337,7 @@ const ConfigureExam = () => {
                 </Card.Body>
             </Card>
         </Container>
+        </div>
     );
 };
 
