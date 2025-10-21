@@ -1,6 +1,6 @@
 import { Card, Row, Col, Button, Badge, Form } from "react-bootstrap";
 import '../../../../css/aiQuestionGeneration.css'
-export default function AIGeneratedEssayQuestions({ questions, onCheck, checkedQuestions, onSaveChecked }) {
+export default function AIGeneratedEssayQuestions({ questions, onCheck, checkedQuestions, onSaveChecked}) {
   return (
     <Card className="parent-ai-card mb-4 mt-4 shadow-lg">
       <Card.Body>

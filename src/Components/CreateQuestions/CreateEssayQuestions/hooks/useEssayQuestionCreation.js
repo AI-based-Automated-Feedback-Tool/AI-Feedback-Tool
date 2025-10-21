@@ -34,6 +34,7 @@ export default function useEssayQuestionCreation(examId, question_count) {
     const [checkedQuestions, setCheckedQuestions] = useState([]);
     const [generatedAndSelectedQuestions, setGeneratedAndSelectedQuestions] = useState([]);
     const [isGenerating, setIsGenerating] = useState(false);
+    const [generateError, setGenerateError] = useState(null);
 
     const fileInputRef = useRef(null);
 
@@ -207,6 +208,7 @@ export default function useEssayQuestionCreation(examId, question_count) {
 
     // Function to generate questions using AI
     const generateQuestion = async () => {
+        setGenerateError(null);
         //basic validation
         const newError = {}
         if (!topic.trim()) {
@@ -252,6 +254,9 @@ export default function useEssayQuestionCreation(examId, question_count) {
             } catch (error) {
                 console.error("Error generating essay questions:", error);
                 // need to set error state here
+                const generateError = {};
+                generateError.generate = "Failed to generate questions. Please try again.";
+                setGenerateError(generateError);
             }
             setIsGenerating(false);
         }
@@ -348,6 +353,7 @@ export default function useEssayQuestionCreation(examId, question_count) {
         setCheckedQuestions,
         handleCheckboxChangeEssay,
         saveCheckedQuestions,
-        isGenerating
+        isGenerating,
+        generateError,
     };
 }

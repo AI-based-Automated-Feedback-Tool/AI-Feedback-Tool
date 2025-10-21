@@ -1,5 +1,6 @@
 import { Col, Row } from "react-bootstrap";
 import {Form, Button} from "react-bootstrap";
+import { useEffect } from "react";
 import AIGeneratedEssayQuestions from "./AIGeneratedEssayQuestions";
 
 export default function EssayQuestionGenerationForm({formState}) {
@@ -30,7 +31,8 @@ export default function EssayQuestionGenerationForm({formState}) {
         setCheckedQuestions,
         handleCheckboxChangeEssay,
         saveCheckedQuestions,
-        isGenerating
+        isGenerating,
+        generateError
     }= formState;
   return (
     <>
@@ -163,12 +165,20 @@ export default function EssayQuestionGenerationForm({formState}) {
         </Form>
 
         {/* Show Generated Questions */}
+        {generateError && (
+            <div className="text-danger">
+                {typeof generateError === "string" 
+                ? generateError 
+                : generateError.generate || JSON.stringify(generateError)}
+            </div>
+        )}
         {generatedQuestions.length > 0 && (
             <AIGeneratedEssayQuestions 
                 questions={generatedQuestions} 
                 checkedQuestions={checkedQuestions}
                 onCheck={handleCheckboxChangeEssay}
                 onSaveChecked={saveCheckedQuestions}
+                generateError={generateError}
             />
         )}
     </>
