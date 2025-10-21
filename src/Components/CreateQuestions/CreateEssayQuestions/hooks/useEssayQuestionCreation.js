@@ -4,6 +4,7 @@ import { useRef } from 'react';
 import { supabase } from "../../../../SupabaseAuth/supabaseClient"; 
 import { createEssayQuestion } from "../service/createEssayQuestionService"; 
 import { useNavigate} from 'react-router-dom';
+import { generateEssayQuestion } from '../service/createEssayQuestionService';
 
 export default function useEssayQuestionCreation(examId, question_count) {
     const [userId, setUserId] = useState(null);
@@ -200,9 +201,25 @@ export default function useEssayQuestionCreation(examId, question_count) {
         return false
     }
 
-    const generateQuestion = () => {
-        // Placeholder for AI question generation logic
-        console.log("Generating questions");
+    // Function to generate questions using AI
+    const generateQuestion = async () => {
+        try {
+            const params = {
+                topic: topic,
+                difficultyLevel: difficultyLevel,
+                guidance: guidance,
+                keyConcepts: keyConcepts,
+                doNotInclude: doNotInclude,
+                wordLimitAI: wordLimitAI,
+                pointsAI: pointsAI,
+                noOfQuestion: noOfQuestion,
+                gradingNotesAI: gradingNotesAI
+            };
+            const data = await generateEssayQuestion(params);
+            console.log("Generated Essay Questions:", data);
+        } catch (error) {
+            console.error("Error generating essay questions:", error);
+        }
     }
     return {
         question,

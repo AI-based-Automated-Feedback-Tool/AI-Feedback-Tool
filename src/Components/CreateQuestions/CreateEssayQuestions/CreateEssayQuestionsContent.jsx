@@ -33,7 +33,26 @@ export default function CreateEssayQuestionsContent({examId, question_count}) {
     saveAllQuestions,
     loading,
     warning,
-    isDisabled
+    isDisabled,
+    topic,
+    setTopic,
+    difficultyLevel,
+    setDifficultyLevel,
+    guidance,
+    setGuidance,
+    keyConcepts,
+    setKeyConcepts,
+    doNotInclude,
+    setDoNotInclude,
+    wordLimitAI,
+    setWordLimitAI,
+    pointsAI,
+    setPointsAI,
+    noOfQuestion,
+    setNoOfQuestion,
+    gradingNotesAI,
+    setGradingNotesAI,
+    generateQuestion
   } = useEssayQuestionCreation(examId, question_count);
     
     
@@ -61,7 +80,26 @@ export default function CreateEssayQuestionsContent({examId, question_count}) {
                 editQuestionIndex,
                 showEditQuestion,
                 setShowEditQuestion,
-                isDisabled
+                isDisabled,
+                topic,
+                setTopic,
+                difficultyLevel,  
+                setDifficultyLevel,
+                guidance,
+                setGuidance,
+                keyConcepts,
+                setKeyConcepts,
+                doNotInclude,
+                setDoNotInclude,
+                wordLimitAI,
+                setWordLimitAI,
+                pointsAI,
+                setPointsAI,
+                noOfQuestion,
+                setNoOfQuestion,
+                gradingNotesAI,
+                setGradingNotesAI,
+                generateQuestion
               }}/>                  
         </Col>   
         {question.length > 0 &&
