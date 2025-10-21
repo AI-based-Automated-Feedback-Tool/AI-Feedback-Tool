@@ -25,7 +25,10 @@ export default function EssayQuestionGenerationForm({formState}) {
         generateQuestion,
         error,
         isDisabled,
-        generatedQuestions
+        generatedQuestions,
+        checkedQuestions,
+        setCheckedQuestions,
+        handleCheckboxChangeEssay
     }= formState;
   return (
     <>
@@ -144,7 +147,11 @@ export default function EssayQuestionGenerationForm({formState}) {
 
         {/* Show Generated Questions */}
         {generatedQuestions.length > 0 && (
-            <AIGeneratedEssayQuestions questions={generatedQuestions} />
+            <AIGeneratedEssayQuestions 
+                questions={generatedQuestions} 
+                checkedQuestions={checkedQuestions}
+                onCheck={handleCheckboxChangeEssay}
+            />
         )}
     </>
   )

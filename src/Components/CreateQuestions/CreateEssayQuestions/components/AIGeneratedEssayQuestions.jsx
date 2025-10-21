@@ -1,6 +1,6 @@
-import { Card, Row, Col, Button, Badge } from "react-bootstrap";
+import { Card, Row, Col, Button, Badge, Form } from "react-bootstrap";
 import '../../../../css/aiQuestionGeneration.css'
-export default function AIGeneratedEssayQuestions({ questions }) {
+export default function AIGeneratedEssayQuestions({ questions, onCheck, checkedQuestions }) {
   return (
     <Card className="parent-ai-card mb-4 mt-4 shadow-lg">
       <Card.Body>
@@ -9,29 +9,38 @@ export default function AIGeneratedEssayQuestions({ questions }) {
         </Card.Title>
 
         {questions.map((q, idx) => (
-          <Card key={idx} className="ai-question-card mb-3 shadow-sm">
-            <Card.Body>
-              <Card.Title className="ai-question-title">
-                Question {idx + 1}
-              </Card.Title>
-              <Card.Text className="ai-question-text mb-3">
-                {q.question_text}
-              </Card.Text>
-              <div className="mb-3">
-                <Badge bg="info" className="me-2">
-                  Word Limit: {q.word_limit}
-                </Badge>
-                <Badge bg="success">
-                  Points: {q.points}
-                </Badge>
-              </div>
-              {q.grading_note && (
-                <Card.Text className="text-muted small ai-grading-note">
-                  <strong>Grading Note:</strong> {q.grading_note}
+          <div key={idx} className="d-flex align-items-start mb-3">
+            <Form.Check
+              type="checkbox"
+              className="me-2 mt-2"
+              checked={!!checkedQuestions[idx]}
+              onChange={() => onCheck(idx)}
+
+            />
+            <Card className="ai-question-card mb-3 shadow-sm">
+              <Card.Body>
+                <Card.Title className="ai-question-title">
+                  Question {idx + 1}
+                </Card.Title>
+                <Card.Text className="ai-question-text mb-3">
+                  {q.question_text}
                 </Card.Text>
-              )}
-            </Card.Body>
-          </Card>
+                <div className="mb-3">
+                  <Badge bg="info" className="me-2">
+                    Word Limit: {q.word_limit}
+                  </Badge>
+                  <Badge bg="success">
+                    Points: {q.points}
+                  </Badge>
+                </div>
+                {q.grading_note && (
+                  <Card.Text className="text-muted small ai-grading-note">
+                    <strong>Grading Note:</strong> {q.grading_note}
+                  </Card.Text>
+                )}
+              </Card.Body>
+            </Card>
+          </div>
         ))}
 
       </Card.Body>

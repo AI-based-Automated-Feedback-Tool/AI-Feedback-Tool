@@ -31,6 +31,7 @@ export default function useEssayQuestionCreation(examId, question_count) {
     const [noOfQuestion, setNoOfQuestion] = useState("");
     const [gradingNotesAI, setGradingNotesAI] = useState("");
     const [generatedQuestions, setGeneratedQuestions] = useState([]);
+    const [checkedQuestions, setCheckedQuestions] = useState([]);
 
     const fileInputRef = useRef(null);
 
@@ -223,6 +224,14 @@ export default function useEssayQuestionCreation(examId, question_count) {
             console.error("Error generating essay questions:", error);
         }
     }
+
+    // Handle checkbox change
+    const handleCheckboxChangeEssay = (index) => {
+        setCheckedQuestions((prev) => ({
+        ...prev,
+        [index]: !prev[index],
+        }));
+    }
     return {
         question,
         examId,
@@ -272,5 +281,8 @@ export default function useEssayQuestionCreation(examId, question_count) {
         setGradingNotesAI,
         generateQuestion,
         generatedQuestions,
+        checkedQuestions,
+        setCheckedQuestions,
+        handleCheckboxChangeEssay
     };
 }

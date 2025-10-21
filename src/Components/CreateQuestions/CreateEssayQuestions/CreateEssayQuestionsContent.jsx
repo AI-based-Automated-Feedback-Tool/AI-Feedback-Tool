@@ -53,7 +53,10 @@ export default function CreateEssayQuestionsContent({examId, question_count}) {
     gradingNotesAI,
     setGradingNotesAI,
     generateQuestion,
-    generatedQuestions
+    generatedQuestions,
+    checkedQuestions,
+    setCheckedQuestions,
+    handleCheckboxChangeEssay
   } = useEssayQuestionCreation(examId, question_count);
     
     
@@ -102,6 +105,9 @@ export default function CreateEssayQuestionsContent({examId, question_count}) {
                 setGradingNotesAI,
                 generateQuestion,
                 generatedQuestions,
+                checkedQuestions,
+                setCheckedQuestions,
+                handleCheckboxChangeEssay
               }}/>                  
         </Col>   
         {question.length > 0 &&
