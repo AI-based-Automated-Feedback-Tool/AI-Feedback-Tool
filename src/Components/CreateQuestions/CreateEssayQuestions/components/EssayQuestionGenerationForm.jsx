@@ -45,6 +45,7 @@ export default function EssayQuestionGenerationForm({formState}) {
                             value={topic}
                             onChange={(e) => setTopic(e.target.value)}
                         />
+                        {error.topic && <div className="text-danger">{error.topic}</div>}
                     </Col>
                     <Col md={6} xs={12}>
                         <Form.Label className='fw-bold'>Difficulty Level *</Form.Label>
@@ -56,6 +57,7 @@ export default function EssayQuestionGenerationForm({formState}) {
                             <option value="Medium">Medium</option>
                             <option value="Hard">Hard</option>
                         </Form.Select>
+                        {error.difficultyLevel && <div className="text-danger">{error.difficultyLevel}</div>}
                     </Col>
                 </Row>
             </Form.Group>
@@ -68,11 +70,12 @@ export default function EssayQuestionGenerationForm({formState}) {
                     value={guidance}
                     onChange={(e) => setGuidance(e.target.value)}
                 />
+                {error.guidance && <div className="text-danger">{error.guidance}</div>}
             </Form.Group>
             <Form.Group className='mb-3'>
                 <Row>
                     <Col md={6} xs={12}>
-                        <Form.Label className='fw-bold'>Key Concept to Include *</Form.Label>
+                        <Form.Label className='fw-bold'>Key Concept to Include </Form.Label>
                         <Form.Control
                             as="textarea"
                             rows={2}
@@ -82,7 +85,7 @@ export default function EssayQuestionGenerationForm({formState}) {
                         />
                     </Col>
                     <Col md={6} xs={12}>
-                        <Form.Label className='fw-bold'>Do Not Include *</Form.Label>
+                        <Form.Label className='fw-bold'>Do Not Include </Form.Label>
                         <Form.Control
                             as="textarea"
                             rows={2}
@@ -103,6 +106,7 @@ export default function EssayQuestionGenerationForm({formState}) {
                             value={wordLimitAI}
                             onChange={(e) => setWordLimitAI(e.target.value)}
                         />
+                        {error.wordLimitAI && <div className="text-danger">{error.wordLimitAI}</div>}
                     </Col>
                     <Col md={4} xs={12}>
                         <Form.Label className='fw-bold'>Points *</Form.Label>
@@ -112,6 +116,7 @@ export default function EssayQuestionGenerationForm({formState}) {
                             value={pointsAI}
                             onChange={(e) => setPointsAI(e.target.value)}
                         />
+                        {error.pointsAI && <div className="text-danger">{error.pointsAI}</div>}
                     </Col>
                     <Col md={4} xs={12}>
                         <Form.Label className='fw-bold'>Number of Questions *</Form.Label>
@@ -121,6 +126,7 @@ export default function EssayQuestionGenerationForm({formState}) {
                             value={noOfQuestion}
                             onChange={(e) => setNoOfQuestion(e.target.value)}
                         />
+                        {error.noOfQuestion && <div className="text-danger">{error.noOfQuestion}</div>}
                     </Col>
                 </Row>
             </Form.Group>
@@ -133,6 +139,7 @@ export default function EssayQuestionGenerationForm({formState}) {
                     value={gradingNotesAI}
                     onChange={(e) => setGradingNotesAI(e.target.value)}
                 />
+                {error.gradingNotesAI && <div className="text-danger">{error.gradingNotesAI}</div>}
             </Form.Group>
 
             {/* Generate Button */}

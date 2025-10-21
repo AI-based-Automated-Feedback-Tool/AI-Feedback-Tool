@@ -206,26 +206,52 @@ export default function useEssayQuestionCreation(examId, question_count) {
 
     // Function to generate questions using AI
     const generateQuestion = async () => {
-        try {
-            const params = {
-                topic: topic,
-                difficultyLevel: difficultyLevel,
-                guidance: guidance,
-                keyConcepts: keyConcepts,
-                doNotInclude: doNotInclude,
-                wordLimitAI: wordLimitAI,
-                pointsAI: pointsAI,
-                noOfQuestion: noOfQuestion,
-                gradingNotesAI: gradingNotesAI
-            };
-            const data = await generateEssayQuestion(params);
-            console.log("Generated Questions:", data);
-            setGeneratedQuestions(data.questions);
-        } catch (error) {
-            console.error("Error generating essay questions:", error);
+        //basic validation
+        const newError = {}
+        if (!topic.trim()) {
+            newError.topic = "Topic is required.";
+        }
+        if (!difficultyLevel.trim()) {
+            newError.difficultyLevel = "Difficulty level is required.";
+        }
+        if (!guidance.trim()) {
+            newError.guidance = "Guidance is required.";
+        }
+        if (!noOfQuestion || isNaN(noOfQuestion) || noOfQuestion <= 0) {
+            newError.noOfQuestion = "Number of questions is required and must be a positive number.";
+        }
+        if (!pointsAI || isNaN(pointsAI) || pointsAI <= 0) {
+            newError.pointsAI = "Points are required and must be a positive number.";
+        }
+        if (!wordLimitAI || isNaN(wordLimitAI) || wordLimitAI <= 0) {
+            newError.wordLimitAI = "Word limit is required and must be a positive number.";
+        }
+        if (!gradingNotesAI.trim()) {
+            newError.gradingNotesAI = "Grading description is required.";
+        }
+        setError(newError);
+
+        if (Object.keys(newError).length === 0) {
+            try {
+                const params = {
+                    topic: topic,
+                    difficultyLevel: difficultyLevel,
+                    guidance: guidance,
+                    keyConcepts: keyConcepts,
+                    doNotInclude: doNotInclude,
+                    wordLimitAI: wordLimitAI,
+                    pointsAI: pointsAI,
+                    noOfQuestion: noOfQuestion,
+                    gradingNotesAI: gradingNotesAI
+                };
+                const data = await generateEssayQuestion(params);
+                console.log("Generated Questions:", data);
+                setGeneratedQuestions(data.questions);
+            } catch (error) {
+                console.error("Error generating essay questions:", error);
+            }
         }
     }
-
     // Handle checkbox change
     const handleCheckboxChangeEssay = (index) => {
         setCheckedQuestions((prev) => ({
