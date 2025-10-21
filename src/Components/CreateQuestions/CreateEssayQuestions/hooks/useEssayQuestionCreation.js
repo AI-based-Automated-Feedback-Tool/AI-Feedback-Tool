@@ -32,6 +32,7 @@ export default function useEssayQuestionCreation(examId, question_count) {
     const [gradingNotesAI, setGradingNotesAI] = useState("");
     const [generatedQuestions, setGeneratedQuestions] = useState([]);
     const [checkedQuestions, setCheckedQuestions] = useState([]);
+    const [generatedAndSelectedQuestions, setGeneratedAndSelectedQuestions] = useState([]);
 
     const fileInputRef = useRef(null);
 
@@ -232,6 +233,24 @@ export default function useEssayQuestionCreation(examId, question_count) {
         [index]: !prev[index],
         }));
     }
+
+    //Save selected generated questions
+    const saveCheckedQuestions = () => {
+        const selectedQuestions = generatedQuestions.filter((q, index) => checkedQuestions[index]);
+        setGeneratedAndSelectedQuestions(selectedQuestions);
+
+        //Add selected questions to the main question list
+        selectedQuestions.forEach((q) => {
+            const formattedQuestion = {
+                question_text: q.question_text,
+                word_limit: q.word_limit,
+                points: q.points,
+                grading_note: q.grading_note,
+                attachment_url: null
+            };
+            setQuestion((prevQuestions) => [...prevQuestions, formattedQuestion]);  
+        });       
+    }
     return {
         question,
         examId,
@@ -283,6 +302,7 @@ export default function useEssayQuestionCreation(examId, question_count) {
         generatedQuestions,
         checkedQuestions,
         setCheckedQuestions,
-        handleCheckboxChangeEssay
+        handleCheckboxChangeEssay,
+        saveCheckedQuestions
     };
 }

@@ -1,6 +1,6 @@
 import { Card, Row, Col, Button, Badge, Form } from "react-bootstrap";
 import '../../../../css/aiQuestionGeneration.css'
-export default function AIGeneratedEssayQuestions({ questions, onCheck, checkedQuestions }) {
+export default function AIGeneratedEssayQuestions({ questions, onCheck, checkedQuestions, onSaveChecked }) {
   return (
     <Card className="parent-ai-card mb-4 mt-4 shadow-lg">
       <Card.Body>
@@ -42,6 +42,15 @@ export default function AIGeneratedEssayQuestions({ questions, onCheck, checkedQ
             </Card>
           </div>
         ))}
+
+        <div className="d-flex justify-content-end mb-3 mx-3" >
+          <Button 
+            variant="primary"
+            onClick={onSaveChecked} 
+          >
+            ➕ Add Questions to the Exam
+          </Button>
+        </div>
 
       </Card.Body>
     </Card>

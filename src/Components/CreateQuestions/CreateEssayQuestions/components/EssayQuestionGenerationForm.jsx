@@ -28,7 +28,8 @@ export default function EssayQuestionGenerationForm({formState}) {
         generatedQuestions,
         checkedQuestions,
         setCheckedQuestions,
-        handleCheckboxChangeEssay
+        handleCheckboxChangeEssay,
+        saveCheckedQuestions
     }= formState;
   return (
     <>
@@ -151,6 +152,7 @@ export default function EssayQuestionGenerationForm({formState}) {
                 questions={generatedQuestions} 
                 checkedQuestions={checkedQuestions}
                 onCheck={handleCheckboxChangeEssay}
+                onSaveChecked={saveCheckedQuestions}
             />
         )}
     </>
