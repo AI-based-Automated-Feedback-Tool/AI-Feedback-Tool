@@ -1,12 +1,12 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import path from 'path'
 
-// https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
-      '@': '/src'
+      '@': path.resolve(__dirname, './src'),
     }
   },
   build: {
@@ -15,8 +15,21 @@ export default defineConfig({
       output: {
         manualChunks: {
           'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+          'ui-vendor': ['bootstrap', 'react-bootstrap', 'react-icons'],
         }
       }
-    }
+    },
+    chunkSizeWarningLimit: 1000
+  },
+  server: {
+    port: 3000,
+    strictPort: true,
+    host: true
+  },
+  preview: {
+    port: 3000,
+    strictPort: true,
+    host: true
+  }
   }
 })
