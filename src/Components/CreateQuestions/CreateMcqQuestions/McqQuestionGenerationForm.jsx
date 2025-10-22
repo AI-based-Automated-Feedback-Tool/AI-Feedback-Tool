@@ -131,6 +131,11 @@ export default function McqQuestionGenerationForm({onSave, warning, disabled, no
         </Form>
 
         {/* Display AI Generated Questions */}
+        {errors.generation && 
+            <div className="text-danger mx-3">
+                {errors.generation}
+            </div>
+        }
         {generatedQuestions.length > 0 && (
             <AIGeneratedQuestions 
                 questions={generatedQuestions} 

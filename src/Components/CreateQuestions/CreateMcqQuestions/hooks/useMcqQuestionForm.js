@@ -85,6 +85,9 @@ const useMcqQuestionForm = (onSave, questionCount, noOfQuestions) => {
 
     // Function to generate questions using AI
     const generateQuestion = async () => {
+        setGeneratedQuestions([]);
+        setCheckedAIQuestions([]);
+        setGeneratedAndSelectedQuestions([]);
         // Basic validation
         const newErrors = {};
         if (!questionTopic.trim())
@@ -115,6 +118,12 @@ const useMcqQuestionForm = (onSave, questionCount, noOfQuestions) => {
             } catch (error) {
                 console.error("Error generating question:", error);
                 //needed to show error to user in UI later
+                setErrors(prev => ({
+                    ...prev,
+                    generation: "Failed to generate questions. Please try again.",
+                }));
+            } finally {
+                setIsGenerating(false);
             }
             setIsGenerating(false);
         }
