@@ -253,6 +253,12 @@ export default function useCodeQuestionForm( examId, question_count, initialQues
         ...prev,
         [index]: !prev[index],
         }));
+
+        // Clear previous saving error when user changes selection
+        setErrors((prev) => {
+            const { limit, ...rest } = prev || {};
+            return rest;
+        });
     }
 
     // Function to save checked questions

@@ -195,18 +195,18 @@ export default function CodeQuestionGenerationForm({formState, question_count}) 
       </Form>
 
       {/* Display AI Generated Questions */}
-        {generatedCodeQuestions.length > 0 && (
-          <AIGeneratedCodeQuestions 
-            questions={generatedCodeQuestions}
-            onCheck={handleCheckboxChangeCode}
-            checkedQuestions={checkedAICodeQuestions}
-            onSaveChecked={saveCheckedQuestions}
-            hasReachedLimit={hasReachedLimit}
-            question_count={question_count}
-            errors={errors}
-          />
-        )
-      }
+      {errors.topic && <div className="text-danger mx-3">{errors.topic}</div>}
+      {generatedCodeQuestions.length > 0 && (
+        <AIGeneratedCodeQuestions 
+          questions={generatedCodeQuestions}
+          onCheck={handleCheckboxChangeCode}
+          checkedQuestions={checkedAICodeQuestions}
+          onSaveChecked={saveCheckedQuestions}
+          hasReachedLimit={hasReachedLimit}
+          question_count={question_count}
+          errors={errors}
+        />
+      )}
     </>
   )
 }
