@@ -4,6 +4,7 @@ import { useRef } from 'react';
 import { supabase } from "../../../../SupabaseAuth/supabaseClient"; 
 import { createEssayQuestion } from "../service/createEssayQuestionService"; 
 import { useNavigate} from 'react-router-dom';
+import { generateEssayQuestion } from '../service/createEssayQuestionService';
 
 export default function useEssayQuestionCreation(examId, question_count) {
     const [userId, setUserId] = useState(null);
@@ -29,6 +30,11 @@ export default function useEssayQuestionCreation(examId, question_count) {
     const [pointsAI, setPointsAI] = useState("");
     const [noOfQuestion, setNoOfQuestion] = useState("");
     const [gradingNotesAI, setGradingNotesAI] = useState("");
+    const [generatedQuestions, setGeneratedQuestions] = useState([]);
+    const [checkedQuestions, setCheckedQuestions] = useState([]);
+    const [generatedAndSelectedQuestions, setGeneratedAndSelectedQuestions] = useState([]);
+    const [isGenerating, setIsGenerating] = useState(false);
+    const [generateError, setGenerateError] = useState(null);
 
     const fileInputRef = useRef(null);
 
@@ -144,6 +150,12 @@ export default function useEssayQuestionCreation(examId, question_count) {
         const updatedQuestions = [...question];
         updatedQuestions.splice(index, 1);
         setQuestion(updatedQuestions);
+
+        // Clear saving errors when user deletes questions
+        setError((prev) => {
+            const { saving, ...rest } = prev;
+            return rest;
+        });
     };
 
     // Function to handle editing a question
@@ -200,10 +212,129 @@ export default function useEssayQuestionCreation(examId, question_count) {
         return false
     }
 
-    const generateQuestion = () => {
-        // Placeholder for AI question generation logic
-        console.log("Generating questions");
+    // Function to generate questions using AI
+    const generateQuestion = async () => {
+        setGenerateError(null);
+        //basic validation
+        const newError = {}
+        if (!topic.trim()) {
+            newError.topic = "Topic is required.";
+        }
+        if (!difficultyLevel.trim()) {
+            newError.difficultyLevel = "Difficulty level is required.";
+        }
+        if (!guidance.trim()) {
+            newError.guidance = "Guidance is required.";
+        }
+        if (!noOfQuestion || isNaN(noOfQuestion) || noOfQuestion <= 0) {
+            newError.noOfQuestion = "Number of questions is required and must be a positive number.";
+        }
+        if (!pointsAI || isNaN(pointsAI) || pointsAI <= 0) {
+            newError.pointsAI = "Points are required and must be a positive number.";
+        }
+        if (!wordLimitAI || isNaN(wordLimitAI) || wordLimitAI <= 0) {
+            newError.wordLimitAI = "Word limit is required and must be a positive number.";
+        }
+        if (!gradingNotesAI.trim()) {
+            newError.gradingNotesAI = "Grading description is required.";
+        }
+        setError(newError);
+
+        if (Object.keys(newError).length === 0) {
+            setIsGenerating(true);
+            try {
+                const params = {
+                    topic: topic,
+                    difficultyLevel: difficultyLevel,
+                    guidance: guidance,
+                    keyConcepts: keyConcepts,
+                    doNotInclude: doNotInclude,
+                    wordLimitAI: wordLimitAI,
+                    pointsAI: pointsAI,
+                    noOfQuestion: noOfQuestion,
+                    gradingNotesAI: gradingNotesAI
+                };
+                const data = await generateEssayQuestion(params);
+                console.log("Generated Questions:", data);
+                setGeneratedQuestions(data.questions);
+            } catch (error) {
+                console.error("Error generating essay questions:", error);
+                // need to set error state here
+                const generateError = {};
+                generateError.generate = "Failed to generate questions. Please try again.";
+                setGenerateError(generateError);
+            }
+            setIsGenerating(false);
+        }
     }
+    // Handle checkbox change
+    const handleCheckboxChangeEssay = (index) => {
+        setCheckedQuestions((prev) => ({
+        ...prev,
+        [index]: !prev[index],
+        }));
+
+        // Clear previous saving error when user changes selection
+        setError((prev) => {
+            const { saving, ...rest } = prev || {};
+            return rest;
+        });
+    }
+
+    //Save selected generated questions
+    const saveCheckedQuestions = () => {
+        // Clear any previous saving error before validating again
+        setError(prev => {
+            const { saving, ...rest } = prev || {};
+            return rest;
+        });
+        
+        const selectedQuestions = generatedQuestions.filter((q, index) => checkedQuestions[index]);
+
+        //check if number of selected questions and created questions sum exceeds the limit needed
+        const newError = {}
+        if (selectedQuestions.length === 0) {
+            newError.saving = "Please select at least one question to add.";
+        }
+        if (question.length + selectedQuestions.length > parseInt(question_count)) {
+            newError.saving = `Adding these questions exceeds the limit of ${question_count} questions. Please select fewer questions.`;
+        }
+        setError(newError);
+        if (Object.keys(newError).length === 0) { 
+            setGeneratedAndSelectedQuestions(selectedQuestions);
+
+            //Add selected questions to the main question list
+            selectedQuestions.forEach((q) => {
+                const formattedQuestion = {
+                    question_text: q.question_text,
+                    word_limit: q.word_limit,
+                    points: q.points,
+                    grading_note: q.grading_note,
+                    attachment_url: null
+                };
+                setQuestion((prevQuestions) => [...prevQuestions, formattedQuestion]);  
+            });     
+            //Clear questioin generation form
+            setTopic("");
+            setDifficultyLevel("Easy");
+            setGuidance("");
+            setKeyConcepts("");
+            setDoNotInclude("");
+            setWordLimitAI("");
+            setPointsAI("");
+            setNoOfQuestion("");
+            setGradingNotesAI(""); 
+
+            //Clear generated questions and checked state
+            setGeneratedQuestions([]);
+            setCheckedQuestions([]);
+
+            //clear any previous errors
+            setError({});
+        }
+    }
+    const hasReachedLimit = question.length >= parseInt(question_count || 0);
+
     return {
         question,
         examId,
@@ -251,6 +382,14 @@ export default function useEssayQuestionCreation(examId, question_count) {
         setNoOfQuestion,
         gradingNotesAI,
         setGradingNotesAI,
-        generateQuestion
+        generateQuestion,
+        generatedQuestions,
+        checkedQuestions,
+        setCheckedQuestions,
+        handleCheckboxChangeEssay,
+        saveCheckedQuestions,
+        isGenerating,
+        generateError,
+        hasReachedLimit
     };
 }
