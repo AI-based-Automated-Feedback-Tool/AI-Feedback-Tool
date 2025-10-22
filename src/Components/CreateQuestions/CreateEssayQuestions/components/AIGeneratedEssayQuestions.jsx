@@ -1,6 +1,6 @@
 import { Card, Row, Col, Button, Badge, Form } from "react-bootstrap";
 import '../../../../css/aiQuestionGeneration.css'
-export default function AIGeneratedEssayQuestions({ questions, onCheck, checkedQuestions, onSaveChecked}) {
+export default function AIGeneratedEssayQuestions({ questions, onCheck, checkedQuestions, onSaveChecked, error, hasReachedLimit}) {
   return (
     <Card className="parent-ai-card mb-4 mt-4 shadow-lg">
       <Card.Body>
@@ -47,10 +47,18 @@ export default function AIGeneratedEssayQuestions({ questions, onCheck, checkedQ
           <Button 
             variant="primary"
             onClick={onSaveChecked} 
+            disabled={!!hasReachedLimit || checkedQuestions.length === 0 || !!error.saving}
           >
             ➕ Add Questions to the Exam
           </Button>
         </div>
+        {
+            <p className="text-success mt-2 text-sm mx-3">
+                You can edit the points for each question after adding them to the exam.
+            </p>
+        }
+        {error.saving && <div className="text-danger mx-3">{error.saving}</div>}
+    
 
       </Card.Body>
     </Card>

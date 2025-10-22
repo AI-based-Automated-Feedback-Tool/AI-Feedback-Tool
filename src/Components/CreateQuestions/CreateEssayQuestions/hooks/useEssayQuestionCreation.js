@@ -150,6 +150,12 @@ export default function useEssayQuestionCreation(examId, question_count) {
         const updatedQuestions = [...question];
         updatedQuestions.splice(index, 1);
         setQuestion(updatedQuestions);
+
+        // Clear saving errors when user deletes questions
+        setError((prev) => {
+            const { saving, ...rest } = prev;
+            return rest;
+        });
     };
 
     // Function to handle editing a question
@@ -267,39 +273,68 @@ export default function useEssayQuestionCreation(examId, question_count) {
         ...prev,
         [index]: !prev[index],
         }));
+
+        // Clear previous saving error when user changes selection
+        setError((prev) => {
+            const { saving, ...rest } = prev || {};
+            return rest;
+        });
     }
 
     //Save selected generated questions
     const saveCheckedQuestions = () => {
+        // Clear any previous saving error before validating again
+        setError(prev => {
+            const { saving, ...rest } = prev || {};
+            return rest;
+        });
+        
         const selectedQuestions = generatedQuestions.filter((q, index) => checkedQuestions[index]);
-        setGeneratedAndSelectedQuestions(selectedQuestions);
 
-        //Add selected questions to the main question list
-        selectedQuestions.forEach((q) => {
-            const formattedQuestion = {
-                question_text: q.question_text,
-                word_limit: q.word_limit,
-                points: q.points,
-                grading_note: q.grading_note,
-                attachment_url: null
-            };
-            setQuestion((prevQuestions) => [...prevQuestions, formattedQuestion]);  
-        });     
-        //Clear questioin generation form
-        setTopic("");
-        setDifficultyLevel("Easy");
-        setGuidance("");
-        setKeyConcepts("");
-        setDoNotInclude("");
-        setWordLimitAI("");
-        setPointsAI("");
-        setNoOfQuestion("");
-        setGradingNotesAI(""); 
+        //check if number of selected questions and created questions sum exceeds the limit needed
+        const newError = {}
+        if (selectedQuestions.length === 0) {
+            newError.saving = "Please select at least one question to add.";
+        }
+        if (question.length + selectedQuestions.length > parseInt(question_count)) {
+            newError.saving = `Adding these questions exceeds the limit of ${question_count} questions. Please select fewer questions.`;
+        }
+        setError(newError);
+        if (Object.keys(newError).length === 0) { 
+            setGeneratedAndSelectedQuestions(selectedQuestions);
 
-        //Clear generated questions and checked state
-        setGeneratedQuestions([]);
-        setCheckedQuestions([]);
+            //Add selected questions to the main question list
+            selectedQuestions.forEach((q) => {
+                const formattedQuestion = {
+                    question_text: q.question_text,
+                    word_limit: q.word_limit,
+                    points: q.points,
+                    grading_note: q.grading_note,
+                    attachment_url: null
+                };
+                setQuestion((prevQuestions) => [...prevQuestions, formattedQuestion]);  
+            });     
+            //Clear questioin generation form
+            setTopic("");
+            setDifficultyLevel("Easy");
+            setGuidance("");
+            setKeyConcepts("");
+            setDoNotInclude("");
+            setWordLimitAI("");
+            setPointsAI("");
+            setNoOfQuestion("");
+            setGradingNotesAI(""); 
+
+            //Clear generated questions and checked state
+            setGeneratedQuestions([]);
+            setCheckedQuestions([]);
+
+            //clear any previous errors
+            setError({});
+        }
     }
+    const hasReachedLimit = question.length >= parseInt(question_count || 0);
+
     return {
         question,
         examId,
@@ -355,5 +390,6 @@ export default function useEssayQuestionCreation(examId, question_count) {
         saveCheckedQuestions,
         isGenerating,
         generateError,
+        hasReachedLimit
     };
 }

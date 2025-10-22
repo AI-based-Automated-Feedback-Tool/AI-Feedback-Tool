@@ -5,6 +5,7 @@ import AIGeneratedEssayQuestions from "./AIGeneratedEssayQuestions";
 
 export default function EssayQuestionGenerationForm({formState}) {
     const {
+        question,
         topic,
         setTopic,
         difficultyLevel,
@@ -32,7 +33,8 @@ export default function EssayQuestionGenerationForm({formState}) {
         handleCheckboxChangeEssay,
         saveCheckedQuestions,
         isGenerating,
-        generateError
+        generateError,
+        hasReachedLimit
     }= formState;
   return (
     <>
@@ -179,6 +181,8 @@ export default function EssayQuestionGenerationForm({formState}) {
                 onCheck={handleCheckboxChangeEssay}
                 onSaveChecked={saveCheckedQuestions}
                 generateError={generateError}
+                error={error}
+                hasReachedLimit={hasReachedLimit}
             />
         )}
     </>
