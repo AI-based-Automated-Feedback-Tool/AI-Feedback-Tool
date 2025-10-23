@@ -5,6 +5,9 @@
 [![Node.js](https://img.shields.io/badge/Backend-Node.js-green)](https://nodejs.org/)
 [![Supabase](https://img.shields.io/badge/Database-Supabase-lightgrey)](https://supabase.com)
 
+## 🌐 Live Demo
+Try out the AI Feedback Platform: [https://aifeedbacktool.netlify.app/](https://aifeedbacktool.netlify.app/)
+
 ## 📄 Description
 
 **AI Feedback Platform** is a comprehensive **browser-based web application** built for **students** and **teachers** to streamline **assignments, exams, feedback, and learning** through the power of **Artificial Intelligence**.
