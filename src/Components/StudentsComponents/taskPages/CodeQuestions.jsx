@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
 import { useParams } from "react-router-dom";
-import { UserContext } from "../../../Context/UserContext";
+import { UserContext } from "../../../Context/userContext";
 import { useCodeQuestions } from "../../../Context/QuestionsContext/CodeContext";
 import { useTask } from "../../../Context/taskContext";
 import "bootstrap/dist/css/bootstrap.min.css";
