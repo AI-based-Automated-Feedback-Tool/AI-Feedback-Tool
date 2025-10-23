@@ -71,12 +71,42 @@
   color: white !important;
   border: 2px solid rgba(255, 255, 255, 0.3);
   backdrop-filter: blur(10px);
+}
+
+/* Dynamic Prompt Generation Badge */
+.dynamic-prompt-badge {
   animation: float 3s ease-in-out infinite;
 }
 
 @keyframes float {
   0%, 100% { transform: translateY(0px); }
   50% { transform: translateY(-5px); }
+}
+
+/* Loading Animation Styles */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Specific styles for the prompt generation loading spinner */
+.spinner-border {
+  width: 3rem;
+  height: 3rem;
+  border: 0.25em solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.75s linear infinite;
+  display: inline-block;
+  position: relative;
+}
+
+/* Prevent animation in feedback selector */
+.feedback-selector .spinner-border {
+  animation: none;
+}
+.feedback-selector-modal .spinner-border {
+  animation: none;
 }
 
 /* Main Configuration Card */
