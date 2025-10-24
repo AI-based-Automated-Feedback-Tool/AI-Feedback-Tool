@@ -1,24 +1,22 @@
-// src/Components/StudentsComponents/Chart/ChartUploadSection.jsx
-import React, { useMemo, useRef, useState } from "react";
+import React, { useMemo, useRef, useState, useEffect } from "react";
 import { uploadImage } from "../Feedback/uploadImageService";
-import { submitChartAnswer } from "../Feedback/generateChartAnalysisService";
-
-const API = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000";
+// import { submitChartAnswer } from "../Feedback/generateChartAnalysisService"; // ❌ not used in attach mode
 
 export default function ChartUploadSection({
-  question,   // { id, question_text|question_description, allowed_formats?, max_file_size_mb? }
+  question,
   userId,
-  onSubmitted, // optional callback({ ai_feedback })
+  mode = "attach",          // "attach" (defer AI) or "immediate"
+  onAttached,               // called when attachment is ready
 }) {
   const [file, setFile] = useState(null);
   const [preview, setPreview] = useState("");
   const [busy, setBusy] = useState(false);
+  const [aiFeedback, setAiFeedback] = useState(""); // kept for "immediate" mode only
   const inputRef = useRef(null);
-  const [aiFeedback, setAiFeedback] = useState("");
 
   const fmts = question?.allowed_formats || ["png", "jpg", "jpeg", "svg", "webp"];
   const maxMb = question?.max_file_size_mb ?? 5;
-  const acceptAttr = useMemo(() => fmts.map((f) => "." + f).join(","), [fmts]);
+  const acceptAttr = useMemo(() => fmts.map(f => "." + f).join(","), [fmts]);
 
   function reset() {
     setFile(null);
@@ -26,6 +24,9 @@ export default function ChartUploadSection({
     setAiFeedback("");
     if (inputRef.current) inputRef.current.value = "";
   }
+
+  // ✅ reset when question changes (extra safety in addition to key)
+  useEffect(() => { reset(); }, [question?.id]);
 
   function onPick(e) {
     const f = e.target.files?.[0];
@@ -38,33 +39,24 @@ export default function ChartUploadSection({
     setPreview(URL.createObjectURL(f));
   }
 
-  async function onConfirmSubmit() {
+  async function onAttach() {
     if (!file) return;
+
     try {
       setBusy(true);
 
-      // 1) Upload the image (to your backend upload route)
+      // Option A (recommended): upload now, store URL (more reliable if page reloads)
       const { url, mime } = await uploadImage(file, fmts);
+      onAttached?.({ imageUrl: url, imageMime: mime });
 
-      // 2) Submit as answer + trigger AI analysis
-      const data = await submitChartAnswer({
-        questionId: question.id || question.question_id,
-        userId,
-        imageUrl: url,
-        imageMime: mime,
-        questionText:
-          question.question_text ||
-          question.question_description ||
-          "",
-      });
+      // Option B (if you prefer): store File in memory and upload later
+      // onAttached?.({ file });
 
-      const feedback = data?.ai_feedback || "";
-      setAiFeedback(feedback);
-      onSubmitted?.(data);
-      alert("Uploaded and submitted successfully.");
+      alert("Image attached for this question.");
+      reset(); // optional; remove if you want to keep the preview
     } catch (e) {
       console.error(e);
-      alert(e.message || "Failed to submit image answer");
+      alert(e.message || "Failed to attach image");
     } finally {
       setBusy(false);
     }
@@ -73,6 +65,7 @@ export default function ChartUploadSection({
   return (
     <div className="mt-3">
       <p className="mb-2"><strong>Upload your diagram/photo</strong></p>
+
       <input
         ref={inputRef}
         type="file"
@@ -88,28 +81,20 @@ export default function ChartUploadSection({
             src={preview}
             alt="diagram preview"
             style={{
-              maxWidth: 280,
-              maxHeight: 220,
-              objectFit: "contain",
-              border: "1px solid #ddd",
-              borderRadius: 6,
+              maxWidth: 280, maxHeight: 220, objectFit: "contain",
+              border: "1px solid #ddd", borderRadius: 6,
             }}
           />
           <div className="d-flex flex-column gap-2">
-            <button
-              className="btn btn-secondary btn-sm"
-              onClick={reset}
-              disabled={busy}
-            >
+            <button className="btn btn-secondary btn-sm" onClick={reset} disabled={busy}>
               Choose another
             </button>
-            <button
-              className="btn btn-success btn-sm"
-              onClick={onConfirmSubmit}
-              disabled={busy}
-            >
-              {busy ? "Submitting..." : "Confirm & Submit"}
+
+            {/* Attach only (no AI yet) */}
+            <button className="btn btn-success btn-sm" onClick={onAttach} disabled={busy}>
+              {busy ? "Attaching..." : "Confirm & Attach"}
             </button>
+
             <small className="text-muted">
               Allowed: {fmts.join(", ")} • Max {maxMb}MB
             </small>
@@ -117,7 +102,8 @@ export default function ChartUploadSection({
         </div>
       )}
 
-      {aiFeedback && (
+      {/* Only used if you switch to "immediate" mode; hidden in "attach" mode */}
+      {mode === "immediate" && aiFeedback && (
         <div className="alert alert-info mt-3 mb-0" aria-live="polite">
           <strong>AI feedback:</strong>
           <div className="mt-1">{aiFeedback}</div>
