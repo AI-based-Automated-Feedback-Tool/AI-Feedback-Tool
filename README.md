@@ -99,6 +99,19 @@ We integrated multiple AI APIs to provide personalized feedback, error analysis,
 
 ---
 
+### 4. OpenAI API
+- **Description:**  
+  OpenAI's API provides access to state-of-the-art language models like GPT-4, offering comprehensive capabilities for both code and natural language tasks.
+- **Pros:**
+  - Advanced understanding of context and nuanced responses
+  - Excellent at both programming and natural language tasks
+  - Robust documentation and large community support
+- **Cons:**
+  - Higher cost compared to other APIs
+  - Rate limits may affect response times during peak usage
+
+---
+
 ✅ We selected these AI APIs to balance **quality**, **cost**, and **task suitability**, ensuring the best experience for both students and teachers.
 
 
