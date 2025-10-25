@@ -44,12 +44,14 @@ Try out the AI Feedback Platform: [https://aifeedbacktool.netlify.app/](https://
 
 ## 👥 Team
 
-|       Name       |  GitHub Name |                       Role                          |
-|------------------|--------------|-----------------------------------------------------|
-| Sujeewa Herath   | SampathHM    | Frontend and backend Developer / Project Management |
-| Upeksha Chiranthi| upeksha-c    | Frontend and backend Developer / Project Management |
-| Archana Ojha     | ojhaarch2054 | Frontend and backend Developer / Project Management |
-| Nipuni Kodikara  | t3komu00     | Frontend and backend Developer / Project Management |
+|         Name           | GitHub Name  |                       Role                          |
+|------------------------|--------------|-----------------------------------------------------|
+| Sujeewa Herath         | SampathHM    | Frontend and backend Developer / Project Management |
+| Upeksha Chiranthi      | upeksha-c    | Frontend and backend Developer / Project Management |
+| Archana Ojha           | ojhaarch2054 | Frontend and backend Developer / Project Management |
+| Nipuni Kodikara        | t3komu00     | Frontend and backend Developer / Project Management |
+| Nadeesha Rathnayake    | t3rana00     | Frontend and backend Developer / Project Management |
+| Hasitha Hiththatiyage  | hasiya89     | Frontend and backend Developer / Project Management |
 
 
 ## 🔗 APIs Used
