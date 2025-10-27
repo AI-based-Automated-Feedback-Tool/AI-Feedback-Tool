@@ -35,6 +35,7 @@ export default function useEssayQuestionCreation(examId, question_count) {
     const [generatedAndSelectedQuestions, setGeneratedAndSelectedQuestions] = useState([]);
     const [isGenerating, setIsGenerating] = useState(false);
     const [generateError, setGenerateError] = useState(null);
+    const [aiModel, setAiModel] = useState("cohere");
 
     const fileInputRef = useRef(null);
 
@@ -252,7 +253,8 @@ export default function useEssayQuestionCreation(examId, question_count) {
                     wordLimitAI: wordLimitAI,
                     pointsAI: pointsAI,
                     noOfQuestion: noOfQuestion,
-                    gradingNotesAI: gradingNotesAI
+                    gradingNotesAI: gradingNotesAI,
+                    aiModel: aiModel
                 };
                 const data = await generateEssayQuestion(params);
                 console.log("Generated Questions:", data);
@@ -324,6 +326,7 @@ export default function useEssayQuestionCreation(examId, question_count) {
             setPointsAI("");
             setNoOfQuestion("");
             setGradingNotesAI(""); 
+            setAiModel("cohere");
 
             //Clear generated questions and checked state
             setGeneratedQuestions([]);
@@ -390,6 +393,8 @@ export default function useEssayQuestionCreation(examId, question_count) {
         saveCheckedQuestions,
         isGenerating,
         generateError,
-        hasReachedLimit
+        hasReachedLimit,
+        aiModel,
+        setAiModel
     };
 }
