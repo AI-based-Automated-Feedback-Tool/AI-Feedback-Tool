@@ -1,20 +1,23 @@
+// src/Components/StudentsComponents/taskPages/EssayQuestionsList.jsx
 import React, { useEffect, useState, useContext } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import { useEssayQuestions } from "../../../Context/QuestionsContext/EssayContext";
-import { UserContext } from "../../../Context/UserContext";
+import { UserContext } from "../../../Context/userContext";
 import QuestionsNavigator from "../features/QuestionsNavigator";
-import { supabase } from '../../../SupabaseAuth/supabaseClient';
+import { supabase } from "../../../SupabaseAuth/supabaseClient";
+import ChartUploadSection from "../Chart/ChartUploadSection.jsx";
 
-
+// services used at final submit time
+import { uploadImage } from "../Feedback/uploadImageService";
+import { submitChartAnswer } from "../Feedback/generateChartAnalysisService";
 
 const EssayQuestionsList = () => {
-  // Get the exam ID from the URL params
   const { id: examId } = useParams();
+  const { search } = useLocation();
+  const forceChart = new URLSearchParams(search).get("chart") === "1";
 
-   // Get the logged-in user ID from context
   const { userId } = useContext(UserContext);
 
-   // Extract state and functions from EssayContext
   const {
     fetchEssayQuestions,
     essayQuestions = [],
@@ -23,167 +26,247 @@ const EssayQuestionsList = () => {
     submitEssayAnswers,
   } = useEssayQuestions();
 
-   // Local states for managing the UI
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [reviewMode, setReviewMode] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-  const [submissionId, setSubmissionId] = useState(null);
   const [timeLeft, setTimeLeft] = useState(null);
   const [focusLossCount, setFocusLossCount] = useState(0);
   const [showWarningBanner, setShowWarningBanner] = useState(false);
-  const [essayFeedback, setEssayFeedback] = useState([]);
 
-  //  Fetch essay questions when component mounts
-  useEffect(() => {
-    fetchEssayQuestions(examId);
-  }, [examId]);
+  const [finalFeedback, setFinalFeedback] = useState([]); // [{question_id, channel:'essay'|'chart', text}]
 
-  //  Fetch the exam duration (in minutes) from Supabase
+  // load questions
   useEffect(() => {
-    const fetchExamDuration = async () => {
+    if (examId) fetchEssayQuestions(examId);
+  }, [examId, fetchEssayQuestions]);
+
+  // load duration
+  useEffect(() => {
+    if (!examId) return;
+    (async () => {
       const { data, error } = await supabase
         .from("exams")
         .select("duration")
         .eq("exam_id", examId)
         .single();
-
       if (error) {
         console.error("Error fetching exam duration:", error);
-        setTimeLeft(30 * 60);  // fallback to 30 mins
+        setTimeLeft(30 * 60);
       } else {
-        const minutes = data?.duration;
-        setTimeLeft(typeof minutes === "number" ? minutes * 60 : 30 * 60);
+        setTimeLeft(((typeof data?.duration === "number" ? data.duration : 30)) * 60);
       }
-    };
-    fetchExamDuration();
+    })();
   }, [examId]);
 
-  //  Countdown timer that auto-submits when time is up
+  // timer
   useEffect(() => {
     if (timeLeft === null) return;
     if (timeLeft <= 0 && !submitted) {
-      console.log("⏰ Time's up. Submitting...");
       handleFinalSubmit();
       return;
     }
-    const timer = setInterval(() => setTimeLeft((prev) => prev - 1), 1000);
-    return () => clearInterval(timer);
+    const t = setInterval(() => setTimeLeft(s => s - 1), 1000);
+    return () => clearInterval(t);
   }, [timeLeft, submitted]);
 
-   // Track if student switches browser tab
+  // tab-focus monitor
   useEffect(() => {
-    const handleVisibilityChange = () => {
+    const onVis = () => {
       if (document.hidden) {
-        setFocusLossCount((prev) => prev + 1);
+        setFocusLossCount(c => c + 1);
         setShowWarningBanner(true);
         setTimeout(() => setShowWarningBanner(false), 3000);
       }
     };
-
-    document.addEventListener("visibilitychange", handleVisibilityChange);
-    return () => {
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
-    };
+    document.addEventListener("visibilitychange", onVis);
+    return () => document.removeEventListener("visibilitychange", onVis);
   }, []);
 
-  //  Format timer from seconds to MM:SS
-  const formatTime = (seconds) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs < 10 ? "0" : ""}${secs}`;
+  useEffect(() => console.log("forceChart =", forceChart), [forceChart]);
+
+  const formatTime = (s) => {
+    const m = Math.floor(s / 60);
+    const sec = s % 60;
+    return `${m}:${sec < 10 ? "0" : ""}${sec}`;
   };
-  //  Handle input change for each question
-  const handleChange = (questionId, text) => {
-    handleEssayAnswerChange(questionId, text);
-  };
-   //  Trigger review mode before final submission
-  const handleInitialSubmit = () => {
-    setReviewMode(true);
-  };
-    //  Submit answers and request AI feedback
-  const handleFinalSubmit = async () => {
-    // Submit essay answers and get back submissionId
-    const id = await submitEssayAnswers({
-      studentId: userId,
-      examId,
-      answers: studentEssayAnswers,
+
+  // ---------- unified setters per question ----------
+  const setAnswerType = (qid, nextType) => {
+    const prev = studentEssayAnswers[qid] ?? {};
+    handleEssayAnswerChange(qid, {
+      type: nextType, // 'text'|'chart'|'both'
+      text: nextType === "chart" ? "" : (prev.text || ""),
+      chart: nextType === "text" ? undefined : (prev.chart || undefined),
     });
-    setSubmissionId(id);
+  };
 
-    console.log("Focus loss count submitted:", focusLossCount);
+  const setTextAnswer = (qid, text) => {
+    const prev = studentEssayAnswers[qid] ?? { type: "text" };
+    handleEssayAnswerChange(qid, { ...prev, type: prev.type || "text", text });
+  };
 
-     // ➕ Save focus loss count to exam_submissions
-     await supabase
-    .from("exam_submissions")
-    .update({ focus_loss_count: focusLossCount })
-    .eq("id", id);
+  const setChartAttachment = (qid, payload) => {
+    // payload from ChartUploadSection: { file? , url? , mime? }
+    const prev = studentEssayAnswers[qid] ?? { type: "chart" };
+    handleEssayAnswerChange(qid, {
+      ...prev,
+      type: prev.type || "chart",
+      chart: {
+        file: payload?.file || null,
+        imageUrl: payload?.url || null,
+        imageMime: payload?.mime || null,
+      },
+    });
+  };
 
-    //  Call backend to generate feedback
+  const handleInitialSubmit = () => setReviewMode(true);
+
+  // ---------- FINAL SUBMIT ----------
+  const handleFinalSubmit = async () => {
     try {
-      const res = await fetch("http://localhost:3000/api/essay-feedback/generate-essay-feedback", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ submissionId: id }),
+      // Submit the *structured* answers. (Your context already knows how to persist.)
+      const submissionId = await submitEssayAnswers({
+        studentId: userId,
+        examId,
+        answers: studentEssayAnswers,
       });
 
-      const result = await res.json();
-      console.log(" AI feedback result:", result);
-
-      if (result.success) {
-        // Fetch updated answers with feedback
-        const { data, error } = await supabase
-          .from("essay_exam_submissions_answers")
-          .select("question_id, student_answer, ai_feedback")
-          .eq("submission_id", id);
-
-        if (!error) {
-          setEssayFeedback(data);
-        } else {
-          console.error(" Error fetching saved feedback:", error);
-        }
-      } else {
-        console.warn(" Feedback result:", result.error);
+      if (submissionId) {
+        await supabase
+          .from("exam_submissions")
+          .update({ focus_loss_count: focusLossCount })
+          .eq("id", submissionId);
       }
-    } catch (err) {
-      console.error(" Error fetching feedback:", err);
-    }
 
-    setSubmitted(true);
+      // Essay feedback (for questions that have text or type includes text)
+      let essayRows = [];
+      try {
+        const res = await fetch("http://localhost:3000/api/essay-feedback/generate-essay-feedback", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ submissionId }),
+        });
+        const json = await res.json();
+        if (!json.success) console.warn("Essay feedback:", json.error);
+
+        // fetch persisted feedback
+        const { data: rows, error: rowsErr } = await supabase
+          .from("essay_exam_submissions_answers")
+          .select("question_id, ai_feedback, student_answer")
+          .eq("submission_id", submissionId);
+
+        if (!rowsErr && Array.isArray(rows)) {
+          essayRows = rows
+            .filter(r => {
+              // Only keep ones that included text
+              const sa = r.student_answer;
+              if (sa && typeof sa === "object") {
+                return sa?.type === "text" || sa?.type === "both";
+              }
+              // legacy plain string means text
+              return typeof r.student_answer === "string";
+            })
+            .map(r => ({
+              question_id: r.question_id,
+              channel: "essay",
+              text: r?.ai_feedback?.comment || "",
+            }));
+        }
+      } catch (e) {
+        console.error("Essay feedback error:", e);
+      }
+
+      // Chart feedback (for questions that include chart)
+      const chartFeedback = [];
+      for (const q of essayQuestions) {
+        const ans = studentEssayAnswers[q.question_id];
+        if (!ans) continue;
+
+        const needsChart =
+          ans.type === "chart" || ans.type === "both";
+
+        if (!needsChart || !ans.chart) continue;
+
+        let { imageUrl, imageMime, file } = ans.chart;
+
+        if (!imageUrl && file) {
+          const uploaded = await uploadImage(
+            file,
+            q.allowed_formats || ["png", "jpg", "jpeg", "svg"]
+          );
+          imageUrl = uploaded.url;
+          imageMime = uploaded.mime;
+        }
+
+        if (!imageUrl) continue;
+
+        const res = await submitChartAnswer({
+          questionId: q.question_id,
+          userId,
+          imageUrl,
+          imageMime,
+          questionText: q.question_text,
+        });
+
+        chartFeedback.push({
+          question_id: q.question_id,
+          channel: "chart",
+          text: res?.ai_feedback || "",
+        });
+      }
+
+      setFinalFeedback([...essayRows, ...chartFeedback]);
+      setSubmitted(true);
+    } catch (err) {
+      console.error("Final submit error:", err);
+      alert("Submission failed. Please try again.");
+    }
   };
 
+  // ---------- RENDER ----------
   if (submitted) {
     return (
       <div className="container mt-5 text-center">
         <h2 className="text-success mb-4">Submission Successful</h2>
-        <p>Thank you for submitting your essay answers.</p>
-        <h4 className="mt-5">📌 AI Feedback</h4>
-        <ul className="list-group">
-          {essayFeedback.map((item, index) => {
-             const parsed = item.student_answer;
-            return (
-              <li key={index} className="list-group-item text-start">
-                <strong>Q{index + 1}:</strong> {parsed.text}
-                <br />
-                <strong>AI Feedback:</strong> {item.ai_feedback?.comment || "No feedback"}
+        <p>Thanks for submitting your answers.</p>
+
+        <h4 className="mt-4">📌 AI Feedback</h4>
+        {finalFeedback.length === 0 ? (
+          <p className="text-muted">No feedback available.</p>
+        ) : (
+          <ul className="list-group text-start">
+            {finalFeedback.map((f, i) => (
+              <li key={i} className="list-group-item">
+                <strong>{f.channel === "chart" ? "Diagram" : "Essay"}:</strong>{" "}
+                {f.text || "—"}
               </li>
-            );
-          })}
-        </ul>
+            ))}
+          </ul>
+        )}
       </div>
     );
   }
-    //  Review screen before final submit
+
   if (reviewMode) {
     return (
       <div className="container mt-5">
         <h3>📝 Review Your Answers</h3>
         <ul className="list-group">
-          {essayQuestions.map((q, idx) => (
-            <li key={q.question_id} className="list-group-item">
-              <strong>Q{idx + 1}:</strong> {q.question_text}
-              <p>{studentEssayAnswers[q.question_id] || "Not answered"}</p>
-            </li>
-          ))}
+          {essayQuestions.map((q, idx) => {
+            const ans = studentEssayAnswers[q.question_id];
+            return (
+              <li key={q.question_id} className="list-group-item">
+                <strong>Q{idx + 1}:</strong> {q.question_text}
+                <div className="mt-2">
+                  <div><em>Type:</em> {ans?.type || "(none)"}</div>
+                  {ans?.text ? <div className="mt-1">{ans.text}</div> : null}
+                  {ans?.chart ? (
+                    <div className="text-muted mt-1">Diagram: {ans.chart.imageUrl ? "uploaded" : ans.chart.file ? "attached (local)" : "missing"}</div>
+                  ) : null}
+                </div>
+              </li>
+            );
+          })}
         </ul>
         <div className="d-flex justify-content-center mt-4">
           <button className="btn btn-secondary me-3" onClick={() => setReviewMode(false)}>
@@ -196,13 +279,15 @@ const EssayQuestionsList = () => {
       </div>
     );
   }
-  //  Loading state before data is ready
+
   if (!essayQuestions.length || timeLeft === null) {
     return <p>Loading essay questions...</p>;
   }
 
-  const currentQuestion = essayQuestions[currentQuestionIndex];
-   //  Main essay question UI
+  const q = essayQuestions[currentQuestionIndex];
+  const ans = studentEssayAnswers[q.question_id] || {};
+  const type = ans.type || (forceChart ? "chart" : "text"); // default
+
   return (
     <div className="container mt-5">
       {showWarningBanner && (
@@ -232,24 +317,84 @@ const EssayQuestionsList = () => {
           <strong>Question {currentQuestionIndex + 1}:</strong>
         </div>
         <div className="card-body">
-          <p>{currentQuestion.question_text}</p>
-          <p><strong>Word Limit:</strong> {currentQuestion.word_limit}</p>
-          <p><strong>Grading Note:</strong> {currentQuestion.grading_note}</p>
+          <p>{q.question_text}</p>
 
-          <textarea
-            rows={10}
-            className="form-control"
-            placeholder="Write your answer here..."
-            value={studentEssayAnswers[currentQuestion.question_id] || ""}
-            onChange={(e) => handleChange(currentQuestion.question_id, e.target.value)}
-          />
-
-          <div className="mt-3">
-            Word Count:{" "}
-            {studentEssayAnswers[currentQuestion.question_id]
-              ?.split(/\s+/)
-              .filter((word) => word).length || 0}
+          {/* Answer Type selector */}
+          <div className="mb-3">
+            <label className="form-label fw-semibold">Answer Type</label>
+            <div className="d-flex gap-3">
+              <div className="form-check">
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  name={`type-${q.question_id}`}
+                  id={`type-text-${q.question_id}`}
+                  checked={type === "text"}
+                  onChange={() => setAnswerType(q.question_id, "text")}
+                />
+                <label className="form-check-label" htmlFor={`type-text-${q.question_id}`}>Text</label>
+              </div>
+              <div className="form-check">
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  name={`type-${q.question_id}`}
+                  id={`type-chart-${q.question_id}`}
+                  checked={type === "chart"}
+                  onChange={() => setAnswerType(q.question_id, "chart")}
+                />
+                <label className="form-check-label" htmlFor={`type-chart-${q.question_id}`}>Diagram / Image</label>
+              </div>
+              <div className="form-check">
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  name={`type-${q.question_id}`}
+                  id={`type-both-${q.question_id}`}
+                  checked={type === "both"}
+                  onChange={() => setAnswerType(q.question_id, "both")}
+                />
+                <label className="form-check-label" htmlFor={`type-both-${q.question_id}`}>Both</label>
+              </div>
+            </div>
           </div>
+
+          {/* Text editor (shown when type includes text) */}
+          {(type === "text" || type === "both") && (
+            <>
+              <p className="mb-1"><strong>Grading Note:</strong> {q.grading_note}</p>
+              <textarea
+                rows={10}
+                className="form-control"
+                placeholder="Write your answer here..."
+                value={ans.text || ""}
+                onChange={(e) => setTextAnswer(q.question_id, e.target.value)}
+              />
+              <div className="mt-2">
+                Word Count: {(ans.text || "").trim().split(/\s+/).filter(Boolean).length}
+              </div>
+            </>
+          )}
+
+          {/* Diagram uploader (shown when type includes chart) */}
+          {(type === "chart" || type === "both") && (
+            <div className="mt-3">
+              <ChartUploadSection
+                mode="attach" // attach only; AI runs after final submit
+                question={{
+                  id: q.question_id,
+                  question_text: q.question_text,
+                  allowed_formats: q.allowed_formats || ["png", "jpg", "jpeg", "svg"],
+                  max_file_size_mb: q.max_file_size_mb || 5,
+                }}
+                userId={userId}
+                onAttached={(payload) => setChartAttachment(q.question_id, payload)}
+              />
+              <small className="text-muted d-block mt-1">
+                Diagram will be analyzed after you submit the whole exam.
+              </small>
+            </div>
+          )}
         </div>
       </div>
 
@@ -257,7 +402,7 @@ const EssayQuestionsList = () => {
         {currentQuestionIndex > 0 && (
           <button
             className="btn btn-secondary"
-            onClick={() => setCurrentQuestionIndex(currentQuestionIndex - 1)}
+            onClick={() => setCurrentQuestionIndex(i => Math.max(0, i - 1))}
           >
             Back
           </button>
@@ -265,7 +410,7 @@ const EssayQuestionsList = () => {
         {currentQuestionIndex < essayQuestions.length - 1 ? (
           <button
             className="btn btn-primary ms-auto"
-            onClick={() => setCurrentQuestionIndex(currentQuestionIndex + 1)}
+            onClick={() => setCurrentQuestionIndex(i => Math.min(essayQuestions.length - 1, i + 1))}
           >
             Next
           </button>

@@ -4,7 +4,7 @@ import React, { createContext, useState, useEffect } from 'react';
 export const ApiCallCountContext = createContext();
 
 export const ApiCallCountProvider = ({ children }) => {
-  const MAX_CALLS_PER_DAY = 10;
+  const MAX_CALLS_PER_DAY = 20;
   const [count, setCount] = useState(0);
 
   // Helper to get today's date string (yyyy-mm-dd)

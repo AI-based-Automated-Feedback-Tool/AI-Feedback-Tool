@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { supabase } from "../../../SupabaseAuth/supabaseClient";
 
-const API_BASE = "http://localhost:3000/api/mock-exam";
+import { MOCK_BASE as API_BASE } from "@/config/api";
 const LETTERS = ["A", "B", "C", "D", "E", "F", "G", "H"];
 
 function norm(s) {

@@ -5,6 +5,9 @@
 [![Node.js](https://img.shields.io/badge/Backend-Node.js-green)](https://nodejs.org/)
 [![Supabase](https://img.shields.io/badge/Database-Supabase-lightgrey)](https://supabase.com)
 
+## 🌐 Live Demo
+Try out the AI Feedback Platform: [https://aifeedbacktool.netlify.app/](https://aifeedbacktool.netlify.app/)
+
 ## 📄 Description
 
 **AI Feedback Platform** is a comprehensive **browser-based web application** built for **students** and **teachers** to streamline **assignments, exams, feedback, and learning** through the power of **Artificial Intelligence**.
@@ -41,12 +44,14 @@
 
 ## 👥 Team
 
-|       Name       |  GitHub Name |                       Role                          |
-|------------------|--------------|-----------------------------------------------------|
-| Sujeewa Herath   | SampathHM    | Frontend and backend Developer / Project Management |
-| Upeksha Chiranthi| upeksha-c    | Frontend and backend Developer / Project Management |
-| Archana Ojha     | ojhaarch2054 | Frontend and backend Developer / Project Management |
-| Nipuni Kodikara  | t3komu00     | Frontend and backend Developer / Project Management |
+|         Name           | GitHub Name  |                       Role                          |
+|------------------------|--------------|-----------------------------------------------------|
+| Sujeewa Herath         | SampathHM    | Frontend and backend Developer / Project Management |
+| Upeksha Chiranthi      | upeksha-c    | Frontend and backend Developer / Project Management |
+| Archana Ojha           | ojhaarch2054 | Frontend and backend Developer / Project Management |
+| Nipuni Kodikara        | t3komu00     | Frontend and backend Developer / Project Management |
+| Nadeesha Rathnayake    | t3rana00     | Frontend and backend Developer / Project Management |
+| Hasitha Hiththatiyage  | hasiya89     | Frontend and backend Developer / Project Management |
 
 
 ## 🔗 APIs Used
@@ -91,6 +96,19 @@ We integrated multiple AI APIs to provide personalized feedback, error analysis,
 - **Cons:**
   - Sometimes less accurate for abstract or non-technical content.
   - Smaller community and fewer resources for troubleshooting.
+
+---
+
+### 4. OpenAI API
+- **Description:**  
+  OpenAI's API provides access to state-of-the-art language models like GPT-4, offering comprehensive capabilities for both code and natural language tasks.
+- **Pros:**
+  - Advanced understanding of context and nuanced responses
+  - Excellent at both programming and natural language tasks
+  - Robust documentation and large community support
+- **Cons:**
+  - Higher cost compared to other APIs
+  - Rate limits may affect response times during peak usage
 
 ---
 
@@ -770,6 +788,67 @@ To maintain system performance and ensure fair usage of AI resources, the **AI F
 - Admin-configurable quota settings
 - Role-based limits (e.g., more calls for premium users)
 - API usage history logs
+
+---
+
+## 🤖 Dynamic AI Prompt Generation
+
+The **Dynamic Prompt Generation** feature allows teachers to create customized AI analysis prompts based on their specific exam needs. This advanced feature uses AI to suggest relevant focus areas and generates tailored prompts for in-depth exam analysis.
+
+### 🎯 Key Features
+
+- **AI-Powered Options**: Automatically analyzes exam data to suggest relevant focus areas
+- **Customizable Analysis**: Select multiple focus areas to create comprehensive feedback
+- **Smart Prompt Generation**: Creates structured JSON prompts based on selected options
+- **Real-time Preview**: See how your selections will shape the AI analysis
+
+### 🔄 How It Works
+
+1. **Initialize Analysis**
+   - Click the "AI-Powered Options" button in the feedback generator
+   - System begins analyzing your exam data and submissions
+
+<div align="center">
+  <img src="./src/assets/analyzing-your-exam.png" alt="Analyzing Your Exam" width="800"/>
+</div>
+
+2. **Select Focus Areas**
+   - Choose from AI-suggested analysis options
+   - Each option targets specific aspects of student performance
+   - Combine multiple focus areas for comprehensive analysis
+
+<div align="center">
+  <img src="./src/assets/ai-powered-prompt-generation.png" alt="AI Powered Prompt Generation" width="800"/>
+</div>
+
+### 💡 Features and Benefits
+
+- **Intelligent Analysis Options**:
+  - Performance patterns analysis
+  - Concept mastery evaluation
+  - Error pattern identification
+  - Learning gap detection
+  - Improvement suggestions
+
+- **Structured Output**:
+  - JSON-formatted responses
+  - Consistent feedback structure
+  - Easy-to-read summaries
+  - Actionable recommendations
+
+- **Customization**:
+  - Multiple focus area selection
+  - Flexible prompt generation
+  - Preview before generation
+  - Edit generated prompts
+
+### ⚙️ Technical Details
+
+- Uses smart API call management
+- Generates structured JSON prompts
+- Supports multiple AI providers
+- Real-time prompt preview
+- Dynamic template generation
 
 ---
 
