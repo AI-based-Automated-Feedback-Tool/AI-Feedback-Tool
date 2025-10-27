@@ -42,3 +42,10 @@
   transform: translateY(-3px);
   box-shadow: 0 8px 16px rgba(0,0,0,0.12);
 }
+
+.ai-model-dropdown {
+  max-width: 250px; 
+  width: 100%;
+  margin: 0 auto;   
+  text-align: center;
+}

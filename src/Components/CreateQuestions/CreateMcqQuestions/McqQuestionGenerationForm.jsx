@@ -1,6 +1,7 @@
-import { Form, Button, Row, Col, Card, Alert } from "react-bootstrap";
+import { Form, Button, Row, Col, Card, Alert, Container } from "react-bootstrap";
 import useMcqQuestionForm from "./hooks/useMcqQuestionForm";
 import AIGeneratedQuestions from "./AIGeneratedQuestions";
+
 export default function McqQuestionGenerationForm({onSave, warning, disabled, noOfQuestions, questionCount}) {
     const {
         errors,
@@ -23,10 +24,39 @@ export default function McqQuestionGenerationForm({onSave, warning, disabled, no
         saveCheckedQuestions,
         generatedAndSelectedQuestions,
         isGenerating,
+        setAiModel,
+        aiModel
     } = useMcqQuestionForm(onSave, questionCount, noOfQuestions);
 
+    const options = [
+        { value: "cohere", label: "Cohere AI" },
+        { value: "deepseek", label: "DeepSeek (Free / Slower)" }
+        
+    ];
   return (
     <>
+        {/* AI Model Selection */}
+       <Row className="mb-4 justify-content-center">
+            <Col xs={12} md={4} className="text-center">
+                <Form.Group>
+                    <Form.Label className="fw-bold d-block">Select AI Model</Form.Label>
+                    <Form.Select
+                        value={aiModel}
+                        onChange={(e) => setAiModel(e.target.value)}
+                        className="ai-model-dropdown mx-auto"
+                    >
+                        <option value="cohere">Cohere AI</option>
+                        <option value="deepseek">DeepSeek (Free / Slower)</option>
+                    </Form.Select>
+                </Form.Group>
+            </Col>
+            
+            <Form.Text className="text-muted text-center mt-2">
+                Choose the AI model to generate questions. Cohere AI is faster, DeepSeek is free but slower.
+            </Form.Text>
+        </Row>
+
+        <Card className="p-3 mb-4">
         <Form>
             {warning && <Alert variant="warning">{warning}</Alert>}
             {/* Question Topic */}
@@ -129,6 +159,7 @@ export default function McqQuestionGenerationForm({onSave, warning, disabled, no
                 </Button>
             </div>          
         </Form>
+        </Card>
 
         {/* Display AI Generated Questions */}
         {errors.generation && 
