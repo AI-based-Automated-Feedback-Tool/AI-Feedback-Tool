@@ -63,7 +63,9 @@ export default function CreateCodeQuestionsContent({examId, question_count}) {
     checkedAICodeQuestions,
     handleCheckboxChangeCode,
     saveCheckedQuestions,
-    hasReachedLimit
+    hasReachedLimit,
+    aiModel,
+    setAiModel
   } = useCodeQuestionForm(examId, question_count);
 
   const isDisabled = () =>{
@@ -132,7 +134,9 @@ export default function CreateCodeQuestionsContent({examId, question_count}) {
               checkedAICodeQuestions,
               handleCheckboxChangeCode,
               saveCheckedQuestions,
-              hasReachedLimit
+              hasReachedLimit,
+              aiModel,
+              setAiModel
             }}
             disabled={isDisabled()}
             question_count={question_count}
