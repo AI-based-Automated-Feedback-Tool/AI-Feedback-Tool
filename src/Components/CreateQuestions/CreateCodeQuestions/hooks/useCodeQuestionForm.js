@@ -36,6 +36,7 @@ export default function useCodeQuestionForm( examId, question_count, initialQues
     const [isGenerating, setIsGenerating] = useState(false);
     const [checkedAICodeQuestions, setCheckedAICodeQuestions] = useState([]);
     const [generatedAndSelectedQuestions, setGeneratedAndSelectedQuestions] = useState([]);
+    const [aiModel, setAiModel] = useState("cohere");
 
     const navigate = useNavigate();
 
@@ -221,7 +222,8 @@ export default function useCodeQuestionForm( examId, question_count, initialQues
                     doNotInclude: doNotInclude,
                     questionNo: questionNo,
                     expectedFunctionSignature: expectedFunctionSignature,
-                    gradingDescription: gradingDescription
+                    gradingDescription: gradingDescription,
+                    aiModel: aiModel
                 };
                 const data = await generateCodeQuestion(params);
                     
@@ -253,6 +255,12 @@ export default function useCodeQuestionForm( examId, question_count, initialQues
         ...prev,
         [index]: !prev[index],
         }));
+
+        // Clear previous saving error when user changes selection
+        setErrors((prev) => {
+            const { limit, ...rest } = prev || {};
+            return rest;
+        });
     }
 
     // Function to save checked questions
@@ -298,6 +306,7 @@ export default function useCodeQuestionForm( examId, question_count, initialQues
         setExpectedFunctionSignature("");
         setGradingDescription("");
         setDifficulty('Easy');
+        setAiModel("cohere");
 
         // Clear generated questions and selections
         setGeneratedCodeQuestions([]);
@@ -370,7 +379,9 @@ export default function useCodeQuestionForm( examId, question_count, initialQues
         checkedAICodeQuestions,
         handleCheckboxChangeCode,
         saveCheckedQuestions,
-        hasReachedLimit
+        hasReachedLimit,
+        aiModel,
+        setAiModel
     };
 
 } 

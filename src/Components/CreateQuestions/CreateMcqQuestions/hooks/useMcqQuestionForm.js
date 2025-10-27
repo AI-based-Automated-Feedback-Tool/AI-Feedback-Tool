@@ -20,6 +20,7 @@ const useMcqQuestionForm = (onSave, questionCount, noOfQuestions) => {
     // State to track the generated questions
     const [generatedAndSelectedQuestions, setGeneratedAndSelectedQuestions] = useState([]);
     const [isGenerating, setIsGenerating] = useState(false);
+    const [aiModel, setAiModel] = useState("cohere");
 
     // Set answer options
     const handleAnswerOptionsChange = (e, index) => {
@@ -85,6 +86,9 @@ const useMcqQuestionForm = (onSave, questionCount, noOfQuestions) => {
 
     // Function to generate questions using AI
     const generateQuestion = async () => {
+        setGeneratedQuestions([]);
+        setCheckedAIQuestions([]);
+        setGeneratedAndSelectedQuestions([]);
         // Basic validation
         const newErrors = {};
         if (!questionTopic.trim())
@@ -105,7 +109,8 @@ const useMcqQuestionForm = (onSave, questionCount, noOfQuestions) => {
                     guidance: guidance,
                     keyConcepts: keyConcepts,
                     doNotInclude: doNotInclude,
-                    questionType: "multiple choice"
+                    questionType: "multiple choice",
+                    aiModel: aiModel
                 };
                 const data = await generateMcqQuestion(params);
                 
@@ -115,6 +120,12 @@ const useMcqQuestionForm = (onSave, questionCount, noOfQuestions) => {
             } catch (error) {
                 console.error("Error generating question:", error);
                 //needed to show error to user in UI later
+                setErrors(prev => ({
+                    ...prev,
+                    generation: "Failed to generate questions. Please try again.",
+                }));
+            } finally {
+                setIsGenerating(false);
             }
             setIsGenerating(false);
         }
@@ -170,6 +181,7 @@ const useMcqQuestionForm = (onSave, questionCount, noOfQuestions) => {
         setGuidance("");
         setKeyConcepts("");
         setDoNotInclude("");
+        setAiModel("cohere");
 
         // Clear generated questions and selections
         setGeneratedQuestions([]);
@@ -208,7 +220,9 @@ const useMcqQuestionForm = (onSave, questionCount, noOfQuestions) => {
         handleCheckboxChangeAIQ,
         saveCheckedQuestions,
         generatedAndSelectedQuestions,
-        isGenerating
+        isGenerating,
+        setAiModel,
+        aiModel
     }
 }
 
