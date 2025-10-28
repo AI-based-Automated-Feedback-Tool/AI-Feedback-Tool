@@ -6,7 +6,7 @@ import { Container, Row, Col, Card, Badge, Alert, Spinner } from 'react-bootstra
 
 const localizer = momentLocalizer(moment);
 
-// ⚙️ CONFIGURATION
+// CONFIGURATION
 const API_BASE_URL = 'http://localhost:3000';
 
 const ExamEventsPage = () => {
@@ -81,15 +81,39 @@ const ExamEventsPage = () => {
     return variants[prepStatus] || 'secondary';
   };
 
-  const updatePreparationStatus = (examId, newStatus) => {
-    // Update local state only
+  const updatePreparationStatus = async (examId, newStatus) => {
+    try {
+      //Update backend First
+      const response = await fetch(`${API_BASE_URL}/api/exams/${examId}/preparation`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ preparationStatus: newStatus })
+      });
+      if (!response.ok) {
+        throw new Error(`Failed to update preparation status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      console.log('Preparation status updated:', result);
+
+      //Update local state after successful backend update
+
+    
     setExams(exams.map(exam => 
       exam.id === examId 
         ? { ...exam, preparationStatus: newStatus }
         : exam
     ));
+
+    } catch (err) {
+      console.error('Error updating preparation status:', err);
+      alert('Failed to update preparation status. Please try again.');
+    }
+
     
-    // TODO: If you want to persist to backend, add your API call here
+    
   };
 
   const getDaysUntilExam = (examDate) => {
@@ -137,7 +161,7 @@ const ExamEventsPage = () => {
     };
   };
 
-  // 🔥 LOADING STATE
+  // LOADING STATE
   if (loading) {
     return (
       <Container className="my-5">
@@ -151,7 +175,7 @@ const ExamEventsPage = () => {
     );
   }
 
-  // 🔥 ERROR STATE
+  //  ERROR STATE
   if (error) {
     return (
       <Container className="my-5">
