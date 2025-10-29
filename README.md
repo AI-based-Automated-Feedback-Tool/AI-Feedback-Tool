@@ -42,7 +42,41 @@ Try out the AI Feedback Platform: [https://aifeedbacktool.netlify.app/](https://
 - **AI Integration:** OpenAI / Cohere / DeepSeek API
 - **Database:** Supabase
 
-## 👥 Team
+## � Deployment
+
+Our application is deployed and accessible through the following URLs:
+
+### Frontend (Netlify)
+- **Live URL:** [https://aifeedbacktool.netlify.app/](https://aifeedbacktool.netlify.app/)
+- **Platform:** Netlify
+- **Features:**
+  - Continuous deployment from main branch
+  - Automatic builds and updates
+  - SSL/TLS encryption
+  - Global CDN distribution
+
+### Backend (Render)
+- **API URL:** [https://ai-feedback-tool-backend-qgvj.onrender.com](https://ai-feedback-tool-backend-qgvj.onrender.com)
+- **Platform:** Render
+- **Features:**
+  - Auto-scaling Node.js environment
+  - Continuous deployment
+  - Automatic HTTPS
+  - Real-time logs and monitoring
+
+### Environment Configuration
+Make sure to set up the following environment variables in your deployment platforms:
+- Frontend (.env):
+  ```
+  VITE_API_URL=https://ai-feedback-tool-backend-qgvj.onrender.com
+  ```
+- Backend (.env):
+  ```
+  PORT=3000
+  FRONTEND_URL=https://aifeedbacktool.netlify.app
+  ```
+
+## �👥 Team
 
 |         Name           | GitHub Name  |                       Role                          |
 |------------------------|--------------|-----------------------------------------------------|

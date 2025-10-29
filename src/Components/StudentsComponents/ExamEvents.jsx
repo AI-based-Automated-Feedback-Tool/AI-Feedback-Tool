@@ -1,101 +1,76 @@
-import React, {useState} from 'react';
-import {Calendar, momentLocalizer} from 'react-big-calendar';
+import React, { useState, useEffect } from 'react';
+import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-import { Container, Row, Col, Card, Badge, Alert } from 'react-bootstrap';
-//import { useParams } from 'react-router-dom';
+import { Container, Row, Col, Card, Badge, Alert, Spinner } from 'react-bootstrap';
 
 const localizer = momentLocalizer(moment);
+
+// CONFIGURATION
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+
 const ExamEventsPage = () => {
-     //const {userId} = useParams();
-
-  //Add calender view state
   const [calendarView, setCalendarView] = useState('month');
-
-  // Dummy data for enrolled exams
-  const [exams, setExams] = useState([
-    {
-      id: 1,
-      courseCode: 'CS101',
-      courseName: 'Introduction to Computer Science',
-      examType: 'Midterm',
-      date: '2025-10-20',
-      time: '9:00 AM - 11:00 AM',
-      duration: '2 hours',
-      location: 'Building A, Room 101',
-      instructor: 'Dr. Smith',
-      status: 'upcoming', // upcoming, in-progress, completed
-      enrolled: true,
-      preparationStatus: 'not-started', // not-started, in-progress, completed
-      syllabus: 'Chapters 1-5, Basic Programming Concepts',
-      importantNotes: 'Bring your student ID and calculator'
-    },
-    {
-      id: 2,
-      courseCode: 'MATH202',
-      courseName: 'Calculus II',
-      examType: 'Final',
-      date: '2025-10-11',
-      time: '1:00 PM - 4:00 PM',
-      duration: '3 hours',
-      location: 'Building B, Room 205',
-      instructor: 'Prof. Johnson',
-      status: 'upcoming',
-      enrolled: true,
-      preparationStatus: 'in-progress',
-      syllabus: 'Integration Techniques, Applications of Integration',
-      importantNotes: 'Formula sheet will be provided'
-    },
-    {
-      id: 3,
-      courseCode: 'PHY101',
-      courseName: 'Physics Fundamentals',
-      examType: 'Quiz',
-      date: '2025-12-10',
-      time: '10:30 AM - 11:30 AM',
-      duration: '1 hour',
-      location: 'Science Building, Lab 3',
-      instructor: 'Dr. Brown',
-      status: 'upcoming',
-      enrolled: true,
-      preparationStatus: 'not-started',
-      syllabus: 'Newtonian Mechanics, Basic Laws',
-      importantNotes: 'Closed book exam'
-    }
-  ]);
-
+  const [exams, setExams] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  
   const [filters, setFilters] = useState({
     examType: 'all',
-    status: 'upcoming',
     preparationStatus: 'all'
   });
 
   const examTypes = ['all', 'Quiz', 'Midterm', 'Final', 'Assignment'];
   const preparationStatuses = ['all', 'not-started', 'in-progress', 'completed'];
 
+  // 🔥 FETCH UPCOMING EXAMS FROM YOUR EXISTING BACKEND
+  useEffect(() => {
+    fetchUpcomingExams();
+  }, []);
+
+  const fetchUpcomingExams = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      // Fetch upcoming exams from your new endpoint
+      const response = await fetch(`${API_BASE_URL}/api/upcoming-exams`);
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch exams: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log('Fetched upcoming exams:', data);
+      
+      // Set the exams data
+      setExams(data);
+      
+    } catch (err) {
+      console.error('Error fetching exams:', err);
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // Filter exams based on selected filters
   const filteredExams = exams.filter(exam => {
+    // Only show upcoming exams
+    if (exam.status !== 'upcoming') {
+      return false;
+    }
+    
     if (filters.examType !== 'all' && exam.examType !== filters.examType) {
       return false;
     }
-    if (filters.status !== 'all' && exam.status !== filters.status) {
-      return false;
-    }
+    
     if (filters.preparationStatus !== 'all' && exam.preparationStatus !== filters.preparationStatus) {
       return false;
     }
-    return exam.enrolled; // Only show enrolled exams
+    
+    return true;
   });
-
-  const getStatusVariant = (status) => {
-    const variants = {
-      'upcoming': 'primary',
-      'in-progress': 'warning',
-      'completed': 'success',
-      'cancelled': 'secondary'
-    };
-    return variants[status] || 'dark';
-  };
 
   const getPreparationVariant = (prepStatus) => {
     const variants = {
@@ -106,12 +81,39 @@ const ExamEventsPage = () => {
     return variants[prepStatus] || 'secondary';
   };
 
-  const updatePreparationStatus = (examId, newStatus) => {
+  const updatePreparationStatus = async (examId, newStatus) => {
+    try {
+      //Update backend First
+      const response = await fetch(`${API_BASE_URL}/api/exams/${examId}/preparation`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ preparationStatus: newStatus })
+      });
+      if (!response.ok) {
+        throw new Error(`Failed to update preparation status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      console.log('Preparation status updated:', result);
+
+      //Update local state after successful backend update
+
+    
     setExams(exams.map(exam => 
       exam.id === examId 
         ? { ...exam, preparationStatus: newStatus }
         : exam
     ));
+
+    } catch (err) {
+      console.error('Error updating preparation status:', err);
+      alert('Failed to update preparation status. Please try again.');
+    }
+
+    
+    
   };
 
   const getDaysUntilExam = (examDate) => {
@@ -122,47 +124,71 @@ const ExamEventsPage = () => {
     return diffDays;
   };
 
-  //Add calender events function
   const getCalendarEvents = () => {
-    return exams.map(exam => ({
+    return filteredExams.map(exam => ({
       id: exam.id,
       title: `${exam.courseCode} - ${exam.examType}`,
       start: moment(exam.date, 'YYYY-MM-DD').toDate(),
-      end: moment(exam.date, 'YYYY-MM-DD').add(1, 'days').toDate( ), // All-day event
+      end: moment(exam.date, 'YYYY-MM-DD').add(1, 'days').toDate(),
       allDay: true,
       resource: exam,
     }));
   };
   
-  //Add event styling function
   const eventStyleGetter = (event) => {
-  console.log('Event being styled:', event); 
-  
-  let backgroundColor;
-  if (event.resource.status === 'completed') {
-    backgroundColor = '#28a745';
-  } else if (event.resource.preparationStatus === 'in-progress') {
-    backgroundColor = '#ffc107';
-  } else if (event.resource.preparationStatus === 'completed') {
-    backgroundColor = '#28a745';
-  } else {
-    backgroundColor = '#dc3545'; // not-started
-  }
-  
-  return {
-    style: {
-      backgroundColor: backgroundColor,
-      borderRadius: '4px',
-      border: 'none',
-      fontSize: '12px',
-      padding: '2px 5px',
-      cursor: 'pointer',
-      color: 'white',
-      opacity: 1, // 🔥 ADD THIS
-      fontWeight: 'bold' // 🔥 ADD THIS
+    let backgroundColor;
+    
+    if (event.resource.preparationStatus === 'completed') {
+      backgroundColor = '#28a745';
+    } else if (event.resource.preparationStatus === 'in-progress') {
+      backgroundColor = '#ffc107';
+    } else {
+      backgroundColor = '#dc3545';
     }
+    
+    return {
+      style: {
+        backgroundColor: backgroundColor,
+        borderRadius: '4px',
+        border: 'none',
+        fontSize: '12px',
+        padding: '2px 5px',
+        cursor: 'pointer',
+        color: 'white',
+        opacity: 1,
+        fontWeight: 'bold'
+      }
+    };
   };
-};
+
+  // LOADING STATE
+  if (loading) {
+    return (
+      <Container className="my-5">
+        <div className="text-center">
+          <Spinner animation="border" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </Spinner>
+          <p className="mt-3">Loading upcoming exams...</p>
+        </div>
+      </Container>
+    );
+  }
+
+  //  ERROR STATE
+  if (error) {
+    return (
+      <Container className="my-5">
+        <Alert variant="danger">
+          <Alert.Heading>Error Loading Exams</Alert.Heading>
+          <p>{error}</p>
+          <button className="btn btn-danger mt-3" onClick={fetchUpcomingExams}>
+            Try Again
+          </button>
+        </Alert>
+      </Container>
+    );
+  }
 
   return (
     <Container className="my-5">
@@ -175,48 +201,40 @@ const ExamEventsPage = () => {
         </Col>
       </Row>
 
-  {/* Quick Stats */}
+      {/* Quick Stats - Only for Upcoming Exams */}
       <Row className="mb-4">
-        <Col md={3}>
+        <Col md={4}>
           <Card className="text-center">
             <Card.Body>
-              <Card.Title>{exams.filter(e => e.status === 'upcoming').length}</Card.Title>
+              <Card.Title>{filteredExams.length}</Card.Title>
               <Card.Text>Upcoming Exams</Card.Text>
             </Card.Body>
           </Card>
         </Col>
-        <Col md={3}>
+        <Col md={4}>
           <Card className="text-center">
             <Card.Body>
-              <Card.Title>{exams.filter(e => e.preparationStatus === 'completed').length}</Card.Title>
-              <Card.Text>Prepared</Card.Text>
-            </Card.Body>
-          </Card>
-        </Col>
-        <Col md={3}>
-          <Card className="text-center">
-            <Card.Body>
-              <Card.Title>{exams.filter(e => e.preparationStatus === 'in-progress').length}</Card.Title>
+              <Card.Title>{filteredExams.filter(e => e.preparationStatus === 'in-progress').length}</Card.Title>
               <Card.Text>In Progress</Card.Text>
             </Card.Body>
           </Card>
         </Col>
-        <Col md={3}>
+        <Col md={4}>
           <Card className="text-center">
             <Card.Body>
-              <Card.Title>{exams.filter(e => e.preparationStatus === 'not-started').length}</Card.Title>
+              <Card.Title>{filteredExams.filter(e => e.preparationStatus === 'not-started').length}</Card.Title>
               <Card.Text>Not Started</Card.Text>
             </Card.Body>
           </Card>
         </Col>
       </Row>
 
-      {/*Calendar component*/}
+      {/* Calendar component */}
       <Row className="mb-4">
         <Col>
           <Card>
             <Card.Header>
-              <h5 className="mb-0">Exam Calendar View</h5>
+              <h5 className="mb-0">Upcoming Exams Calendar</h5>
               <small className="text-muted">Click on events to see exam details</small>
             </Card.Header>
             <Card.Body>
@@ -230,7 +248,6 @@ const ExamEventsPage = () => {
                   view={calendarView}
                   onView={view => setCalendarView(view)}
                   onSelectEvent={event => {
-                    // Optional: You can add functionality here to show exam details when clicked
                     console.log('Selected exam:', event.resource);
                     alert(`Selected: ${event.resource.courseCode} - ${event.resource.examType}\nDate: ${event.resource.date}\nStatus: ${event.resource.preparationStatus}`);
                   }}
@@ -253,7 +270,7 @@ const ExamEventsPage = () => {
 
       {/* Filters */}
       <Row className="mb-4">
-        <Col md={4}>
+        <Col md={6}>
           <label htmlFor="examType-filter" className="form-label">Exam Type</label>
           <select 
             id="examType-filter"
@@ -268,7 +285,7 @@ const ExamEventsPage = () => {
             ))}
           </select>
         </Col>
-        <Col md={4}>
+        <Col md={6}>
           <label htmlFor="preparation-filter" className="form-label">Preparation Status</label>
           <select 
             id="preparation-filter"
@@ -290,7 +307,8 @@ const ExamEventsPage = () => {
         {filteredExams.length === 0 ? (
           <Col>
             <Alert variant="info" className="text-center">
-              No exams found matching your filters.
+              <Alert.Heading>No Upcoming Exams</Alert.Heading>
+              <p>You don't have any upcoming exams at the moment.</p>
             </Alert>
           </Col>
         ) : (
@@ -301,11 +319,9 @@ const ExamEventsPage = () => {
               <Col md={6} lg={4} key={exam.id} className="mb-4">
                 <Card className="h-100">
                   <Card.Header className="d-flex justify-content-between align-items-center">
-                    <Badge bg={getStatusVariant(exam.status)}>
-                      {exam.status}
-                    </Badge>
+                    <Badge bg="primary">Upcoming</Badge>
                     <Badge bg={getPreparationVariant(exam.preparationStatus)}>
-                      {exam.preparationStatus.replace('-', ' ')}
+                      {exam.preparationStatus?.replace('-', ' ') || 'not started'}
                     </Badge>
                   </Card.Header>
                   <Card.Body>
@@ -316,9 +332,9 @@ const ExamEventsPage = () => {
                     
                     <div className="mb-3">
                       <strong>Date:</strong> {exam.date}<br />
-                      <strong>Time:</strong> {exam.time} ({exam.duration})<br />
-                      <strong>Location:</strong> {exam.location}<br />
-                      <strong>Instructor:</strong> {exam.instructor}
+                      <strong>Time:</strong> {exam.time || 'TBA'} {exam.duration && `(${exam.duration})`}<br />
+                      <strong>Location:</strong> {exam.location || 'TBA'}<br />
+                      <strong>Instructor:</strong> {exam.instructor || 'TBA'}
                     </div>
 
                     {daysUntil <= 7 && daysUntil > 0 && (
@@ -327,15 +343,19 @@ const ExamEventsPage = () => {
                       </Alert>
                     )}
 
-                    <div className="mb-3">
-                      <strong>Syllabus:</strong>
-                      <p className="small text-muted mb-2">{exam.syllabus}</p>
-                    </div>
+                    {exam.syllabus && (
+                      <div className="mb-3">
+                        <strong>Syllabus:</strong>
+                        <p className="small text-muted mb-2">{exam.syllabus}</p>
+                      </div>
+                    )}
 
-                    <div className="mb-3">
-                      <strong>Notes:</strong>
-                      <p className="small text-muted">{exam.importantNotes}</p>
-                    </div>
+                    {exam.importantNotes && (
+                      <div className="mb-3">
+                        <strong>Notes:</strong>
+                        <p className="small text-muted">{exam.importantNotes}</p>
+                      </div>
+                    )}
 
                     {/* Preparation Status Controls */}
                     <div className="d-grid gap-2">
@@ -368,8 +388,6 @@ const ExamEventsPage = () => {
           })
         )}
       </Row>
-
-
     </Container>
   );
 };
