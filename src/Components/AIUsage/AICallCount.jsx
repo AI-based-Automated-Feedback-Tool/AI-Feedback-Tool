@@ -2,16 +2,10 @@ import { useAICallUsage } from "./hooks/useAICallUsage";
 import { Badge } from "react-bootstrap";
 
 
-export default function AICallCount() {
-    const {
-        usageCount,
-        loading,
-        errorAICallUsage
-    } = useAICallUsage();
-
+export default function AICallCount({ usageCount, loadingAICount, errorAICallUsage }) {
     const DAILY_LIMIT = 5;
 
-    if (loading) {
+    if (loadingAICount) {
         return <div>Loading AI usage count...</div>;
     }
     if (errorAICallUsage) {

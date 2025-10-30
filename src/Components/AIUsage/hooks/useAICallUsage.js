@@ -4,12 +4,12 @@ import { fetchAiUsage } from "../service/aiUsageService";
 
 export function useAICallUsage() {
     const [usageCount, setUsageCount] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const [loadingAICount, setLoadingAICount] = useState(true);
     const [errorAICallUsage, setErrorAICallUsage] = useState(null);
 
     const loadCount = async () => {
         try {
-            setLoading(true);
+            setLoadingAICount(true);
             const { data: { session } } = await supabase.auth.getSession();
             const token = session?.access_token;
             const count = await fetchAiUsage(token);
@@ -18,7 +18,7 @@ export function useAICallUsage() {
             console.error("Error fetching AI usage count:", error);
             setErrorAICallUsage("Failed to load AI usage count");
         } finally {
-            setLoading(false);
+            setLoadingAICount(false);
         }
     }
 
@@ -26,5 +26,5 @@ export function useAICallUsage() {
         loadCount();
     }, []);
 
-    return { usageCount, loading, errorAICallUsage, loadCount };
+    return { usageCount, loadingAICount, errorAICallUsage, loadCount };
 }
