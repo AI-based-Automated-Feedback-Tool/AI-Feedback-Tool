@@ -3,7 +3,7 @@ import { createCodeQuestion } from "../service/createCodeQuestionService";
 import { supabase } from "../../../../SupabaseAuth/supabaseClient"; 
 import { useNavigate } from 'react-router-dom';
 import { generateCodeQuestion } from "../service/createCodeQuestionService";    
-import language from "react-syntax-highlighter/dist/esm/languages/hljs/1c";
+import { useAICallUsage } from "../../../AIUsage/hooks/useAICallUsage";
 
 export default function useCodeQuestionForm( examId, question_count, initialQuestion = null  ) {
     const [userId, setUserId] = useState(null);
@@ -37,6 +37,8 @@ export default function useCodeQuestionForm( examId, question_count, initialQues
     const [checkedAICodeQuestions, setCheckedAICodeQuestions] = useState([]);
     const [generatedAndSelectedQuestions, setGeneratedAndSelectedQuestions] = useState([]);
     const [aiModel, setAiModel] = useState("cohere");
+
+    const { loadCount } = useAICallUsage();
 
     const navigate = useNavigate();
 
@@ -237,6 +239,9 @@ export default function useCodeQuestionForm( examId, question_count, initialQues
                         })) || []
                     }));
                     setGeneratedCodeQuestions(formattedQuestions);
+
+                    // Refresh AI usage count after generation
+                    await loadCount();
                 }
             } catch (error) {
                 console.error("Error generating question:", error);
