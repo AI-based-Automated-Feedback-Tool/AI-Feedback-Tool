@@ -6,14 +6,18 @@ import ManualCodeQuestionCreationForm from './ManualCodeQuestionCreationForm';
 import CodeQuestionGenerationForm from './CodeQuestionGenerationForm';
 import AICallCount from '../../../AIUsage/AICallCount';
 
-export default function CodeQuestionForm({setError, onAddQuestion, formState, disabled, question_count}) {
+export default function CodeQuestionForm({setError, onAddQuestion, formState, disabled, question_count, usageCount, loadingAICount, errorAICallUsage}) {
     const [activeTab, setActiveTab] = useState('manual'); // 'manual' or 'ai'
 
     return (
         <Card>
             <Card.Header className='bg-primary text-white'>
                 <h4>📝 Create Code Questions</h4>
-                <AICallCount />
+                <AICallCount 
+                    usageCount={usageCount}
+                    loadingAICount={loadingAICount}
+                    errorAICallUsage={errorAICallUsage}
+                />
             </Card.Header>
             <Card.Body>
                 <div>

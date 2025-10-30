@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { generateCodeQuestion } from "../service/createCodeQuestionService";    
 import { useAICallUsage } from "../../../AIUsage/hooks/useAICallUsage";
 
-export default function useCodeQuestionForm( examId, question_count, initialQuestion = null  ) {
+export default function useCodeQuestionForm( examId, question_count, loadCount, initialQuestion = null  ) {
     const [userId, setUserId] = useState(null);
     const [questionDescription, setQuestionDescription] = useState("");
     const [functionSignature, setFunctionSignature] = useState("");
@@ -38,7 +38,6 @@ export default function useCodeQuestionForm( examId, question_count, initialQues
     const [generatedAndSelectedQuestions, setGeneratedAndSelectedQuestions] = useState([]);
     const [aiModel, setAiModel] = useState("cohere");
 
-    const { loadCount } = useAICallUsage();
 
     const navigate = useNavigate();
 
