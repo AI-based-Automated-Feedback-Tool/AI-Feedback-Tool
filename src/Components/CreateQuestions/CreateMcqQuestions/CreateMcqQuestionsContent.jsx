@@ -8,7 +8,7 @@ import {useMcqQuestion} from './useMcqQuestion';
 import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 
-export default function CreateMcqQuestionsContent({examId, question_count}) {
+export default function CreateMcqQuestionsContent({examId, question_count, loadCount, usageCount, loadingAICount, errorAICallUsage}) {
     
     const navigate = useNavigate();
 
@@ -55,6 +55,10 @@ export default function CreateMcqQuestionsContent({examId, question_count}) {
                     disabled={isDisabled()} 
                     noOfQuestions={questions.length} 
                     questionCount={question_count}
+                    loadCount={loadCount}
+                    usageCount={usageCount}
+                    loadingAICount={loadingAICount}
+                    errorAICallUsage={errorAICallUsage}
                 />
                 {questions.length > 0 && (
                     <Card className="mt-4">

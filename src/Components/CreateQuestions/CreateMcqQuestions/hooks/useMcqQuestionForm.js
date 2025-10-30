@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { generateMcqQuestion } from "../service/aiQuestionGenerationService"; 
 import { useAICallUsage } from "../../../AIUsage/hooks/useAICallUsage";
 
-const useMcqQuestionForm = (onSave, questionCount, noOfQuestions) => {
+const useMcqQuestionForm = (onSave, questionCount, noOfQuestions, loadCount) => {
     const [questionText, setQuestionText] = useState("");
     const [answerOptions, setAnswerOptions] = useState(["","","",""])
     const [correctAnswers, setCorrectAnswers] = useState([]);
@@ -23,7 +23,6 @@ const useMcqQuestionForm = (onSave, questionCount, noOfQuestions) => {
     const [isGenerating, setIsGenerating] = useState(false);
     const [aiModel, setAiModel] = useState("cohere");
 
-    const { loadCount } = useAICallUsage();
 
     // Set answer options
     const handleAnswerOptionsChange = (e, index) => {

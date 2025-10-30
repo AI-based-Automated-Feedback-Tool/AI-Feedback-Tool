@@ -7,7 +7,7 @@ import '../../../css/questionCreation.css';
 import AICallCount from "../../AIUsage/AICallCount";
 import useMcqQuestionForm from "./hooks/useMcqQuestionForm";
 
-export default function McqQuestionForm({onSave, warning, disabled, noOfQuestions, questionCount}) {     
+export default function McqQuestionForm({onSave, warning, disabled, noOfQuestions, questionCount, loadCount, usageCount, loadingAICount, errorAICallUsage}) {     
     const [activeTab, setActiveTab] = useState('manual'); // 'manual' or 'ai'
 
     const {
@@ -44,12 +44,16 @@ export default function McqQuestionForm({onSave, warning, disabled, noOfQuestion
         isGenerating,
         setAiModel,
         aiModel
-    } = useMcqQuestionForm(onSave);
+    } = useMcqQuestionForm(onSave,questionCount,noOfQuestions,loadCount);
   return ( 
     <Card>
         <Card.Header className="bg-primary text-white">
             <h4>📝 Create MCQ Questions</h4>
-            <AICallCount />
+            <AICallCount 
+                usageCount={usageCount}
+                loadingAICount={loadingAICount}
+                errorAICallUsage={errorAICallUsage}
+            />
         </Card.Header>
         <Card.Body>
             <div>
