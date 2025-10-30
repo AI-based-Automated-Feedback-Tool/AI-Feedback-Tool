@@ -4,6 +4,7 @@ import { Nav } from "react-bootstrap";
 import ManualMcqQuestionCreation from './ManualMcqQuestionCreation';
 import McqQuestionGenerationForm from "./McqQuestionGenerationForm";
 import '../../../css/questionCreation.css';
+import AICallCount from "../../AIUsage/AICallCount";
 
 export default function McqQuestionForm({onSave, warning, disabled, noOfQuestions, questionCount}) {     
     const [activeTab, setActiveTab] = useState('manual'); // 'manual' or 'ai'
@@ -11,6 +12,7 @@ export default function McqQuestionForm({onSave, warning, disabled, noOfQuestion
     <Card>
         <Card.Header className="bg-primary text-white">
             <h4>📝 Create MCQ Questions</h4>
+            <AICallCount />
         </Card.Header>
         <Card.Body>
             <div>
