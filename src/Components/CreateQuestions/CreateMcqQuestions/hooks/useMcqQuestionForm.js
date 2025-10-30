@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react"; 
 import { generateMcqQuestion } from "../service/aiQuestionGenerationService"; 
+import { useAICallUsage } from "../../../AIUsage/hooks/useAICallUsage";
 
 const useMcqQuestionForm = (onSave, questionCount, noOfQuestions) => {
     const [questionText, setQuestionText] = useState("");
@@ -21,6 +22,8 @@ const useMcqQuestionForm = (onSave, questionCount, noOfQuestions) => {
     const [generatedAndSelectedQuestions, setGeneratedAndSelectedQuestions] = useState([]);
     const [isGenerating, setIsGenerating] = useState(false);
     const [aiModel, setAiModel] = useState("cohere");
+
+    const { loadCount } = useAICallUsage();
 
     // Set answer options
     const handleAnswerOptionsChange = (e, index) => {
@@ -117,6 +120,9 @@ const useMcqQuestionForm = (onSave, questionCount, noOfQuestions) => {
                 if(data.questions && data.questions.length > 0){
                     setGeneratedQuestions(data.questions);
                 }
+                // Refresh AI usage count after generation
+                await loadCount();
+
             } catch (error) {
                 console.error("Error generating question:", error);
                 //needed to show error to user in UI later
