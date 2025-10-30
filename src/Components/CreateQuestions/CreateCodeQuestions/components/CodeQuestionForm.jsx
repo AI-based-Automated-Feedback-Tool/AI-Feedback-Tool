@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Nav } from "react-bootstrap";
 import ManualCodeQuestionCreationForm from './ManualCodeQuestionCreationForm';
 import CodeQuestionGenerationForm from './CodeQuestionGenerationForm';
+import AICallCount from '../../../AIUsage/AICallCount';
 
 export default function CodeQuestionForm({setError, onAddQuestion, formState, disabled, question_count}) {
     const [activeTab, setActiveTab] = useState('manual'); // 'manual' or 'ai'
@@ -12,6 +13,7 @@ export default function CodeQuestionForm({setError, onAddQuestion, formState, di
         <Card>
             <Card.Header className='bg-primary text-white'>
                 <h4>📝 Create Code Questions</h4>
+                <AICallCount />
             </Card.Header>
             <Card.Body>
                 <div>
