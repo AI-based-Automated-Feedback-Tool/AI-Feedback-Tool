@@ -5,9 +5,8 @@ import { supabase } from "../../../../SupabaseAuth/supabaseClient";
 import { createEssayQuestion } from "../service/createEssayQuestionService"; 
 import { useNavigate} from 'react-router-dom';
 import { generateEssayQuestion } from '../service/createEssayQuestionService';
-import { useAICallUsage } from '../../../AIUsage/hooks/useAICallUsage';
 
-export default function useEssayQuestionCreation(examId, question_count) {
+export default function useEssayQuestionCreation(examId, question_count, loadCount) {
     const [userId, setUserId] = useState(null);
     const [question, setQuestion] = useState([]);
     const [questionText, setQuestionText] = useState("");
@@ -37,8 +36,6 @@ export default function useEssayQuestionCreation(examId, question_count) {
     const [isGenerating, setIsGenerating] = useState(false);
     const [generateError, setGenerateError] = useState(null);
     const [aiModel, setAiModel] = useState("cohere");
-
-    const { loadCount } = useAICallUsage();
 
     const fileInputRef = useRef(null);
 
