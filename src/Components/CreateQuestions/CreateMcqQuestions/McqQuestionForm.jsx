@@ -5,9 +5,46 @@ import ManualMcqQuestionCreation from './ManualMcqQuestionCreation';
 import McqQuestionGenerationForm from "./McqQuestionGenerationForm";
 import '../../../css/questionCreation.css';
 import AICallCount from "../../AIUsage/AICallCount";
+import useMcqQuestionForm from "./hooks/useMcqQuestionForm";
 
 export default function McqQuestionForm({onSave, warning, disabled, noOfQuestions, questionCount}) {     
     const [activeTab, setActiveTab] = useState('manual'); // 'manual' or 'ai'
+
+    const {
+        questionText, 
+        setQuestionText,
+        answerOptions,
+        correctAnswers,
+        numOfAnswers,
+        points, 
+        setPoints,
+        errors,
+        handleAddQuestion,
+        handleAnswerOptionsChange,
+        handleCheckboxChange,
+        handleNumOfAnswersChange,
+        questionTopic, 
+        setQuestionTopic,
+        questionNo, 
+        setQuestionNo,
+        questionDifficulty, 
+        setQuestionDifficulty,
+        guidance, 
+        setGuidance,
+        keyConcepts, 
+        setKeyConcepts,
+        doNotInclude, 
+        setDoNotInclude,
+        generateQuestion,
+        generatedQuestions,
+        checkedAIQuestions,
+        handleCheckboxChangeAIQ,
+        saveCheckedQuestions,
+        generatedAndSelectedQuestions,
+        isGenerating,
+        setAiModel,
+        aiModel
+    } = useMcqQuestionForm(onSave);
   return ( 
     <Card>
         <Card.Header className="bg-primary text-white">
@@ -34,18 +71,52 @@ export default function McqQuestionForm({onSave, warning, disabled, noOfQuestion
                 <div className="mt-4">
                     {activeTab === 'manual' && (
                         <ManualMcqQuestionCreation 
-                            onSave={onSave} 
+                            formState={{
+                                questionText, 
+                                setQuestionText,
+                                answerOptions,
+                                correctAnswers,
+                                numOfAnswers,
+                                points, 
+                                setPoints,
+                                errors,
+                                handleAddQuestion,
+                                handleAnswerOptionsChange,
+                                handleCheckboxChange,
+                                handleNumOfAnswersChange
+                            }} 
                             warning={warning} 
                             disabled={disabled} 
                         />
                     )}
                     {activeTab === 'ai' && (
                         <McqQuestionGenerationForm 
-                            onSave={onSave} 
+                            formState={{
+                                errors,
+                                questionTopic, 
+                                setQuestionTopic,
+                                questionNo, 
+                                setQuestionNo,
+                                questionDifficulty, 
+                                setQuestionDifficulty,
+                                guidance, 
+                                setGuidance,
+                                keyConcepts, 
+                                setKeyConcepts,
+                                doNotInclude, 
+                                setDoNotInclude,
+                                generateQuestion,
+                                generatedQuestions,
+                                checkedAIQuestions,
+                                handleCheckboxChangeAIQ,
+                                saveCheckedQuestions,
+                                generatedAndSelectedQuestions,
+                                isGenerating,
+                                setAiModel,
+                                aiModel
+                            }} 
                             warning={warning} 
-                            disabled={disabled} 
-                            noOfQuestions={noOfQuestions} 
-                            questionCount={questionCount}
+                            disabled={disabled}
                         />
                     )}
                 </div>

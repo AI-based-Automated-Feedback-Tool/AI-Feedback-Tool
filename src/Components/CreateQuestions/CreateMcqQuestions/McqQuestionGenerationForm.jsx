@@ -2,7 +2,7 @@ import { Form, Button, Row, Col, Card, Alert, Container } from "react-bootstrap"
 import useMcqQuestionForm from "./hooks/useMcqQuestionForm";
 import AIGeneratedQuestions from "./AIGeneratedQuestions";
 
-export default function McqQuestionGenerationForm({onSave, warning, disabled, noOfQuestions, questionCount}) {
+export default function McqQuestionGenerationForm({formState, warning}) {
     const {
         errors,
         questionTopic, 
@@ -26,7 +26,7 @@ export default function McqQuestionGenerationForm({onSave, warning, disabled, no
         isGenerating,
         setAiModel,
         aiModel
-    } = useMcqQuestionForm(onSave, questionCount, noOfQuestions);
+    } = formState;
 
     const options = [
         { value: "cohere", label: "Cohere AI" },

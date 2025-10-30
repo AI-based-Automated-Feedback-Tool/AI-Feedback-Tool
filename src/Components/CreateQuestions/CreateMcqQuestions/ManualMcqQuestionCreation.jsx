@@ -1,7 +1,6 @@
 import { Form, Button, Row, Col, Card, Alert } from "react-bootstrap";
-import useMcqQuestionForm from "./hooks/useMcqQuestionForm";
 
-export default function ManualMcqQuestionCreation({onSave, warning, disabled}) {
+export default function ManualMcqQuestionCreation({formState, warning, disabled}) {
     const {
         questionText, 
         setQuestionText,
@@ -15,7 +14,7 @@ export default function ManualMcqQuestionCreation({onSave, warning, disabled}) {
         handleAnswerOptionsChange,
         handleCheckboxChange,
         handleNumOfAnswersChange
-    } = useMcqQuestionForm(onSave);
+    } = formState;
 
   return (
     <Form>
