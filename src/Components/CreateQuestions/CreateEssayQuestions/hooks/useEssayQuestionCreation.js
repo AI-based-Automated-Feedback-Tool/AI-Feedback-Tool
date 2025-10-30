@@ -5,6 +5,7 @@ import { supabase } from "../../../../SupabaseAuth/supabaseClient";
 import { createEssayQuestion } from "../service/createEssayQuestionService"; 
 import { useNavigate} from 'react-router-dom';
 import { generateEssayQuestion } from '../service/createEssayQuestionService';
+import { useAICallUsage } from '../../../AIUsage/hooks/useAICallUsage';
 
 export default function useEssayQuestionCreation(examId, question_count) {
     const [userId, setUserId] = useState(null);
@@ -36,6 +37,8 @@ export default function useEssayQuestionCreation(examId, question_count) {
     const [isGenerating, setIsGenerating] = useState(false);
     const [generateError, setGenerateError] = useState(null);
     const [aiModel, setAiModel] = useState("cohere");
+
+    const { loadCount } = useAICallUsage();
 
     const fileInputRef = useRef(null);
 
@@ -259,6 +262,9 @@ export default function useEssayQuestionCreation(examId, question_count) {
                 const data = await generateEssayQuestion(params);
                 console.log("Generated Questions:", data);
                 setGeneratedQuestions(data.questions);
+
+                // Refresh AI usage count after generation
+                await loadCount();
             } catch (error) {
                 console.error("Error generating essay questions:", error);
                 // need to set error state here
