@@ -1,33 +1,16 @@
-import { useEffect, useState } from "react" ;
-import { supabase } from "../../supabaseClient";
-import { fetchAiUsage } from "../AIUsage/service/aiUsageService";
-import { use } from "react";
+import { useAICallUsage } from "./hooks/useAICallUsage";
 
 export default function AICallCount() {
-    const [usageCount, setUsageCount] = useState(null);
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        const getUsageCount = async () => {
-            try {
-                const { data: { session } } = await supabase.auth.getSession();
-                const token = session?.access_token;
-                const count = await fetchAiUsage(token);
-                setUsageCount(count);
-            } catch (error) {
-                console.error("Error fetching AI usage count:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        getUsageCount();
-    }, []);
+    const {
+        usageCount,
+        loading,
+        errorAICallUsage
+    } = useAICallUsage();
 
     if (loading) {
         return <div>Loading AI usage count...</div>;
     }
-    if (!usageCount) {
+    if (errorAICallUsage) {
         return <div>Unable to fetch AI usage count.</div>;
     }
 
