@@ -43,7 +43,9 @@ export default function McqQuestionForm({onSave, warning, disabled, noOfQuestion
         generatedAndSelectedQuestions,
         isGenerating,
         setAiModel,
-        aiModel
+        aiModel,
+        gradingNotes, 
+        setGradingNotes
     } = useMcqQuestionForm(onSave,questionCount,noOfQuestions,loadCount);
   return ( 
     <Card>
@@ -117,7 +119,9 @@ export default function McqQuestionForm({onSave, warning, disabled, noOfQuestion
                                 generatedAndSelectedQuestions,
                                 isGenerating,
                                 setAiModel,
-                                aiModel
+                                aiModel,
+                                gradingNotes, 
+                                setGradingNotes
                             }} 
                             warning={warning} 
                             disabled={disabled}

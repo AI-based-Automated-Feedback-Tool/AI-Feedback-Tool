@@ -15,6 +15,7 @@ const useMcqQuestionForm = (onSave, questionCount, noOfQuestions, loadCount) => 
     const [guidance, setGuidance] = useState("");
     const [keyConcepts, setKeyConcepts] = useState("");
     const [doNotInclude, setDoNotInclude] = useState("");
+    const [gradingNotes, setGradingNotes] = useState("");
     const [generatedQuestions, setGeneratedQuestions] = useState([]);
     // State to track which questions are checked
     const [checkedAIQuestions, setCheckedAIQuestions] = useState([]);
@@ -98,7 +99,9 @@ const useMcqQuestionForm = (onSave, questionCount, noOfQuestions, loadCount) => 
         if (!questionNo || isNaN(questionNo) || parseInt(questionNo) < 1)
             newErrors.questionNo = "Enter a valid number of questions.";
         if (!guidance.trim())
-            newErrors.guidance = "Guidance is required.";   
+            newErrors.guidance = "Guidance is required.";
+        if (!gradingNotes.trim())
+            newErrors.gradingNotes = "Grading notes are required.";
         setErrors(newErrors);   
 
         if (Object.keys(newErrors).length === 0) {
@@ -112,7 +115,8 @@ const useMcqQuestionForm = (onSave, questionCount, noOfQuestions, loadCount) => 
                     keyConcepts: keyConcepts,
                     doNotInclude: doNotInclude,
                     questionType: "multiple choice",
-                    aiModel: aiModel
+                    aiModel: aiModel,
+                    gradingNotes: gradingNotes
                 };
                 const data = await generateMcqQuestion(params);
                 
@@ -174,7 +178,7 @@ const useMcqQuestionForm = (onSave, questionCount, noOfQuestions, loadCount) => 
                 answers: q.choices,
                 numOfAnswers: 1,
                 correctAnswers: [q.correct_answer],
-                points: 1 //default points
+                points: q.points || 1 
             }
             onSave(formattedQuestion);
         })
@@ -187,6 +191,7 @@ const useMcqQuestionForm = (onSave, questionCount, noOfQuestions, loadCount) => 
         setKeyConcepts("");
         setDoNotInclude("");
         setAiModel("cohere");
+        setGradingNotes("");
 
         // Clear generated questions and selections
         setGeneratedQuestions([]);
@@ -227,7 +232,9 @@ const useMcqQuestionForm = (onSave, questionCount, noOfQuestions, loadCount) => 
         generatedAndSelectedQuestions,
         isGenerating,
         setAiModel,
-        aiModel
+        aiModel,
+        gradingNotes, 
+        setGradingNotes
     }
 }
 
