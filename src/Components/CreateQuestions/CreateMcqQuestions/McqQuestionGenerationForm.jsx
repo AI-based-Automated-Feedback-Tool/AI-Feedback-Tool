@@ -25,7 +25,9 @@ export default function McqQuestionGenerationForm({formState, warning}) {
         generatedAndSelectedQuestions,
         isGenerating,
         setAiModel,
-        aiModel
+        aiModel,
+        gradingNotes, 
+        setGradingNotes
     } = formState;
 
     const options = [
@@ -139,6 +141,18 @@ export default function McqQuestionGenerationForm({formState, warning}) {
                         </Col>                      
                     </Row>                    
                     {errors.correct && <div className="text-danger small">{errors.correct}</div>}
+                </Form.Group>
+
+                {/* Guidance for grading/points */}
+                <Form.Group className="mb-3">
+                    <Form.Label className="fw-bold">Grading / Points *</Form.Label>
+                    <Form.Control
+                        type="text"
+                        value={gradingNotes}
+                        onChange={e => setGradingNotes(e.target.value)}
+                        placeholder='Create 2 points questions .... '
+                    />
+                    {errors.gradingNotes && <div className="text-danger small">{errors.gradingNotes}</div>}
                 </Form.Group>
 
                 {/* Generate Button */}
