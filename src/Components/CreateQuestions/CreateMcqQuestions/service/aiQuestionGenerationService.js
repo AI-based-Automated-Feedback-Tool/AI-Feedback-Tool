@@ -1,10 +1,16 @@
+import { supabase } from "../../../../SupabaseAuth/supabaseClient";
 // API service to generate mcq questions using AI
 export const generateMcqQuestion = async (params) => {
     try {
+        // Get the current user's token
+        const { data } = await supabase.auth.getSession();
+        const token = data.session?.access_token;
+
         const response = await fetch('http://localhost:3000/api/generate-questions', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify(params),
         });

@@ -1,3 +1,4 @@
+import { supabase } from "../../../../SupabaseAuth/supabaseClient";
 //API service to fetch programming languages
 export const getLanguages = async () => {
     const res = await fetch(`http://localhost:3000/api/createCodeQuestions/languages`);
@@ -36,10 +37,15 @@ export const createCodeQuestion = async (questionData) => {
 // API service to generate code questions using AI
 export const generateCodeQuestion = async (params) => {
     try {
+        // Get the current user's token
+        const { data } = await supabase.auth.getSession();
+        const token = data.session?.access_token;
+
         const response = await fetch('http://localhost:3000/api/generate-code-questions', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify(params),
         });

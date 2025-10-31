@@ -2,13 +2,19 @@ import { Card, Nav } from "react-bootstrap";
 import { useState } from "react";
 import ManualMcqQuestionCreation from "./ManualEssayQuestionCreation";
 import EssayQuestionGenerationForm from "./EssayQuestionGenerationForm";
+import AICallCount from "../../../AIUsage/AICallCount";
 
-export default function EssayQuestionForm({ formState }) {  
+export default function EssayQuestionForm({ formState, usageCount, loadingAICount, errorAICallUsage}) {  
     const [activeTab, setActiveTab] = useState('manual');
   return (
     <Card>
         <Card.Header className='bg-primary text-white'>
             <h4>Essay Question</h4>
+            <AICallCount 
+              usageCount={usageCount}
+              loadingAICount={loadingAICount}
+              errorAICallUsage={errorAICallUsage}
+            />
         </Card.Header>
         <Card.Body>
             <div>

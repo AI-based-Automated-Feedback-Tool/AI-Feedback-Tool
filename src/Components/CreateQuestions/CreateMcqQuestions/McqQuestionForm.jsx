@@ -4,13 +4,58 @@ import { Nav } from "react-bootstrap";
 import ManualMcqQuestionCreation from './ManualMcqQuestionCreation';
 import McqQuestionGenerationForm from "./McqQuestionGenerationForm";
 import '../../../css/questionCreation.css';
+import AICallCount from "../../AIUsage/AICallCount";
+import useMcqQuestionForm from "./hooks/useMcqQuestionForm";
 
-export default function McqQuestionForm({onSave, warning, disabled, noOfQuestions, questionCount}) {     
+export default function McqQuestionForm({onSave, warning, disabled, noOfQuestions, questionCount, loadCount, usageCount, loadingAICount, errorAICallUsage}) {     
     const [activeTab, setActiveTab] = useState('manual'); // 'manual' or 'ai'
+
+    const {
+        questionText, 
+        setQuestionText,
+        answerOptions,
+        correctAnswers,
+        numOfAnswers,
+        points, 
+        setPoints,
+        errors,
+        handleAddQuestion,
+        handleAnswerOptionsChange,
+        handleCheckboxChange,
+        handleNumOfAnswersChange,
+        questionTopic, 
+        setQuestionTopic,
+        questionNo, 
+        setQuestionNo,
+        questionDifficulty, 
+        setQuestionDifficulty,
+        guidance, 
+        setGuidance,
+        keyConcepts, 
+        setKeyConcepts,
+        doNotInclude, 
+        setDoNotInclude,
+        generateQuestion,
+        generatedQuestions,
+        checkedAIQuestions,
+        handleCheckboxChangeAIQ,
+        saveCheckedQuestions,
+        generatedAndSelectedQuestions,
+        isGenerating,
+        setAiModel,
+        aiModel,
+        gradingNotes, 
+        setGradingNotes
+    } = useMcqQuestionForm(onSave,questionCount,noOfQuestions,loadCount);
   return ( 
     <Card>
         <Card.Header className="bg-primary text-white">
             <h4>📝 Create MCQ Questions</h4>
+            <AICallCount 
+                usageCount={usageCount}
+                loadingAICount={loadingAICount}
+                errorAICallUsage={errorAICallUsage}
+            />
         </Card.Header>
         <Card.Body>
             <div>
@@ -32,18 +77,54 @@ export default function McqQuestionForm({onSave, warning, disabled, noOfQuestion
                 <div className="mt-4">
                     {activeTab === 'manual' && (
                         <ManualMcqQuestionCreation 
-                            onSave={onSave} 
+                            formState={{
+                                questionText, 
+                                setQuestionText,
+                                answerOptions,
+                                correctAnswers,
+                                numOfAnswers,
+                                points, 
+                                setPoints,
+                                errors,
+                                handleAddQuestion,
+                                handleAnswerOptionsChange,
+                                handleCheckboxChange,
+                                handleNumOfAnswersChange
+                            }} 
                             warning={warning} 
                             disabled={disabled} 
                         />
                     )}
                     {activeTab === 'ai' && (
                         <McqQuestionGenerationForm 
-                            onSave={onSave} 
+                            formState={{
+                                errors,
+                                questionTopic, 
+                                setQuestionTopic,
+                                questionNo, 
+                                setQuestionNo,
+                                questionDifficulty, 
+                                setQuestionDifficulty,
+                                guidance, 
+                                setGuidance,
+                                keyConcepts, 
+                                setKeyConcepts,
+                                doNotInclude, 
+                                setDoNotInclude,
+                                generateQuestion,
+                                generatedQuestions,
+                                checkedAIQuestions,
+                                handleCheckboxChangeAIQ,
+                                saveCheckedQuestions,
+                                generatedAndSelectedQuestions,
+                                isGenerating,
+                                setAiModel,
+                                aiModel,
+                                gradingNotes, 
+                                setGradingNotes
+                            }} 
                             warning={warning} 
-                            disabled={disabled} 
-                            noOfQuestions={noOfQuestions} 
-                            questionCount={questionCount}
+                            disabled={disabled}
                         />
                     )}
                 </div>

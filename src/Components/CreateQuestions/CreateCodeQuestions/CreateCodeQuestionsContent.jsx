@@ -5,7 +5,7 @@ import CodeQuestionTable from './components/CodeQuestionTable';
 import EditCodeQuestion from './components/EditCodeQuestion';
 import useCodeQuestionForm from './hooks/useCodeQuestionForm';
 
-export default function CreateCodeQuestionsContent({examId, question_count}) {
+export default function CreateCodeQuestionsContent({examId, question_count, loadCount, usageCount, loadingAICount, errorAICallUsage}) {
   const{
     questionDescription,
     setQuestionDescription,
@@ -66,7 +66,7 @@ export default function CreateCodeQuestionsContent({examId, question_count}) {
     hasReachedLimit,
     aiModel,
     setAiModel
-  } = useCodeQuestionForm(examId, question_count);
+  } = useCodeQuestionForm(examId, question_count, loadCount);
 
   const isDisabled = () =>{
         if (questions.length >= parseInt(question_count)) {
@@ -140,6 +140,9 @@ export default function CreateCodeQuestionsContent({examId, question_count}) {
             }}
             disabled={isDisabled()}
             question_count={question_count}
+            usageCount={usageCount}
+            loadingAICount={loadingAICount}
+            errorAICallUsage={errorAICallUsage}
       />
       {questions.length > 0 && (
         <>

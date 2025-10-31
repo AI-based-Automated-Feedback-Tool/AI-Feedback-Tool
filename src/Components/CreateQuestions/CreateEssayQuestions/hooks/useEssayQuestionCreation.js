@@ -6,7 +6,7 @@ import { createEssayQuestion } from "../service/createEssayQuestionService";
 import { useNavigate} from 'react-router-dom';
 import { generateEssayQuestion } from '../service/createEssayQuestionService';
 
-export default function useEssayQuestionCreation(examId, question_count) {
+export default function useEssayQuestionCreation(examId, question_count, loadCount) {
     const [userId, setUserId] = useState(null);
     const [question, setQuestion] = useState([]);
     const [questionText, setQuestionText] = useState("");
@@ -259,6 +259,9 @@ export default function useEssayQuestionCreation(examId, question_count) {
                 const data = await generateEssayQuestion(params);
                 console.log("Generated Questions:", data);
                 setGeneratedQuestions(data.questions);
+
+                // Refresh AI usage count after generation
+                await loadCount();
             } catch (error) {
                 console.error("Error generating essay questions:", error);
                 // need to set error state here

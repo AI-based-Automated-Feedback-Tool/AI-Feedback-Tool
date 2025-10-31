@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react"; 
 import { generateMcqQuestion } from "../service/aiQuestionGenerationService"; 
+import { useAICallUsage } from "../../../AIUsage/hooks/useAICallUsage";
 
-const useMcqQuestionForm = (onSave, questionCount, noOfQuestions) => {
+const useMcqQuestionForm = (onSave, questionCount, noOfQuestions, loadCount) => {
     const [questionText, setQuestionText] = useState("");
     const [answerOptions, setAnswerOptions] = useState(["","","",""])
     const [correctAnswers, setCorrectAnswers] = useState([]);
@@ -14,6 +15,7 @@ const useMcqQuestionForm = (onSave, questionCount, noOfQuestions) => {
     const [guidance, setGuidance] = useState("");
     const [keyConcepts, setKeyConcepts] = useState("");
     const [doNotInclude, setDoNotInclude] = useState("");
+    const [gradingNotes, setGradingNotes] = useState("");
     const [generatedQuestions, setGeneratedQuestions] = useState([]);
     // State to track which questions are checked
     const [checkedAIQuestions, setCheckedAIQuestions] = useState([]);
@@ -21,6 +23,7 @@ const useMcqQuestionForm = (onSave, questionCount, noOfQuestions) => {
     const [generatedAndSelectedQuestions, setGeneratedAndSelectedQuestions] = useState([]);
     const [isGenerating, setIsGenerating] = useState(false);
     const [aiModel, setAiModel] = useState("cohere");
+
 
     // Set answer options
     const handleAnswerOptionsChange = (e, index) => {
@@ -96,7 +99,9 @@ const useMcqQuestionForm = (onSave, questionCount, noOfQuestions) => {
         if (!questionNo || isNaN(questionNo) || parseInt(questionNo) < 1)
             newErrors.questionNo = "Enter a valid number of questions.";
         if (!guidance.trim())
-            newErrors.guidance = "Guidance is required.";   
+            newErrors.guidance = "Guidance is required.";
+        if (!gradingNotes.trim())
+            newErrors.gradingNotes = "Grading notes are required.";
         setErrors(newErrors);   
 
         if (Object.keys(newErrors).length === 0) {
@@ -110,13 +115,17 @@ const useMcqQuestionForm = (onSave, questionCount, noOfQuestions) => {
                     keyConcepts: keyConcepts,
                     doNotInclude: doNotInclude,
                     questionType: "multiple choice",
-                    aiModel: aiModel
+                    aiModel: aiModel,
+                    gradingNotes: gradingNotes
                 };
                 const data = await generateMcqQuestion(params);
                 
                 if(data.questions && data.questions.length > 0){
                     setGeneratedQuestions(data.questions);
                 }
+                // Refresh AI usage count after generation
+                await loadCount();
+
             } catch (error) {
                 console.error("Error generating question:", error);
                 //needed to show error to user in UI later
@@ -169,7 +178,7 @@ const useMcqQuestionForm = (onSave, questionCount, noOfQuestions) => {
                 answers: q.choices,
                 numOfAnswers: 1,
                 correctAnswers: [q.correct_answer],
-                points: 1 //default points
+                points: q.points || 1 
             }
             onSave(formattedQuestion);
         })
@@ -182,6 +191,7 @@ const useMcqQuestionForm = (onSave, questionCount, noOfQuestions) => {
         setKeyConcepts("");
         setDoNotInclude("");
         setAiModel("cohere");
+        setGradingNotes("");
 
         // Clear generated questions and selections
         setGeneratedQuestions([]);
@@ -222,7 +232,9 @@ const useMcqQuestionForm = (onSave, questionCount, noOfQuestions) => {
         generatedAndSelectedQuestions,
         isGenerating,
         setAiModel,
-        aiModel
+        aiModel,
+        gradingNotes, 
+        setGradingNotes
     }
 }
 

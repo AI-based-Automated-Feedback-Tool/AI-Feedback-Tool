@@ -5,7 +5,7 @@ import useEssayQuestionCreation from './hooks/useEssayQuestionCreation';
 import EssayQuestionTable from './components/EssayQuestionTable';
 import EditEssayQuestion from './components/EditEssayQuestion';
 
-export default function CreateEssayQuestionsContent({examId, question_count}) { 
+export default function CreateEssayQuestionsContent({examId, question_count, loadCount, usageCount, loadingAICount, errorAICallUsage}) { 
   const {
     question,
     questionText,
@@ -62,7 +62,7 @@ export default function CreateEssayQuestionsContent({examId, question_count}) {
     generateError,
     aiModel,
     setAiModel
-  } = useEssayQuestionCreation(examId, question_count);
+  } = useEssayQuestionCreation(examId, question_count, loadCount);
     
     
   return (
@@ -118,7 +118,11 @@ export default function CreateEssayQuestionsContent({examId, question_count}) {
                 generateError,
                 aiModel,
                 setAiModel
-              }}/>                  
+              }}
+              usageCount={usageCount}
+              loadingAICount={loadingAICount}
+              errorAICallUsage={errorAICallUsage}
+              />                  
         </Col>   
         {question.length > 0 &&
         <>

@@ -2,7 +2,7 @@ import { Form, Button, Row, Col, Card, Alert, Container } from "react-bootstrap"
 import useMcqQuestionForm from "./hooks/useMcqQuestionForm";
 import AIGeneratedQuestions from "./AIGeneratedQuestions";
 
-export default function McqQuestionGenerationForm({onSave, warning, disabled, noOfQuestions, questionCount}) {
+export default function McqQuestionGenerationForm({formState, warning}) {
     const {
         errors,
         questionTopic, 
@@ -25,8 +25,10 @@ export default function McqQuestionGenerationForm({onSave, warning, disabled, no
         generatedAndSelectedQuestions,
         isGenerating,
         setAiModel,
-        aiModel
-    } = useMcqQuestionForm(onSave, questionCount, noOfQuestions);
+        aiModel,
+        gradingNotes, 
+        setGradingNotes
+    } = formState;
 
     const options = [
         { value: "cohere", label: "Cohere AI" },
@@ -139,6 +141,18 @@ export default function McqQuestionGenerationForm({onSave, warning, disabled, no
                         </Col>                      
                     </Row>                    
                     {errors.correct && <div className="text-danger small">{errors.correct}</div>}
+                </Form.Group>
+
+                {/* Guidance for grading/points */}
+                <Form.Group className="mb-3">
+                    <Form.Label className="fw-bold">Grading / Points *</Form.Label>
+                    <Form.Control
+                        type="text"
+                        value={gradingNotes}
+                        onChange={e => setGradingNotes(e.target.value)}
+                        placeholder='Create 2 points questions .... '
+                    />
+                    {errors.gradingNotes && <div className="text-danger small">{errors.gradingNotes}</div>}
                 </Form.Group>
 
                 {/* Generate Button */}
