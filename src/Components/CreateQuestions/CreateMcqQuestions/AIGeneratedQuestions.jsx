@@ -1,6 +1,6 @@
 import React from 'react'
 import {useState} from 'react'
-import { Row, Card, CardBody, Col, Form, Button } from "react-bootstrap";
+import { Row, Card, CardBody, Col, Form, Button, Badge } from "react-bootstrap";
 import '../../../css/aiQuestionGeneration.css';
 
 export default function AIGeneratedQuestions({ questions, checkedQuestions, onCheck, onSaveChecked, errors }) {
@@ -38,6 +38,11 @@ export default function AIGeneratedQuestions({ questions, checkedQuestions, onCh
                 ))}
               </Row>
               <div className="text-muted">Correct Answer: {q.correct_answer}</div>
+              {q.points && (
+                <Badge bg="secondary" className="mb-2">
+                  Points: {q.points}
+                </Badge>
+              )}
             </CardBody>
           </Card>
           </div>
