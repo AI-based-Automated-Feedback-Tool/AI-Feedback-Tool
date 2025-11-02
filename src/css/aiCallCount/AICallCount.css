@@ -1,0 +1,28 @@
+.ai-usage-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: 9999px;
+  color: white;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  transition: transform 0.2s ease;
+}
+.ai-usage-badge:hover { transform: translateY(-1px); }
+
+.ai-usage-badge.cohere   { background: linear-gradient(135deg, #6366f1, #4f46e5); }
+.ai-usage-badge.deepseek { background: linear-gradient(135deg, #10b981, #059669); }
+
+.ai-usage-badge .icon {
+  font-size: 1rem;
+}
+
+/* Loading & error states */
+.ai-usage-loading,
+.ai-usage-error {
+  font-size: 0.85rem;
+  color: #6b7280;
+  font-style: italic;
+}
