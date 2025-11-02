@@ -81,7 +81,6 @@ export default function CreateMcqQuestionsContent({examId, question_count, loadC
                 </div>
             </div>
 
-            {warning && <Alert variant="warning" className="mb-4">{warning}</Alert>}
             {error && <Alert variant="danger" className="mb-4">{error}</Alert>}
 
             {/* Question Form */}

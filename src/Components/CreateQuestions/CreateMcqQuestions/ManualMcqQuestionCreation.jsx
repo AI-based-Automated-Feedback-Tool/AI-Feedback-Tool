@@ -22,9 +22,13 @@ export default function ManualMcqQuestionCreation({onSave, warning, disabled, qu
     const groupId = useId();
 
   return (
-    <Form className="space-y-6">
-      {warning && <Alert variant="warning">{warning}</Alert>}  
-        
+    <Form className="space-y-6">  
+      {warning && (
+        <div className="error-alert mb-4">
+          <i className="fas fa-exclamation-triangle icon"></i>
+            {warning}
+        </div>
+      )}
       {/* Question */}
       <Form.Group className="form-group" controlId="questionText">
         <Form.Label className="form-label">
