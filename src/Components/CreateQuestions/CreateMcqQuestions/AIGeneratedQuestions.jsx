@@ -1,62 +1,106 @@
-import React from 'react'
-import {useState} from 'react'
-import { Row, Card, CardBody, Col, Form, Button, Badge } from "react-bootstrap";
-import '../../../css/aiQuestionGeneration.css';
+import { Row, Col } from "react-bootstrap";
+import '../../../css/questionCreation/McqCreation.css';
+import '../../../css/questionCreation/AIGeneratedQuestions.css';
 
 export default function AIGeneratedQuestions({ questions, checkedQuestions, onCheck, onSaveChecked, errors }) {
   
   return (
-    <Row className="mb-4 mt-4 mx-1 main-row-bg">
-      <Card className="text-start border-0 shadow-sm bg-light mb-2">
-        <CardBody>
-          <h5>
-            <span className="text-muted mb-1">🧠 Generated Questions by AI: </span>
-          </h5>                    
-        </CardBody>
-      </Card>
+    <div className="glass-card mt-5 overflow-visible">
+      <div className="gradient-header">
+        <h4>
+          <i className='fas fa-brain me-2'></i>
+          Generated Questions by AI
+          </h4>
+      </div>
 
-      {questions &&
-        questions.map((q, index) => (
-          <div key={index} className="d-flex align-items-start mb-3">
-            <Form.Check
-              type="checkbox"
-              className="me-2 mt-2"
-              checked={!!checkedQuestions[index]}
-              onChange={() => onCheck(index)}
+      <div className="p-4">
+        <p className="text-muted small mb-4">
+          Select the questions you want to add to your exam.
+        </p>
 
-            />
-            <Card className="flex-grow-1" >
-            <CardBody>
-              <div className="fw-bold">{q.question}</div>
-              <Row className="mt-2">
-                {q.choices.map((choice, idx) => (
-                  <Col key={idx} md={6} xs={12} className='mb-2'>
-                    <Card className={`p-2 border choice-card ${choice === q.correct_answer ? 'choice-correct' : ''}`}>
-                      {choice}
-                    </Card>
-                  </Col>
-                ))}
-              </Row>
-              <div className="text-muted">Correct Answer: {q.correct_answer}</div>
-              {q.points && (
-                <Badge bg="secondary" className="mb-2">
-                  Points: {q.points}
-                </Badge>
-              )}
-            </CardBody>
-          </Card>
-          </div>
-        ))
-      }
+        {questions && questions.length > 0 ? (
+          <div className="space-y-4">
+            {questions.map((q, index) => (
+              <div key={index} className="d-flex align-items-start gap-3">
+                {/* Custom Checkbox */}
+                <div
+                  className="custom-checkbox mt-1"
+                  onClick={() => onCheck(index)}
+                >
+                  <input
+                    type="checkbox"
+                    className="d-none"
+                    checked={!!checkedQuestions[index]}
+                    readOnly
+                  />
+                  <i className={`fas ${checkedQuestions[index] ? 'fa-check-square text-primary' : 'fa-square'} fa-lg`}></i>
+                </div>
+                {/* Question Card */}
+                <div className="glass-card flex-grow-1 hover-lift">
+                  <div className="p-3">
+                    <div className="fw-bold fs-5 mb-3 text-dark">
+                      {q.question}
+                    </div>
+
+                    {/* Choices */}
+                    <Row className="g-3">
+                      {q.choices.map((choice, idx) => (
+                        <Col key={idx} md={6} xs={12}>
+                          <div 
+                            className={`choice-pill p-3 rounded-3 text-center fw-medium ${
+                              choice === q.correct_answer
+                                ? 'choice-correct text-white'
+                                : 'choice-normal'
+                            }`}
+                          >
+                            {choice}
+                            {choice === q.correct_answer && (
+                              <i className="fas fa-check ms-2"></i>
+                            )}
+                          </div>
+                        </Col>
+                      ))}
+                    </Row>
+
+                    {/* Points */}
+                    {q.points && (
+                      <div className='mt-3'>
+                        <span className="badge bg-gradient-primary">
+                          <i className="fas fa-coins me-1"></i>
+                          Points: {q.points}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))}
+            </div>
+          ):(
+            <p className="text-muted text-center py-5">
+            No questions generated yet. Try generating some above!
+          </p>
+        )}
 
       {/* Add Questions Button */}
-      <div className="d-flex justify-content-end" onClick={onSaveChecked}>
-        <Button variant="primary" >
-          ➕ Add Questions to the Exam
-        </Button>
+      <div className="text-end mt-5">
+        <button 
+          type="button" 
+          className="action-btn action-btn-lg"
+          onClick={onSaveChecked}
+        >
+          <i className="fas fa-plus me-2"></i>
+          Add Questions to the Exam
+        </button>
       </div>
-      {errors.aiQuestionsCount && <div className="text-danger small">{errors.aiQuestionsCount}</div>}
-
-    </Row>
-  )
+      
+      {errors.aiQuestionsCount && (
+        <div className="error-alert mt-3 text-center">
+          <i className="fas fa-exclamation-triangle icon"></i>
+          {errors.aiQuestionsCount}
+        </div>
+      )}
+    </div>
+  </div>
+  );
 }
