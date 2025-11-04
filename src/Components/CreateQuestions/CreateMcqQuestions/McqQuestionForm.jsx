@@ -1,9 +1,7 @@
 import { useState } from 'react';
-import { Nav } from "react-bootstrap";
 import ManualMcqQuestionCreation from './ManualMcqQuestionCreation';
 import McqQuestionGenerationForm from "./McqQuestionGenerationForm";
-import AICallCount from "../../AIUsage/AICallCount";
-import useMcqQuestionForm from "./hooks/useMcqQuestionForm";
+import '../../../css/questionCreation/QuestionCreationTabs.css';
 
 export default function McqQuestionForm({onSave, warning, disabled, noOfQuestions, questionCount, loadCount, usageCount, loadingAICount, errorAICallUsage}) {     
     const [activeTab, setActiveTab] = useState('manual'); // 'manual' or 'ai'
@@ -11,11 +9,11 @@ export default function McqQuestionForm({onSave, warning, disabled, noOfQuestion
   return ( 
     <div>
       {/* GLASS TABS */}
-      <div className="mcq-tabs" role="tablist" aria-label="MCQ Question Creation Tabs">
+      <div className="question-tabs" role="tablist" aria-label="MCQ Question Creation Tabs">
         <button
           type='button'
           id="tab-manual"
-          className={`mcq-tab ${activeTab === 'manual' ? 'active' : ''}`}
+          className={`question-tab ${activeTab === 'manual' ? 'active' : ''}`}
           onClick={() => setActiveTab('manual')}
           aria-selected={activeTab === 'manual'}
           aria-controls="manual-panel"
@@ -26,7 +24,7 @@ export default function McqQuestionForm({onSave, warning, disabled, noOfQuestion
         <button
           type='button'
           id="tab-ai"
-          className={`mcq-tab ${activeTab === 'ai' ? 'active' : ''}`}
+          className={`question-tab ${activeTab === 'ai' ? 'active' : ''}`}
           onClick={() => setActiveTab('ai')}
           aria-selected={activeTab === 'ai'}
           aria-controls="ai-panel"
