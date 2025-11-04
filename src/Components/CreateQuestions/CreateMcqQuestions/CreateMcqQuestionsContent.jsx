@@ -28,7 +28,11 @@ export default function CreateMcqQuestionsContent({examId, question_count, loadC
     } = useMcqQuestion(examId, question_count);
 
     const handleSaveQuestions = async () => {
-        await saveAllQuestions();
+        const result = await saveAllQuestions();
+
+        if (!result.success) {
+            return;
+        }
         if (!error) {
             clearQuestions();
             alert("Questions saved successfully!");
@@ -81,8 +85,6 @@ export default function CreateMcqQuestionsContent({examId, question_count, loadC
                 </div>
             </div>
 
-            {error && <Alert variant="danger" className="mb-4">{error}</Alert>}
-
             {/* Question Form */}
             <div className="glass-card mb-5">
                 <div className="p-4">
@@ -108,7 +110,14 @@ export default function CreateMcqQuestionsContent({examId, question_count, loadC
                             <i className="fas fa-eye icon"></i> Preview Questions
                         </h4>
                     </div>
-                    {error && <Alert variant="danger">{error}</Alert>}
+                    {error && typeof error === "object" && error.message && (
+                            <div className="error-alert">
+                                <i className="fas fa-exclamation-triangle icon"></i>
+                                {error.message}
+                                {console.log("Error Object:", error)}
+                                {console.log("error.message:", error.message)}
+                            </div>
+                        )}
                     <div className="p-4">
                         <QuestionTable 
                             questions={questions} 
@@ -134,6 +143,14 @@ export default function CreateMcqQuestionsContent({examId, question_count, loadC
                                 {loading ? <><span className="spinner"></span> Saving...</> : "Save All"}
                             </button>
                         </div>
+                        {error && typeof error === "object" && error.restriction && (
+                            <div className="error-alert">
+                                <i className="fas fa-exclamation-triangle icon"></i>
+                                {error.restriction}
+                                {console.log("Error Object:", error)}
+                                {console.log("error.restriction:", error.restriction)}
+                            </div>
+                        )}
                     </div>
                 </div>
             )}
