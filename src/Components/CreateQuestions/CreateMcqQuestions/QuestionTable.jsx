@@ -1,52 +1,79 @@
-import React from 'react'
-import { Table, Button } from 'react-bootstrap';
+import '../../../css/questionCreation/QuestionTable.css'
 
 export default function QuestionTable({questions, onDelete, onEdit}) {
   return (
-    <Table striped bordered hover responsive className="mt-4">
-      <thead>
-        <tr>
-            <th>#</th>
-            <th className="text-center">Question</th>
-            <th className="text-center">Points</th>
-            <th className="text-center">No of answers</th>
-            <th className='text-center'>Answer options</th>
-            <th className="text-center">Correct Answers</th>
-            <th className="text-center">Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        {questions.map((q, idx) => (
-          <tr key={idx}>
-            <td>{idx + 1}</td>
-            <td>{q.question}</td>
-            <td>{q.points}</td>
-            <td>{q.numOfAnswers}</td>
-            <td>{q.answers.join(", ")}</td>
-            <td>{q.correctAnswers.join(", ")}</td>
-            <td>
-                <div className="d-flex flex-wrap gap-2 justify-content-center">
-                    <Button 
-                        variant="danger" 
-                        size="sm" 
-                        className="flex-grow-1 flex-md-grow-0"
-                        onClick={() => onDelete(idx)}
-                    >
-                        Delete
-                    </Button>
-                    <Button
-                        variant="warning" 
-                        size="sm" 
-                        className="flex-grow-1 flex-md-grow-0"
-                        onClick={() => onEdit(idx)}
-                    >
-                        Edit
-                    </Button>
-                </div>
-            </td>
+    <div className='question-table-wrapper'>
+      <table className='modern-table'>
+        <thead>
+          <tr>
+              <th>#</th>
+              <th>Question</th>
+              <th>Points</th>
+              <th>No of answers</th>
+              <th>Answer options</th>
+              <th>Correct Answers</th>
+              <th>Actions</th>
           </tr>
-        ))}
-      </tbody>
-    </Table>
+        </thead>
+        <tbody>
+          {questions.map((q, idx) => {
+            const fullQuestion = q.question;
+            const fullAnswers = q.answers.join(", ");
+            const fullCorrectAnswers = q.correctAnswers.join(", ");
+            
+            return (
+              <tr key={idx}>
+                <td><strong>{idx + 1}</strong></td>
+                <td 
+                  className="truncate-cell"
+                  data-full={fullQuestion}
+                  title={fullQuestion}
+                >
+                  {fullQuestion}
+                </td>
+                <td>
+                  <span className="badge bg-gradient-primary">
+                    {q.points || '-'} pts
+                  </span>
+                </td>
+                <td>{q.numOfAnswers || q.answers?.length || "-"}</td>
+                <td 
+                  className='truncate-cell'
+                  data-full={fullAnswers}
+                  title={fullAnswers}
+                >
+                  {fullAnswers}
+                </td>
+                <td
+                  className="truncate-cell text-success fw-bold"
+                  data-full={fullCorrectAnswers}
+                  title={fullCorrectAnswers}
+                >
+                  {fullCorrectAnswers}
+                </td>
+                <td>
+                  <div className="d-flex flex-wrap gap-2 justify-content-center">
+                    <button 
+                      className="action-btn-sm btn-delete"
+                      onClick={() => onDelete(idx)}
+                    >
+                      <i className="fas fa-trash action-icon"></i>
+                      Delete
+                    </button>
+                    <button 
+                      className="action-btn-sm btn-edit"
+                      onClick={() => onEdit(idx)}
+                    >
+                      <i className="fas fa-edit action-icon"></i>
+                      Edit
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            )
+          })}
+        </tbody>
+      </table>
+    </div>
   )
 }
