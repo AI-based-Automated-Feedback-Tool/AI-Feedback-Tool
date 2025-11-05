@@ -155,7 +155,7 @@ export default function ManualMcqQuestionCreation({onSave, warning, disabled, qu
           onClick={handleAddQuestion}
           disabled={disabled}
         >
-          Save Question
+          Create Question
         </button>
       </div>
     </Form>
