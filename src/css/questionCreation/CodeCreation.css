@@ -1,0 +1,10 @@
+.test-case-add button {
+  min-height: 48px;
+  font-weight: 600;
+  border: 2px solid #667eea;
+  color: #667eea;
+}
+.test-case-add button:hover {
+  background: #667eea;
+  color: white;
+}
