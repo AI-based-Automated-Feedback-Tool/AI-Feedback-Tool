@@ -107,7 +107,7 @@ export default function McqQuestionGenerationForm({onSave, warning, disabled, qu
                     {/* Question Topic */}
                         <Form.Group className="form-group" controlId="questionTopic">
                             <Form.Label className="form-label">
-                                Topic of questions *
+                                <i className="fas fa-question-circle icon"></i> Topic of questions *
                             </Form.Label>
                             <Form.Control 
                                 as="textarea" 
@@ -167,8 +167,7 @@ export default function McqQuestionGenerationForm({onSave, warning, disabled, qu
                         {/* Describe about the topic for guidance */}
                         <Form.Group className="form-group" controlId="guidance">
                             <Form.Label className="form-label">
-                                <i className="fas ffa-lightbulb icon"></i>
-                                Guidance for question creation *
+                                <i className="fas fa-lightbulb icon"></i> Guidance for question creation *
                             </Form.Label>
                             <Form.Control
                                 as="textarea"

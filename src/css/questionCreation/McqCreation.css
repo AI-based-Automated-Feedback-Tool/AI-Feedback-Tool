@@ -301,6 +301,20 @@
   overflow: visible !important;
 }
 
+/* change container background */
+.mcq-page {
+  background: linear-gradient(135deg, #f5f7fa 0%, #e4e9fd 100%);
+  min-height: 100vh;
+  padding: 2rem 0;
+  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 500;
+}
+.mcq-page .container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
 /* mobile floating menu */
 @media (max-width: 768px) {
   .glass-card {
