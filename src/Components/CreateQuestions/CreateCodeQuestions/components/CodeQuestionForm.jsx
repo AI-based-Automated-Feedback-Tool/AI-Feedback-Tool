@@ -3,7 +3,7 @@ import ManualCodeQuestionCreationForm from './ManualCodeQuestionCreationForm';
 import CodeQuestionGenerationForm from './CodeQuestionGenerationForm';
 import '../../../../css/questionCreation/QuestionCreationTabs.css';
 
-export default function CodeQuestionForm({setError, onAddQuestion, formState, disabled, question_count, usageCount, loadingAICount, errorAICallUsage}) {
+export default function CodeQuestionForm({onAddQuestion, formState, disabled, question_count, usageCount, loadingAICount, errorAICallUsage}) {
     const [activeTab, setActiveTab] = useState('manual'); // 'manual' or 'ai'
 
     return (
@@ -41,7 +41,6 @@ export default function CodeQuestionForm({setError, onAddQuestion, formState, di
             >            
                 <ManualCodeQuestionCreationForm
                     onAddQuestion={onAddQuestion}
-                    setError={setError}
                     formState={formState}
                     disabled={disabled}
                 />

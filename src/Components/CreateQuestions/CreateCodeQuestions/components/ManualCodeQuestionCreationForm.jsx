@@ -4,8 +4,7 @@ import React from "react";
 import '../../../../css/questionCreation/CodeCreation.css';
 
 
-export default function ManualCodeQuestionCreationForm({onAddQuestion, setError, formState, disabled}) {
-    const {languages, loading} = useFetchLanguages(setError);
+export default function ManualCodeQuestionCreationForm({onAddQuestion, formState, disabled}) {
     const {
         questionDescription, 
         setQuestionDescription, 
@@ -25,12 +24,12 @@ export default function ManualCodeQuestionCreationForm({onAddQuestion, setError,
         validate,
         resetForm
     } = formState;
+    const {languages, loading} = useFetchLanguages(setErrors);
 
     const handleAddQuestion = () => {
         // Validate and submit the question
         const isValid = validate();
         if (!isValid) {
-            setError({"message": "Please fill in all required fields correctly."});
             return;
         }
 
@@ -62,6 +61,12 @@ export default function ManualCodeQuestionCreationForm({onAddQuestion, setError,
           value={questionDescription}
           onChange={(e) => setQuestionDescription(e.target.value)}
         />
+        {errors.question && (
+          <div className="error-alert">
+            <i className="fas fa-exclamation-triangle icon"></i>
+            {errors.question}
+          </div>
+        )}
       </Form.Group>
 
       <Form.Group className="form-group" controlId="functionSignature">
@@ -76,6 +81,12 @@ export default function ManualCodeQuestionCreationForm({onAddQuestion, setError,
           value={functionSignature}
           onChange={(e) => setFunctionSignature(e.target.value)}  
         />
+        {errors.functionSignature && (
+          <div className="error-alert">
+            <i className="fas fa-exclamation-triangle icon"></i>
+            {errors.functionSignature}
+          </div>
+        )}
       </Form.Group>
 
       <Form.Group className="form-group" controlId="wrapperCode">
@@ -90,6 +101,12 @@ export default function ManualCodeQuestionCreationForm({onAddQuestion, setError,
           value={wrapperCode}
           onChange={(e) => setWrapperCode(e.target.value)}
         />
+        {errors.wrapperCode && (
+          <div className="error-alert">
+            <i className="fas fa-exclamation-triangle icon"></i>
+            {errors.wrapperCode}
+          </div>
+        )}
       </Form.Group>
 
       <Form.Group className="form-group" controlId="testCases">
@@ -136,6 +153,12 @@ export default function ManualCodeQuestionCreationForm({onAddQuestion, setError,
             </Col>
           </Row>
         ))}
+        {errors.testCases && (
+          <div className="error-alert">
+            <i className="fas fa-exclamation-triangle icon"></i>
+            {errors.testCases}
+          </div>
+        )}
       </Form.Group>
 
       <Form.Group className="form-group" controlId="programmingLanguage">
@@ -159,6 +182,12 @@ export default function ManualCodeQuestionCreationForm({onAddQuestion, setError,
             ))}
           </Form.Select>
         </div>
+        {errors.language && (
+          <div className="error-alert">
+            <i className="fas fa-exclamation-triangle icon"></i>
+            {errors.language}
+          </div>
+        )}
       </Form.Group>
 
       <Form.Group className="form-group" controlId="points">
@@ -174,6 +203,12 @@ export default function ManualCodeQuestionCreationForm({onAddQuestion, setError,
           onChange={(e) => setPoints(Number(e.target.value))}
           required
         />
+        {errors.points && (
+          <div className="error-alert">
+            <i className="fas fa-exclamation-triangle icon"></i>
+            {errors.points}
+          </div>
+        )}
       </Form.Group>
 
       {/* Submit Button */}
@@ -193,6 +228,12 @@ export default function ManualCodeQuestionCreationForm({onAddQuestion, setError,
           )}
         </button>
       </div>
+      {errors.message && (
+        <div className="error-alert">
+          <i className="fas fa-exclamation-triangle icon"></i>
+          {errors.message}
+        </div>
+      )}
 
     </Form>
   )

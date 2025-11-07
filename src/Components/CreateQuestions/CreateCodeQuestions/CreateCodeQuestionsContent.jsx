@@ -121,7 +121,6 @@ export default function CreateCodeQuestionsContent({examId, question_count, load
               </div>
             )}  
             <CodeQuestionForm 
-              setError={setErrors}
               onAddQuestion={handleAddQuestion}
               formState={{
                 questionDescription, 

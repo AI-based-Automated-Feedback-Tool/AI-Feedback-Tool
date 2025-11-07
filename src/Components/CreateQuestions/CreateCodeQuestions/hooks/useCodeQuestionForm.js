@@ -113,6 +113,10 @@ export default function useCodeQuestionForm( examId, question_count, loadCount, 
 
     // Function to handle adding a new question
     const handleAddQuestion = (newQuestion) => {
+        const isValid = validate();
+        if (!isValid) {
+            return;
+        }
         setQuestions(prev => {
             if (prev.length >= parseInt(question_count)) {
             setWarning(`You can only add ${question_count} questions.`);
