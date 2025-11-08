@@ -5,8 +5,9 @@ import { supabase } from "../../../../SupabaseAuth/supabaseClient";
 import { createEssayQuestion } from "../service/createEssayQuestionService"; 
 import { useNavigate} from 'react-router-dom';
 import { generateEssayQuestion } from '../service/createEssayQuestionService';
+import { DAILY_LIMIT } from "../../../../config/api";
 
-export default function useEssayQuestionCreation(examId, question_count, loadCount) {
+export default function useEssayQuestionCreation(examId, question_count, loadCount, usageCount) {
     const [userId, setUserId] = useState(null);
     const [question, setQuestion] = useState([]);
     const [questionText, setQuestionText] = useState("");
@@ -218,6 +219,11 @@ export default function useEssayQuestionCreation(examId, question_count, loadCou
         setGenerateError(null);
         //basic validation
         const newError = {}
+        if (usageCount[aiModel] >= DAILY_LIMIT) {
+            newError.usageLimit = `You have reached the daily limit for ${aiModel} model. Please try again later.`;
+            setError(newError);
+            return;
+        }
         if (!topic.trim()) {
             newError.topic = "Topic is required.";
         }

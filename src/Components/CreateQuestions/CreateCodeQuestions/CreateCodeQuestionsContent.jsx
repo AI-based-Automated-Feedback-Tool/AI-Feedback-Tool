@@ -67,7 +67,7 @@ export default function CreateCodeQuestionsContent({examId, question_count, load
     hasReachedLimit,
     aiModel,
     setAiModel
-  } = useCodeQuestionForm(examId, question_count, loadCount);
+  } = useCodeQuestionForm(examId, question_count, loadCount, usageCount);
 
   const isDisabled = () =>{
         if (questions.length >= parseInt(question_count)) {

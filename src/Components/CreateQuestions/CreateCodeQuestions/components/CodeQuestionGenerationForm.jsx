@@ -335,6 +335,12 @@ export default function CodeQuestionGenerationForm({formState, question_count}) 
                   )}
                 </button>
               </div>
+              {errors.usageLimit && (
+                <div className="error-alert mt-4 text-center">
+                    <i className="fas fa-exclamation-triangle icon"></i>
+                    {errors.usageLimit}
+                </div>
+              )}
           </Form>
         </div>
       </div>

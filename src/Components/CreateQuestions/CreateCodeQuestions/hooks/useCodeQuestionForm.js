@@ -3,9 +3,9 @@ import { createCodeQuestion } from "../service/createCodeQuestionService";
 import { supabase } from "../../../../SupabaseAuth/supabaseClient"; 
 import { useNavigate } from 'react-router-dom';
 import { generateCodeQuestion } from "../service/createCodeQuestionService";    
-import { useAICallUsage } from "../../../AIUsage/hooks/useAICallUsage";
+import { DAILY_LIMIT } from "../../../../config/api";
 
-export default function useCodeQuestionForm( examId, question_count, loadCount, initialQuestion = null  ) {
+export default function useCodeQuestionForm( examId, question_count, loadCount, usageCount, initialQuestion = null  ) {
     const [userId, setUserId] = useState(null);
     const [questionDescription, setQuestionDescription] = useState("");
     const [functionSignature, setFunctionSignature] = useState("");
@@ -200,6 +200,11 @@ export default function useCodeQuestionForm( examId, question_count, loadCount, 
     const handleGenerateQuestions = async () => {
         // Basic validation
         const newErrors = {};
+        if (usageCount[aiModel] >= DAILY_LIMIT) {
+            newErrors.usageLimit = `You have reached the daily limit for ${aiModel} model. Please try again later.`;
+            setErrors(newErrors);
+            return;
+        }
         if (!topicDescription.trim())
             newErrors.topicDescription = "Topic description is required.";
         if (!aiformSelectedLanguage)

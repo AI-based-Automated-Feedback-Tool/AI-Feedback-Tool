@@ -62,7 +62,7 @@ export default function CreateEssayQuestionsContent({examId, question_count, loa
     generateError,
     aiModel,
     setAiModel
-  } = useEssayQuestionCreation(examId, question_count, loadCount);
+  } = useEssayQuestionCreation(examId, question_count, loadCount, usageCount);
     
     
   return (

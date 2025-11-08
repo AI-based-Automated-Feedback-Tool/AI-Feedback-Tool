@@ -187,7 +187,13 @@ export default function EssayQuestionGenerationForm({formState}) {
                             "➕ Generate Questions"
                         )}
                     </Button>
-                </div>          
+                </div>
+                {error.usageLimit && (
+                    <div className="error-alert mt-4 text-center">
+                        <i className="fas fa-exclamation-triangle icon"></i>
+                        {error.usageLimit}
+                    </div>
+                )}          
             </Form>
         </Card>
 
