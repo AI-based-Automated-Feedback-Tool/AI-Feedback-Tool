@@ -113,21 +113,17 @@ export default function useCodeQuestionForm( examId, question_count, loadCount, 
 
     // Function to handle adding a new question
     const handleAddQuestion = (newQuestion) => {
-        const isValid = validate();
-        if (!isValid) {
-            return;
-        }
         setQuestions(prev => {
             if (prev.length >= parseInt(question_count)) {
-            setWarning(`You can only add ${question_count} questions.`);
-            return prev; 
+                setWarning(`You can only add ${question_count} questions.`);
+                return prev; 
             }
             const updated = [...prev, newQuestion];
             // Show warning if limit reached
             if (updated.length === parseInt(question_count)) {
-            setWarning(`You have reached the limit of ${question_count} questions.`);
+                setWarning(`You have reached the limit of ${question_count} questions.`);
             } else {
-            setWarning(null);
+                setWarning(null);
             }
             return updated;
         });
@@ -293,9 +289,6 @@ export default function useCodeQuestionForm( examId, question_count, loadCount, 
             setErrors(newErrors);
             return;
         }
-
-        
-
         //add questions to main questions list
         selectedQuestions.forEach((q) => {
             const formattedQuestion = {

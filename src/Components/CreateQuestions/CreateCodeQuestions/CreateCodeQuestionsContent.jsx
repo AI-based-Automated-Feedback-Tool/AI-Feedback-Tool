@@ -190,46 +190,46 @@ export default function CreateCodeQuestionsContent({examId, question_count, load
                 Preview Code Questions
               </h4>
             </div>
-          <div className="p-4">
-            <CodeQuestionTable 
-              questions={questions} 
-              onDelete={handleDeleteQuestion}
-              onEdit={handleEditQuestion}
-            />
-            {editQuestionIndex !== null && questions[editQuestionIndex] && (
-              <EditCodeQuestion 
-                show={showEditQuestion}
-                handleClose={() => setShowEditQuestion(false)}
-                questionDetails={questions[editQuestionIndex]}
-                handleSaveChanges={handleSaveChanges}
+            <div className="p-4">
+              <CodeQuestionTable 
+                questions={questions} 
+                onDelete={handleDeleteQuestion}
+                onEdit={handleEditQuestion}
               />
-            )}
+              {editQuestionIndex !== null && questions[editQuestionIndex] && (
+                <EditCodeQuestion 
+                  show={showEditQuestion}
+                  handleClose={() => setShowEditQuestion(false)}
+                  questionDetails={questions[editQuestionIndex]}
+                  handleSaveChanges={handleSaveChanges}
+                />
+              )}
 
-            {/* Submit Button */}
-            <div className="text-end mt-4">
-              <button 
-                className="action-btn"
-                onClick={saveAllQuestions} 
-                disabled={loading}
-              >
-                {loading ? (
-                  <>
-                    <span className="spinner"></span>
-                    Saving Questions...
-                  </>
-                ) : (
-                  "Save All Questions"
-                )}                              
-              </button>
-            </div> 
+              {/* Submit Button */}
+              <div className="text-end mt-4">
+                <button 
+                  className="action-btn"
+                  onClick={saveAllQuestions} 
+                  disabled={loading}
+                >
+                  {loading ? (
+                    <>
+                      <span className="spinner"></span>
+                      Saving Questions...
+                    </>
+                  ) : (
+                    "Save All Questions"
+                  )}                              
+                </button>
+              </div> 
+            </div>
           </div>
-        </div>
         )}
-        {errors?.restriction && 
+        {errors?.restriction && (
           <div className="mt-3">
             <Alert variant="danger">{errors.restriction}</Alert>
           </div>
-        }
+        )}
       </div>
     </div>
   )
