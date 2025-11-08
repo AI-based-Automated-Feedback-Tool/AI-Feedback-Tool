@@ -123,8 +123,14 @@ export default function CodeQuestionGenerationForm({formState, question_count}) 
                   onChange={(e) => setTopicDescription(e.target.value)}
                   placeholder='E.g.: Arrays, Linked Lists, Recursion, Dynamic Programming, etc.'
                 />
-                {errors.topicDescription && <div className="text-danger">{errors.topicDescription}</div>}
+                {errors.topicDescription && (
+                  <div className="error-alert">
+                    <i className="fas fa-exclamation-triangle icon"></i>
+                    {errors.topicDescription}
+                  </div>
+                )}
               </Form.Group>
+              
               <Form.Group className='form-group mb-4' controlId='programmingLanguage'>
                 <Form.Label className="form-label">
                   <i className="fas fa-code me-2 icon"></i> Programming Language *
@@ -142,7 +148,12 @@ export default function CodeQuestionGenerationForm({formState, question_count}) 
                     </option>
                   ))}
                 </Form.Select>
-                {errors.aiformSelectedLanguage && <div className="text-danger">{errors.aiformSelectedLanguage}</div>}
+                {errors.aiformSelectedLanguage && (
+                  <div className="error-alert">
+                    <i className="fas fa-exclamation-triangle icon"></i>
+                    {errors.aiformSelectedLanguage}
+                  </div>
+                )}
               </Form.Group>
 
               <div>
@@ -184,7 +195,12 @@ export default function CodeQuestionGenerationForm({formState, question_count}) 
                         onChange={(e) => setSubQuestionType(e.target.value)}
                         placeholder='E.g. function implementation, debugging, algorithm design'
                       />
-                      {errors.subQuestionType && <div className="text-danger">{errors.subQuestionType}</div>}
+                      {errors.subQuestionType && (
+                        <div className="error-alert">
+                          <i className="fas fa-exclamation-triangle icon"></i>
+                          {errors.subQuestionType}
+                        </div>
+                      )}
                     </Form.Group>
                   </Col>
                 </Row>
@@ -204,7 +220,12 @@ export default function CodeQuestionGenerationForm({formState, question_count}) 
                   onChange={(e) => setGuidance(e.target.value)}
                   placeholder='Provide guidance or context for the AI / Tell the AI what kind of question to generate...'
                 />
-                {errors.guidance && <div className="text-danger">{errors.guidance}</div>}
+                {errors.guidance && (
+                  <div className="error-alert">
+                    <i className="fas fa-exclamation-triangle icon"></i>
+                    {errors.guidance}
+                  </div>
+                )}
               </Form.Group>
               
               <Form.Group className='form-group mb-3' controlId='keyConcepts'>
@@ -246,7 +267,12 @@ export default function CodeQuestionGenerationForm({formState, question_count}) 
                     onChange={(e) => setQuestionNo(e.target.value)}
                     placeholder='Enter the number of questions to generate'
                   />
-                  {errors.questionNo && <div className="text-danger">{errors.questionNo}</div>}
+                  {errors.questionNo && (
+                    <div className="error-alert">
+                      <i className="fas fa-exclamation-triangle icon"></i>
+                      {errors.questionNo}
+                    </div>
+                  )}
                 </Form.Group>
                 
                 <Form.Group className='form-group mb-3' controlId='expectedFunctionSignature'>
@@ -273,7 +299,12 @@ export default function CodeQuestionGenerationForm({formState, question_count}) 
                     onChange={(e) => setGradingDescription(e.target.value)}
                     placeholder='Describe how much points to be awarded for each question... E.g.- Four 10 points questions and two 5 points questions'
                   />
-                  {errors.gradingDescription && <div className="text-danger">{errors.gradingDescription}</div>}
+                  {errors.gradingDescription && (
+                    <div className="error-alert">
+                      <i className="fas fa-exclamation-triangle icon"></i>
+                      {errors.gradingDescription}
+                    </div>
+                  )}
                 </Form.Group>
               </Card>
 
@@ -303,7 +334,12 @@ export default function CodeQuestionGenerationForm({formState, question_count}) 
       </div>
 
       {/* Display AI Generated Questions */}
-      {errors.topic && <div className="text-danger mx-3">{errors.topic}</div>}
+      {errors.topic && (
+        <div className="error-alert mx-3">
+          <i className="fas fa-exclamation-triangle icon"></i>
+          {errors.topic}
+        </div>
+      )}
       {generatedCodeQuestions.length > 0 && (
         <AIGeneratedCodeQuestions 
           questions={generatedCodeQuestions}
