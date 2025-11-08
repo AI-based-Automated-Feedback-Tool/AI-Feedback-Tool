@@ -46,7 +46,6 @@
 .card .form-select {
   border: 1.5px solid #cbd5e1;
   border-radius: .75rem;
-  background: #fafafa;
   font-size: .95rem;
   padding: .75rem 1rem;
   transition: all .3s ease;
@@ -55,7 +54,6 @@
 .card .form-select:focus {
   border-color: #667eea;
   box-shadow: 0 0 0 3px rgba(102,126,234,.2);
-  background: white;
 }
 
 /* === TOGGLE BUTTONS (Difficulty) === */
