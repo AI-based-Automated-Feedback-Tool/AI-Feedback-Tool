@@ -47,6 +47,7 @@ export default function McqQuestionForm({onSave, warning, disabled, noOfQuestion
             questionCount={questionCount}
             noOfQuestions={noOfQuestions}
             loadCount={loadCount}
+            usageCount={usageCount}
           />
         </div>
         <div
@@ -62,6 +63,7 @@ export default function McqQuestionForm({onSave, warning, disabled, noOfQuestion
             questionCount={questionCount}
             noOfQuestions={noOfQuestions}
             loadCount={loadCount}
+            usageCount={usageCount}
           />
         </div>
     </div>

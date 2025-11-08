@@ -2,7 +2,7 @@ import { Form, Button, Row, Col, Card, Alert } from "react-bootstrap";
 import useMcqQuestionForm from "./hooks/useMcqQuestionForm";
 import '../../../css/questionCreation/McqCreation.css'
 import { useId } from "react";
-export default function ManualMcqQuestionCreation({onSave, warning, disabled, questionCount, noOfQuestions, loadCount}) {
+export default function ManualMcqQuestionCreation({onSave, warning, disabled, questionCount, noOfQuestions, loadCount, usageCount}) {
     const {
         questionText, 
         setQuestionText,
@@ -16,7 +16,7 @@ export default function ManualMcqQuestionCreation({onSave, warning, disabled, qu
         handleAnswerOptionsChange,
         handleCheckboxChange,
         handleNumOfAnswersChange
-    } = useMcqQuestionForm(onSave, questionCount, noOfQuestions, loadCount);
+    } = useMcqQuestionForm(onSave, questionCount, noOfQuestions, loadCount, usageCount);
 
     // Generate a unique ID 
     const groupId = useId();

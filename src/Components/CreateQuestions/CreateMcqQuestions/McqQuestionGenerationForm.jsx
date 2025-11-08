@@ -3,7 +3,7 @@ import { useState } from "react";
 import useMcqQuestionForm from "./hooks/useMcqQuestionForm";
 import AIGeneratedQuestions from "./AIGeneratedQuestions";
 
-export default function McqQuestionGenerationForm({onSave, warning, disabled, questionCount, noOfQuestions, loadCount}) {
+export default function McqQuestionGenerationForm({onSave, warning, disabled, questionCount, noOfQuestions, loadCount, usageCount}) {
     const {
         errors,
         questionTopic, 
@@ -29,7 +29,7 @@ export default function McqQuestionGenerationForm({onSave, warning, disabled, qu
         aiModel,
         gradingNotes, 
         setGradingNotes
-    } = useMcqQuestionForm(onSave, questionCount, noOfQuestions, loadCount);
+    } = useMcqQuestionForm(onSave, questionCount, noOfQuestions, loadCount, usageCount);
 
     const [isModelOpen, setIsModelOpen] = useState(false);
     const aiModels = [
@@ -263,7 +263,13 @@ export default function McqQuestionGenerationForm({onSave, warning, disabled, qu
                                     </>
                                 )}
                             </button>
-                        </div>          
+                        </div> 
+                        {errors.usageLimit && (
+                            <div className="error-alert mt-4 text-center">
+                                <i className="fas fa-exclamation-triangle icon"></i>
+                                {errors.usageLimit}
+                            </div>
+                        )}
                     </Form>
                 </div>
             </div>

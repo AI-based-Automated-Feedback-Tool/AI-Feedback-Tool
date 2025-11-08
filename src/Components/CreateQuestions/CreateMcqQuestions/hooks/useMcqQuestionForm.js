@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react"; 
 import { generateMcqQuestion } from "../service/aiQuestionGenerationService"; 
-import { useAICallUsage } from "../../../AIUsage/hooks/useAICallUsage";
+import { DAILY_LIMIT } from "../../../../config/api";
 
-const useMcqQuestionForm = (onSave, questionCount, noOfQuestions, loadCount) => {
+const useMcqQuestionForm = (onSave, questionCount, noOfQuestions, loadCount, usageCount) => {
     const [questionText, setQuestionText] = useState("");
     const [answerOptions, setAnswerOptions] = useState(["","","",""])
     const [correctAnswers, setCorrectAnswers] = useState([]);
@@ -94,6 +94,11 @@ const useMcqQuestionForm = (onSave, questionCount, noOfQuestions, loadCount) => 
         setGeneratedAndSelectedQuestions([]);
         // Basic validation
         const newErrors = {};
+        if (usageCount[aiModel] >= DAILY_LIMIT) {
+            newErrors.usageLimit = `You have reached the daily limit for ${aiModel} model. Please try again later.`;
+            setErrors(newErrors);
+            return;
+        }
         if (!questionTopic.trim())
             newErrors.questionTopic = "Question topic is required.";
         if (!questionNo || isNaN(questionNo) || parseInt(questionNo) < 1)
