@@ -8,3 +8,69 @@
   background: #667eea;
   color: white;
 }
+/*AI question generation form styles*/
+/* change container background */
+.code-question-generation-form {
+  background: linear-gradient(135deg, #f5f7fa 0%, #e4e9fd 100%);
+  min-height: 100vh;
+  padding: 2rem 0;
+  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 500;
+}
+.code-question-generation-form .container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.outside-card-label {
+  font-weight: 700;
+  font-size: 1.3rem;
+  color: #374151;
+  margin: 1.5rem 0 .5rem;
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+}
+.outside-card-label::before {
+  content: '';
+  width: 6px;
+  height: 28px;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  border-radius: 3px;
+  margin-right: .75rem;
+}
+
+/* === FORM INPUTS === */
+.card .form-control,
+.card .form-select {
+  border: 1.5px solid #cbd5e1;
+  border-radius: .75rem;
+  background: #fafafa;
+  font-size: .95rem;
+  padding: .75rem 1rem;
+  transition: all .3s ease;
+}
+.card .form-control:focus,
+.card .form-select:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102,126,234,.2);
+  background: white;
+}
+
+/* === TOGGLE BUTTONS (Difficulty) === */
+.btn-toggle-group .btn {
+  flex: 1;
+  border-radius: .75rem !important;
+  font-weight: 600;
+}
+.btn-toggle-group .btn.active {
+  background: linear-gradient(135deg, #667eea, #764ba2) !important;
+  color: white !important;
+  box-shadow: 0 4px 12px rgba(102,126,234,.3);
+}
+.btn-toggle-group .btn:not(.active) {
+  background: #f8fafc;
+  color: #64748b;
+  border: 1.5px solid #cbd5e1;
+}
