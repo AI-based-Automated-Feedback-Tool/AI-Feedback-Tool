@@ -216,6 +216,7 @@ export default function useCodeQuestionForm( examId, question_count, loadCount, 
 
         if (Object.keys(newErrors).length === 0) {
             setIsGenerating(true);
+            setGeneratedCodeQuestions([]);
             try {
                 const params = {
                     topicDescription: topicDescription,

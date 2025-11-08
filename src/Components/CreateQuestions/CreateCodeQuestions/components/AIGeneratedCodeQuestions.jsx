@@ -9,7 +9,6 @@ export default function AIGeneratedCodeQuestions({ questions, onCheck, checkedQu
 
   return (
     <>
-    {errors.topic && <div className="text-danger mx-3">{errors.topic}</div>}
     <Card className="mx-3 mx-md-5 mb-3">
         <Card.Header className="bg-secondary text-white">
             <h5>Generated Questions</h5>
