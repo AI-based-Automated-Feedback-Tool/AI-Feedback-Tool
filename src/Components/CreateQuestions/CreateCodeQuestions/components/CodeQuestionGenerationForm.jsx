@@ -158,12 +158,12 @@ export default function CodeQuestionGenerationForm({formState, question_count}) 
 
               <div>
                 <Row className="align-items-center mt-3">
-                  <Col md={6}>
+                  <Col md={6} xs={12}>
                     <Form.Group className="form-group mb-3" controlId="difficultyLevel">
                       <Form.Label className="form-label">
                         <i className="fas fa-tachometer-alt me-2 icon"></i> Difficulty Level *
                       </Form.Label>
-                      <ButtonGroup className="d-flex">
+                      <ButtonGroup className="difficulty-btn-group w-100">
                         {difficultyLevels.map((level) => (
                           <ToggleButton
                             key={level}
@@ -174,17 +174,23 @@ export default function CodeQuestionGenerationForm({formState, question_count}) 
                             value={level}
                             checked={difficulty === level}
                             onChange={(e) => setDifficulty(e.currentTarget.value)}
+                            className='difficulty-btn'
                           >
                             {level}
                           </ToggleButton>
                         ))}
                       </ButtonGroup> 
-                      {errors.difficulty && <div className="text-danger">{errors.difficulty}</div>}           
+                      {errors.difficulty && (
+                        <div className="error-alert mt-2">
+                          <i className="fas fa-exclamation-triangle icon"></i>
+                          {errors.difficulty}
+                        </div>
+                      )}           
                     </Form.Group>
                   </Col>
 
 
-                  <Col md={6}>
+                  <Col md={6} xs={12}>
                     <Form.Group className="form-group mb-3" controlId="subQuestionType">
                       <Form.Label className="form-label">
                         <i className="fas fa-tag me-2 icon"></i> Question Type *
