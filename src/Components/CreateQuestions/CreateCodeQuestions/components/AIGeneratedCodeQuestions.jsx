@@ -126,9 +126,10 @@ export default function AIGeneratedCodeQuestions({ questions, onCheck, checkedQu
         </div>
     
         {
-            <p className="text-success mt-2 text-sm mx-3">
-                You can edit the points for each question after adding them to the exam.
-            </p>
+            <div className="info-banner mt-3 mx-3">
+                <i className="fas fa-edit me-2"></i>
+                <span>You can edit points for each question after adding them to the exam.</span>
+            </div>
         }            
 
         {/* Add Questions Button */}

@@ -226,8 +226,9 @@ export default function CreateCodeQuestionsContent({examId, question_count, load
           </div>
         )}
         {errors?.restriction && (
-          <div className="mt-3">
-            <Alert variant="danger">{errors.restriction}</Alert>
+          <div className="error-alert mt-4 text-center">
+            <i className="fas fa-exclamation-triangle icon"></i>
+            {errors.restriction}
           </div>
         )}
       </div>
