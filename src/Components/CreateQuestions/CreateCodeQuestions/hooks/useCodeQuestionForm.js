@@ -134,6 +134,9 @@ export default function useCodeQuestionForm( examId, question_count, loadCount, 
         const updatedQuestions = [...questions];
         updatedQuestions.splice(index, 1);
         setQuestions(updatedQuestions);
+
+         //clear warning message
+        updatedQuestions.length < parseInt(question_count) && setWarning(null)
     };
 
     // Function to handle editing a question
