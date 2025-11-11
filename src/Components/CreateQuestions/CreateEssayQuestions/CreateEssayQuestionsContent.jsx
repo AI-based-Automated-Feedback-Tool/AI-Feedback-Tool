@@ -174,6 +174,7 @@ export default function CreateEssayQuestionsContent({examId, question_count, loa
                   Preview Essay Questions
                 </h4>
               </div>
+
               <div className="p-4">
                 <EssayQuestionTable
                   questions={question}
@@ -226,6 +227,12 @@ export default function CreateEssayQuestionsContent({examId, question_count, loa
               </div>
             </div>
           )}  
+          {error?.restriction && (
+            <div className="error-alert mt-4 text-center">
+              <i className="fas fa-exclamation-triangle icon"></i>
+              {error.restriction}
+            </div>
+          )}
       </div>             
     </div>
   );

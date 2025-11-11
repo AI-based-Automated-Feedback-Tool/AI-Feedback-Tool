@@ -158,6 +158,9 @@ export default function useEssayQuestionCreation(examId, question_count, loadCou
             const { saving, ...rest } = prev;
             return rest;
         });
+
+        //clear warning message
+        updatedQuestions.length < parseInt(question_count) && setWarning(null)
     };
 
     // Function to handle editing a question
@@ -176,6 +179,14 @@ export default function useEssayQuestionCreation(examId, question_count, loadCou
     };
 
     const saveAllQuestions = async () => {
+        const newErrors = {};
+        if (question.length != question_count) {
+            newErrors.restriction = "Please add the exact number of questions required.";
+        }
+        if (Object.keys(newErrors).length > 0) {
+            setError(newErrors);
+            return;
+        }
         setLoading(true);
         setError({});
         try {
