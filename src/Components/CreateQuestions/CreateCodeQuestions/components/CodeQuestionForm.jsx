@@ -1,59 +1,61 @@
-import React from 'react'
-import { Card } from "react-bootstrap";
 import { useState } from 'react';
-import { Nav } from "react-bootstrap";
 import ManualCodeQuestionCreationForm from './ManualCodeQuestionCreationForm';
 import CodeQuestionGenerationForm from './CodeQuestionGenerationForm';
-import AICallCount from '../../../AIUsage/AICallCount';
+import '../../../../css/questionCreation/QuestionCreationTabs.css';
 
-export default function CodeQuestionForm({setError, onAddQuestion, formState, disabled, question_count, usageCount, loadingAICount, errorAICallUsage}) {
+export default function CodeQuestionForm({onAddQuestion, formState, disabled, question_count, usageCount, loadingAICount, errorAICallUsage}) {
     const [activeTab, setActiveTab] = useState('manual'); // 'manual' or 'ai'
 
     return (
-        <Card>
-            <Card.Header className='bg-primary text-white'>
-                <h4>📝 Create Code Questions</h4>
-                <AICallCount 
-                    usageCount={usageCount}
-                    loadingAICount={loadingAICount}
-                    errorAICallUsage={errorAICallUsage}
-                />
-            </Card.Header>
-            <Card.Body>
-                <div>
-                <div className="flex border-b">
-                    <Nav variant="tabs" activeKey={activeTab} onSelect={(k) => setActiveTab(k)}>
-                        <Nav.Item>
-                            <Nav.Link eventKey="manual" className={activeTab === 'manual' ? 'bg-primary text-white' : ''}>
-                                Manual Question Creation
-                            </Nav.Link>
-                        </Nav.Item>
-                        <Nav.Item>
-                            <Nav.Link eventKey="ai" className={activeTab === 'ai' ? 'bg-primary text-white' : ''}>
-                                AI-Assisted Question Creation
-                            </Nav.Link>
-                        </Nav.Item>
-                        </Nav>
-                </div>
+        <div>
+            <div className="question-tabs" role="tablist">
+                <button 
+                    type='button'
+                    id="tab-manual"
+                    className={`question-tab ${activeTab === 'manual' ? 'active' : ''}`} 
+                    onClick={() => setActiveTab('manual')}
+                    aria-selected={activeTab === 'manual'}
+                    aria-controls="manual-panel"
+                    role="tab"
+                >
+                    Manual Creation
+                </button>
+                <button 
+                    type='button'
+                    id="tab-ai"
+                    className={`question-tab ${activeTab === 'ai' ? 'active' : ''}`} 
+                    onClick={() => setActiveTab('ai')}
+                    aria-selected={activeTab === 'ai'}
+                    aria-controls="ai-panel"
+                    role="tab"
+                >
+                    AI Generation
+                </button>
+            </div>
 
-                <div className="mt-4">
-                    {activeTab === 'manual' && (
-                        <ManualCodeQuestionCreationForm
-                            onAddQuestion={onAddQuestion}
-                            setError={setError}
-                            formState={formState}
-                            disabled={disabled}
-                        />
-                    )}
-                    {activeTab === 'ai' && (
-                        <CodeQuestionGenerationForm
-                            formState={formState}
-                            question_count={question_count}
-                        />
-                    )}
-                </div>
-            </div>        
-            </Card.Body>
-        </Card>
+            <div
+                id="manual-panel"
+                role="tabpanel"
+                aria-labelledby='tab-manual'
+                hidden={activeTab !== 'manual'}
+            >            
+                <ManualCodeQuestionCreationForm
+                    onAddQuestion={onAddQuestion}
+                    formState={formState}
+                    disabled={disabled}
+                />
+            </div>
+            <div
+                id="ai-panel"
+                role="tabpanel"
+                aria-labelledby='tab-ai'
+                hidden={activeTab !== 'ai'}
+            >
+                <CodeQuestionGenerationForm
+                    formState={formState}
+                    question_count={question_count}
+                />
+            </div>
+        </div>
     )
 }

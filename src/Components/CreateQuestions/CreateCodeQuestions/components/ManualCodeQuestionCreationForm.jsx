@@ -1,9 +1,10 @@
 import { Form, Button, Row, Col } from "react-bootstrap";
 import useFetchLanguages from "../hooks/useFetchLanguages";
+import React from "react";
+import '../../../../css/questionCreation/CodeCreation.css';
 
 
-export default function ManualCodeQuestionCreationForm({onAddQuestion, setError, formState, disabled}) {
-    const {languages, loading} = useFetchLanguages(setError);
+export default function ManualCodeQuestionCreationForm({onAddQuestion, formState, disabled}) {
     const {
         questionDescription, 
         setQuestionDescription, 
@@ -23,12 +24,12 @@ export default function ManualCodeQuestionCreationForm({onAddQuestion, setError,
         validate,
         resetForm
     } = formState;
+    const {languages, loading} = useFetchLanguages(setErrors);
 
     const handleAddQuestion = () => {
         // Validate and submit the question
         const isValid = validate();
         if (!isValid) {
-            setError({"message": "Please fill in all required fields correctly."});
             return;
         }
 
@@ -47,47 +48,79 @@ export default function ManualCodeQuestionCreationForm({onAddQuestion, setError,
     }
 
   return (
-    <Form>
-      <Form.Group className="mb-3">
-        <Form.Label className="fw-bold">Question Description*</Form.Label>
+    <Form className="space-y-6">
+      <Form.Group className="form-group" controlId="questionDescription">
+        <Form.Label className="form-label">
+          <i className="fas fa-align-left icon"></i> Question Description*
+        </Form.Label>
         <Form.Control 
           as="textarea" 
-          rows={2} className="fs-6"
+          className="form-textarea"
+          rows={3}
           placeholder='Enter your question here...'
           value={questionDescription}
           onChange={(e) => setQuestionDescription(e.target.value)}
         />
+        {errors.question && (
+          <div className="error-alert">
+            <i className="fas fa-exclamation-triangle icon"></i>
+            {errors.question}
+          </div>
+        )}
       </Form.Group>
 
-      <Form.Group className="mb-3">
-        <Form.Label className="fw-bold">Function Signature*</Form.Label>
+      <Form.Group className="form-group" controlId="functionSignature">
+        <Form.Label className="form-label">
+          <i className="fas fa-signature icon"></i> Function Signature*
+        </Form.Label>
         <Form.Control 
           as="textarea" 
-          rows={2} className="fs-6"
-          placeholder='Enter the function signature here...'
+          className="form-textarea"
+          rows={3}
+          placeholder='e.g. def calculate_sum(a: int, b: int) -> int:'
           value={functionSignature}
           onChange={(e) => setFunctionSignature(e.target.value)}  
         />
+        {errors.functionSignature && (
+          <div className="error-alert">
+            <i className="fas fa-exclamation-triangle icon"></i>
+            {errors.functionSignature}
+          </div>
+        )}
       </Form.Group>
 
-      <Form.Group className="mb-3">
-        <Form.Label className="fw-bold">Wrapper code*</Form.Label>
+      <Form.Group className="form-group" controlId="wrapperCode">
+        <Form.Label className="form-label">
+          <i className="fas fa-code icon"></i> Wrapper code*
+        </Form.Label>
         <Form.Control 
           as="textarea" 
-          rows={2} className="fs-6"
+          className="form-textarea"
+          rows={4}
           placeholder='Enter the wrapper code here...'
           value={wrapperCode}
           onChange={(e) => setWrapperCode(e.target.value)}
         />
+        {errors.wrapperCode && (
+          <div className="error-alert">
+            <i className="fas fa-exclamation-triangle icon"></i>
+            {errors.wrapperCode}
+          </div>
+        )}
       </Form.Group>
 
-      <Form.Group className="mb-3">
-        <Form.Label className="fw-bold">Test Cases *</Form.Label>
+      <Form.Group className="form-group" controlId="testCases">
+        <Form.Label className="form-label">
+          <i className="fas fa-vial icon"></i> Test Cases *
+        </Form.Label>
+        
         {testCases.map((testCase, index) => (
-          <Row className='mb-2' key={index}>
+          <Row key={index} className="align-items-end mb-3 g-3">
             <Col>
               <Form.Control 
                 placeholder='Input'
+                type="text"
+                className="form-input"
                 value={testCase.input}
                 onChange={(e) => {
                   const newTestCase = [...testCases];
@@ -99,6 +132,7 @@ export default function ManualCodeQuestionCreationForm({onAddQuestion, setError,
             <Col>
               <Form.Control
                 placeholder='Output'
+                className="form-input"
                 value={testCase.output}
                 onChange={(e) => {
                   const newTestCase = [...testCases];
@@ -108,51 +142,98 @@ export default function ManualCodeQuestionCreationForm({onAddQuestion, setError,
               />
             </Col>
             <Col xs="auto">
-              <Button variant="outline-secondary" onClick={addTestCase}>+</Button>
+              <div className="test-case-add">                
+                <Button 
+                  variant="outline-secondary" 
+                  onClick={addTestCase}
+                >
+                  <i className="fas fa-plus"></i>
+                </Button>
+              </div>
             </Col>
           </Row>
         ))}
+        {errors.testCases && (
+          <div className="error-alert">
+            <i className="fas fa-exclamation-triangle icon"></i>
+            {errors.testCases}
+          </div>
+        )}
       </Form.Group>
 
-      <Form.Group className="mb-3">
-        <Form.Label className="fw-bold">Programming Language *</Form.Label>
-        <Form.Select
-          value={selectedLanguage?.id || ""}
-          onChange={(e) => {
-            const selectedLang = languages.find(lang => String(lang.id) === e.target.value);
-            setSelectedLanguage(selectedLang);
-          }}
-        >
-          {languages.map((language) => (
-            <option key={language.id} value={language.id}>
-              {language.language_name}
-            </option>
-          ))}
-        </Form.Select>
+      <Form.Group className="form-group" controlId="programmingLanguage">
+        <Form.Label className="form-label">
+          <i className="fas fa-code-branch icon"></i> Programming Language *
+        </Form.Label>
+        <div className="custom-select">
+          <Form.Select
+            value={selectedLanguage?.id || ""}
+            onChange={(e) => {
+              const selectedLang = languages.find(lang => String(lang.id) === e.target.value);
+              setSelectedLanguage(selectedLang);
+            }}
+            className="form-select"
+          >
+            <option value="">Choose language</option>
+            {languages.map((language) => (
+              <option key={language.id} value={language.id}>
+                {language.language_name}
+              </option>
+            ))}
+          </Form.Select>
+        </div>
+        {errors.language && (
+          <div className="error-alert">
+            <i className="fas fa-exclamation-triangle icon"></i>
+            {errors.language}
+          </div>
+        )}
       </Form.Group>
 
-      <Form.Group className="mb-3">
-        <Form.Label className="fw-bold">Number of points *</Form.Label>
-          <Form.Control
-            type="number"
-            min="1"
-            placeholder="Enter points for this question"
-            value={points}
-            onChange={(e) => setPoints(Number(e.target.value))}
-            required
-          />
+      <Form.Group className="form-group" controlId="points">
+        <Form.Label className="form-label">
+          <i className="fas fa-coins icon"></i> Number of points *
+        </Form.Label>
+        <Form.Control
+          type="number"
+          className="form-input"
+          min="1"
+          placeholder="Enter points for this question"
+          value={points}
+          onChange={(e) => setPoints(Number(e.target.value))}
+          required
+        />
+        {errors.points && (
+          <div className="error-alert">
+            <i className="fas fa-exclamation-triangle icon"></i>
+            {errors.points}
+          </div>
+        )}
       </Form.Group>
 
       {/* Submit Button */}
       <div className="d-flex justify-content-end" >
-        <Button 
-          variant="primary" 
+        <button 
+          type="button"
+          className="action-btn"
           onClick={handleAddQuestion} 
           disabled= {loading || disabled}
         >
-          ➕ Save Question
-        </Button>
+          {disabled ? (
+            <>
+              Limit Reached
+            </>
+          ) : (
+            "Create Question"
+          )}
+        </button>
       </div>
+      {errors.message && (
+        <div className="error-alert">
+          <i className="fas fa-exclamation-triangle icon"></i>
+          {errors.message}
+        </div>
+      )}
 
     </Form>
   )

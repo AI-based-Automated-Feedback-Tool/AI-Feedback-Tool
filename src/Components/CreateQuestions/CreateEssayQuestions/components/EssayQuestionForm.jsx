@@ -2,51 +2,56 @@ import { Card, Nav } from "react-bootstrap";
 import { useState } from "react";
 import ManualMcqQuestionCreation from "./ManualEssayQuestionCreation";
 import EssayQuestionGenerationForm from "./EssayQuestionGenerationForm";
-import AICallCount from "../../../AIUsage/AICallCount";
+import '../../../../css/questionCreation/QuestionCreationTabs.css';
 
 export default function EssayQuestionForm({ formState, usageCount, loadingAICount, errorAICallUsage}) {  
     const [activeTab, setActiveTab] = useState('manual');
   return (
-    <Card>
-        <Card.Header className='bg-primary text-white'>
-            <h4>Essay Question</h4>
-            <AICallCount 
-              usageCount={usageCount}
-              loadingAICount={loadingAICount}
-              errorAICallUsage={errorAICallUsage}
+    <div>
+        <div className="question-tabs" role="tablist">
+            <button 
+                type='button'
+                id="tab-manual"
+                className={`question-tab ${activeTab === 'manual' ? 'active' : ''}`} 
+                onClick={() => setActiveTab('manual')}
+                aria-selected={activeTab === 'manual'}
+                aria-controls="manual-panel"
+                role="tab"
+            >
+                Manual Creation
+            </button>
+            <button 
+                type='button'
+                id="tab-ai"
+                className={`question-tab ${activeTab === 'ai' ? 'active' : ''}`} 
+                onClick={() => setActiveTab('ai')}
+                aria-selected={activeTab === 'ai'}
+                aria-controls="ai-panel"
+                role="tab"
+            >
+                AI Generation
+            </button>
+        </div>
+        <div 
+            id="manual-panel"
+            role="tabpanel"
+            aria-labelledby='tab-manual'
+            hidden={activeTab !== 'manual'}
+        >
+            <ManualMcqQuestionCreation 
+                formState={formState} 
             />
-        </Card.Header>
-        <Card.Body>
-            <div>
-                <div className="flex border-b">
-                    <Nav variant="tabs" activeKey={activeTab} onSelect={(k) => setActiveTab(k)}>
-                        <Nav.Item>
-                            <Nav.Link eventKey="manual" className={activeTab === 'manual' ? 'bg-primary text-white' : ''}>
-                                Manual Question Creation
-                            </Nav.Link>
-                        </Nav.Item>
-                        <Nav.Item>
-                            <Nav.Link eventKey="ai" className={activeTab === 'ai' ? 'bg-primary text-white' : ''}>
-                                AI-Assisted Question Creation
-                            </Nav.Link>
-                        </Nav.Item>
-                        </Nav>
-                </div>
-
-                <div className="mt-4">
-                    {activeTab === 'manual' && (
-                        <ManualMcqQuestionCreation 
-                            formState={formState} 
-                        />
-                    )}
-                    {activeTab === 'ai' && (
-                        <EssayQuestionGenerationForm 
-                            formState={formState} 
-                        />
-                    )}
-                </div>
-            </div>
-        </Card.Body>
-    </Card>
+        </div>
+        <div 
+            id="ai-panel"
+            role="tabpanel"
+            aria-labelledby='tab-ai'
+            hidden={activeTab !== 'ai'}
+        >
+            <EssayQuestionGenerationForm 
+                formState={formState} 
+            />
+        </div>
+    </div>
   )
 }

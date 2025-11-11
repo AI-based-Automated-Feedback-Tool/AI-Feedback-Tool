@@ -4,7 +4,8 @@ import QuestionTable from './QuestionTable';
 import EditQuestion from './EditQuestion';
 import {useMcqQuestion} from './useMcqQuestion';
 import { useNavigate } from 'react-router-dom';
-import '../../../css/questionCreation/McqCreation.css'
+import '../../../css/questionCreation/QuestionCreation.css';
+import '../../../css/questionCreation/McqCreation.css';
 import AICallCount from "../../AIUsage/AICallCount";
 
 export default function CreateMcqQuestionsContent({examId, question_count, loadCount, usageCount, loadingAICount, errorAICallUsage}) {
@@ -48,14 +49,14 @@ export default function CreateMcqQuestionsContent({examId, question_count, loadC
     }
 
   return (
-    <div className="mcq-page">
+    <div className="question-creation-page mcq-page">
         <div className="container">
 
             {/* Header Card */}
-            <div className="mcq-top-card mb-5">
-                <div className="mcq-top-header">
-                    <h1 className="mcq-top-title">Create MCQ Questions</h1>
-                    <p className="mcq-top-subtitle">
+            <div className="top-card mb-5">
+                <div className="top-header">
+                    <h1 className="top-title">Create MCQ Questions</h1>
+                    <p className="top-subtitle">
                         Build high-quality multiple-choice questions for your exam
                     </p>
                 </div>
@@ -70,7 +71,7 @@ export default function CreateMcqQuestionsContent({examId, question_count, loadC
                     />
                 </div>
 
-                <div className="mcq-top-footer">
+                <div className="top-footer">
                     <p className="progress-text">
                         Need <strong>{question_count}</strong> questions • You have{" "}
                         <strong>{questions.length}</strong>

@@ -3,7 +3,7 @@ import { useState } from "react";
 import useMcqQuestionForm from "./hooks/useMcqQuestionForm";
 import AIGeneratedQuestions from "./AIGeneratedQuestions";
 
-export default function McqQuestionGenerationForm({onSave, warning, disabled, questionCount, noOfQuestions, loadCount}) {
+export default function McqQuestionGenerationForm({onSave, warning, disabled, questionCount, noOfQuestions, loadCount, usageCount}) {
     const {
         errors,
         questionTopic, 
@@ -29,7 +29,7 @@ export default function McqQuestionGenerationForm({onSave, warning, disabled, qu
         aiModel,
         gradingNotes, 
         setGradingNotes
-    } = useMcqQuestionForm(onSave, questionCount, noOfQuestions, loadCount);
+    } = useMcqQuestionForm(onSave, questionCount, noOfQuestions, loadCount, usageCount);
 
     const [isModelOpen, setIsModelOpen] = useState(false);
     const aiModels = [
@@ -107,7 +107,7 @@ export default function McqQuestionGenerationForm({onSave, warning, disabled, qu
                     {/* Question Topic */}
                         <Form.Group className="form-group" controlId="questionTopic">
                             <Form.Label className="form-label">
-                                Topic of questions *
+                                <i className="fas fa-question-circle icon"></i> Topic of questions *
                             </Form.Label>
                             <Form.Control 
                                 as="textarea" 
@@ -167,8 +167,7 @@ export default function McqQuestionGenerationForm({onSave, warning, disabled, qu
                         {/* Describe about the topic for guidance */}
                         <Form.Group className="form-group" controlId="guidance">
                             <Form.Label className="form-label">
-                                <i className="fas ffa-lightbulb icon"></i>
-                                Guidance for question creation *
+                                <i className="fas fa-lightbulb icon"></i> Guidance for question creation *
                             </Form.Label>
                             <Form.Control
                                 as="textarea"
@@ -264,7 +263,13 @@ export default function McqQuestionGenerationForm({onSave, warning, disabled, qu
                                     </>
                                 )}
                             </button>
-                        </div>          
+                        </div> 
+                        {errors.usageLimit && (
+                            <div className="error-alert mt-4 text-center">
+                                <i className="fas fa-exclamation-triangle icon"></i>
+                                {errors.usageLimit}
+                            </div>
+                        )}
                     </Form>
                 </div>
             </div>
