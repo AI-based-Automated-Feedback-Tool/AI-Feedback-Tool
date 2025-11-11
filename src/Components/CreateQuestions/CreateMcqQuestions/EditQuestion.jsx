@@ -1,7 +1,7 @@
 import React from 'react'
 import { Modal, Form, Button  } from 'react-bootstrap'
 import { useState } from 'react';
-import '../../../css/questionCreation/editQuestion/EditMCQQuestionModal.css';
+import '../../../css/questionCreation/editQuestion/EditQuestionModal.css';
 
 export default function EditQuestion({show, handleClose, questionDetails, onSave}) {  
     const [questiontext, setQuestionText] = useState(questionDetails.question);

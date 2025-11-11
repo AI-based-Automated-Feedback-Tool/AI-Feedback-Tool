@@ -45,7 +45,7 @@
 }
 
 /* labels */
-.form-label {
+.edit-question-modal .form-label {
   font-weight: 600;
   font-size: .95rem;
   color: #374151;
@@ -54,7 +54,7 @@
   gap: .5rem;
   margin-bottom: .5rem;
 }
-.form-label .icon {
+.edit-question-modal .form-label .icon {
   color: #667eea;
   font-size: 1.1rem;
 }
@@ -80,17 +80,17 @@
 }
 
 /* answer options */
-.answer-option-group {
+.edit-question-modal .answer-option-group {
   display: flex;
   flex-direction: column;
   gap: .75rem;
 }
-.answer-option-wrapper {
+.edit-question-modal .answer-option-wrapper {
   display: flex;
   align-items: stretch;
   gap: .75rem;
 }
-.answer-option-wrapper .form-label {
+.edit-question-modal .answer-option-wrapper .form-label {
   min-width: 80px;
   margin: 0;
   padding-top: 0.5rem;
@@ -102,17 +102,17 @@
   color: #64748b;
 }
 /* input takes remaining space */
-.answer-option-wrapper .form-control {
+.edit-question-modal .answer-option-wrapper .form-control {
   flex: 1;
 }
 
 /* correct answer checkboxes */
-.correct-answer-group {
+.edit-question-modal .correct-answer-group {
   display: flex;
   flex-direction: column;
   gap: .75rem;
 }
-.correct-answer-item {
+.edit-question-modal .correct-answer-item {
   display: flex;
   align-items: center;
   gap: .75rem;
@@ -122,17 +122,17 @@
   border-radius: .75rem;
   transition: all .3s ease;
 }
-.correct-answer-item:hover {
+.edit-question-modal .correct-answer-item:hover {
   border-color: #667eea;
   background: #f8fafc;
 }
-.correct-answer-item .form-check-input {
+.edit-question-modal .correct-answer-item .form-check-input {
   width: 1.4rem;
   height: 1.4rem;
   accent-color: #10b981;
   cursor: pointer;
 }
-.correct-answer-item .form-check-label {
+.edit-question-modal .correct-answer-item .form-check-label {
   margin: 0;
   flex-grow: 1;
   cursor: pointer;
@@ -141,7 +141,7 @@
 }
 
 /* error text */
-.error-text {
+.edit-question-modal .error-text {
   color: #dc2626;
   font-size: .85rem;
   font-weight: 500;
@@ -162,7 +162,7 @@
 }
 
 /* action buttons */
-.action-btn {
+.edit-question-modal .action-btn {
   background: linear-gradient(135deg, #667eea, #764ba2);
   color: #fff;
   border: none;
@@ -179,25 +179,25 @@
   min-width: 120px;
   justify-content: center;
 }
-.action-btn:hover:not(:disabled) {
+.edit-question-modal .action-btn:hover:not(:disabled) {
   transform: translateY(-2px);
   box-shadow: 0 8px 28px rgba(102,126,234,.4);
 }
-.action-btn:disabled {
+.edit-question-modal .action-btn:disabled {
   opacity: .6;
   cursor: not-allowed;
 }
-.action-btn-secondary {
+.edit-question-modal .action-btn-secondary {
   background: #e2e8f0;
   color: #475569;
 }
-.action-btn-secondary:hover:not(:disabled) {
+.edit-question-modal .action-btn-secondary:hover:not(:disabled) {
   background: #cbd5e1;
   color: #1f2937;
 }
 
 /* spinner inside button */
-.action-btn .spinner {
+.edit-question-modal .action-btn .spinner {
   width: 1.1rem;
   height: 1.1rem;
   border: 2px solid transparent;
@@ -230,4 +230,52 @@
 @media (max-width: 576px) {
   .answer-option-wrapper { flex-direction: column; align-items: stretch; }
   .answer-option-wrapper .form-label { width: auto; margin-bottom: .25rem; }
+}
+
+/* code question - edit */
+/* reusable small action buttons */
+.edit-question-modal .action-btn-sm {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.75rem;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.edit-question-modal.action-btn-sm:hover {
+  transform: translateY(-1px);
+}
+
+/* test case row */
+.edit-question-modal .test-case-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.edit-question-modal.test-case-row {
+  background: white;
+  padding: 0.75rem;
+  border-radius: 0.75rem;
+  border: 1.5px solid #e2e8f0;
+  transition: all 0.2s ease;
+}
+
+.edit-question-modal .test-case-row:hover {
+  border-color: #667eea;
+  box-shadow: 0 2px 8px rgba(102,126,234,.1);
+}
+
+/* responsive */
+@media (max-width: 768px) {
+  .test-case-row .col {
+    margin-bottom: 0.5rem;
+  }
+  .test-case-row .col:last-child {
+    margin-bottom: 0;
+  }
 }
