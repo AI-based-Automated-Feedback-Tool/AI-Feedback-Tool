@@ -1,6 +1,7 @@
 import React from 'react'
 import { Modal, Form, Button  } from 'react-bootstrap'
 import { useState } from 'react';
+import '../../../css/questionCreation/editQuestion/EditMCQQuestionModal.css';
 
 export default function EditQuestion({show, handleClose, questionDetails, onSave}) {  
     const [questiontext, setQuestionText] = useState(questionDetails.question);
@@ -57,73 +58,136 @@ export default function EditQuestion({show, handleClose, questionDetails, onSave
     }
 
     return (
-    <Modal show={show} onHide={handleClose} size="lg">
+    <Modal 
+        show={show} 
+        onHide={handleClose} 
+        size="lg" 
+        className="edit-question-modal" 
+        centered
+    >
         <Modal.Header closeButton>
-            <Modal.Title>Edit Question</Modal.Title>
+            <Modal.Title>
+                <i className="fas fa-edit me-2"></i> Edit Question
+            </Modal.Title>
         </Modal.Header>
 
         <Modal.Body>
-            <Form.Group className="mb-3">
-                <Form.Label>Question</Form.Label>
+            <Form.Group controlId="edit-question-text" className="mb-4">
+                <Form.Label className='form-label'>
+                    <i className="fas fa-question-circle icon"></i> Question
+                </Form.Label>
                 <Form.Control
                     as="textarea"
                     rows={3}
                     value={questiontext}
                     onChange={(e) => setQuestionText(e.target.value)}
+                    placeholder='Enter your question...'
                 />
-                {errors.question && <div className="text-danger small">{errors.question}</div>}
+                {errors.question && (
+                    <div className="error-text">
+                        <i className="fas fa-exclamation-triangle icon"></i> {errors.question}
+                    </div>
+                )}
             </Form.Group>
         
-            <Form.Group className="mb-3">
-                <Form.Label>Answer Options</Form.Label>
-                {answerOptions.map((answer, index) => (
-                    <Form.Control
-                        key={index}
-                        type="text"
-                        value={answer}
-                        onChange={(e) => updateAnswers(index, e)}
-                    />
-                ))}
-                {errors.answers && <div className="text-danger small">{errors.answers}</div>}
-            </Form.Group>
-
-            <Form.Group className="mb-3">
-                <Form.Label>No of Answers</Form.Label>
-                    <Form.Control
-                        type="number"
-                        value={numOfAnswers}
-                        onChange={(e) => setNumOfAnswers( e.target.value)}
-                    />
-            </Form.Group>
-
-            <Form.Group className="mb-3">
-                <Form.Label>Correct Answers</Form.Label>
+            <div className="mb-4">
+                <Form.Label className='form-label'>
+                    <i className="fas fa-list-ul icon"></i> Answer Options
+                </Form.Label>
+                <div className="answer-option-group">
                     {answerOptions.map((answer, index) => (
-                        <Form.Check
+                        <Form.Group 
+                            className="answer-option-wrapper mb-2" 
                             key={index}
-                            type="checkbox"
-                            label={answer}
-                            checked={correctAnswers.includes(answer)}
-                            onChange={() => handleChange(answer)}
-                        />
-            ))}
-            {errors.correct && <div className="text-danger small">{errors.correct}</div>}
-            </Form.Group>
+                            controlId={`answer-option-${index}`}
+                        >
+                            <Form.Label 
+                                className='fw-bold text-muted d-flex align-items-center'
+                                style={{ minWidth: '80px', margin: 0 }}
+                            >
+                                Option {index + 1}
+                            </Form.Label>
+                            <Form.Control
+                                type="text"
+                                value={answer}
+                                onChange={(e) => updateAnswers(index, e)}
+                                placeholder={`Option ${index + 1}`}
+                                className='flex-grow-1'
+                            />
+                        </Form.Group>
+                    ))}
+                </div>
+                {errors.answers && (
+                    <div className="error-text">
+                        <i className="fas fa-exclamation-triangle icon"></i> {errors.answers}
+                    </div>
+                )}
+            </div>
 
-            <Form.Group className="mb-3">
-                <Form.Label>Points</Form.Label>
+            <Form.Group controlId="num-answers" className="mb-4">
+                <Form.Label className="form-label">
+                    <i className="fas fa-hashtag icon"></i> No of Answers
+                </Form.Label>
                 <Form.Control
                     type="number"
+                    value={numOfAnswers}
+                    onChange={(e) => setNumOfAnswers( e.target.value)}
+                />
+            </Form.Group>
+
+            <div className="mb-4">
+                <Form.Label className="form-label">
+                    <i className="fas fa-check-circle icon"></i> Correct Answers
+                </Form.Label>
+                <div className='correct-answer-group'>
+                    {answerOptions.map((answer, index) => (
+                        <Form.Group
+                            key= {index}
+                            controlId={`correct-answer-${index}`}
+                            className='correct-answer-item'
+                        >
+                            <Form.Check
+                                type="checkbox"
+                                checked={correctAnswers.includes(answer)}
+                                onChange={() => handleChange(answer)}
+                                label={answer || `Option ${index + 1}`}
+                            />
+                        </Form.Group>
+                    ))
+                    }
+                </div>
+                {errors.correct && (
+                    <div className="error-text">
+                        <i className="fas fa-exclamation-triangle icon"></i> {errors.correct}
+                    </div>
+                )}
+            </div>
+
+            <Form.Group controlId="edit-points" className="mb-4">
+                <Form.Label className="form-label">
+                    Points
+                </Form.Label>
+                <Form.Control
+                    type="number"
+                    min="1"
                     value={points}
                     onChange={(e) => setPoints(e.target.value)}
                 />
+                {errors.points && (
+                    <div className="error-text">
+                        <i className="fas fa-exclamation-triangle icon"></i> {errors.points}
+                    </div>
+                )}
             </Form.Group>
-            {errors.points && <div className="text-danger small">{errors.points}</div>}
       </Modal.Body>
 
       <Modal.Footer>
-        <Button variant="secondary" onClick={handleClose}>Close</Button>
-        <Button variant="primary" onClick={handleEdit} >Save Changes</Button>
+        <button className="action-btn action-btn-secondary" onClick={handleClose}>
+            Close
+        </button>
+        <button className="action-btn" onClick={handleEdit}>
+            Save Changes
+        </button>
       </Modal.Footer>
     </Modal>
   )
