@@ -279,3 +279,34 @@
     margin-bottom: 0;
   }
 }
+
+/* essay edit form*/
+/* file upload button */
+#essay-attachment-input + label {
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+/* attachment preview card */
+.attachment-preview {
+  border: 1.5px solid #e2e8f0;
+  transition: all 0.2s ease;
+}
+.attachment-preview:hover {
+  border-color: #667eea;
+  box-shadow: 0 2px 8px rgba(102,126,234,.1);
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+/* responsive */
+@media (max-width: 576px) {
+  .attachment-preview .d-flex {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+}
