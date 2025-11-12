@@ -76,12 +76,12 @@
   border: none;
   border-radius: 20px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
+  overflow: visible; /* allow content to expand */
   transition: all 0.3s ease;
   cursor: pointer;
   position: relative;
   animation: slideUp 0.6s ease-out;
-  height: 280px;
+  min-height: 220px; /* allow growth for long titles/descriptions */
   display: flex;
   flex-direction: column;
 }
@@ -107,7 +107,7 @@
   padding: 1.5rem;
   text-align: center;
   position: relative;
-  overflow: hidden;
+  overflow: visible; /* allow long titles to wrap instead of being clipped */
 }
 
 .course-card-header::before {
@@ -128,11 +128,14 @@
   position: relative;
   z-index: 2;
   text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+  white-space: normal; /* allow wrapping */
+  word-break: break-word;
+  overflow-wrap: anywhere;
 }
 
 .course-card-body {
   padding: 1.5rem;
-  flex: 1;
+  flex: 1 1 auto;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -153,7 +156,9 @@
   color: #4a5568;
   line-height: 1.6;
   font-size: 0.95rem;
-  flex: 1;
+  flex: 1 1 auto;
+  white-space: normal;
+  word-break: break-word;
 }
 
 .course-stats {

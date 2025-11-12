@@ -22,28 +22,11 @@ const TeacherCourses = () => {
           throw new Error("Please login to view courses");
         }
 
-        // Step 1: Get all exams created by this user
-        const { data: exams, error: examsError } = await supabase
-          .from('exams')
-          .select('course_id')
-          .eq('user_id', user.id)
-          .not('course_id', 'is', null); 
-
-        if (examsError) throw examsError;
-
-        // Extract unique course_ids from exams
-        const courseIds = [...new Set(exams.map(exam => exam.course_id))];
-        
-        if (courseIds.length === 0) {
-          setCourses([]);
-          return;
-        }
-
-        // Step 2: Get course details for these course_ids
+        // Fetch courses created by this user (direct query)
         const { data: coursesData, error: coursesError } = await supabase
           .from('courses')
           .select('course_id, course_code, title, description')
-          .in('course_id', courseIds)
+          .eq('user_id', user.id)
           .order('title', { ascending: true });
 
         if (coursesError) throw coursesError;
