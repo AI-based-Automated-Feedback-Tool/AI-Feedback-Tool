@@ -37,6 +37,7 @@ const ConfigureExam = () => {
                 const { data, error } = await supabase
                     .from('courses')
                     .select('course_id, title, course_code')
+                    .eq('user_id', session.user.id)
                     .order('created_at', { ascending: false });
 
                 if (error) throw error;
