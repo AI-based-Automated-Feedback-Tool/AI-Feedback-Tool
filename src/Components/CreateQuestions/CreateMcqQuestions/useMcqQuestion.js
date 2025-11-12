@@ -33,6 +33,7 @@ export const useMcqQuestion = (examId, question_count) => {
                 return prevQuestions;
             }
             const newQuestionsList = [...prevQuestions, newQuestion]
+            if (error && error.restriction) setError(null);
             
             // Show warning if limit reached now
             if (newQuestionsList.length === parseInt(question_count)) {
@@ -68,12 +69,14 @@ export const useMcqQuestion = (examId, question_count) => {
     }
     // Save all questions to the database
     const saveAllQuestions = async () => {
-        if(!userId){
-            setError("User not authenticated");
-            return;
-        }
-        setLoading(true);
+        if (questions.length != question_count) {
+            const restrictionError = { restriction: "Please add the exact number of questions required." };
+            setError(restrictionError);
+            return { success: false, error: restrictionError };
+        } 
         setError(null);
+        setLoading(true);
+
         try{
             for (const question of questions) {
                 const payload = {
@@ -87,8 +90,9 @@ export const useMcqQuestion = (examId, question_count) => {
                 }
                 await saveMcqQuestion(payload);
             }  
+            return { success: true };
         } catch (err) {
-            setError(err.message || "Something went wrong");
+            setError({ message: "Something went wrong" });
         } finally {
             setLoading(false);
         }

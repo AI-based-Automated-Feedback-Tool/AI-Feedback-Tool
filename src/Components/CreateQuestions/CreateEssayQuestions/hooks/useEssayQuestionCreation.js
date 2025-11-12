@@ -5,8 +5,9 @@ import { supabase } from "../../../../SupabaseAuth/supabaseClient";
 import { createEssayQuestion } from "../service/createEssayQuestionService"; 
 import { useNavigate} from 'react-router-dom';
 import { generateEssayQuestion } from '../service/createEssayQuestionService';
+import { DAILY_LIMIT } from "../../../../config/api";
 
-export default function useEssayQuestionCreation(examId, question_count) {
+export default function useEssayQuestionCreation(examId, question_count, loadCount, usageCount) {
     const [userId, setUserId] = useState(null);
     const [question, setQuestion] = useState([]);
     const [questionText, setQuestionText] = useState("");
@@ -157,6 +158,9 @@ export default function useEssayQuestionCreation(examId, question_count) {
             const { saving, ...rest } = prev;
             return rest;
         });
+
+        //clear warning message
+        updatedQuestions.length < parseInt(question_count) && setWarning(null)
     };
 
     // Function to handle editing a question
@@ -175,6 +179,14 @@ export default function useEssayQuestionCreation(examId, question_count) {
     };
 
     const saveAllQuestions = async () => {
+        const newErrors = {};
+        if (question.length != question_count) {
+            newErrors.restriction = "Please add the exact number of questions required.";
+        }
+        if (Object.keys(newErrors).length > 0) {
+            setError(newErrors);
+            return;
+        }
         setLoading(true);
         setError({});
         try {
@@ -218,6 +230,11 @@ export default function useEssayQuestionCreation(examId, question_count) {
         setGenerateError(null);
         //basic validation
         const newError = {}
+        if (usageCount[aiModel] >= DAILY_LIMIT) {
+            newError.usageLimit = `You have reached the daily limit for ${aiModel} model. Please try again later.`;
+            setError(newError);
+            return;
+        }
         if (!topic.trim()) {
             newError.topic = "Topic is required.";
         }
@@ -259,6 +276,9 @@ export default function useEssayQuestionCreation(examId, question_count) {
                 const data = await generateEssayQuestion(params);
                 console.log("Generated Questions:", data);
                 setGeneratedQuestions(data.questions);
+
+                // Refresh AI usage count after generation
+                await loadCount();
             } catch (error) {
                 console.error("Error generating essay questions:", error);
                 // need to set error state here

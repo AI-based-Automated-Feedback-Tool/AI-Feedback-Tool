@@ -13,7 +13,10 @@ const useFetchLanguages = (setGlobalError) => {
                 setLanguages(data);
             })
             .catch(error => {
-                setGlobalError(error.message || "Failed to fetch languages");
+                setGlobalError(prev => ({
+                    ...prev,
+                    message: error.message || "Failed to fetch languages."
+                }));
             })
             .finally(() => setLoading(false));
     }, []);

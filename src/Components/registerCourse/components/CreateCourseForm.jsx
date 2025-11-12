@@ -14,56 +14,64 @@ export default function CreateCourseForm({ formState}) {
         error,
     } = formState
   return (
-    <>
-        { error && (
-            <Alert variant="info">
-                <p className="mb-0">
-                    {error}
-                </p>
+    <div className="space-y-6">
+
+        {/* ERROR ALERT */}
+        {error && (
+            <Alert variant="danger" className="mb-4">
+            <p className="mb-0">{error}</p>
             </Alert>
         )}
-        <Form.Group className="mb-3">
-            <Form.Label className='fw-bold  mb-1'>Course Name *</Form.Label>
-            <Form.Control 
-                type="text" 
-                placeholder="Enter course name" 
-                value={courseName} 
-                onChange={(e) => setCourseName(e.target.value)} 
-            />
-        </Form.Group>
 
-        <Form.Group className="mb-3">
-            <Form.Label className='fw-bold  mb-1'>Course Description *</Form.Label>
-            <Form.Control 
-                as="textarea" 
-                rows={3} 
-                placeholder="Enter course description" 
-                value={courseDescription} 
-                onChange={(e) => setCourseDescription(e.target.value)} 
+        <div className="form-group">
+            <label className="form-label">Course Name *</label>
+            <input
+                type="text"
+                className="form-input"
+                placeholder="e.g., Advanced JavaScript"
+                value={courseName}
+                onChange={e => setCourseName(e.target.value)}
             />
-        </Form.Group>
-
-        <Form.Group className="mb-3">
-            <Form.Label className='fw-bold  mb-1'>Course Code *</Form.Label>
-            <Form.Control 
-                type="text" 
-                placeholder="Enter course code (Ex: CS101)" 
-                value={courseCode} 
-                onChange={(e) => setCourseCode(e.target.value)} 
-            />
-        </Form.Group>
-
-        <div className='d-flex justify-content-end'>
-            <Button 
-                onClick={() => registerCourse(userId)}
-                disabled={loading}
-                variant='primary'
-                size='lg'
-            >
-                Register Course
-            </Button>
         </div>
 
-    </>
+        <div className="form-group">
+            <label className="form-label">Course Description *</label>
+            <textarea
+                className="form-textarea"
+                rows="4"
+                placeholder="Brief overview of the course content and goals..."
+                value={courseDescription}
+                onChange={e => setCourseDescription(e.target.value)}
+            />
+        </div>
+
+        <div className="form-group">
+            <label className="form-label">Course Code *</label>
+            <input
+                type="text"
+                className="form-input"
+                placeholder="e.g., CS201"
+                value={courseCode}
+                onChange={e => setCourseCode(e.target.value)}
+            />
+        </div>
+
+        <div className="text-end">
+            <button
+                className="action-btn"
+                onClick={() => registerCourse(userId)}
+                disabled={loading}
+            >
+                {loading ? (
+                    <>
+                    <span className="spinner"></span>
+                    Registering...
+                    </>
+                ) : (
+                    <>Register Course</>
+                )}
+            </button>
+        </div>
+    </div>
   )
 }

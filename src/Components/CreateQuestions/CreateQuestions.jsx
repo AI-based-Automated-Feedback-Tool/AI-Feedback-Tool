@@ -4,6 +4,7 @@ import { useLocation } from 'react-router-dom';
 import CreateMcqQuestionsContent from './CreateMcqQuestions/CreateMcqQuestionsContent';
 import CreateCodeQuestionsContent from './CreateCodeQuestions/CreateCodeQuestionsContent';
 import CreateEssayQuestionsContent from './CreateEssayQuestions/CreateEssayQuestionsContent';
+import { useAICallUsage } from '../AIUsage/hooks/useAICallUsage';
 
 export default function CreateQuestions() {
     
@@ -12,14 +13,36 @@ export default function CreateQuestions() {
     const query = new URLSearchParams(location.search);
     const question_count = query.get('question_count');
     const navigate = useNavigate();
+    const { usageCount, loadingAICount, errorAICallUsage, loadCount } = useAICallUsage();
 
 
   return (
     <>
         { questionType === "mcq" ? (
-            <CreateMcqQuestionsContent examId = {examId} question_count = {question_count} />) : (questionType === "code") ? 
-                (<CreateCodeQuestionsContent examId = {examId} question_count = {question_count} />) : (questionType === "essay") ? 
-                    (<CreateEssayQuestionsContent examId = {examId} question_count = {question_count} />) : null
+          <CreateMcqQuestionsContent 
+            examId = {examId} 
+            question_count = {question_count} 
+            loadCount={loadCount} 
+            usageCount={usageCount}
+            loadingAICount={loadingAICount}
+            errorAICallUsage={errorAICallUsage}
+          />) : (questionType === "code") ? 
+            (<CreateCodeQuestionsContent 
+              examId = {examId} 
+              question_count = {question_count} 
+              loadCount={loadCount} 
+              usageCount={usageCount}
+              loadingAICount={loadingAICount}
+              errorAICallUsage={errorAICallUsage}
+            />) : (questionType === "essay") ? 
+              (<CreateEssayQuestionsContent 
+                examId = {examId} 
+                question_count = {question_count} 
+                loadCount={loadCount} 
+                usageCount={usageCount}
+                loadingAICount={loadingAICount}
+                errorAICallUsage={errorAICallUsage}
+              />) : null
         }
     </>  
   );

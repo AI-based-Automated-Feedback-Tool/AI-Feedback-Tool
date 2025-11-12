@@ -1,3 +1,4 @@
+import { supabase } from '../../../../SupabaseAuth/supabaseClient';
 export const uploadAttachment = async (file) => {
     try{
         const formData = new FormData();
@@ -64,10 +65,15 @@ export const createEssayQuestion = async (questionData) => {
 //API service to generate essay questions using AI
 export const generateEssayQuestion = async (params) => {
     try{
+        //Get the current user's token
+        const { data } = await supabase.auth.getSession();
+        const token = data.session?.access_token;
+
         const response = await fetch('http://localhost:3000/api/generate-essay-questions', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify(params),
         });

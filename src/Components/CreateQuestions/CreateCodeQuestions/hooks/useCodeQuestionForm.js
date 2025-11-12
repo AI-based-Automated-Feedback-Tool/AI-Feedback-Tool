@@ -3,9 +3,9 @@ import { createCodeQuestion } from "../service/createCodeQuestionService";
 import { supabase } from "../../../../SupabaseAuth/supabaseClient"; 
 import { useNavigate } from 'react-router-dom';
 import { generateCodeQuestion } from "../service/createCodeQuestionService";    
-import language from "react-syntax-highlighter/dist/esm/languages/hljs/1c";
+import { DAILY_LIMIT } from "../../../../config/api";
 
-export default function useCodeQuestionForm( examId, question_count, initialQuestion = null  ) {
+export default function useCodeQuestionForm( examId, question_count, loadCount, usageCount, initialQuestion = null  ) {
     const [userId, setUserId] = useState(null);
     const [questionDescription, setQuestionDescription] = useState("");
     const [functionSignature, setFunctionSignature] = useState("");
@@ -37,6 +37,7 @@ export default function useCodeQuestionForm( examId, question_count, initialQues
     const [checkedAICodeQuestions, setCheckedAICodeQuestions] = useState([]);
     const [generatedAndSelectedQuestions, setGeneratedAndSelectedQuestions] = useState([]);
     const [aiModel, setAiModel] = useState("cohere");
+
 
     const navigate = useNavigate();
 
@@ -114,15 +115,15 @@ export default function useCodeQuestionForm( examId, question_count, initialQues
     const handleAddQuestion = (newQuestion) => {
         setQuestions(prev => {
             if (prev.length >= parseInt(question_count)) {
-            setWarning(`You can only add ${question_count} questions.`);
-            return prev; 
+                setWarning(`You can only add ${question_count} questions.`);
+                return prev; 
             }
             const updated = [...prev, newQuestion];
             // Show warning if limit reached
             if (updated.length === parseInt(question_count)) {
-            setWarning(`You have reached the limit of ${question_count} questions.`);
+                setWarning(`You have reached the limit of ${question_count} questions.`);
             } else {
-            setWarning(null);
+                setWarning(null);
             }
             return updated;
         });
@@ -133,6 +134,9 @@ export default function useCodeQuestionForm( examId, question_count, initialQues
         const updatedQuestions = [...questions];
         updatedQuestions.splice(index, 1);
         setQuestions(updatedQuestions);
+
+         //clear warning message
+        updatedQuestions.length < parseInt(question_count) && setWarning(null)
     };
 
     // Function to handle editing a question
@@ -195,6 +199,11 @@ export default function useCodeQuestionForm( examId, question_count, initialQues
     const handleGenerateQuestions = async () => {
         // Basic validation
         const newErrors = {};
+        if (usageCount[aiModel] >= DAILY_LIMIT) {
+            newErrors.usageLimit = `You have reached the daily limit for ${aiModel} model. Please try again later.`;
+            setErrors(newErrors);
+            return;
+        }
         if (!topicDescription.trim())
             newErrors.topicDescription = "Topic description is required.";
         if (!aiformSelectedLanguage)
@@ -211,6 +220,7 @@ export default function useCodeQuestionForm( examId, question_count, initialQues
 
         if (Object.keys(newErrors).length === 0) {
             setIsGenerating(true);
+            setGeneratedCodeQuestions([]);
             try {
                 const params = {
                     topicDescription: topicDescription,
@@ -237,6 +247,9 @@ export default function useCodeQuestionForm( examId, question_count, initialQues
                         })) || []
                     }));
                     setGeneratedCodeQuestions(formattedQuestions);
+
+                    // Refresh AI usage count after generation
+                    await loadCount();
                 }
             } catch (error) {
                 console.error("Error generating question:", error);
@@ -279,9 +292,6 @@ export default function useCodeQuestionForm( examId, question_count, initialQues
             setErrors(newErrors);
             return;
         }
-
-        
-
         //add questions to main questions list
         selectedQuestions.forEach((q) => {
             const formattedQuestion = {
