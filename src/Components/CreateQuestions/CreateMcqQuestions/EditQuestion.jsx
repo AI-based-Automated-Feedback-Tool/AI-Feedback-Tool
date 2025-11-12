@@ -1,6 +1,6 @@
 import React from 'react'
 import { Modal, Form, Button  } from 'react-bootstrap'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import '../../../css/questionCreation/editQuestion/EditQuestionModal.css';
 
 export default function EditQuestion({show, handleClose, questionDetails, onSave}) {  
@@ -16,6 +16,24 @@ export default function EditQuestion({show, handleClose, questionDetails, onSave
         updatedAnswers[index] = e.target.value;
         setAnswerOptions(updatedAnswers);
     }
+
+    // function to close the dialog and reset temporary state
+    const handleExit = () => {
+        setErrors({});
+        handleClose();
+    };
+
+    //update state when question details change
+    useEffect(() => {
+        if (questionDetails) {
+            setQuestionText(questionDetails.question);
+            setAnswerOptions(questionDetails.answers);
+            setNumOfAnswers(questionDetails.numOfAnswers);
+            setCorrectAnswers(questionDetails.correctAnswers);
+            setPoints(questionDetails.points);
+            setErrors({});
+        }
+    }, [questionDetails]);
 
     const handleChange = (answer) => {
         if (correctAnswers.includes(answer)) {
@@ -54,13 +72,14 @@ export default function EditQuestion({show, handleClose, questionDetails, onSave
             };
             onSave(updatedQuestion);
             setErrors({});
+            handleExit();
         }        
     }
 
     return (
     <Modal 
         show={show} 
-        onHide={handleClose} 
+        onHide={handleExit} 
         size="lg" 
         className="edit-question-modal" 
         centered
@@ -182,7 +201,7 @@ export default function EditQuestion({show, handleClose, questionDetails, onSave
       </Modal.Body>
 
       <Modal.Footer>
-        <button className="action-btn action-btn-secondary" onClick={handleClose}>
+        <button className="action-btn action-btn-secondary" onClick={handleExit}>
             Close
         </button>
         <button className="action-btn" onClick={handleEdit}>
