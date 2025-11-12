@@ -66,6 +66,7 @@ export const useMcqQuestion = (examId, question_count) => {
         updatedQuestions[editQuestionIndex] = updatedQuestion;
         setQuestions(updatedQuestions);
         setShowEditQuestion(false);
+        setEditQuestionIndex(null);
     }
     // Save all questions to the database
     const saveAllQuestions = async () => {
