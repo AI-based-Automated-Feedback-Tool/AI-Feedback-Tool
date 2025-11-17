@@ -1,4 +1,4 @@
-import { Card, CardBody, CardHeader, Spinner, Badge , ListGroup, Button } from 'react-bootstrap';
+import { Spinner, Badge ,Button } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 import { useState } from 'react';
 import useExamDetails from './hooks/useExamDetails';
@@ -57,7 +57,7 @@ export default function ExamsContent() {
   }*/
 
   return (
-    <div className='exam-details-page'>
+    <div className='exam-details-page pb-2'>
       <div className='container py-5'>
 
         {/* Top header */}
@@ -76,17 +76,17 @@ export default function ExamsContent() {
               <span className="text-muted">• {examDetails.question_count} Questions</span>
             </div>
             <Button
-              variant="outline-primary"
-              className='d-flex align-items-center gap-2'
               onClick={() => handleEditExam(examId)}
+              className="modern-edit-exam-btn d-flex align-items-center gap-2 px-4 py-2"
             >
-              <span>✏️ Edit Exam</span>
+              <i className="fas fa-edit"></i>
+              <span>Edit Exam</span>
             </Button>
           </div>
         </div>
 
         {/* Exam Information Card */}
-        <div className='glass-card mb-5'>
+        <div className='glass-card-description mb-5'>
           <div className='gradient-header'>
             <h4>Exam Information</h4>
           </div>
