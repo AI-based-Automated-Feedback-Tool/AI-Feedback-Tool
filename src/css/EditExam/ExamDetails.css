@@ -1,0 +1,153 @@
+.exam-details-page {
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  min-height: 100vh;
+}
+
+.top-card {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+
+.top-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 2rem;
+}
+
+.top-title {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.top-subtitle {
+  opacity: 0.9;
+  font-size: 1.1rem;
+  margin: 0.5rem 0 0;
+}
+
+.top-footer {
+  padding: 1.5rem 2rem;
+  background: rgba(255,255,255,0.95);
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,0.18);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+}
+
+.gradient-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 1rem 1.5rem;
+}
+
+.gradient-header h4 {
+  margin: 0;
+  font-weight: 600;
+}
+
+.question-preview-card {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  border-left: 5px solid #667eea;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+.options-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.75rem;
+  margin: 1rem 0;
+}
+
+.option-item {
+  padding: 0.75rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  transition: all 0.2s;
+}
+
+.option-item.correct {
+  background: #d4edda;
+  border: 1px solid #c3e6cb;
+  color: #155724;
+  font-weight: 500;
+}
+
+.code-block {
+  background: #2d3748 !important;
+  color: #e2e8f0 !important;
+  border-radius: 12px;
+  overflow: hidden;
+  font-family: 'Fira Code', 'Consolas', monospace;
+  font-size: 0.95rem;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.code-block.signature {
+  background: #f0f4f8 !important;
+  color: #2d3748 !important;
+  border: 1px solid #e2e8f0;
+}
+
+.code-block.wrapper {
+  background: #1a202c !important;
+  color: #e2e8f0 !important;
+}
+
+.test-cases-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1rem;
+}
+
+.test-case-item {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  border: 1px solid #e2e8f0;
+  transition: transform 0.2s;
+}
+
+.test-case-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+}
+
+.test-case-header {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  padding: 0.75rem 1rem;
+  font-weight: 600;
+}
+
+.test-case-number {
+  font-size: 0.9rem;
+}
+
+.test-case-body {
+  padding: 1rem;
+}
+
+.test-case-body code {
+  background: #1a202c;
+  color: #e2e8f0;
+  font-size: 0.9rem;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.test-case-body .bg-success {
+  background: #2f855a !important;
+}
