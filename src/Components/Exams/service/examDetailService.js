@@ -1,9 +1,11 @@
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+
 //Api service to fetch exam details
 export const getExamDetails = async (examId) => {
     if (!examId) {
         throw new Error("Exam selection is required");
     }
-    const res = await fetch(`https://ai-feedback-tool-backend-qgvj.onrender.com/api/examDetails?examId=${examId}`)
+    const res = await fetch(`${API_BASE_URL}/api/examDetails?examId=${examId}`)
     const json = await res.json();
     if (res.ok){
         return json.examDetails;
@@ -18,7 +20,7 @@ export const editExamDetails = async (examData) => {
     if (!examData || !examData.exam_id) {
         throw new Error("Exam ID is required");
     }
-    const res = await fetch('https://ai-feedback-tool-backend-qgvj.onrender.com/api/editExamDetails', {
+    const res = await fetch(`${API_BASE_URL}/api/editExamDetails`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',

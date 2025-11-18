@@ -1,4 +1,7 @@
 import { supabase } from "../../../../SupabaseAuth/supabaseClient";
+
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+
 // API service to generate mcq questions using AI
 export const generateMcqQuestion = async (params) => {
     try {
@@ -6,7 +9,7 @@ export const generateMcqQuestion = async (params) => {
         const { data } = await supabase.auth.getSession();
         const token = data.session?.access_token;
 
-        const response = await fetch('https://ai-feedback-tool-backend-qgvj.onrender.com/api/generate-questions', {
+        const response = await fetch(`${API_BASE_URL}/api/generate-questions`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

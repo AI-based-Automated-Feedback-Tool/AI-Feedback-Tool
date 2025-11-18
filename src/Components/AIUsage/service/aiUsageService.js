@@ -1,7 +1,9 @@
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+
 // Fetch AI call count details for a user
 export const fetchAiUsage = async (token) => {
     try {
-        const response = await fetch('https://ai-feedback-tool-backend-qgvj.onrender.com/api/ai-usage', {
+        const response = await fetch(`${API_BASE_URL}/api/ai-usage`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

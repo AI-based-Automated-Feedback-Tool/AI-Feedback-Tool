@@ -1,7 +1,10 @@
 import { supabase } from "../../../../SupabaseAuth/supabaseClient";
+
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+
 //API service to fetch programming languages
 export const getLanguages = async () => {
-    const res = await fetch(`https://ai-feedback-tool-backend-qgvj.onrender.com/api/createCodeQuestions/languages`);
+    const res = await fetch(`${API_BASE_URL}/api/createCodeQuestions/languages`);
     const data = await res.json();
     if (res.ok) {
         return data.languages;
@@ -13,7 +16,7 @@ export const getLanguages = async () => {
 // API service to create a new code question
 export const createCodeQuestion = async (questionData) => {
     try{
-        const response = await fetch('https://ai-feedback-tool-backend-qgvj.onrender.com/api/createCodeQuestion', {
+        const response = await fetch(`${API_BASE_URL}/api/createCodeQuestion`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -41,7 +44,7 @@ export const generateCodeQuestion = async (params) => {
         const { data } = await supabase.auth.getSession();
         const token = data.session?.access_token;
 
-        const response = await fetch('https://ai-feedback-tool-backend-qgvj.onrender.com/api/generate-code-questions', {
+        const response = await fetch(`${API_BASE_URL}/api/generate-code-questions`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
