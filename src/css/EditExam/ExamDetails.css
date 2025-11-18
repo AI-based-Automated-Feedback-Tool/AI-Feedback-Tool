@@ -204,3 +204,80 @@
     justify-content: center;
   }
 }
+
+.essay-question-card {
+  position: relative;
+  background: linear-gradient(145deg, #ffffff, #f8f9ff);
+  border-left: 6px solid #6366f1 !important;
+  transition: all 0.3s ease;
+}
+
+.essay-question-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(99, 102, 241, 0.15) !important;
+}
+
+.essay-question-card h6 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #310b6b;
+}
+
+.essay-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+  background: rgba(99, 102, 241, 0.05);
+  padding: 1.25rem;
+  border-radius: 12px;
+  border: 1px dashed rgba(99, 102, 241, 0.2);
+}
+
+.info-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.info-item strong {
+  color: #4c1d95;
+}
+
+.grading-note {
+  grid-column: span 2;
+}
+
+@media (max-width: 768px) {
+  .grading-note {
+    grid-column: span 1;
+  }
+}
+
+.attachment-preview {
+  background: linear-gradient(135deg, #eef2ff, #e0e7ff);
+  border: 2px solid #c7d2fe;
+  transition: all 0.2s;
+}
+
+.attachment-preview:hover {
+  background: linear-gradient(135deg, #e0e7ff, #c7d2fe);
+  border-color: #818cf8;
+}
+
+.attachment-link {
+  color: #4f46e5;
+  font-weight: 500;
+  text-decoration: underline;
+  transition: color 0.2s;
+}
+
+.attachment-link:hover {
+  color: #4338ca;
+}
+
+.essay-divider {
+  height: 4px;
+  background: linear-gradient(90deg, transparent, #a78bfa, transparent);
+  border-radius: 2px;
+  opacity: 0.6;
+}

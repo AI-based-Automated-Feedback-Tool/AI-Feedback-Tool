@@ -219,32 +219,55 @@ export default function ExamsContent() {
             ))}
 
             {examDetails.type === 'essay' && examDetails.questions.map((q, i) => (
-              <div key={q.question_id} className="question-preview-card mb-4">
-                <h6 className="mb-3">Q{i + 1}. {q.question_text}</h6>
-                <div className="d-flex gap-4 flex-wrap">
-                  <div>
-                    <strong>Word Limit:</strong> {q.word_limit}
-                  </div>
-                  <div>
-                    <strong>Points:</strong> {q.points}
-                  </div>
-                </div>
-                {q.grading_note && (
-                  <div className="mt-3">
-                    <strong>Grading Note:</strong>
-                    <p className="text-muted small mt-1">{q.grading_note}</p>
-                  </div>
-                )}
-                {q.attachment_url && (
-                  <div className="mt-3">
-                    <i className="fas fa-paperclip me-2"></i>
-                    <a href={q.attachment_url} target="_blank" rel="noopener noreferrer">
-                      {getFileName(q.attachment_url)}
-                    </a>
-                  </div>
-                )}
-              </div>
-            ))}
+  <div key={q.question_id} className="question-preview-card essay-question-card mb-5">
+    {/* Header with icon and points */}
+    <div className="d-flex justify-content-between align-items-start mb-4">
+      <h6 className="mb-0 d-flex align-items-center gap-3">
+        <i className="fas fa-file-alt text-indigo fs-4"></i>
+        <span>Q{i + 1}. {q.question_text || 'Write your essay...'}</span>
+      </h6>
+      <Badge bg="warning" className="fs-6 px-3 py-2">
+        {q.points} pts
+      </Badge>
+    </div>
+
+    {/* Info Grid */}
+    <div className="essay-info-grid mb-4">
+      <div className="info-item">
+        <i className="fas fa-align-left text-muted me-2"></i>
+        <strong>Word Limit:</strong> {q.word_limit || 'No limit'}
+      </div>
+      {q.grading_note && (
+        <div className="info-item grading-note">
+          <i className="fas fa-lightbulb text-warning me-2"></i>
+          <strong>Grading Note:</strong>
+          <p className="mt-2 mb-0 text-muted small">{q.grading_note}</p>
+        </div>
+      )}
+    </div>
+
+    {/* Attachment (if exists) */}
+    {q.attachment_url && (
+      <div className="attachment-preview p-3 rounded d-flex align-items-center gap-3">
+        <i className="fas fa-paperclip fs-3 text-primary"></i>
+        <div className="flex-grow-1">
+          <strong>Attached File:</strong>
+          <a
+            href={q.attachment_url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="attachment-link ms-2"
+          >
+            {getFileName(q.attachment_url)}
+          </a>
+        </div>
+        <i className="fas fa-external-link-alt text-muted"></i>
+      </div>
+    )}
+
+    <div className="essay-divider mt-4"></div>
+  </div>
+))}
           </div>
         </div>
       </div>
