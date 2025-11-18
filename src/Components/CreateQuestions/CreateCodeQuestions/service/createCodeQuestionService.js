@@ -1,7 +1,7 @@
 import { supabase } from "../../../../SupabaseAuth/supabaseClient";
 //API service to fetch programming languages
 export const getLanguages = async () => {
-    const res = await fetch(`http://localhost:3000/api/createCodeQuestions/languages`);
+    const res = await fetch(`https://ai-feedback-tool-backend-qgvj.onrender.com/api/createCodeQuestions/languages`);
     const data = await res.json();
     if (res.ok) {
         return data.languages;
@@ -13,7 +13,7 @@ export const getLanguages = async () => {
 // API service to create a new code question
 export const createCodeQuestion = async (questionData) => {
     try{
-        const response = await fetch('http://localhost:3000/api/createCodeQuestion', {
+        const response = await fetch('https://ai-feedback-tool-backend-qgvj.onrender.com/api/createCodeQuestion', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -41,7 +41,7 @@ export const generateCodeQuestion = async (params) => {
         const { data } = await supabase.auth.getSession();
         const token = data.session?.access_token;
 
-        const response = await fetch('http://localhost:3000/api/generate-code-questions', {
+        const response = await fetch('https://ai-feedback-tool-backend-qgvj.onrender.com/api/generate-code-questions', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

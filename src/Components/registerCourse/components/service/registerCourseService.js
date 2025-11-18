@@ -1,7 +1,7 @@
 // API service to create a new course
 export const saveCourse = async (courseData) => {
     try{
-        const response = await fetch('http://localhost:3000/api/registerCourse', {
+        const response = await fetch('https://ai-feedback-tool-backend-qgvj.onrender.com/api/registerCourse', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

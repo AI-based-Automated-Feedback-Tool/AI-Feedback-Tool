@@ -3,7 +3,7 @@ export const getExamDetails = async (examId) => {
     if (!examId) {
         throw new Error("Exam selection is required");
     }
-    const res = await fetch(`http://localhost:3000/api/examDetails?examId=${examId}`)
+    const res = await fetch(`https://ai-feedback-tool-backend-qgvj.onrender.com/api/examDetails?examId=${examId}`)
     const json = await res.json();
     if (res.ok){
         return json.examDetails;
@@ -18,7 +18,7 @@ export const editExamDetails = async (examData) => {
     if (!examData || !examData.exam_id) {
         throw new Error("Exam ID is required");
     }
-    const res = await fetch('http://localhost:3000/api/editExamDetails', {
+    const res = await fetch('https://ai-feedback-tool-backend-qgvj.onrender.com/api/editExamDetails', {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',

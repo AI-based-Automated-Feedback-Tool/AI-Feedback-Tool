@@ -1,7 +1,7 @@
 // Fetch AI call count details for a user
 export const fetchAiUsage = async (token) => {
     try {
-        const response = await fetch('http://localhost:3000/api/ai-usage', {
+        const response = await fetch('https://ai-feedback-tool-backend-qgvj.onrender.com/api/ai-usage', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

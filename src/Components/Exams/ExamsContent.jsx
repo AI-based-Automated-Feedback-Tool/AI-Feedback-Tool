@@ -1,9 +1,10 @@
-import { Card, CardBody, CardHeader, Col, Badge , ListGroup, Button } from 'react-bootstrap';
+import { Spinner, Badge ,Button } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 import { useState } from 'react';
 import useExamDetails from './hooks/useExamDetails';
 import EditExam from './components/EditExam';
 import { useNavigate } from 'react-router-dom';
+import '../../css/EditExam/ExamDetails.css';
 
 
 export default function ExamsContent() {
@@ -43,106 +44,240 @@ export default function ExamsContent() {
       navigate(`/teacher/courses/${course_id}/exams`);
   };
 
+  if (loading) {
+    return (
+      <div className="d-flex justify-content-center align-items-center" style={{ height: '70vh' }}>
+        <Spinner animation="border" variant="primary" />
+      </div>
+    );
+  }
+
+  /*if (error || !examDetails) {
+    return <div className="alert alert-danger text-center">Failed to load exam.</div>;
+  }*/
+
   return (
-    <Col className="w-100" style={{ backgroundColor: '#f8f9fa' }}>
-      <Card className="mt-4">
-        <Card.Header className='bg-primary text-white'>
-          <h4>📚 Exam Info - {examDetails?.title}</h4>
-        </Card.Header>
-        <Card.Body>
-          <>
-            <div className="d-flex justify-content-end ">
-              <Button variant="outline-primary" size="sm" className='mb-3' onClick={() => handleEditExam(examId)}>
-                ✏️ Edit Exam
-              </Button>
+    <div className='exam-details-page pb-2'>
+      <div className='container py-5'>
+
+        {/* Top header */}
+        <div className='top-card mb-5'>
+          <div className='top-header'>
+            <h1 className='top-title'>
+              Exam Details
+            </h1>
+            <p className='top-subtitle'>
+              View and manage your exam configuration
+            </p>
+          </div>
+          <div className='top-footer d-flex justify-content-between align-items-center'>
+            <div>
+              <Badge bg="primary" className="me-2 fs-6">{examDetails.type.toUpperCase()}</Badge>
+              <span className="text-muted">• {examDetails.question_count} Questions</span>
             </div>
-            <p><strong>Type:</strong> <Badge bg="secondary">{examDetails?.type.toUpperCase()}</Badge></p>
-            <p><strong>Duration:</strong> {examDetails?.duration} minutes</p>
-            <p><strong>Start:</strong> {formatDateTime(examDetails?.start_time)}</p>
-            <p><strong>End:</strong> {formatDateTime(examDetails?.end_time)}</p>
-            <p><strong>Instructions:</strong> {examDetails?.instructions || '---'}</p>
-            <p><strong>AI Assessment Guide:</strong> {examDetails?.ai_assessment_guide || '---'}</p>
-            <p><strong>Question Count:</strong> {examDetails?.question_count || 0}</p>
+            <Button
+              onClick={() => handleEditExam(examId)}
+              className="modern-edit-exam-btn d-flex align-items-center gap-2 px-4 py-2"
+            >
+              <i className="fas fa-edit"></i>
+              <span>Edit Exam</span>
+            </Button>
+          </div>
+        </div>
 
-            <hr />
-            <h5 className="mt-4">📝 Questions ({examDetails?.questions.length})</h5>
-            
-            {examDetails?.type === 'mcq' && (
-              <ListGroup variant="flush">
-                {examDetails?.questions?.map((q, index) => (
-                  <ListGroup.Item key={q.question_id} className="mb-3">
-                    <strong>Q{index + 1}:</strong> {q.question_text}
-                    <div className="mt-2">
-                      {q.options.map((option, i) => {
-                        const isCorrect = q.answers.includes(option);
-                        return (
-                          <div key={i} className={`px-2 py-1 rounded mb-1 ${isCorrect ? 'bg-success text-white' : 'bg-light'}`}>
-                            {String.fromCharCode(65 + i)}. {option}
-                          </div>
-                        );
-                      })}
-                    </div>
-                    <div className="mt-2">
-                      <small>
-                        Points: <strong>{q.points}</strong> | Correct Answer(s): <strong>{q.no_of_correct_answers}</strong>
-                      </small>
-                    </div>
-                  </ListGroup.Item>
-                ))}
-              </ListGroup>
-            )}
+        {/* Exam Information Card */}
+        <div className='glass-card-description mb-5'>
+          <div className='gradient-header'>
+            <h4>Exam Information</h4>
+          </div>
+          <div className='p-4'>
+            <div className="row g-4">
+              <div className="col-md-6">
+                <p><strong>Duration</strong></p>
+                <p className="text-muted">{examDetails.duration} minutes</p>
+              </div>
+              <div className="col-md-6">
+                <p><strong>Start Time</strong></p>
+                <p className="text-muted">{formatDateTime(examDetails.start_time)}</p>
+              </div>
+              <div className="col-md-6">
+                <p><strong>End Time</strong></p>
+                <p className="text-muted">{formatDateTime(examDetails.end_time)}</p>
+              </div>
+              <div className="col-md-6">
+                <p><strong>Instructions</strong></p>
+                <p className="text-muted">{examDetails.instructions || 'No instructions provided'}</p>
+              </div>
+              {examDetails.ai_assessment_guide && (
+                <div className="col-12">
+                  <p><strong>AI Assessment Guide</strong></p>
+                  <div className="bg-light p-3 rounded">
+                    <small>{examDetails.ai_assessment_guide}</small>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
 
-            {examDetails?.type === 'code' && (
-              <ListGroup variant="flush">
-                {examDetails?.questions?.map((q, index) => (
-                  <ListGroup.Item key={q.question_id} className="mb-3">
-                    <strong>Q{index + 1}:</strong> {q.question_description}
-                    <p className="mb-1 mt-2 "><strong>Function Signature:</strong></p>
-                    <pre className="bg-light p-2 mt-2"><code>{q.function_signature}</code></pre>
-                    <p className="mb-1"><strong>Wrapper Code:</strong></p>
-                    <pre className="bg-secondary text-white p-2 rounded"><code>{q.wrapper_code}</code></pre>
-                    <p><strong>Points:</strong> {q.points}</p>
-                    <p className="mt-2"><strong>Test Cases:</strong></p>
-                    <ListGroup variant="flush">
-                      {q.test_cases.map((tc, tcIndex) => (
-                        <ListGroup.Item key={tcIndex} className="bg-light p-2 mb-2">
-                          <p><strong>Input:</strong> <code>{JSON.stringify(tc.input)}</code></p>
-                          <p><strong>Expected Output:</strong> <code>{JSON.stringify(tc.output)}</code></p>
-                        </ListGroup.Item>
-                      ))}
-                    </ListGroup>
-                  </ListGroup.Item>
-                ))}
-              </ListGroup>
-            )}
-
-            {examDetails?.type === 'essay' && (
-              <ListGroup variant="flush">
-                {examDetails?.questions?.map((q, index) => (
-                  <ListGroup.Item key={q.question_id} className="mb-3">
-                    <strong>Q{index + 1}:</strong> {q.question_text}
-                    <p className="mt-2"><strong>Word Limit:</strong> {q.word_limit}</p>
-                    {q.grading_note && <p><strong>Grading Note:</strong> {q.grading_note}</p>}
-                    {q.attachment_url && (
-                      <div className="mt-2">
-                        <p><strong>Attachment:</strong> {getFileName(q.attachment_url)}</p>
+        {/* Questions Preview */}
+        <div className="glass-card">
+          <div className="gradient-header">
+            <h4>Questions ({examDetails.questions.length})</h4>
+          </div>
+          <div className="p-4">
+            {examDetails.type === 'mcq' && examDetails.questions.map((q, i) => (
+              <div key={q.question_id} className="question-preview-card mb-4">
+                <div className="d-flex justify-content-between align-items-start">
+                  <h6 className="mb-3">Q{i + 1}. {q.question_text}</h6>
+                  <Badge bg="info">{q.points} pts</Badge>
+                </div>
+                <div className="options-grid">
+                  {q.options.map((opt, idx) => {
+                    const isCorrect = q.answers.includes(opt);
+                    return (
+                      <div
+                        key={idx}
+                        className={`option-item ${isCorrect ? 'correct' : ''}`}
+                      >
+                        <strong>{String.fromCharCode(65 + idx)}.</strong> {opt}
+                        {isCorrect && <i className="fas fa-check ms-2 text-success"></i>}
                       </div>
+                    );
+                  })}
+                </div>
+                <small className="text-muted">
+                  {q.no_of_correct_answers} correct answer{q.no_of_correct_answers > 1 ? 's' : ''}
+                </small>
+              </div>
+            ))}
+
+            {examDetails?.type === 'code' && examDetails.questions.map((q, i) => (
+              <div key={q.question_id} className="question-preview-card mb-4">
+                {/* Question Header */}
+                <div className="d-flex justify-content-between align-items-start mb-3">
+                  <h6 className="mb-0">
+                    <i className="fas fa-code me-2 text-primary"></i>
+                    Q{i + 1}. {q.question_description || 'Write a function...'}
+                  </h6>
+                  <Badge bg="info" className="fs-6">{q.points} pts</Badge>
+                </div>
+
+                {/* Function Signature */}
+                <div className="mb-3">
+                  <strong className="text-muted">
+                    Function Signature
+                  </strong>
+                  <pre className="code-block signature mt-2 p-3 rounded">
+                    <code>{q.function_signature || 'def solution(...)'}</code>
+                  </pre>
+                </div>
+
+                {/* Wrapper Code (Hidden by default — collapsible) */}
+                <details className="mb-3">
+                  <summary className="text-primary fw-bold cursor-pointer">
+                    Wrapper Code (Click to expand)
+                  </summary>
+                  <pre className="code-block wrapper mt-2 p-3 rounded">
+                    <code>{q.wrapper_code || '# No wrapper code'}</code>
+                  </pre>
+                </details>
+
+                {/* Test Cases */}
+                <div>
+                  <strong className="text-muted d-flex align-items-center gap-2">
+                    Test Cases ({q.test_cases?.length || 0})
+                  </strong>
+                  <div className="test-cases-grid mt-3">
+                    {q.test_cases?.map((tc, idx) => (
+                      <div key={idx} className="test-case-item">
+                        <div className="test-case-header">
+                          <span className="test-case-number">Test {idx + 1}</span>
+                        </div>
+                        <div className="test-case-body">
+                          <div>
+                            <strong>Input:</strong>
+                            <code className="d-block mt-1 p-2 bg-dark text-light rounded">
+                              {JSON.stringify(tc.input, null, 2)}
+                            </code>
+                          </div>
+                          <div className="mt-3">
+                            <strong>Expected:</strong>
+                            <code className="d-block mt-1 p-2 bg-success text-white rounded">
+                              {JSON.stringify(tc.output, null, 2)}
+                            </code>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                    {!q.test_cases?.length && (
+                      <p className="text-muted small">No test cases defined</p>
                     )}
-                    <p><strong>Points:</strong> {q.points}</p>
-                  </ListGroup.Item>
-                ))}
-              </ListGroup>
-            )}
-          </>
-        </Card.Body>
-      </Card>
+                  </div>
+                </div>
+              </div>
+            ))}
+
+            {examDetails.type === 'essay' && examDetails.questions.map((q, i) => (
+  <div key={q.question_id} className="question-preview-card essay-question-card mb-5">
+    {/* Header with icon and points */}
+    <div className="d-flex justify-content-between align-items-start mb-4">
+      <h6 className="mb-0 d-flex align-items-center gap-3">
+        <i className="fas fa-file-alt text-indigo fs-4"></i>
+        <span>Q{i + 1}. {q.question_text || 'Write your essay...'}</span>
+      </h6>
+      <Badge bg="warning" className="fs-6 px-3 py-2">
+        {q.points} pts
+      </Badge>
+    </div>
+
+    {/* Info Grid */}
+    <div className="essay-info-grid mb-4">
+      <div className="info-item">
+        <i className="fas fa-align-left text-muted me-2"></i>
+        <strong>Word Limit:</strong> {q.word_limit || 'No limit'}
+      </div>
+      {q.grading_note && (
+        <div className="info-item grading-note">
+          <i className="fas fa-lightbulb text-warning me-2"></i>
+          <strong>Grading Note:</strong>
+          <p className="mt-2 mb-0 text-muted small">{q.grading_note}</p>
+        </div>
+      )}
+    </div>
+
+    {/* Attachment (if exists) */}
+    {q.attachment_url && (
+      <div className="attachment-preview p-3 rounded d-flex align-items-center gap-3">
+        <i className="fas fa-paperclip fs-3 text-primary"></i>
+        <div className="flex-grow-1">
+          <strong>Attached File:</strong>
+          <a
+            href={q.attachment_url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="attachment-link ms-2"
+          >
+            {getFileName(q.attachment_url)}
+          </a>
+        </div>
+        <i className="fas fa-external-link-alt text-muted"></i>
+      </div>
+    )}
+
+    <div className="essay-divider mt-4"></div>
+  </div>
+))}
+          </div>
+        </div>
+      </div>
       <EditExam
         examId={examId}
         show={showEditExam}
         handleClose={closeEditExam}
         onSaveSuccess={handleSaveSuccess}
       />
-    </Col>
-
+    </div>
+    
   )
 }

@@ -1,0 +1,283 @@
+.exam-details-page {
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  min-height: 100vh;
+}
+
+.exam-details-page .top-card {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+
+.exam-details-page .top-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 2rem;
+}
+
+.exam-details-page .top-title {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.exam-details-page .top-subtitle {
+  opacity: 0.9;
+  font-size: 1.1rem;
+  margin: 0.5rem 0 0;
+}
+
+.exam-details-page .top-footer {
+  padding: 1.5rem 2rem;
+  background: rgba(255,255,255,0.95);
+}
+
+.exam-details-page .glass-card-description {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,0.18);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+}
+
+.exam-details-page .glass-card {
+  background: rgba(255, 255, 255, 0.422);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,0.18);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+}
+
+.exam-details-page .gradient-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 1rem 1.5rem;
+}
+
+.exam-details-page .gradient-header h4 {
+  margin: 0;
+  font-weight: 600;
+}
+
+.exam-details-page .question-preview-card {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  border-left: 5px solid #667eea;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+.exam-details-page .options-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.75rem;
+  margin: 1rem 0;
+}
+
+.exam-details-page .option-item {
+  padding: 0.75rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  transition: all 0.2s;
+}
+
+.exam-details-page .option-item.correct {
+  background: #d4edda;
+  border: 1px solid #c3e6cb;
+  color: #155724;
+  font-weight: 500;
+}
+
+.exam-details-page .code-block {
+  background: #2d3748 !important;
+  color: #e2e8f0 !important;
+  border-radius: 12px;
+  overflow: hidden;
+  font-family: 'Fira Code', 'Consolas', monospace;
+  font-size: 0.95rem;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.exam-details-page .code-block.signature {
+  background: #f0f4f8 !important;
+  color: #2d3748 !important;
+  border: 1px solid #e2e8f0;
+}
+
+.exam-details-page .code-block.wrapper {
+  background: #1a202c !important;
+  color: #e2e8f0 !important;
+}
+
+.exam-details-page .test-cases-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1rem;
+}
+
+.exam-details-page .test-case-item {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  border: 1px solid #e2e8f0;
+  transition: transform 0.2s;
+}
+
+.exam-details-page .test-case-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+}
+
+.exam-details-page .test-case-header {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  padding: 0.75rem 1rem;
+  font-weight: 600;
+}
+
+.exam-details-page .test-case-number {
+  font-size: 0.9rem;
+}
+
+.exam-details-page .test-case-body {
+  padding: 1rem;
+}
+
+.exam-details-page .test-case-body code {
+  background: #1a202c;
+  color: #e2e8f0;
+  font-size: 0.9rem;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.exam-details-page .test-case-body .bg-success {
+  background: #2f855a !important;
+}
+
+/* edit exam button */
+.modern-edit-exam-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  color: white;
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+  transition: all 0.3s ease;
+  font-size: 1rem;
+  min-width: 140px;
+  justify-content: center;
+  white-space: nowrap;
+}
+
+.modern-edit-exam-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px rgba(102, 126, 234, 0.4);
+  background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+}
+
+.modern-edit-exam-btn:active {
+  transform: translateY(-1px);
+}
+
+.modern-edit-exam-btn i {
+  font-size: 1.1rem;
+}
+
+/* Stack footer content vertically on small screens */
+@media (max-width: 576px) {
+  .top-footer {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem !important;
+  }
+  
+  .top-footer > div {
+    justify-content: center;
+  }
+}
+
+.essay-question-card {
+  position: relative;
+  background: linear-gradient(145deg, #ffffff, #f8f9ff);
+  border-left: 6px solid #6366f1 !important;
+  transition: all 0.3s ease;
+}
+
+.essay-question-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(99, 102, 241, 0.15) !important;
+}
+
+.essay-question-card h6 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #310b6b;
+}
+
+.essay-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+  background: rgba(99, 102, 241, 0.05);
+  padding: 1.25rem;
+  border-radius: 12px;
+  border: 1px dashed rgba(99, 102, 241, 0.2);
+}
+
+.info-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.info-item strong {
+  color: #4c1d95;
+}
+
+.grading-note {
+  grid-column: span 2;
+}
+
+@media (max-width: 768px) {
+  .grading-note {
+    grid-column: span 1;
+  }
+}
+
+.attachment-preview {
+  background: linear-gradient(135deg, #eef2ff, #e0e7ff);
+  border: 2px solid #c7d2fe;
+  transition: all 0.2s;
+}
+
+.attachment-preview:hover {
+  background: linear-gradient(135deg, #e0e7ff, #c7d2fe);
+  border-color: #818cf8;
+}
+
+.attachment-link {
+  color: #4f46e5;
+  font-weight: 500;
+  text-decoration: underline;
+  transition: color 0.2s;
+}
+
+.attachment-link:hover {
+  color: #4338ca;
+}
+
+.essay-divider {
+  height: 4px;
+  background: linear-gradient(90deg, transparent, #a78bfa, transparent);
+  border-radius: 2px;
+  opacity: 0.6;
+}
