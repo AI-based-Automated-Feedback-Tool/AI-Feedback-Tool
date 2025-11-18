@@ -1,6 +1,6 @@
 //API service to fetch courses
 export const getCourses = async (userId) => {
-    const res = await fetch(`http://localhost:3000/api/teacher/reports/course?userId=${userId}`);
+    const res = await fetch(`https://ai-feedback-tool-backend-qgvj.onrender.com/api/teacher/reports/course?userId=${userId}`);
     const data = await res.json();
     if (res.ok) {
         return data.courses;
@@ -14,7 +14,7 @@ export const getExamTitles = async (selectedCourse) => {
     if (!selectedCourse) {
         throw new Error("Course ID is required");
     }   
-    const res = await fetch(`http://localhost:3000/api/teacher/reports/exams?course_id=${selectedCourse}`)
+    const res = await fetch(`https://ai-feedback-tool-backend-qgvj.onrender.com/api/teacher/reports/exams?course_id=${selectedCourse}`)
     const json = await res.json();
     if (res.ok){
         return json.exams;
@@ -29,7 +29,7 @@ export const getStudents = async (selectedCourse) => {
     if (!selectedCourse) {
         throw new Error("Course ID is required");
     }        
-    const res = await fetch(`http://localhost:3000/api/teacher/reports/students?course_id=${selectedCourse}`)
+    const res = await fetch(`https://ai-feedback-tool-backend-qgvj.onrender.com/api/teacher/reports/students?course_id=${selectedCourse}`)
     const json = await res.json();
     if (res.ok){
         return json.students;
@@ -44,7 +44,7 @@ export const getExamSubmissions = async (selectedExam) => {
     if (!selectedExam) {
         throw new Error("Exam selection is required");
     }        
-    const res = await fetch(`http://localhost:3000/api/teacher/reports/exam_submission?examId=${selectedExam}`)
+    const res = await fetch(`https://ai-feedback-tool-backend-qgvj.onrender.com/api/teacher/reports/exam_submission?examId=${selectedExam}`)
     const json = await res.json();
     if (res.ok){
         return json.examSubmissions;
@@ -59,7 +59,7 @@ export const getMcqQuestions = async (selectedExam) => {
     if (!selectedExam) {
         throw new Error("Exam selection is required");
     }        
-    const res = await fetch(`http://localhost:3000/api/teacher/reports/mcq?examId=${selectedExam}`)
+    const res = await fetch(`https://ai-feedback-tool-backend-qgvj.onrender.com/api/teacher/reports/mcq?examId=${selectedExam}`)
     const json = await res.json();
     if (res.ok){
         return json.mcqQuestions;
@@ -74,7 +74,7 @@ export const getSubmittedAnswers = async (submissionId) => {
     if (!submissionId) {
         throw new Error("Submission ID is required");
     }        
-    const res = await fetch(`http://localhost:3000/api/teacher/reports/submitted_answers?submissionId=${submissionId}`)
+    const res = await fetch(`https://ai-feedback-tool-backend-qgvj.onrender.com/api/teacher/reports/submitted_answers?submissionId=${submissionId}`)
     const json = await res.json();
     if (res.ok){
         return json.submittedAnswers;
@@ -89,7 +89,7 @@ export const getCodeQuestions = async (selectedExam) => {
     if (!selectedExam) {
         throw new Error("Exam selection is required");
     }
-    const res = await fetch(`http://localhost:3000/api/teacher/reports/code_questions?examId=${selectedExam}`)
+    const res = await fetch(`https://ai-feedback-tool-backend-qgvj.onrender.com/api/teacher/reports/code_questions?examId=${selectedExam}`)
     const json = await res.json();
     if (res.ok){
         return json.codeQuestions;
@@ -104,7 +104,7 @@ export const getSubmittedCodeAnswers = async (submissionId) => {
     if (!submissionId) {
         throw new Error("Submission ID is required");
     }
-    const res = await fetch(`http://localhost:3000/api/teacher/reports/submitted_code_answers?submissionId=${submissionId}`)
+    const res = await fetch(`https://ai-feedback-tool-backend-qgvj.onrender.com/api/teacher/reports/submitted_code_answers?submissionId=${submissionId}`)
     const json = await res.json();
     if (res.ok){
         return json.submittedAnswers;
@@ -119,7 +119,7 @@ export const getEssayQuestions = async (selectedExam) => {
     if (!selectedExam) {
         throw new Error("Exam selection is required");
     }
-    const res = await fetch(`http://localhost:3000/api/teacher/reports/essay_questions?examId=${selectedExam}`)
+    const res = await fetch(`https://ai-feedback-tool-backend-qgvj.onrender.com/api/teacher/reports/essay_questions?examId=${selectedExam}`)
     const json = await res.json();
     if (res.ok){
         return json.essayQuestions;
@@ -134,7 +134,7 @@ export const getSubmittedEssayAnswers = async (submissionId) => {
     if (!submissionId) {
         throw new Error("Submission ID is required");
     }
-    const res = await fetch(`http://localhost:3000/api/teacher/reports/submitted_essay_answers?submissionId=${submissionId}`)
+    const res = await fetch(`https://ai-feedback-tool-backend-qgvj.onrender.com/api/teacher/reports/submitted_essay_answers?submissionId=${submissionId}`)
     const json = await res.json();
     if (res.ok){
         return json.submittedAnswers;
@@ -149,7 +149,7 @@ export const getStudentReportData = async (examId, studentId, examType) => {
     if (!examId || !studentId || !examType) {
         throw new Error("Exam ID, Student ID, and Exam Type are required");
     }
-    const res = await fetch(`http://localhost:3000/api/teacher/reports/student_exam_details?examId=${examId}&studentId=${studentId}&examType=${examType}`)
+    const res = await fetch(`https://ai-feedback-tool-backend-qgvj.onrender.com/api/teacher/reports/student_exam_details?examId=${examId}&studentId=${studentId}&examType=${examType}`)
     const json = await res.json();
     if (res.ok){
         return json.submittedAnswers;

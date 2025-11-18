@@ -6,7 +6,7 @@ export const generateMcqQuestion = async (params) => {
         const { data } = await supabase.auth.getSession();
         const token = data.session?.access_token;
 
-        const response = await fetch('http://localhost:3000/api/generate-questions', {
+        const response = await fetch('https://ai-feedback-tool-backend-qgvj.onrender.com/api/generate-questions', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
