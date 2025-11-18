@@ -1,6 +1,6 @@
 export const saveMcqQuestion = async (questionData) => {
     try{
-        const response = await fetch('http://localhost:3000/api/createQuestions', {
+        const response = await fetch('https://ai-feedback-tool-backend-qgvj.onrender.com/api/createQuestions', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
