@@ -1,4 +1,4 @@
-import { Modal, Form, Button, Row, Col, Accordion } from 'react-bootstrap'
+import { Modal, Form,Row, Col } from 'react-bootstrap'
 import { useEffect } from 'react';
 import useEditExam from '../hooks/useEditExam';
 import EditMcqQuestionCollection from './EditMcqQuestionCollection';
@@ -7,9 +7,10 @@ import EditCodeQuestionCollection from './EditCodeQuestionCollection';
 import EditEssayQuestionCollection from './EditEssayQuestionCollection';
 import { useRef } from 'react';
 import { uploadAttachment } from "../../CreateQuestions/CreateEssayQuestions/service/createEssayQuestionService";
+import '../../../css/EditExam/EditExam.css';
 
 
-export default function EditExam({examId, show, handleClose, onSaveSuccess}) {
+export default function EditExam({formState, examId, show, handleClose, onSaveSuccess}) {
     const essayAttachmentRef = useRef({});
     const {
         examDetails,
@@ -30,11 +31,12 @@ export default function EditExam({examId, show, handleClose, onSaveSuccess}) {
         setQuestionCount,
         manageSaveChangesToExam,
         setError,
+        loading,
         setLoading,
         validate,
         questions,
         setQuestions
-    } = useEditExam({examId});
+    } = formState;
 
     const navigate = useNavigate();
 
@@ -185,114 +187,164 @@ export default function EditExam({examId, show, handleClose, onSaveSuccess}) {
     };
 
     return (
-    <Modal show={show} onHide={handleClose} size="lg">
-        <Modal.Header closeButton>
-            <Modal.Title>Edit Exam</Modal.Title>
+    <Modal show={show} onHide={handleClose} size="lg" className="edit-exam-modal">
+        <Modal.Header closeButton className="edit-exam-header">
+            <Modal.Title>
+                <i className="fas fa-cog me-3"></i>
+                Edit Exam - {type?.toUpperCase()} Exam
+            </Modal.Title>
         </Modal.Header>
 
-        <Modal.Body>
-            <Row className="mb-3">
-                <Col md={6}>
-                    <Form.Group className="mb-3">
-                        <Form.Label>Exam instructions</Form.Label>
-                        <Form.Control
-                            as="textarea"
-                            rows={3}
-                            value={instructions}
-                            onChange={(e) => setInstructions(e.target.value)}
-                        />
-                    </Form.Group>
-                </Col>
-                <Col md={6}>
-                    <Form.Group className="mb-3">
-                        <Form.Label>AI Assessment Guide</Form.Label>
-                        <Form.Control
-                            as={"textarea"}
-                            rows={3}
-                            value={aiAssessmentGuide}
-                            onChange={(e) => setAiAssessmentGuide(e.target.value)}
-                        />
-                    </Form.Group>
-                </Col>
-            </Row>
-
-            <Row className="mb-3">
-                <Col md={6}>
-                    <Form.Group className="mb-3">
-                        <Form.Label>Question Type</Form.Label>
-                        <Form.Control
-                            type='text'
-                            value={type}
-                            onChange={(e) => setType(e.target.value)}
-                        />
-                        {error.type && <div className="text-danger small">{error.type}</div>}
-                    </Form.Group>
+        <Modal.Body className="edit-exam-body">
+            <Row className="g-4 mb-5">
+                <Col lg={6}>
+                    <div className="form-section">
+                        <h6 className="section-title">
+                            <i className="fas fa-info-circle text-primary me-2"></i>
+                            Exam Instructions
+                        </h6>
+                        <Form.Group controlId="exam-instructions">
+                            <Form.Control
+                                as="textarea"
+                                rows={3}
+                                value={instructions || ''}
+                                onChange={(e) => setInstructions(e.target.value)}
+                                placeholder="Write any special instructions for students..."
+                            />
+                        </Form.Group>
+                    </div>
                 </Col>
 
-                <Col md={6}>
-                    <Form.Group className="mb-3">
-                        <Form.Label>Question Count</Form.Label>
-                        <Form.Control
-                            type="number"
-                            value={questionCount}
-                            onChange={(e) => setQuestionCount(e.target.value)}
-                        />
-                        {error.questionCount && <div className="text-danger small">{error.questionCount}</div>}
-                    </Form.Group>
+                <Col lg={6}>
+                    <div className="form-section">
+                        <h6 className="section-title">
+                            <i className="fas fa-robot text-indigo me-2"></i>
+                            AI Assessment Guide
+                        </h6>
+                        <Form.Group controlId="exam-ai-guide">
+                            <Form.Control
+                                as={"textarea"}
+                                rows={3}
+                                value={aiAssessmentGuide || ''}
+                                onChange={(e) => setAiAssessmentGuide(e.target.value)}
+                                placeholder="How should the AI evaluate and give feedback?"
+                            />
+                        </Form.Group>
+                    </div>
                 </Col>
             </Row>
 
-            <Row className="mb-3">
-                <Col md={6}>
-                    <Form.Group className="mb-3">
-                        <Form.Label>Start Time</Form.Label>
-                        <Form.Control
-                            type="datetime-local"
-                            value={formatDateTime(startTime)}
-                            onChange={(e) => setStartTime(e.target.value)}
-                        />
-                        {error.startTime && <div className="text-danger small">{error.startTime}</div>}
-                    </Form.Group>
+            <Row className="g-4 mb-4">
+                <Col md={4}>
+                    <div className="form-section">
+                        <h6 className="section-title">
+                            <i className="fas fa-clock text-success me-2"></i>
+                            Duration (min)
+                        </h6>
+                        <Form.Group className="exam-duration">
+                            <Form.Control
+                                type='number'
+                                min="1"
+                                value={duration || ''}
+                                onChange={(e) => setDuration(e.target.value)}
+                            />
+                        </Form.Group>
+                    </div>
                 </Col>
 
-                <Col md={6}>
-                    <Form.Group className="mb-3">
-                        <Form.Label>End Time</Form.Label>
-                        <Form.Control
-                            type="datetime-local"
-                            value={formatDateTime(endTime)}
-                            onChange={(e) => setEndTime(e.target.value)}
-                        />
-                        {error.endTime && <div className="text-danger small">{error.endTime}</div>}
-                    </Form.Group>
+                <Col md={4}>
+                    <div className="form-section">
+                        <h6 className="section-title">
+                            <i className="fas fa-calendar-alt text-primary me-2"></i>
+                            Start Time
+                        </h6>
+                        <Form.Group controlId="exam-start-time">
+                            <Form.Control
+                                type="datetime-local"
+                                value={formatDateTime(startTime)}
+                                onChange={(e) => setStartTime(e.target.value)}
+                            />
+                        </Form.Group>
+                    </div>
                 </Col>
+
+                <Col md={4}>
+                    <div className="form-section">
+                        <h6 className="section-title">
+                            <i className="fas fa-calendar-check text-danger me-2"></i>
+                            End Time
+                        </h6>
+                        <Form.Group controlId="exam-end-time">
+                            <Form.Control
+                                type="datetime-local"
+                                value={formatDateTime(endTime)}
+                                onChange={(e) => setEndTime(e.target.value)}
+                            />
+                        </Form.Group>
+                    </div>
+                </Col>
+                {error.duration && <div className="text-danger small">{error.duration}</div>}
+                {error.startTime && <div className="text-danger small">{error.startTime}</div>}
+                {error.endTime && <div className="text-danger small">{error.endTime}</div>}
+
             </Row>
 
-            <hr />
-            { examDetails?.type === 'mcq' && <EditMcqQuestionCollection
-                questions={questions}
-                setQuestions={setQuestions}
-            />}
+            <div className="divider mb-4"></div>
 
-            { examDetails?.type === 'code' && (
-                <EditCodeQuestionCollection
+            <div className="questions-section mt-5">
+                <div className="d-flex justify-content-between align-items-center mb-4">
+                    <h5 className="mb-0 text-indigo fw-bold">
+                    <i className="fas fa-list-ol me-3"></i>
+                    Questions ({questions?.length || 0})
+                    </h5>
+                </div>
+
+                { examDetails?.type === 'mcq' && <EditMcqQuestionCollection
                     questions={questions}
                     setQuestions={setQuestions}
-                />
-            )} 
+                />}
 
-            { examDetails?.type === 'essay' && (
-                <EditEssayQuestionCollection
-                    questions={questions}
-                    setQuestions={setQuestions}
-                />
-            )} 
+                { examDetails?.type === 'code' && (
+                    <EditCodeQuestionCollection
+                        questions={questions}
+                        setQuestions={setQuestions}
+                    />
+                )} 
 
+                { examDetails?.type === 'essay' && (
+                    <EditEssayQuestionCollection
+                        questions={questions}
+                        setQuestions={setQuestions}
+                    />
+                )} 
+            </div>
         </Modal.Body>
 
-        <Modal.Footer>
-            <Button variant="secondary" onClick={handleClose}>Close</Button>
-            <Button variant="primary" onClick={manageSaveChanges}>Save Changes</Button>
+        <Modal.Footer className="">
+            <button 
+                type="button" 
+                className="action-btn action-btn-secondary px-4"
+                onClick={handleClose}
+                disabled={loading}
+            >
+                Close
+            </button>
+            <button 
+                type="button"
+                className="action-btn px-5"
+                onClick={manageSaveChanges}
+                disabled={loading}
+            >
+                {loading ? (
+                    <>
+                        <span className="spinner"></span> Saving...
+                    </>
+                    ) : (
+                    <>
+                        <i className="fas fa-save me-2"></i> Save Changes
+                    </>
+                )}
+            </button>
         </Modal.Footer>
     </Modal>
   )

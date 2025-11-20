@@ -1,0 +1,142 @@
+.edit-exam-modal .modal-content {
+  border-radius: 20px;
+  border: none;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18);
+}
+
+.edit-exam-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 1.8rem 2rem;
+  border-bottom: none;
+}
+
+.edit-exam-header .modal-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.edit-exam-body {
+  background: linear-gradient(145deg, #f8f9ff 0%, #d8e0ff 100%);
+  padding: 2.5rem;
+  min-height: 70vh;
+}
+
+.form-section {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  border-radius: 18px;
+  padding: 1.8rem;
+  box-shadow: 0 10px 30px rgba(102, 126, 234, 0.12);
+  border: 1px solid rgba(102, 126, 234, 0.15);
+  transition: all 0.3s ease;
+}
+
+.form-section:hover {
+  box-shadow: 0 15px 40px rgba(102, 126, 234, 0.18);
+  transform: translateY(-4px);
+}
+
+.section-title {
+  color: #4c1d95;
+  font-weight: 700;
+  font-size: 1.15rem;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.questions-section {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(14px);
+  border-radius: 22px;
+  padding: 2.5rem;
+  margin-top: 2rem;
+  border: 1px solid rgba(102, 126, 234, 0.2);
+  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.1);
+}
+
+.action-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 14px;
+  padding: 0.85rem 2rem;
+  font-weight: 600;
+  font-size: 1.05rem;
+  box-shadow: 0 10px 25px rgba(102, 126, 234, 0.35);
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.action-btn:hover:not(:disabled) {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 35px rgba(102, 126, 234, 0.45);
+  background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+}
+
+.action-btn:active {
+  transform: translateY(-1px);
+}
+
+.action-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.action-btn-secondary {
+  background: #e2e8f0;
+  color: #475569;
+}
+
+.action-btn-secondary:hover:not(:disabled) {
+  background: #cbd5e1;
+  color: #1e293b;
+}
+
+.spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid transparent;
+  border-top: 2px solid white;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin-right: 8px;
+}
+
+.divider {
+  height: 4px;
+  background: linear-gradient(90deg, transparent, #a78bfa, transparent);
+  border-radius: 2px;
+  opacity: 0.6;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .edit-exam-body {
+    padding: 1.5rem;
+  }
+  .form-section,
+  .questions-section {
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .edit-exam-header {
+    padding: 1.5rem;
+  }
+  .action-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}

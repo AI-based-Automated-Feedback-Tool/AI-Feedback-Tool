@@ -18,15 +18,15 @@ const useEditExam = ({examId}) => {
         closeEditExam
     } = useExamDetails({ examId });
 
-    const [type, setType] = useState(examDetails?.type);
-    const [duration, setDuration] = useState(examDetails?.duration);
-    const [startTime, setStartTime] = useState(examDetails?.start_time);
-    const [endTime, setEndTime] = useState(examDetails?.end_time);
-    const [instructions, setInstructions] = useState(examDetails?.instructions);
-    const [aiAssessmentGuide, setAiAssessmentGuide] = useState(examDetails?.ai_assessment_guide);
-    const [questionCount, setQuestionCount] = useState(examDetails?.questions.length || 0);
+    const [type, setType] = useState("");
+    const [duration, setDuration] = useState(0);
+    const [startTime, setStartTime] = useState("");
+    const [endTime, setEndTime] = useState("");
+    const [instructions, setInstructions] = useState("");
+    const [aiAssessmentGuide, setAiAssessmentGuide] = useState("");
+    const [questionCount, setQuestionCount] = useState(0);
 
-    const [questions, setQuestions] = useState(examDetails?.questions || []);
+    const [questions, setQuestions] = useState([]);
     
 
     const validate = () => {
@@ -90,8 +90,8 @@ const useEditExam = ({examId}) => {
     };
 
     return {
+        setExamDetails,
         examDetails,
-        loading,
         error,
         formatDateTime,
         showEditExam,
@@ -112,6 +112,7 @@ const useEditExam = ({examId}) => {
         manageSaveChangesToExam,
         handleEditExam,
         setError,
+        loading,
         setLoading,
         validate,
         questions,

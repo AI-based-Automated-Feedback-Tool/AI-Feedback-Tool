@@ -5,6 +5,7 @@ import useExamDetails from './hooks/useExamDetails';
 import EditExam from './components/EditExam';
 import { useNavigate } from 'react-router-dom';
 import '../../css/EditExam/ExamDetails.css';
+import useEditExam from './hooks/useEditExam';
 
 
 export default function ExamsContent() {
@@ -13,8 +14,28 @@ export default function ExamsContent() {
         examDetails,
         loading,
         error,
-        formatDateTime
-    }= useExamDetails({ examId });
+        formatDateTime,
+        type,
+        setType,
+        duration,
+        setDuration,
+        startTime,
+        setStartTime,
+        endTime,
+        setEndTime,
+        instructions,
+        setInstructions,
+        aiAssessmentGuide,
+        setAiAssessmentGuide,           
+        questionCount,
+        setQuestionCount,
+        manageSaveChangesToExam,
+        setError,
+        setLoading,
+        validate,
+        questions,
+        setQuestions
+    }= useEditExam({ examId });
 
     const navigate = useNavigate();
 
@@ -310,12 +331,39 @@ export default function ExamsContent() {
           </div>
         </div>
       </div>
-      <EditExam
-        examId={examId}
-        show={showEditExam}
-        handleClose={closeEditExam}
-        onSaveSuccess={handleSaveSuccess}
-      />
+      {examDetails && (
+        <EditExam
+          formState={{
+            examDetails,
+            error,
+            type,
+            setType,
+            duration,
+            setDuration,
+            startTime,
+            setStartTime,
+            endTime,
+            setEndTime,
+            instructions,
+            setInstructions,
+            aiAssessmentGuide,
+            setAiAssessmentGuide,           
+            questionCount,
+            setQuestionCount,
+            manageSaveChangesToExam,
+            setError,
+            loading,
+            setLoading,
+            validate,
+            questions,
+            setQuestions
+          }}
+          examId={examId}
+          show={showEditExam}
+          handleClose={closeEditExam}
+          onSaveSuccess={handleSaveSuccess}
+        />
+      )}
     </div>
     
   )
