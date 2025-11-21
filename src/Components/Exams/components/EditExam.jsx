@@ -53,7 +53,7 @@ export default function EditExam({formState, examId, show, handleClose, onSaveSu
     }
 
     useEffect(() => {
-        if (examDetails) {
+        if (show && examDetails) {
             setType(examDetails.type);
             setDuration(examDetails.duration);
             setStartTime(formatDateTimeToLocalInput(examDetails.start_time));
@@ -61,9 +61,9 @@ export default function EditExam({formState, examId, show, handleClose, onSaveSu
             setInstructions(examDetails.instructions);
             setAiAssessmentGuide(examDetails.ai_assessment_guide);
             setQuestionCount(examDetails.question_count);
-            setQuestions(examDetails.questions);
+            setQuestions(JSON.parse(JSON.stringify(examDetails.questions)));
         }
-    }, [examDetails]);
+    }, [show, examDetails]);
     
     const formatDateTime = (utcDateString) => {
         if (!utcDateString) return '';
