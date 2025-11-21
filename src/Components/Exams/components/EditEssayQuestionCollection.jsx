@@ -1,6 +1,7 @@
 import { Form, Row, Col, Button} from 'react-bootstrap';
 import { useState, useEffect, useRef } from 'react';
 const SUPABASE_PUBLIC_URL = "https://okmurjvzsgdxjiaflacq.supabase.co/storage/v1/object/public/essay-attachments/";
+import '../../../css/EditExam/EditEssayQuestionCollection.css';
 
 export default function EditEssayQuestionCollection({questions, setQuestions, attachmentRef}) {
   const localAttachmentBackup = useRef({});
@@ -39,14 +40,29 @@ export default function EditEssayQuestionCollection({questions, setQuestions, at
           fileName = decodeURIComponent(filePart?.substring(filePart.indexOf('_') + 1));
         }
         return (
-          <div key={q.question_id} className="mb-4 p-3 border rounded bg-light">
-            <h6>Question {index + 1}</h6>
+          <div key={q.question_id} className="essay-question-card px-4 pt-3">
+            <div className="essay-question-header mb-4">
+              <div className="d-flex align-items-center justify-content-between w-100">
+                <div className="d-flex align-items-center gap-3">
+                  <div className="essay-icon">
+                    <i className="fas fa-pen-nib"></i>
+                  </div>
+                  <h5 className="essay-title mb-0">
+                    Question {index + 1}
+                  </h5>
+                </div>
+                <div className="points-badge">
+                  {q.points || 0} pts
+                </div>
+              </div>
+            </div>
 
             {/* Question text */}
-            <Form.Group className="mb-2">
-              <Form.Label>Question Text</Form.Label>
+            <Form.Group className="mb-4">
+              <Form.Label className='input-label'>Question Text</Form.Label>
               <Form.Control
-                type="text"
+                as="textarea"
+                rows={3}
                 value={q.question_text}
                 onChange={(e) => {
                   const updated = [...questions];
@@ -54,14 +70,17 @@ export default function EditEssayQuestionCollection({questions, setQuestions, at
                     console.log('Updated Question Text:', updated[index].question_text);
                   setQuestions(updated);
                 }}
+                className='question-textarea'
+                placeholder='Write your essay question here...'
               />
             </Form.Group>
 
             {/* Grading Notes */}
-            <Form.Group className="mb-2">
-              <Form.Label>Grading Note</Form.Label>
+            <Form.Group className="mb-4">
+              <Form.Label className='input-label'>Grading Note</Form.Label>
               <Form.Control
-                type="text"
+                as="textarea"
+                rows={2}
                 value={q.grading_note}
                 onChange={(e) => {
                   const updated = [...questions];
@@ -69,60 +88,70 @@ export default function EditEssayQuestionCollection({questions, setQuestions, at
                     console.log('Updated Function Signature:', updated[index].function_signature);
                   setQuestions(updated);
                 }}
+                className='question-textarea'
+                placeholder='How should AI grade this essay?'
               />
             </Form.Group>
 
             {/* Word Limit */}
-            <Form.Group className="mb-2">
-              <Form.Label>Word Limit</Form.Label>
-              <Form.Control
-                type="text"
-                value={q.word_limit}
-                onChange={(e) => {
-                  const updated = [...questions];
-                  updated[index].word_limit = e.target.value;
-                    console.log('Updated Word Limit:', updated[index].word_limit);
-                  setQuestions(updated);
-                }}
-              />
-            </Form.Group>
+            <Row className="g-4 mb-4">
+              <Col md={6}>
+                <Form.Group>
+                  <Form.Label className='input-label'>Word Limit</Form.Label>
+                  <Form.Control
+                    type="number"
+                    value={q.word_limit}
+                    min={1}
+                    onChange={(e) => {
+                      const updated = [...questions];
+                      updated[index].word_limit = e.target.value;
+                        console.log('Updated Word Limit:', updated[index].word_limit);
+                      setQuestions(updated);
+                    }}
+                    className="points-input"
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={6}>
+                <Form.Group>
+                  <Form.Label className='input-label'>Points</Form.Label>
+                  <Form.Control
+                    type="number"
+                    min={0}
+                    value={q.points || ''}
+                    onChange={(e) => {
+                      const updated = [...questions];
+                      updated[index].points = parseInt(e.target.value) || 0;
+                      console.log('Updated Points:', updated[index].points);
+                      setQuestions(updated);
+                    }}
+                    className="points-input"
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
 
-            
-
-            {/* Points */}
-            <Form.Group className="mb-2">
-              <Form.Label>Points</Form.Label>
-              <Form.Control
-                type="number"
-                min={0}
-                value={q.points || ''}
-                onChange={(e) => {
-                  const updated = [...questions];
-                  updated[index].points = parseInt(e.target.value) || 0;
-                  console.log('Updated Points:', updated[index].points);
-                  setQuestions(updated);
-                }}
-              />
-            </Form.Group>
-
-            <Form.Group className="mb-2">
-              <Form.Label>Attachment</Form.Label>
+            <div className="mb-4">
+              <Form.Label className="input-label">Attachment</Form.Label>
               {attachments && (
-                <div className="mb-2">
-                  <span className="text-muted">Attachment: {fileName}</span>
-                  {!isFile && (
-                    <a
-                      href={getPublicAttachmentUrl(attachments)}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="ms-2"
-                    >
-                      View
-                    </a>
-                  )}
-                  <span
-                    className="ms-2"
-                    style={{ cursor: 'pointer' }}
+                <div className="attachment-preview p-3 rounded border mb-3 d-flex align-items-center justify-content-between">
+                  <div>
+                    <i className="fas fa-paperclip me-2 text-primary"></i>
+                    <strong>{fileName}</strong>
+                    {!isFile && (
+                      <a
+                        href={getPublicAttachmentUrl(attachments)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="ms-3 text-decoration-underline small"
+                      >
+                        View
+                      </a>
+                    )}
+                  </div>
+                  <Button
+                    variant="outline-danger"
+                    size="sm"
                     onClick={() => {
                       const updated = [...questions];
                       updated[index].attachments = null;
@@ -131,9 +160,10 @@ export default function EditEssayQuestionCollection({questions, setQuestions, at
                     }}
                   >
                     ❌
-                  </span>
+                  </Button>
                 </div>
               )}
+
               <Form.Control
                 type="file"
                 accept=".png,.jpg,.jpeg,.pdf,.doc,.mp4,.mp3"
@@ -146,9 +176,13 @@ export default function EditEssayQuestionCollection({questions, setQuestions, at
                     setQuestions(updated);
                   }
                 }}
+                className='form-control'
               />
-            </Form.Group>
+              <small className="text-muted">Supported: Images, PDF, Word</small>
+            </div>
+            <hr className='question-divider'/>
           </div>
+          
         );
       })}
     </>
