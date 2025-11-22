@@ -23,6 +23,7 @@ import useFetchEssayQuestions from './hooks/useFetchEssayQuestions';
 import useFetchStudentReportData from './hooks/useFetchStudentReportData';
 import StudentReportCard from './components/StudentReportCard'; 
 import useFetchCourses from './hooks/useFetchCourses';
+import useSelectStudents from './hooks/useSelectStudents';
 
 export default function TeacherReportContent() {
     const [selectedCourse, setSelectedCourse] = useState("");
@@ -46,6 +47,7 @@ export default function TeacherReportContent() {
     const [submissionId, setSubmissionId] = useState([]);
 
     const { courses, courseLoading } = useFetchCourses(userId, setError); //phase2
+    const { studentList, processing } = useSelectStudents(selectedCourse, setError, examSubmissions);
 
     //find exam type
     const selectedExamObject = exams.find((exam) => exam.exam_id === selectedExam)
