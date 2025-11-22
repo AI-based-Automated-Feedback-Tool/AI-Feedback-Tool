@@ -80,7 +80,7 @@ export default function TeacherReportContent() {
         setReportData(false);
         setReportError(null);
         setReportRequested(false);
-    }, [selectedCourse, selectedExam]);
+    }, [selectedCourse, selectedExam, selectedStudent]);
 
     // Show report when data is fetched
     useEffect(() => {
@@ -112,6 +112,15 @@ export default function TeacherReportContent() {
         setSubmissionId(submissionIdDetails);
     }, [examSubmissions])
 
+    // reset exam and student when course changes
+    useEffect(() =>{
+        setSelectedExam("");
+        setSelectedStudent("");
+    }, [selectedCourse])
+    // reset student when exam changes
+    useEffect(() =>{
+        setSelectedStudent("");
+    }, [selectedExam])
 
   return (
     <Col
