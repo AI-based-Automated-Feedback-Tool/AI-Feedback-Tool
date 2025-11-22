@@ -3,11 +3,11 @@ import { getCourses } from "../service/teacherReportsService";
 
 const useFetchCourses = (userId,setGlobalError) => {
     const [courses, setCourses] = useState([]);
-    const [loading, setLoading] = useState(false);
+    const [courseLoading, setCourseLoading] = useState(false);
 
     useEffect(() => {
         if (!userId) return;
-        setLoading(true);
+        setCourseLoading(true);
 
         getCourses(userId)
             .then(data => {
@@ -16,8 +16,8 @@ const useFetchCourses = (userId,setGlobalError) => {
             .catch(error => {
                 setGlobalError(error.message || "Failed to fetch courses");
             })
-            .finally(() => setLoading(false));
+            .finally(() => setCourseLoading(false));
     }, [userId]);
-    return { courses, loading };
+    return { courses, courseLoading };
 }
 export default useFetchCourses;

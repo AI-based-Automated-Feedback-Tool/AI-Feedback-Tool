@@ -22,6 +22,7 @@ import useFetchExams from './hooks/useFetchExams';
 import useFetchEssayQuestions from './hooks/useFetchEssayQuestions';   
 import useFetchStudentReportData from './hooks/useFetchStudentReportData';
 import StudentReportCard from './components/StudentReportCard'; 
+import useFetchCourses from './hooks/useFetchCourses';
 
 export default function TeacherReportContent() {
     const [selectedCourse, setSelectedCourse] = useState("");
@@ -43,6 +44,8 @@ export default function TeacherReportContent() {
     const {essayQuestions, loadingEssay} = useFetchEssayQuestions(selectedExam, setReportError);
     const {exams, loadingExams} = useFetchExams(selectedCourse, setError);
     const [submissionId, setSubmissionId] = useState([]);
+
+    const { courses, courseLoading } = useFetchCourses(userId, setError); //phase2
 
     //find exam type
     const selectedExamObject = exams.find((exam) => exam.exam_id === selectedExam)
@@ -115,7 +118,7 @@ export default function TeacherReportContent() {
         className="w-100 "
         style={{ backgroundColor: '#f8f9fa' }}
     >
-        {loadingUser ? (
+        {loadingUser || courseLoading ? (
             <LoadingCard />
         ) :(<>
             <Card className="mt-4">
@@ -132,6 +135,10 @@ export default function TeacherReportContent() {
                             <Row className="mb-2 mb-md-3">
                                 <Col md={6}>
                                     <CourseDropdown 
+                                        formState={{
+                                            courses,
+                                            courseLoading
+                                        }}
                                         selectedCourse={selectedCourse} 
                                         setSelectedCourse={setSelectedCourse} 
                                         userId={userId} 
