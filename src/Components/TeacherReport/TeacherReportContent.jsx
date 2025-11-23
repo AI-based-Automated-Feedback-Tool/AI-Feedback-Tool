@@ -24,6 +24,8 @@ import useFetchStudentReportData from './hooks/useFetchStudentReportData';
 import StudentReportCard from './components/StudentReportCard'; 
 import useFetchCourses from './hooks/useFetchCourses';
 import useSelectStudents from './hooks/useSelectStudents';
+import ExamReportTable from './components/ExamReportTable';
+import useFetchStudents from './hooks/useFetchStudents';
 
 export default function TeacherReportContent() {
     const [selectedCourse, setSelectedCourse] = useState("");
@@ -45,6 +47,7 @@ export default function TeacherReportContent() {
     const {essayQuestions, loadingEssay} = useFetchEssayQuestions(selectedExam, setReportError);
     const {exams, loadingExams} = useFetchExams(selectedCourse, setError);
     const [submissionId, setSubmissionId] = useState([]);
+    const {students, loadingStudents} = useFetchStudents(selectedCourse, setError);
 
     const { courses, courseLoading } = useFetchCourses(userId, setError); //phase2
     const { studentList, processing } = useSelectStudents(selectedCourse, setError, examSubmissions);
@@ -174,6 +177,7 @@ export default function TeacherReportContent() {
                                         selectedStudent={selectedStudent} 
                                         setSelectedStudent={setSelectedStudent} 
                                         setError={setError}
+                                        formState={{ students, loadingStudents }}
                                     />
                                 </Col>
                             </Row>
@@ -257,6 +261,8 @@ export default function TeacherReportContent() {
                                         />
                                         <StyledDivider />
                                         <QuestionAccuracyChart questionStats={questionStats} />
+                                        <StyledDivider />
+                                        <ExamReportTable studentList={studentList} />
                                     </>
                                 )}
                             </>

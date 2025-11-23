@@ -3,11 +3,11 @@ import { getStudents } from "../service/teacherReportsService";
 
 const useFetchStudents = (selectedCourse, setGlobalError) => {
     const [students, setStudents] = useState([]);
-    const [loading, setLoading] = useState(false);
+    const [loadingStudents, setLoadingStudents] = useState(false);
 
     useEffect(() => {
         if (!selectedCourse) return;
-        setLoading(true);
+        setLoadingStudents(true);
 
         getStudents(selectedCourse)
             .then(data => {
@@ -16,8 +16,8 @@ const useFetchStudents = (selectedCourse, setGlobalError) => {
             .catch(error => {
                 setGlobalError(error.message || "Failed to fetch students");
             })
-            .finally(() => setLoading(false));
+            .finally(() => setLoadingStudents(false));
     }, [selectedCourse]);
-    return { students, loading };
+    return { students, loadingStudents };
 }
 export default useFetchStudents;
