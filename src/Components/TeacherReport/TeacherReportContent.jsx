@@ -196,7 +196,7 @@ export default function TeacherReportContent() {
                     
                     {/* Report Section */}
                     <Card className="mb-4 border-0 shadow-sm">
-                        {!reportRequested || !reportData ? (
+                        {!reportRequested || (!reportData && !students) ? (
                             <CardBody>
                                 <Alert variant="info">
                                     <p className="mb-0">
@@ -239,32 +239,41 @@ export default function TeacherReportContent() {
                                     <CardBody>
                                         <Alert variant="danger">{reportError}</Alert>
                                     </CardBody>
-                                ) : noOfStudentsDoneExam === 0 ? (
+                                ) : students.length === 0 ? (
                                     <CardBody>
                                         <Alert variant="info">
-                                            No students have completed this exam yet.
+                                            No students enrolled in this course.
                                         </Alert>
                                     </CardBody>
-                                ) : (
-                                    <>
-                                        <ReportStatsCards 
-                                            noOfStudentsDoneExam={noOfStudentsDoneExam}
-                                            avgScore={avgScore}
-                                            highestScore={highestScore}
-                                        />
-                                        <StyledDivider />
-                                        <ScoreDistributionChart scoreDistributionData={scoreDistributionData} />
-                                        <StyledDivider />
-                                        <PerformanceAnalysisCards 
-                                            avgTimeInMinutes={avgTimeInMinutes} 
-                                            avgFocusLoss={avgFocusLoss}
-                                        />
-                                        <StyledDivider />
-                                        <QuestionAccuracyChart questionStats={questionStats} />
-                                        <StyledDivider />
-                                        <ExamReportTable studentList={studentList} />
-                                    </>
-                                )}
+                                ) : (students.length > 0 && noOfStudentsDoneExam === 0)  ? (
+                                        
+                                        <>
+                                            <CardBody>
+                                                <Alert variant="info">
+                                                    No students have completed the exam yet.
+                                                </Alert>
+                                            </CardBody>
+                                            <ExamReportTable studentList={studentList} />
+                                        </>
+                                    ) : <>
+                                            <ReportStatsCards 
+                                                noOfStudentsDoneExam={noOfStudentsDoneExam}
+                                                avgScore={avgScore}
+                                                highestScore={highestScore}
+                                            />
+                                            <StyledDivider />
+                                            <ScoreDistributionChart scoreDistributionData={scoreDistributionData} />
+                                            <StyledDivider />
+                                            <PerformanceAnalysisCards 
+                                                avgTimeInMinutes={avgTimeInMinutes} 
+                                                avgFocusLoss={avgFocusLoss}
+                                            />
+                                            <StyledDivider />
+                                            <QuestionAccuracyChart questionStats={questionStats} />
+                                            <StyledDivider />
+                                            <ExamReportTable studentList={studentList} />
+                                        </>
+                                }
                             </>
                         ):null
                         }

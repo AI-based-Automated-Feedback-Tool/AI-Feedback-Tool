@@ -14,6 +14,9 @@ const useSelectStudents = (selectedCourse, setError, examSubmissions) => {
                 user_id: student.user_id,
                 name: student.name,
                 status: "Not Submitted",
+                total_score: null,
+                time_taken: null,
+                focus_loss_count: null,
             }));
             setStudentList(list);
             return;
@@ -28,7 +31,7 @@ const useSelectStudents = (selectedCourse, setError, examSubmissions) => {
                 status: submission ? "Submitted" : "Not Submitted",
                 total_score: submission?.total_score ?? null,
                 time_taken: submission?.time_taken ?? null,
-                focus_loss_count: submission?.focus_loss_count ?? 0,
+                focus_loss_count: submission?.focus_loss_count ?? null,
             };
         });
         console.log("Compiled student list:", list);
