@@ -1,0 +1,205 @@
+/* Student Name Card */
+.student-name-card {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 2rem 2.5rem;
+  border-radius: 24px;
+  color: white;
+  margin-bottom: 2.5rem;
+  box-shadow: 0 15px 40px rgba(139, 92, 246, 0.3);
+}
+
+.student-avatar {
+  width: 80px;
+  height: 80px;
+  background: rgba(255,255,255,0.25);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  backdrop-filter: blur(10px);
+}
+
+.student-name {
+  font-size: 2.2rem;
+  font-weight: 800;
+  margin: 0;
+  letter-spacing: -0.5px;
+}
+
+.student-subtitle {
+  margin: 0.5rem 0 0;
+  opacity: 0.95;
+  font-size: 1.1rem;
+}
+
+/* Info Cards */
+.info-card {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  background: white;
+  padding: 1.5rem 2rem;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(139, 92, 246, 0.12);
+  border-left: 5px solid #8b5cf6;
+}
+
+.info-icon {
+  width: 45px;
+  height: 45px;
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  color: white;
+}
+
+.info-icon.submitted { background: linear-gradient(135deg, #10b981, #34d399); }
+
+.info-label {
+  color: #64748b;
+  font-size: 0.95rem;
+  margin: 0;
+  font-weight: 600;
+}
+
+.info-value {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #1e293b;
+}
+
+.metric-card {
+  text-align: center;
+  padding: 2rem 1.5rem;
+  border-radius: 24px;
+  background: white;
+  box-shadow: 0 15px 40px rgba(139, 92, 246, 0.15);
+  transition: transform 0.3s ease;
+}
+
+.metric-card:hover {
+  transform: translateY(-8px);
+}
+
+.metric-card h3 {
+  font-size: 2rem;
+  font-weight: 900;
+  margin: 1rem 0 0.5rem;
+  background: linear-gradient(135deg, #8b5cf6, #ec4899);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.metric-card p {
+  color: #64748b;
+  font-weight: 600;
+  margin: 0;
+}
+
+.metric-icon {
+  width: 70px;
+  height: 70px;
+  margin: 0 auto 1rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  color: white;
+}
+
+.metric-card.score .metric-icon { background: linear-gradient(135deg, #f59e0b, #fbbf24); }
+.metric-card.duration .metric-icon { background: linear-gradient(135deg, #3b82f6, #8b5cf6); }
+.metric-card.focus .metric-icon { background: linear-gradient(135deg, #ef4444, #f87171); }
+
+/* feedback card */
+.feedback-card {
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border: 2px solid #e2e8f0;
+  border-radius: 24px;
+  padding: 2rem 2.5rem;
+  margin: 2.5rem 0;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+.feedback-title {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #5b21b6;
+  margin: 0 0 1.5rem;
+}
+
+.feedback-summary {
+  font-size: 1.15rem;
+  line-height: 1.7;
+  color: #1e293b;
+  margin-bottom: 1rem;
+}
+
+.feedback-placeholder {
+  text-align: center;
+  padding: 2.5rem 1rem;
+  color: #94a3b8;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border-radius: 18px;
+  border: 2px dashed #cbd5e1;
+}
+
+.feedback-placeholder i {
+  opacity: 0.5;
+}
+
+.feedback-placeholder p {
+  font-size: 1.1rem;
+  margin: 0.5rem 0;
+}
+
+.strengths, .improvements {
+  margin: 1rem 0;
+  padding: 1rem;
+  border-radius: 16px;
+  background: white;
+  font-size: 1.05rem;
+}
+
+.strengths { border-left: 5px solid #10b981; }
+.improvements { border-left: 5px solid #f59e0b; }
+
+.questions-section .section-title {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #5b21b6;
+  margin: 1rem 0 1.5rem;
+  padding-bottom: 0.8rem;
+  border-bottom: 3px solid #e8e0ff;
+  display: inline-block;
+}
+
+.modern-empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: #64748b;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .student-name-card {
+    flex-direction: column;
+    text-align: center;
+    padding: 2rem;
+  }
+  .student-avatar {
+    width: 70px;
+    height: 70px;
+    font-size: 2rem;
+  }
+  .student-name { font-size: 1.8rem; }
+}

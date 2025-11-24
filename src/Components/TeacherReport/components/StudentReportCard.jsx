@@ -2,6 +2,7 @@ import React from 'react'
 import { Row, Col, CardHeader, CardBody, Card } from 'react-bootstrap';
 import Alert from 'react-bootstrap/Alert';
 import StudentReportTable from './StudentReportTable';
+import '../../../css/Reports/StudentReportCard.css';
 
 
 export default function StudentReportCard({ studentReportData, examType }) {
@@ -24,115 +25,137 @@ export default function StudentReportCard({ studentReportData, examType }) {
     } else {
         reportData = [];
     }
-  return (
-    <>
-        {(!studentReportData || studentReportData.length === 0)? (
-            <Alert variant="info">
-                <p className="mb-0">
-                    No report available to for this student.
-                </p>
-            </Alert>
-        ):( 
-            <div>
-                <Row className="mb-4 mt-4">
-                    <Card className="text-start border-0 shadow-sm bg-light">
-                        <CardBody>
-                            <h5>
-                                <span className="text-muted mb-1">🧑‍🎓 Student Name: </span>
-                                <span className="fw-bold text-primary">{studentReportData[0].users.name}</span>
-                            </h5>                    
-                        </CardBody>
-                    </Card>
-                </Row>
-                <Row className="mb-4 mt-4">
-                    <Card className="text-start border-0 shadow-sm bg-light">
-                        <CardBody>
-                            <h5>
-                                <span className="text-muted mb-1">⏱ Submission date and time: </span>
-                                <span className="fw-bold text-primary">{formatDateTime(studentReportData[0].submitted_at)}</span>
-                            </h5>
-                        </CardBody>
-                    </Card>
-                </Row>
-                <Row className="mb-4 mt-4">
-                    <Col md={4}>
-                        <Card className="text-center border-0 shadow-sm bg-light">
-                            <CardBody>
-                                <p className="text-muted mb-1">Score</p>
-                                <h3 className="fw-bold text-primary">{studentReportData[0].total_score}</h3>
-                            </CardBody>
-                        </Card>
-                    </Col>
-                    <Col md={4}>
-                        <Card className="text-center border-0 shadow-sm bg-light">
-                            <CardBody>
-                                <p className="text-muted mb-1">Duration</p>
-                                <h3 className="fw-bold text-primary">{(studentReportData[0].time_taken/60).toFixed(2)} minutes</h3>
-                            </CardBody>
-                        </Card>
-                    </Col>
-                    <Col md={4}>
-                        <Card className="text-center border-0 shadow-sm bg-light">
-                            <CardBody>
-                                <p className="text-muted mb-1">Focus loss count</p>
-                                <h3 className="fw-bold text-primary">{studentReportData[0].focus_loss_count}</h3>
-                            </CardBody>
-                        </Card>
-                    </Col>
-                </Row>
-                <Row className="mb-4 mt-4">
-                    <Card className="text-start border-0 shadow-sm bg-light">
-                        <CardBody>
-                            <h5>
-                                <span className="text-muted mb-3">💬 Overall Feedback: </span>
-                            </h5>
-                            {studentReportData[0].feedback_summary ? (
-                                typeof studentReportData[0].feedback_summary === "string" ? (
-                                <p className="fw-normal text-dark ms-4">
-                                    {studentReportData[0].feedback_summary}
-                                </p>
-                                ) : (
-                                <div className="ms-4">
-                                    {studentReportData[0].feedback_summary.summary && (
-                                    <p className="fw-normal text-dark">
-                                        {studentReportData[0].feedback_summary.summary}
-                                    </p>
-                                    )}
-
-                                    {studentReportData[0].feedback_summary.areas_of_strength && (
-                                    <p className="fw-normal text-dark">
-                                        <strong>Strengths:</strong>{" "}
-                                        {studentReportData[0].feedback_summary.areas_of_strength.join(", ")}
-                                    </p>
-                                    )}
-
-                                    {studentReportData[0].feedback_summary.areas_for_improvement && (
-                                    <p className="fw-normal text-dark">
-                                        <strong>Improvements:</strong>{" "}
-                                        {studentReportData[0].feedback_summary.areas_for_improvement.join(", ")}
-                                    </p>
-                                    )}
-                                </div>
-                                )
-                            ) : (
-                                <span className="fw-normal text-dark ms-4">No feedback available</span>
-                            )}
-                        </CardBody>
-                    </Card>
-                </Row>
-                <Row className="mb-4 mt-4">
-                    <Card className="border-0 shadow-sm bg-light">
-                        <CardHeader className="bg-white border-0 mt-3">
-                        <h5 className="text-muted mb-1">📊 Question Details :</h5>
-                        </CardHeader>
-                    <CardBody>
-                        <StudentReportTable studentReportTableData={reportData} examType={examType} />
-                    </CardBody>
-                    </Card>
-                </Row>
-            </div>
-        )}
-    </>
     
-  )
+    return (
+        <>
+            {(!studentReportData || studentReportData.length === 0)? (
+                <div className="modern-empty-state">
+                    <i className="fas fa-user-graduate fa-3x text-muted mb-3"></i>
+                    <p>No report data available for this student.</p>
+                </div>
+            ):( 
+                <div className="student-report-modern">
+                    <div className="student-name-card">
+                        <div className="student-avatar">
+                            <i className="fas fa-user-graduate"></i>
+                        </div>
+                        <div>
+                            <h2 className="student-name">{studentReportData[0].users.name}</h2>
+                            <p className="student-subtitle">Individual Performance Report</p>
+                        </div>
+                    </div>
+
+                    <Row className="g-4 mb-5">
+                        <Col md={6}>
+                            <div className='info-card'>
+                                <div className='info-icon submitted'>
+                                    <i className="fas fa-calendar-check"></i>
+                                </div>
+                                <div>
+                                    <p className='info-label'>Submitted On</p>
+                                    <h4 className='info-value'>{formatDateTime(studentReportData[0].submitted_at)}</h4>
+                                </div>
+                            </div>
+                        </Col>
+                        <Col md={6}>
+                            <div className='info-card'>
+                                <div className='info-icon score'>
+                                    <i className="fas fa-clock"></i>
+                                </div>
+                                <div>
+                                    <p className='info-label'>Time Taken</p>
+                                    <h4 className='info-value'>{(studentReportData[0].time_taken/60).toFixed(2)} minutes</h4>
+                                </div>
+                            </div>
+                        </Col>
+                    </Row>
+
+                    <Row className="g-4 mb-4">
+                        <Col md={4}>
+                            <div className="metric-card score">
+                                <div className="metric-icon">
+                                    <i className="fas fa-trophy"></i>
+                                </div>
+                                <h3>{studentReportData[0].total_score}</h3>
+                                <p>Total Score</p>
+                            </div>
+                        </Col>
+                        <Col md={4}>
+                            <div className="metric-card duration">
+                                <div className="metric-icon">
+                                    <i className="fas fa-stopwatch"></i>
+                                </div>
+                                <h3>{(studentReportData[0].time_taken / 60).toFixed(1)} min</h3>
+                                <p>Duration</p>
+                            </div>
+                        </Col>
+                        <Col md={4}>
+                            <div className="metric-card focus">
+                                <div className="metric-icon">
+                                    <i className="fas fa-eye"></i>
+                                </div>
+                                <h3>{studentReportData[0].focus_loss_count}</h3>
+                                <p>Focus Loss</p>
+                            </div>
+                        </Col>
+                    </Row>
+
+                    
+                        <div className="feedback-card">
+                            <h3 className="feedback-title">
+                                <i className="fas fa-comment-dots me-3"></i>
+                                AI Feedback Summary
+                            </h3>
+                            <div className='feedback-content'>
+                                {studentReportData[0].feedback_summary ? (
+                                    typeof studentReportData[0].feedback_summary === "string" ? (
+                                        <p className="feedback-text">
+                                            {studentReportData[0].feedback_summary}
+                                        </p>
+                                    ) : (
+                                        <div>
+                                            {studentReportData[0].feedback_summary.summary && (
+                                                <p className="feedback-summary">
+                                                    {studentReportData[0].feedback_summary.summary}
+                                                </p>
+                                            )}
+
+                                            {studentReportData[0].feedback_summary.areas_of_strength && (
+                                                <div className="strengths">
+                                                    <strong>Strengths:</strong>{" "}
+                                                    {studentReportData[0].feedback_summary.areas_of_strength.join(", ")}
+                                                </div>
+                                            )}
+
+                                            {studentReportData[0].feedback_summary.areas_for_improvement && (
+                                                <div className="improvements">
+                                                    <strong>Areas to Improve:</strong>{" "}
+                                                    {studentReportData[0].feedback_summary.areas_for_improvement.join(", ")}
+                                                </div>
+                                            )}
+                                        </div>
+                                    )
+                                ) : (
+                                    <div className="feedback-placeholder">
+                                        <i className="fas fa-robot fa-2x text-muted mb-3"></i>
+                                        <p className="text-muted mb-0">
+                                            AI feedback is not available for this submission.
+                                        </p>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+
+                    <div className="questions-section mt-5">
+                        <h3 className="section-title full-width-title">
+                            <i className="fas fa-list-ol me-3"></i>
+                            Question-wise Performance
+                        </h3>
+                        <StudentReportTable studentReportTableData={reportData} examType={examType} />
+                    </div>
+                </div>
+            )}        
+        </>
+    
+    )
 }
