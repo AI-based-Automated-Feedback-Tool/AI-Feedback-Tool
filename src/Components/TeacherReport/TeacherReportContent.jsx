@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { supabase } from '../../SupabaseAuth/supabaseClient';
-import { Row, Col, CardHeader, CardBody, Card, Button, Alert } from 'react-bootstrap';
+import { Row, Col, Spinner, CardBody, Card, Button, Alert, Badge} from 'react-bootstrap';
 import CourseDropdown from './components/CourseDropdown';
 import StudentDropdown from './components/StudentDropdown';
 import ExamDropdown from './components/ExamDropdown'; 
@@ -26,6 +26,8 @@ import useFetchCourses from './hooks/useFetchCourses';
 import useSelectStudents from './hooks/useSelectStudents';
 import ExamReportTable from './components/ExamReportTable';
 import useFetchStudents from './hooks/useFetchStudents';
+import '../../css/Reports/TeacherReport.css';
+
 
 export default function TeacherReportContent() {
     const [selectedCourse, setSelectedCourse] = useState("");
@@ -128,131 +130,143 @@ export default function TeacherReportContent() {
     }, [selectedExam])
 
   return (
-    <Col
-        className="w-100 "
-        style={{ backgroundColor: '#f8f9fa' }}
+    <div
+        className="report-page-wrapper"
     >
         {loadingUser || courseLoading ? (
             <LoadingCard />
-        ) :(<>
-            <Card className="mt-4">
-                <CardHeader className='bg-primary text-white '>
-                    <h4>📋 Teacher Report</h4>
-                </CardHeader>
-                <CardBody>
-                    <Card className="mb-4 border-0 shadow-sm">
-                        <CardHeader>
-                            <h5 className="mb-0">Search Criteria</h5>
-                        </CardHeader>
-                        <CardBody>
-                            {error && <Alert variant="danger">{error}</Alert>}
-                            <Row className="mb-2 mb-md-3">
-                                <Col md={6}>
-                                    <CourseDropdown 
-                                        formState={{
-                                            courses,
-                                            courseLoading
-                                        }}
-                                        selectedCourse={selectedCourse} 
-                                        setSelectedCourse={setSelectedCourse} 
-                                        userId={userId} 
-                                        setError={setError}
-                                    />
-                                </Col>
+        ) :(<div className='container'>
+                <div className="page-header-card">
+                    <div className="header-gradient-section">
+                        <div className="header-icon-circle">
+                            <i className="fas fa-chart-line"></i>
+                        </div>
+                        
+                        <div className="header-text-content">
+                            <h1 className="main-title">Teacher Report</h1>
+                            <p className="main-subtitle">Analyze student performance with detailed insights</p>
+                        </div>
+                    </div>
+                </div>
+                    
+                
+                   
+                <Card className="report-search-panel">
+                    <Card.Body className="report-search-body">
+                        <h4 className="report-search-title">
+                            <i className="fas fa-search me-2"></i>
+                            Search Criteria
+                        </h4>
+                        
+                        {error && <Alert variant="danger" className="rounded-3">{error}</Alert>}
+                        <Row className="g-4">
+                            <Col lg={4}>
+                                <CourseDropdown 
+                                    formState={{
+                                        courses,
+                                        courseLoading
+                                    }}
+                                    selectedCourse={selectedCourse} 
+                                    setSelectedCourse={setSelectedCourse} 
+                                    userId={userId} 
+                                    setError={setError}
+                                    className = "modern-dropdown"
+                                />
+                            </Col>
 
-                                <Col md={6}>
-                                    <ExamDropdown 
-                                        selectedCourse={selectedCourse} 
-                                        selectedExam={selectedExam} 
-                                        setSelectedExam={setSelectedExam} 
-                                        setError={setError}
-                                    />
-                                </Col>
-                            </Row>
+                            <Col lg={4}>
+                                <ExamDropdown 
+                                    selectedCourse={selectedCourse} 
+                                    selectedExam={selectedExam} 
+                                    setSelectedExam={setSelectedExam} 
+                                    setError={setError}
+                                    className = "modern-dropdown"
+                                />
+                            </Col>
 
-                            <Row className='mb-2 mb-md-3'>
-                                <Col md={6}>
-                                    <StudentDropdown 
-                                        selectedCourse={selectedCourse} 
-                                        selectedStudent={selectedStudent} 
-                                        setSelectedStudent={setSelectedStudent} 
-                                        setError={setError}
-                                        formState={{ students, loadingStudents }}
-                                    />
-                                </Col>
-                            </Row>
+                            <Col lg={4}>
+                                <StudentDropdown 
+                                    selectedCourse={selectedCourse} 
+                                    selectedStudent={selectedStudent} 
+                                    setSelectedStudent={setSelectedStudent} 
+                                    setError={setError}
+                                    formState={{ students, loadingStudents }}
+                                    className = "modern-dropdown"
+                                />
+                            </Col>
+                        </Row>
 
+                        <div className='report-generate-section'>
                             <Button 
-                                variant="primary" 
-                                type="submit" 
-                                className="mt-2 mt-md-3"
+                                size = "lg" 
+                                className="report-generate-btn"
                                 onClick={generateReport}
-                                disabled={loadingReport}
-                            >
-                                Generate Report
+                                disabled={loadingReport|| !selectedCourse || !selectedExam}
+                                >
+                                    {loadingReport ? (
+                                        <>Generating Report <Spinner size="sm" className="ms-2" /></>
+                                    ) : (
+                                        <>Generate Report</>
+                                    )}
                             </Button>
-                        </CardBody>
-                    </Card>
+                        </div>
+                    </Card.Body>
+                </Card>
                     
                     {/* Report Section */}
-                    <Card className="mb-4 border-0 shadow-sm">
+                    
                         {!reportRequested || (!reportData && !students) ? (
-                            <CardBody>
-                                <Alert variant="info">
-                                    <p className="mb-0">
-                                        No report available to preview. Please select the criteria and generate a report.
-                                    </p>
-                                </Alert>
-                            </CardBody>
+                            <Card className="text-center py-5 border-0 shadow-sm">
+                                <Card.Body>
+                                    <div className="text-muted fs-1 mb-3"></div>
+                                    <h4 className="text-muted">Select criteria above to generate a report</h4>
+                                </Card.Body>
+                            </Card>
                         ) : (selectedCourse && selectedExam && selectedStudent) ? (
-                            <>
-                                <CardHeader className="bg-white">
-                                    <h5>📊 Student Report</h5>
-                                </CardHeader>
+                            <div className="report-content">
+                                <div className="report-section-header">
+                                    <h2 className="report-section-title">
+                                        <i className="fas fa-user-graduate me-3"></i>
+                                        Student Performance Report
+                                    </h2>
+                                    <div className="report-section-divider"></div>
+                                </div>
                                 {/*  Insert student-specific report */}
                                 <CardBody>
                                     {reportError ? (
-                                        <CardBody>
-                                            <Alert variant="danger">{reportError}</Alert>
-                                        </CardBody>
+                                        <Alert variant="danger" className="rounded-4 shadow">{reportError}</Alert>
                                     ) : studentReportData ?  (
-                                        <CardBody>
-                                            <StudentReportCard studentReportData={studentReportData} examType={examType} />
-                                        </CardBody>
+                                        <StudentReportCard studentReportData={studentReportData} examType={examType} />
                                     ) : (
-                                        <CardBody>
-                                            <Alert variant="info">
-                                                No report data available for this student.
-                                            </Alert>
-                                        </CardBody>
+                                        <Alert variant="info">No data found for this student.</Alert>
                                     )}
                                 </CardBody>
-                            </>
+                            </div>
                         ): (selectedCourse && selectedExam) ? (
-                            <>
-                                <CardHeader className="bg-white">
-                                    <h5>
-                                        📊 Overall Exam Report
-                                    </h5>
-                                </CardHeader>
+                            <div className="report-content">
+                                <div className="report-section-header">
+                                    <h2 className="report-section-title">
+                                        <i className="fas fa-chart-bar me-3"></i>
+                                        Overall Exam Report
+                                    </h2>
+                                    <div className="report-section-subtitle">
+                                        {noOfStudentsDoneExam} student{noOfStudentsDoneExam !== 1 ? 's' : ''} completed the exam
+                                    </div>
+                                    <div className="report-section-divider"></div>
+                                </div>
                                 {reportError ? (
-                                    <CardBody>
-                                        <Alert variant="danger">{reportError}</Alert>
-                                    </CardBody>
+                                    <Alert variant="danger" className="rounded-4 shadow">{reportError}</Alert>
                                 ) : students.length === 0 ? (
-                                    <CardBody>
-                                        <Alert variant="info">
-                                            No students enrolled in this course.
-                                        </Alert>
-                                    </CardBody>
+                                    <Alert variant="warning" className="rounded-4">
+                                        No students enrolled in this course.
+                                    </Alert>
                                 ) : (students.length > 0 && noOfStudentsDoneExam === 0)  ? (
                                         
                                         <>
-                                            <CardBody>
-                                                <Alert variant="info">
-                                                    No students have completed the exam yet.
-                                                </Alert>
-                                            </CardBody>
+                                            
+                                            <Alert variant="warning" className="rounded-4">
+                                                    No students have completed this exam yet.
+                                            </Alert>
                                             <ExamReportTable studentList={studentList} />
                                         </>
                                     ) : <>
@@ -274,13 +288,11 @@ export default function TeacherReportContent() {
                                             <ExamReportTable studentList={studentList} />
                                         </>
                                 }
-                            </>
+                            </div>
                         ):null
-                        }
-                    </Card>
-                </CardBody>
-            </Card>
-        </>)}
-    </Col>
+                    }
+            </div>
+        )}
+    </div>
   )
 }
