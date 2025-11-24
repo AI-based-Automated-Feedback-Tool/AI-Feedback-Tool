@@ -1,0 +1,90 @@
+.stats-cards-section {
+  margin: 2.5rem 0;
+  padding: 0 1rem;
+}
+
+.stat-card {
+  background: white;
+  padding: 2rem 1.5rem;
+  border-radius: 24px;
+  text-align: center;
+  box-shadow: 
+    0 12px 35px rgba(139, 92, 246, 0.15),
+    0 6px 15px rgba(0, 0, 0, 0.06);
+  transition: all 0.35s ease;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(139, 92, 246, 0.1);
+}
+
+.stat-card::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(135deg, transparent 30%, rgba(255,255,255,0.1) 100%);
+  pointer-events: none;
+  border-radius: 24px;
+}
+
+.stat-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 
+    0 20px 50px rgba(139, 92, 246, 0.25),
+    0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.stat-icon {
+  width: 70px;
+  height: 70px;
+  margin: 0 auto 1.2rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.9rem;
+  color: white;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.stat-card.students .stat-icon {
+  background: linear-gradient(135deg, #3b82f6, #60a5fa);
+}
+
+.stat-card.average .stat-icon {
+  background: linear-gradient(135deg, #8b5cf6, #a78bfa);
+}
+
+.stat-card.highest .stat-icon {
+  background: linear-gradient(135deg, #f59e0b, #fbbf24);
+}
+
+.stat-value {
+  font-size: 2.6rem;
+  font-weight: 900;
+  color: #1e293b;
+  margin: 0.5rem 0;
+  letter-spacing: -1px;
+}
+
+.stat-label {
+  color: #64748b;
+  font-weight: 600;
+  font-size: 1.05rem;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+@media (max-width: 768px) {
+  .stat-card {
+    padding: 1.8rem 1.2rem;
+  }
+  .stat-value {
+    font-size: 2.3rem;
+  }
+  .stat-icon {
+    width: 60px;
+    height: 60px;
+    font-size: 1.6rem;
+  }
+}
