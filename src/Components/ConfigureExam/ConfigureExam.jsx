@@ -95,7 +95,7 @@ const ConfigureExam = () => {
             }
 
             const response = await axios.post(
-                "http://localhost:3000/api/configureExam",
+                "https://ai-feedback-tool-backend-qgvj.onrender.com/api/configureExam",
                 {
                     ...exam,
                     user_id: session.user.id
