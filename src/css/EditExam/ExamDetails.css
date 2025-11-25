@@ -94,72 +94,86 @@
   font-weight: 500;
 }
 
-.exam-details-page .code-block {
-  background: #2d3748 !important;
-  color: #e2e8f0 !important;
-  border-radius: 12px;
-  overflow: hidden;
-  font-family: 'Fira Code', 'Consolas', monospace;
-  font-size: 0.95rem;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+.code-label {
+  color: #3234a0 !important;
+  font-weight: 600;  
 }
 
-.exam-details-page .code-block.signature {
-  background: #f0f4f8 !important;
-  color: #2d3748 !important;
-  border: 1px solid #e2e8f0;
+.exam-details-page .accordion-button:not(.collapsed) {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6) !important;
+  color: white !important;
 }
 
-.exam-details-page .code-block.wrapper {
-  background: #1a202c !important;
-  color: #e2e8f0 !important;
+.table {
+  margin-bottom: 0 !important;
 }
 
-.exam-details-page .test-cases-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 1rem;
+.table pre {
+  font-size: 0.9rem;
+  line-height: 1.4;
 }
 
-.exam-details-page .test-case-item {
+.modern-testcases-accordion .accordion-button {
   background: white;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-  border: 1px solid #e2e8f0;
-  transition: transform 0.2s;
-}
-
-.exam-details-page .test-case-item:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 30px rgba(0,0,0,0.15);
-}
-
-.exam-details-page .test-case-header {
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  color: white;
-  padding: 0.75rem 1rem;
+  color: #555;
   font-weight: 600;
+  border: none;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.1);
+  transition: all 0.3s ease;
 }
 
-.exam-details-page .test-case-number {
+.modern-testcases-accordion .accordion-button:not(.collapsed) {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  color: white !important;
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+}
+
+.modern-testcases-accordion .accordion-button:focus {
+  box-shadow: 0 0 0 0.25rem rgba(102, 126, 234, 0.25);
+}
+
+.modern-testcases-table thead {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.modern-testcases-table th,
+.modern-testcases-table td {
+  vertical-align: middle;
+  border: 1px solid #e2e8f0;
+}
+
+.modern-testcases-table pre {
   font-size: 0.9rem;
+  line-height: 1.5;
+  margin: 0;
+  background: #f8f9fa !important;
+  border-radius: 8px;
 }
 
-.exam-details-page .test-case-body {
-  padding: 1rem;
+.modern-testcases-table .bg-success-subtle {
+  background-color: #d4edda !important;
+  color: #155724 !important;
 }
 
-.exam-details-page .test-case-body code {
-  background: #1a202c;
-  color: #e2e8f0;
-  font-size: 0.9rem;
-  white-space: pre-wrap;
-  word-break: break-all;
+/* Hover effect on rows */
+.modern-testcases-table tr:hover {
+  background-color: rgba(102, 126, 234, 0.05);
+  transform: scale(1.01);
+  transition: all 0.2s ease;
 }
 
-.exam-details-page .test-case-body .bg-success {
-  background: #2f855a !important;
+.accordion-item {
+  overflow: hidden;
+}
+
+
+/* Divider */
+.exam-details-page .code-divider {
+  height: 5px;
+  background: linear-gradient(90deg, transparent, #86efac, transparent);
+  border-radius: 3px;
+  margin: 2rem 0 0;
+  opacity: 0.7;
 }
 
 /* edit exam button */

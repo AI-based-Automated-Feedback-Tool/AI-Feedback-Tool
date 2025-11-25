@@ -2,8 +2,8 @@ import React from 'react';
 import { Form } from 'react-bootstrap';
 import useFetchCourses from '../hooks/useFetchCourses';
 
-const CourseDropdown = ({ userId, selectedCourse, setSelectedCourse, setError }) => {
-    const { courses, loading } = useFetchCourses(userId, setError);
+const CourseDropdown = ({ formState, userId, selectedCourse, setSelectedCourse, setError }) => {
+    const { courses, courseLoading } = formState;
 
     return (
         <Form.Group>
@@ -13,7 +13,7 @@ const CourseDropdown = ({ userId, selectedCourse, setSelectedCourse, setError })
             <Form.Select
                 value={selectedCourse}
                 onChange={(e) => setSelectedCourse(e.target.value)}
-                disabled={loading || !userId}
+                disabled={courseLoading || !userId}
             >
                 <option value="">Select a course</option>
                 {courses.length === 0 && (

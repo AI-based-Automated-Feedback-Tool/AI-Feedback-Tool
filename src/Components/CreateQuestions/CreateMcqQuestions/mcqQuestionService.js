@@ -1,6 +1,8 @@
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+
 export const saveMcqQuestion = async (questionData) => {
     try{
-        const response = await fetch('https://ai-feedback-tool-backend-qgvj.onrender.com/api/createQuestions', {
+        const response = await fetch(`${API_BASE_URL}/api/createQuestions`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

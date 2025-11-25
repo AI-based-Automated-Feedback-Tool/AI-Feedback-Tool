@@ -1,0 +1,175 @@
+.essay-question-card {
+  background: white;
+  border-radius: 20px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  border: 1px solid rgba(139, 92, 246, 0.15);
+  box-shadow: 0 8px 25px rgba(102, 86, 230, 0.1);
+  transition: all 0.3s ease;
+}
+
+.essay-question-card:hover {
+  box-shadow: 0 15px 40px rgba(102, 86, 230, 0.16);
+  transform: translateY(-4px);
+}
+
+.essay-question-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.8rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #e8e0ff;
+  position: relative;
+}
+
+.essay-question-header::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 70px;
+  height: 3px;
+  background: linear-gradient(90deg, #8b5cf6, #a78bfa);
+  border-radius: 3px;
+}
+
+.essay-icon {
+  width: 35px;
+  height: 35px;
+  color: #5b21b6;
+  font-size: 1.7rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.essay-icon:hover {
+  background: #f3edff;
+  border-radius: 10px;
+  color: #8b5cf6;
+  transform: scale(1.1);
+}
+
+.essay-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #5b21b6;
+  letter-spacing: -0.4px;
+}
+
+.points-badge {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  font-size: 0.95rem;
+  font-weight: 700;
+  padding: 0.5rem 1.1rem;
+  border-radius: 50px;
+  box-shadow: 0 5px 15px rgba(16, 185, 129, 0.3);
+  white-space: nowrap;
+}
+
+.input-label {
+  font-weight: 700;
+  color: #5b21b6;
+  font-size: 1.05rem;
+  margin-bottom: 0.6rem;
+}
+
+.question-textarea,
+.points-input {
+  border: 2.5px solid #e0d4ff;
+  border-radius: 14px;
+  padding: 0.9rem 1.2rem;
+  font-size: 0.95rem;
+  background: #fdfaff;
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+.question-textarea:focus,
+.points-input:focus {
+  border-color: #8b5cf6 !important;
+  box-shadow: 0 0 0 5px rgba(139, 92, 246, 0.18);
+  background: white;
+  outline: none;
+}
+
+.points-input {
+  width: 100%;
+  max-width: 180px;
+}
+
+.attachment-preview {
+  background: #f0f9ff;
+  border: 2px dashed #0dcaf0;
+  border-radius: 14px;
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
+}
+
+.attachment-preview:hover {
+  background: #e3f9ff;
+  border-color: #0dcaf0;
+  box-shadow: 0 6px 20px rgba(13, 202, 240, 0.15);
+}
+
+.attachment-preview strong {
+  color: #1e293b;
+}
+
+.attachment-preview a {
+  color: #0d6efd;
+  font-weight: 600;
+}
+
+.attachment-preview a:hover {
+  color: #0b5ed7;
+  text-decoration: underline !important;
+}
+
+.form-control[type="file"] {
+  padding: 0.8rem;
+  border: 2.5px dashed #c4b5fd;
+  border-radius: 14px;
+  background: #fbf8ff;
+  font-size: 0.94rem;
+}
+
+.form-control[type="file"]:focus {
+  border-color: #8b5cf6;
+  box-shadow: 0 0 0 5px rgba(139, 92, 246, 0.15);
+}
+
+.question-divider {
+  height: 4px;
+  background: linear-gradient(90deg, transparent, #c4b5fd 40%, #8b5cf6 50%, #c4b5fd 60%, transparent);
+  border: none;
+  margin: 2.5rem 0;
+  border-radius: 2px;
+}
+
+@media (max-width: 768px) {
+  .essay-question-card {
+    padding: 1.5rem;
+  }
+  
+  .essay-title {
+    font-size: 1.4rem;
+  }
+  
+  .points-badge {
+    font-size: 0.9rem;
+    padding: 0.4rem 0.9rem;
+  }
+  
+  .attachment-preview {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.8rem;
+  }
+  
+  .attachment-preview > div {
+    width: 100%;
+  }
+}

@@ -5,6 +5,7 @@ import useExamDetails from './hooks/useExamDetails';
 import EditExam from './components/EditExam';
 import { useNavigate } from 'react-router-dom';
 import '../../css/EditExam/ExamDetails.css';
+import useEditExam from './hooks/useEditExam';
 
 
 export default function ExamsContent() {
@@ -13,8 +14,28 @@ export default function ExamsContent() {
         examDetails,
         loading,
         error,
-        formatDateTime
-    }= useExamDetails({ examId });
+        formatDateTime,
+        type,
+        setType,
+        duration,
+        setDuration,
+        startTime,
+        setStartTime,
+        endTime,
+        setEndTime,
+        instructions,
+        setInstructions,
+        aiAssessmentGuide,
+        setAiAssessmentGuide,           
+        questionCount,
+        setQuestionCount,
+        manageSaveChangesToExam,
+        setError,
+        setLoading,
+        validate,
+        questions,
+        setQuestions
+    }= useEditExam({ examId });
 
     const navigate = useNavigate();
 
@@ -156,127 +177,193 @@ export default function ExamsContent() {
               <div key={q.question_id} className="question-preview-card mb-4">
                 {/* Question Header */}
                 <div className="d-flex justify-content-between align-items-start mb-3">
-                  <h6 className="mb-0">
-                    <i className="fas fa-code me-2 text-primary"></i>
-                    Q{i + 1}. {q.question_description || 'Write a function...'}
+                  <h6 className="mb-0 d-flex align-items-center gap-3">
+                    <i className="fas fa-laptop-code fs-3" style={{ color: '#3234a0' }} ></i>
+                    <span className="fw-bold">Q{i + 1}. {q.question_description || 'Write a function...'}</span>
                   </h6>
-                  <Badge bg="info" className="fs-6">{q.points} pts</Badge>
+                  <Badge bg="success" className="fs-6 px-3 py-2">{q.points} pts</Badge>
                 </div>
 
                 {/* Function Signature */}
-                <div className="mb-3">
-                  <strong className="text-muted">
-                    Function Signature
-                  </strong>
-                  <pre className="code-block signature mt-2 p-3 rounded">
-                    <code>{q.function_signature || 'def solution(...)'}</code>
+                <div className="mb-4">
+                  <div className="d-flex align-items-center gap-2 mb-2">
+                    <i className="fas fa-signature code-label"></i>
+                    <strong className=" code-label ">
+                      Function Signature
+                    </strong>
+                  </div>
+                  <pre className="code-block signature p-3 rounded overflow-auto">
+                    <code>{q.function_signature}</code>
                   </pre>
                 </div>
 
-                {/* Wrapper Code (Hidden by default — collapsible) */}
-                <details className="mb-3">
-                  <summary className="text-primary fw-bold cursor-pointer">
-                    Wrapper Code (Click to expand)
-                  </summary>
-                  <pre className="code-block wrapper mt-2 p-3 rounded">
-                    <code>{q.wrapper_code || '# No wrapper code'}</code>
-                  </pre>
-                </details>
+                {/* Wrapper Code */}
+                {q.wrapper_code && (
+                  <div className="mb-4">
+                    <div className="d-flex align-items-center gap-2 mb-2">
+                      <i className="fas fa-cogs code-label"></i>
+                      <strong className="code-label">Wrapper Code</strong>
+                    </div>
+                    <pre className="code-block wrapper p-3 rounded overflow-auto">
+                      <code>{q.wrapper_code}</code>
+                    </pre>
+                  </div>
+                )}
 
                 {/* Test Cases */}
-                <div>
-                  <strong className="text-muted d-flex align-items-center gap-2">
-                    Test Cases ({q.test_cases?.length || 0})
-                  </strong>
-                  <div className="test-cases-grid mt-3">
-                    {q.test_cases?.map((tc, idx) => (
-                      <div key={idx} className="test-case-item">
-                        <div className="test-case-header">
-                          <span className="test-case-number">Test {idx + 1}</span>
-                        </div>
-                        <div className="test-case-body">
-                          <div>
-                            <strong>Input:</strong>
-                            <code className="d-block mt-1 p-2 bg-dark text-light rounded">
-                              {JSON.stringify(tc.input, null, 2)}
-                            </code>
+                <div className="test-cases-section">
+                  <div className="d-flex align-items-center gap-2 mb-3">
+                    <i className="fas fa-vial code-label"></i>
+                    <strong className='code-label'>
+                      Test Cases ({q.test_cases?.length || 0})
+                    </strong>
+                  </div>
+
+                  <div className="accordion modern-testcases-accordion">
+                    <div className="accordion-item border-0 rounded-3 overflow-hidden shadow-sm">
+                      <h2 className="accordion-header">
+                        <button
+                          className="accordion-button collapsed fw-semibold py-3"
+                          type="button"
+                          data-bs-toggle="collapse"
+                          data-bs-target={`#testcases-table-${q.question_id}`}
+                        >
+                          <i className="fas fa-table me-2"></i>
+                          View all test cases
+                          <span className="ms-2 text-muted small">({q.test_cases?.length} cases)</span>
+                        </button>
+                      </h2>
+                      <div
+                        id={`testcases-table-${q.question_id}`}
+                        className="accordion-collapse collapse"
+                      >
+                        <div className="accordion-body p-0">
+                          <div className="table-responsive">
+                            <table className="table table-hover mb-0 modern-testcases-table">
+                              <thead>
+                                <tr className="bg-gradient-header text-white">
+                                  <th className="text-center py-3 fw-semibold">Input</th>
+                                  <th className="text-center py-3 fw-semibold">Expected Output</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {q.test_cases?.map((tc, index) => (
+                                  <tr key={index} className="align-middle">
+                                    <td className="font-monospace small text-muted py-3">
+                                      <pre className="mb-0 px-3 py-2 bg-light rounded-3">
+                                        {JSON.stringify(tc.input, null, 2)}
+                                      </pre>
+                                    </td>
+                                    <td className="font-monospace small text-success py-3">
+                                      <pre className="mb-0 px-3 py-2 bg-success-subtle text-success fw-500 rounded-3">
+                                        {JSON.stringify(tc.output, null, 2)}
+                                      </pre>
+                                    </td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
                           </div>
-                          <div className="mt-3">
-                            <strong>Expected:</strong>
-                            <code className="d-block mt-1 p-2 bg-success text-white rounded">
-                              {JSON.stringify(tc.output, null, 2)}
-                            </code>
-                          </div>
+                          {!q.test_cases?.length && (
+                            <div className="p-4 text-center text-muted small">
+                              No test cases defined
+                            </div>
+                          )}
                         </div>
                       </div>
-                    ))}
-                    {!q.test_cases?.length && (
-                      <p className="text-muted small">No test cases defined</p>
-                    )}
+                    </div>
                   </div>
                 </div>
+                <div className="essay-divider mt-4"></div>
               </div>
             ))}
 
             {examDetails.type === 'essay' && examDetails.questions.map((q, i) => (
-  <div key={q.question_id} className="question-preview-card essay-question-card mb-5">
-    {/* Header with icon and points */}
-    <div className="d-flex justify-content-between align-items-start mb-4">
-      <h6 className="mb-0 d-flex align-items-center gap-3">
-        <i className="fas fa-file-alt text-indigo fs-4"></i>
-        <span>Q{i + 1}. {q.question_text || 'Write your essay...'}</span>
-      </h6>
-      <Badge bg="warning" className="fs-6 px-3 py-2">
-        {q.points} pts
-      </Badge>
-    </div>
+              <div key={q.question_id} className="question-preview-card essay-question-card mb-5">
+                {/* Header with icon and points */}
+                <div className="d-flex justify-content-between align-items-start mb-4">
+                  <h6 className="mb-0 d-flex align-items-center gap-3">
+                    <i className="fas fa-file-alt text-indigo fs-4"></i>
+                    <span>Q{i + 1}. {q.question_text || 'Write your essay...'}</span>
+                  </h6>
+                  <Badge bg="warning" className="fs-6 px-3 py-2">
+                    {q.points} pts
+                  </Badge>
+                </div>
 
-    {/* Info Grid */}
-    <div className="essay-info-grid mb-4">
-      <div className="info-item">
-        <i className="fas fa-align-left text-muted me-2"></i>
-        <strong>Word Limit:</strong> {q.word_limit || 'No limit'}
-      </div>
-      {q.grading_note && (
-        <div className="info-item grading-note">
-          <i className="fas fa-lightbulb text-warning me-2"></i>
-          <strong>Grading Note:</strong>
-          <p className="mt-2 mb-0 text-muted small">{q.grading_note}</p>
-        </div>
-      )}
-    </div>
+                {/* Info Grid */}
+                <div className="essay-info-grid mb-4">
+                  <div className="info-item">
+                    <i className="fas fa-align-left text-muted me-2"></i>
+                    <strong>Word Limit:</strong> {q.word_limit || 'No limit'}
+                  </div>
+                  {q.grading_note && (
+                    <div className="info-item grading-note">
+                      <i className="fas fa-lightbulb text-warning me-2"></i>
+                      <strong>Grading Note:</strong>
+                      <p className="mt-2 mb-0 text-muted small">{q.grading_note}</p>
+                    </div>
+                  )}
+                </div>
 
-    {/* Attachment (if exists) */}
-    {q.attachment_url && (
-      <div className="attachment-preview p-3 rounded d-flex align-items-center gap-3">
-        <i className="fas fa-paperclip fs-3 text-primary"></i>
-        <div className="flex-grow-1">
-          <strong>Attached File:</strong>
-          <a
-            href={q.attachment_url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="attachment-link ms-2"
-          >
-            {getFileName(q.attachment_url)}
-          </a>
-        </div>
-        <i className="fas fa-external-link-alt text-muted"></i>
-      </div>
-    )}
+                {/* Attachment (if exists) */}
+                {q.attachment_url && (
+                  <div className="attachment-preview p-3 rounded d-flex align-items-center gap-3">
+                    <i className="fas fa-paperclip fs-3 text-primary"></i>
+                    <div className="flex-grow-1">
+                      <strong>Attached File:</strong>
+                        <a
+                          href={q.attachment_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="attachment-link ms-2"
+                        >
+                          {getFileName(q.attachment_url)}
+                        </a>
+                    </div>
+                    <i className="fas fa-external-link-alt text-muted"></i>
+                  </div>
+                )}
 
-    <div className="essay-divider mt-4"></div>
-  </div>
-))}
+                <div className="essay-divider mt-4"></div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
-      <EditExam
-        examId={examId}
-        show={showEditExam}
-        handleClose={closeEditExam}
-        onSaveSuccess={handleSaveSuccess}
-      />
+      {examDetails && (
+        <EditExam
+          formState={{
+            examDetails,
+            error,
+            type,
+            setType,
+            duration,
+            setDuration,
+            startTime,
+            setStartTime,
+            endTime,
+            setEndTime,
+            instructions,
+            setInstructions,
+            aiAssessmentGuide,
+            setAiAssessmentGuide,           
+            questionCount,
+            setQuestionCount,
+            manageSaveChangesToExam,
+            setError,
+            loading,
+            setLoading,
+            validate,
+            questions,
+            setQuestions
+          }}
+          examId={examId}
+          show={showEditExam}
+          handleClose={closeEditExam}
+          onSaveSuccess={handleSaveSuccess}
+        />
+      )}
     </div>
     
   )

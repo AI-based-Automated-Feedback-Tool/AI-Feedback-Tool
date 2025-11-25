@@ -1,0 +1,115 @@
+.question-table-wrapper {
+  margin-top: 1.5rem;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(139, 92, 246, 0.12);
+  background: white;
+}
+
+.question-table {
+  margin: 0;
+  font-size: 0.98rem;
+  border: none;
+}
+
+.question-table thead th {
+  background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
+  color: white;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 0.8px;
+  padding: 1rem 1.2rem;
+  border: none;
+  text-align: left;
+}
+
+.question-table tbody tr {
+  transition: all 0.25s ease;
+  border-bottom: 1px solid #f1e8ff;
+}
+
+.question-table tbody tr:hover {
+  background-color: #faf5ff;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(139, 92, 246, 0.12);
+}
+
+.question-table td {
+  padding: 1.1rem 1.2rem;
+  vertical-align: middle;
+  border: none;
+}
+
+.question-number {
+  font-weight: 700;
+  color: #5b21b6;
+  width: 50px;
+}
+
+.question-text, .student-answer {
+  max-width: 350px;
+}
+
+.question-content, .answer-content {
+  line-height: 1.5;
+  color: #374151;
+}
+
+.answer-content {
+  font-family: 'Courier New', monospace;
+  font-size: 0.94rem;
+  background: #f8f9fa;
+  padding: 0.6rem 0.8rem;
+  border-radius: 10px;
+  border-left: 4px solid #e0d4ff;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.4rem 0.9rem;
+  border-radius: 50px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status-badge.correct {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.score {
+  font-size: 1.1rem;
+  text-align: center;
+  color: #5b21b6;
+}
+
+@media (max-width: 992px) {
+  .question-table-wrapper {
+    border-radius: 16px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin-left: -1rem;
+    margin-right: -1rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .question-table {
+    min-width: 850px;        /* Keeps all columns visible together */
+    font-size: 0.94rem;
+  }
+
+  .question-table th,
+  .question-table td {
+    padding: 0.9rem 0.8rem;
+  }
+
+  .answer-content {
+    font-size: 0.9rem;
+    padding: 0.55rem 0.7rem;
+  }
+}
