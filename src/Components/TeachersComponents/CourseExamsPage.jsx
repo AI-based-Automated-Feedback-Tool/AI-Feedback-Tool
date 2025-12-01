@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Card, Table, Button, Spinner, Alert } from 'react-bootstrap';
 import { supabase } from '../../SupabaseAuth/supabaseClient';
+import '../../css/CourseExamsPage.css';
 
 const CourseExamsPage = () => {
   const { course_id } = useParams();
@@ -69,23 +70,24 @@ const CourseExamsPage = () => {
   };
 
   return (
-    <Container className="mt-4">
-      <Card className="shadow-sm">
-        <Card.Header className="bg-primary text-white d-flex justify-content-between align-items-center">
-          <h4>
+    <Container className="mt-5 exam-page">
+      <Card className="shadow-lg exam-main-card">
+        <Card.Header className="bg-gradient text-white d-flex justify-content-between align-items-center exam-header">
+          <h4 className="mb-0">
             {courseData ? `${courseData.course_code} - ${courseData.title}` : 'Course Exams'}
           </h4>
           {courseData && (
             <Button 
               variant="light"
+              className="create-exam-btn"
               onClick={() => navigate(`/teacher/exams`)}
             >
               Create New Exam
             </Button>
           )}
         </Card.Header>
-        <Card.Body>
-          {error && <Alert variant="danger">{error}</Alert>}
+        <Card.Body className='p-4'>
+          {error && <Alert variant="danger" className="modern-alert">{error}</Alert>}
           
           {loading ? (
             <div className="text-center py-4">
@@ -95,11 +97,11 @@ const CourseExamsPage = () => {
               <p className="mt-2">Loading exams...</p>
             </div>
           ) : exams.length === 0 ? (
-            <Alert variant="info">
+            <Alert variant="info" className="empty-state-alert">
               No exams found for this course. Create one to get started.
             </Alert>
           ) : (
-            <Table striped bordered hover responsive>
+            <Table striped bordered hover responsive className="exam-table-list">
               <thead>
                 <tr>
                   <th>Title</th>
@@ -111,9 +113,13 @@ const CourseExamsPage = () => {
               </thead>
               <tbody>
                 {exams.map((exam) => (
-                  <tr key={exam.exam_id} style={{ cursor: 'pointer' }} onClick={() => navigate(`/teacher/courses/${course_id}/exams/${exam.exam_id}`)}>
-                    <td>{exam.title}</td>
-                    <td>{exam.type.toUpperCase()}</td>
+                  <tr key={exam.exam_id} style={{ cursor: 'pointer' }} onClick={() => navigate(`/teacher/courses/${course_id}/exams/${exam.exam_id}`)} className="exam-row">
+                    <td className="exam-title">{exam.title}</td>
+                    <td>
+                      <span className={`type-badge ${exam.type}`}>
+                        {exam.type.toUpperCase()}
+                      </span>
+                    </td>
                     <td>{formatDuration(exam.duration)}</td>
                     <td>{exam.question_count || 'N/A'}</td>
                     <td>{formatDate(exam.end_time)}</td>
