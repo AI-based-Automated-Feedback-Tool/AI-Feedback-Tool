@@ -63,8 +63,8 @@ export default function StudentReportCard({ studentReportData, examType }) {
                                     <i className="fas fa-clock"></i>
                                 </div>
                                 <div>
-                                    <p className='info-label'>Time Taken</p>
-                                    <h4 className='info-value'>{(studentReportData[0].time_taken/60).toFixed(2)} minutes</h4>
+                                    <p className='info-label'>Time Taken per Question</p>
+                                    <h4 className='info-value'>{((studentReportData[0].time_taken/60)/reportData.length).toFixed(2)} minutes</h4>
                                 </div>
                             </div>
                         </Col>
