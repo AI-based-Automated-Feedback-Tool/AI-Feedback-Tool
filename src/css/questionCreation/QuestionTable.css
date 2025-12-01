@@ -1,4 +1,4 @@
-.question-table-wrapper {
+.question-table-wrapper-qcreation {
   overflow-x: auto;
   border-radius: 1.5rem;
   box-shadow: 0 10px 35px rgba(0, 0, 0, .08);
@@ -7,7 +7,7 @@
   margin-top: 2rem;
 }
 
-.modern-table {
+.modern-table-qcreation {
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
@@ -17,12 +17,12 @@
   overflow: hidden;
 }
 
-.modern-table thead {
+.modern-table-qcreation thead {
   background: linear-gradient(135deg, #667eea, #764ba2);
   color: white;
 }
 
-.modern-table th {
+.modern-table-qcreation th {
   padding: 1.2rem 1rem;
   text-align: center;
   font-weight: 600;
@@ -31,7 +31,7 @@
   letter-spacing: 0.5px;
 }
 
-.modern-table td {
+.modern-table-qcreation td {
   padding: 1rem;
   text-align: center;
   vertical-align: middle;
@@ -40,18 +40,18 @@
   color: #374151;
 }
 
-.modern-table tbody tr {
+.modern-table-qcreation tbody tr {
   background: #fafafa;
   transition: all 0.3s ease;
 }
 
-.modern-table tbody tr:hover {
+.modern-table-qcreation tbody tr:hover {
   background: #f1f5f9;
   transform: translateY(-2px);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
 }
 
-.modern-table tbody tr:last-child td {
+.modern-table-qcreation tbody tr:last-child td {
   border-bottom: none;
 }
 
@@ -233,8 +233,8 @@
 
 /* responsive */
 @media (max-width: 992px) {
-  .modern-table th,
-  .modern-table td {
+  .modern-table-qcreation th,
+  .modern-table-qcreation td {
     padding: 0.8rem 0.6rem;
     font-size: 0.85rem;
   }
@@ -248,8 +248,8 @@
 }
 
 @media (max-width: 768px) {
-  .modern-table th,
-  .modern-table td {
+  .modern-table-qcreation th,
+  .modern-table-qcreation td {
     font-size: 0.8rem;
   }
   .truncate-cell {
