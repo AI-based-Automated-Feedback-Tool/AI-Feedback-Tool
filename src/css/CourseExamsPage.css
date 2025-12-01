@@ -1,7 +1,10 @@
 .exam-page {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 1rem;
+  width: 100vw;
+  max-width: 100% !important;
+  margin: 0 !important;
+  padding: 2rem 2rem !important;
+  box-sizing: border-box;
+  background: #f9f9ff;
 }
 
 .exam-main-card {
@@ -38,7 +41,6 @@
 .create-exam-btn:hover {
   transform: translateY(-4px);
   box-shadow: 0 15px 35px rgba(0,0,0,0.25);
-  background: #f8f9fa !important;
 }
 
 .exam-table-list {
@@ -66,44 +68,28 @@
   transition: background 0.25s ease;
 }
 
-.exam-row {
-  transition: all 0.25s ease;
-}
-
 .exam-row:hover {
   background: #faf5ff !important;
   transform: translateX(6px);
 }
 
-.exam-title {
-  font-weight: 600;
-  color: #1e293b;
-  font-size: 1.05rem;
+.exam-row .exam-title {
+  font-weight: 700 !important;
+  color: #1e293b !important;
+  font-size: 1.08rem !important;
 }
 
 .type-badge {
-  padding: 0.45rem 1rem;
-  border-radius: 50px;
-  font-size: 0.82rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.6px;
+  background: #d7c6ff !important;
+  color: #5b21b6 !important;
+  padding: 0.45rem 1.1rem !important;
+  border-radius: 50px !important;
+  font-size: 0.82rem !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.6px !important;
 }
 
-.type-badge.quiz {
-  background: #dbeafe;
-  color: #1e40af;
-}
-
-.type-badge.test {
-  background: #fecdd3;
-  color: #991b1b;
-}
-
-.type-badge.assignment {
-  background: #e0e0e0;
-  color: #52525b;
-}
 
 .modern-alert {
   border-radius: 16px !important;
@@ -124,10 +110,6 @@
   font-size: 1.1rem;
 }
 
-.text-center.py-4 {
-  padding: 4rem 0 !important;
-}
-
 .text-center.py-4 .spinner-border {
   width: 3.5rem;
   height: 3.5rem;
@@ -142,10 +124,6 @@
     gap: 1rem;
   }
 
-  .exam-header h4 {
-    font-size: 1.6rem;
-  }
-
   .create-exam-btn {
     width: 100%;
   }
@@ -153,11 +131,5 @@
   .exam-table-list th,
   .exam-table-list td {
     padding: 1rem 0.8rem !important;
-    font-size: 0.92rem;
-  }
-
-  .type-badge {
-    font-size: 0.78rem;
-    padding: 0.4rem 0.8rem;
   }
 }
