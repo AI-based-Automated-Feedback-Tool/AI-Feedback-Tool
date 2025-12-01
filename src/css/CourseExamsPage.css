@@ -116,6 +116,39 @@
   border-width: 0.4em;
 }
 
+.action-cell {
+  text-align: center;
+  padding: 1rem 1.6rem !important;
+}
+
+.delete-exam-btn {
+  background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+  border: none !important;
+  border-radius: 16px !important;
+  padding: 0.55rem 1.3rem !important;
+  font-weight: 700 !important;
+  font-size: 0.88rem !important;
+  color: white !important;
+  box-shadow: 0 6px 18px rgba(239, 68, 68, 0.3) !important;
+  transition: all 0.3s ease !important;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-width: 110px;
+  justify-content: center;
+}
+
+.delete-exam-btn:hover {
+  background: linear-gradient(135deg, #dc2626, #b91c1c) !important;
+  transform: translateY(-3px) scale(1.05) !important;
+  box-shadow: 0 12px 30px rgba(239, 68, 68, 0.45) !important;
+  color: white !important;
+}
+
+.delete-exam-btn:active {
+  transform: translateY(-1px) !important;
+}
+
 @media (max-width: 768px) {
   .exam-header {
     padding: 1.8rem 1.5rem !important;

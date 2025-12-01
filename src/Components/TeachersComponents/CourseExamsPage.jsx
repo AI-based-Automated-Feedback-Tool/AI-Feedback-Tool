@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Card, Table, Button, Spinner, Alert } from 'react-bootstrap';
 import { supabase } from '../../SupabaseAuth/supabaseClient';
 import '../../css/CourseExamsPage.css';
+import useDeleteExam from './courseExamPage/useCourseExamPage';
 
 const CourseExamsPage = () => {
   const { course_id } = useParams();
@@ -69,6 +70,8 @@ const CourseExamsPage = () => {
     });
   };
 
+  // Delete exam handler
+  const { deletingId, deleting, deleteError, handleDeleteClick } = useDeleteExam(setExams);
   return (
     <Container className="mt-5 exam-page">
       <Card className="shadow-lg exam-main-card">
@@ -109,6 +112,7 @@ const CourseExamsPage = () => {
                   <th>Duration</th>
                   <th>Questions</th>
                   <th>Due Date</th>
+                  <th></th>
                 </tr>
               </thead>
               <tbody>
@@ -123,6 +127,21 @@ const CourseExamsPage = () => {
                     <td>{formatDuration(exam.duration)}</td>
                     <td>{exam.question_count || 'N/A'}</td>
                     <td>{formatDate(exam.end_time)}</td>
+                    <td className="action-cell">
+                      <Button
+                        variant="danger"
+                        size="sm"
+                        className='delete-exam-btn'
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDeleteClick(exam.exam_id, exam.title); 
+                        }}
+                        disabled={deleting && deletingId === exam.exam_id}
+                      >
+                        <i className="fas fa-trash-alt me-1"></i>
+                        Delete
+                      </Button>
+                    </td>
                   </tr>
                 ))}
               </tbody>
