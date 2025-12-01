@@ -2,8 +2,8 @@ import '../../../css/questionCreation/QuestionTable.css'
 
 export default function QuestionTable({questions, onDelete, onEdit}) {
   return (
-    <div className='question-table-wrapper'>
-      <table className='modern-table'>
+    <div className='question-table-wrapper-qcreation'>
+      <table className='modern-table-qcreation'>
         <thead>
           <tr>
               <th>#</th>

@@ -49,7 +49,7 @@ export default function ExamReportTable({studentList}) {
                                 </td>
                                 <td className="time-cell">
                                     {student.time_taken !== null ? (
-                                        <span>{student.time_taken} min</span>
+                                        <span>{(student.time_taken/60).toFixed(2)} min</span>
                                     ) : (
                                         <span className="na">—</span>
                                     )}
