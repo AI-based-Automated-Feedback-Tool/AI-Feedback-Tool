@@ -23,7 +23,7 @@ export default function EditMcqQuestionCollection({questions, setQuestions}) {
           {/* Question Text */}
           <div className="mb-4">             
             <Form.Group controlId={`question-text-${q.question_id}`}>
-              <Form.Label className="fw-semibold text-indigo">
+              <Form.Label className="section-title">
                 Question Text
               </Form.Label>
               <Form.Control
