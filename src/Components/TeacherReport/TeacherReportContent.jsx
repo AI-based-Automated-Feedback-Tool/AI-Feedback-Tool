@@ -53,7 +53,7 @@ export default function TeacherReportContent() {
 
     const { courses, courseLoading } = useFetchCourses(userId, setError); //phase2
     const { studentList, processing } = useSelectStudents(selectedCourse, setError, examSubmissions);
-
+    const [examDueDate, setExamDueDate] = useState(null);
     //find exam type
     const selectedExamObject = exams.find((exam) => exam.exam_id === selectedExam)
     const examType = selectedExamObject?.type || 'mcq';
@@ -128,6 +128,16 @@ export default function TeacherReportContent() {
     useEffect(() =>{
         setSelectedStudent("");
     }, [selectedExam])
+
+    useEffect(() => {
+        if (!selectedExam) {
+        setExamDueDate(null);
+        return;
+    }
+
+    const exam = exams.find((e) => e.exam_id === selectedExam);
+    setExamDueDate(exam?.end_time || null); 
+    }, [selectedExam, exams]);
 
   return (
     <div
@@ -250,7 +260,7 @@ export default function TeacherReportContent() {
                                         Overall Exam Report
                                     </h2>
                                     <div className="report-section-subtitle">
-                                        {noOfStudentsDoneExam} student{noOfStudentsDoneExam !== 1 ? 's' : ''} completed the exam
+                                        {noOfStudentsDoneExam} student{noOfStudentsDoneExam !== 1 ? 's' : ''} completed the exam (Exam due on {examDueDate ? new Date(examDueDate).toLocaleDateString() : "No due date"})
                                     </div>
                                     <div className="report-section-divider"></div>
                                 </div>
