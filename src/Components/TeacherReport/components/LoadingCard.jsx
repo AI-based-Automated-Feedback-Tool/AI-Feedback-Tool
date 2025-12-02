@@ -7,7 +7,7 @@ const LoadingCard = () => {
           <div className="spinner-core"></div>
         </div>
         <div className="loading-text">
-          <h3>Loading user info...</h3>
+          <h3>Loading info...</h3>
           <p>Please wait while we retrieve your data.</p>
         </div>
         <div className="loading-dots">

@@ -6,6 +6,7 @@ import EditExam from './components/EditExam';
 import { useNavigate } from 'react-router-dom';
 import '../../css/EditExam/ExamDetails.css';
 import useEditExam from './hooks/useEditExam';
+import LoadingCard from '../TeacherReport/components/LoadingCard';
 
 
 export default function ExamsContent() {
@@ -67,9 +68,7 @@ export default function ExamsContent() {
 
   if (loading) {
     return (
-      <div className="d-flex justify-content-center align-items-center" style={{ height: '70vh' }}>
-        <Spinner animation="border" variant="primary" />
-      </div>
+      <LoadingCard />      
     );
   }
 
