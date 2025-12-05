@@ -16,7 +16,8 @@ const ConfigureExam = () => {
         question_count: "",
         ai_assessment_guide: "",
         start_time: "",
-        end_time: ""
+        end_time: "",
+        exam_or_assignment: "exam"
     });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -98,7 +99,8 @@ const ConfigureExam = () => {
                 "https://ai-feedback-tool-backend-qgvj.onrender.com/api/configureExam",
                 {
                     ...exam,
-                    user_id: session.user.id
+                    user_id: session.user.id,
+                    exam_or_assignment: exam.exam_or_assignment
                 }
             );
             
@@ -107,7 +109,7 @@ const ConfigureExam = () => {
                 examId: response.data.examId
             }));
             
-            navigate(`/teacher/exams/${response.data.examId}/questions/${exam.type}?question_count=${exam.question_count}`);
+            navigate(`/teacher/exams/${response.data.examId}/questions/${exam.type}?question_count=${exam.question_count}&exam_or_assignment=${exam.exam_or_assignment}`);
 
         } catch (err) {
             console.error("Error saving exam:", err);
@@ -133,8 +135,12 @@ const ConfigureExam = () => {
             <div className="configure-hero-section">
                 <Container>
                     <div className="configure-hero-content">
-                        <h1 className="configure-hero-title">📝 Configure New Exam</h1>
-                        <p className="configure-hero-subtitle">Set up comprehensive exam parameters and grading criteria</p>
+                        <h1 className="configure-hero-title">
+                            {exam.exam_or_assignment === "exam" ? "📝 Configure New Exam" : "📋 Configure New Assignment"}
+                        </h1>
+                        <p className="configure-hero-subtitle">
+                            Set up comprehensive parameters and grading criteria
+                        </p>
                     </div>
                 </Container>
             </div>
@@ -142,11 +148,52 @@ const ConfigureExam = () => {
             <Container className="my-4">
                 <Card className="main-card">
                     <Card.Header className="main-card-header">
-                        <h4>Exam Configuration</h4>
+                        <h4>{exam.exam_or_assignment === "exam" ? "Exam Configuration" : "Assignment Configuration"}</h4>
                     </Card.Header>
                     <Card.Body>
                     {error && <Alert variant="danger">{error}</Alert>}
                     <Form onSubmit={handleSubmit}>
+                        {/* Exam or Assignment Selection */}
+                        <Card className="section-card mb-3">
+                            <Card.Header className="section-card-header">
+                                <h5 className="mb-0">Type Selection</h5>
+                            </Card.Header>
+                            <Card.Body>
+                                <Form.Group>
+                                    <Form.Label className="fw-bold">Select Type *</Form.Label>
+                                    <div className="d-flex gap-4">
+                                        <Form.Check
+                                            type="radio"
+                                            id="type-exam"
+                                            name="exam_or_assignment"
+                                            value="exam"
+                                            label={
+                                                <div>
+                                                    <strong>Exam</strong>
+                                                    <div className="text-muted small">Traditional assessment format</div>
+                                                </div>
+                                            }
+                                            checked={exam.exam_or_assignment === "exam"}
+                                            onChange={handleChange}
+                                        />
+                                        <Form.Check
+                                            type="radio"
+                                            id="type-assignment"
+                                            name="exam_or_assignment"
+                                            value="assignment"
+                                            label={
+                                                <div>
+                                                    <strong>Assignment</strong>
+                                                    <div className="text-muted small">Project or homework submission</div>
+                                                </div>
+                                            }
+                                            checked={exam.exam_or_assignment === "assignment"}
+                                            onChange={handleChange}
+                                        />
+                                    </div>
+                                </Form.Group>
+                            </Card.Body>
+                        </Card>
                         {/* Basic Information Section */}
                         <Card className="section-card">
                             <Card.Header className="section-card-header">
@@ -154,12 +201,16 @@ const ConfigureExam = () => {
                             </Card.Header>
                             <Card.Body>
                                 <Form.Group className="mb-3">
-                                    <Form.Label className="fw-bold">Exam Title *</Form.Label>
+                                    <Form.Label className="fw-bold">
+                                        {exam.exam_or_assignment === "exam" ? "Exam Title" : "Assignment Title"} *
+                                    </Form.Label>
                                     <Form.Control 
                                         name="title" 
                                         onChange={handleChange}
                                         value={exam.title}
-                                        placeholder="Enter a descriptive title (e.g., 'Data Structures Final Exam')"
+                                        placeholder={exam.exam_or_assignment === "exam" 
+                                            ? "Enter a descriptive title (e.g., 'Data Structures Final Exam')"
+                                            : "Enter a descriptive title (e.g., 'Project Report Assignment')"}
                                         required
                                     />
                                 </Form.Group>
@@ -189,7 +240,7 @@ const ConfigureExam = () => {
                                     </Col>
                                     <Col md={6}>
                                         <Form.Group>
-                                            <Form.Label className="fw-bold">Exam Duration (Minutes) *</Form.Label>
+                                            <Form.Label className="fw-bold">Duration (Minutes) *</Form.Label>
                                             <Form.Control 
                                                 type="number" 
                                                 name="duration" 
@@ -236,7 +287,9 @@ const ConfigureExam = () => {
                         {/* Exam Rules Section */}
                         <Card className="section-card">
                             <Card.Header className="section-card-header">
-                                <h5 className="mb-0">Exam Rules & Instructions</h5>
+                                <h5 className="mb-0">
+                                    {exam.exam_or_assignment === "exam" ? "Exam Rules & Instructions" : "Assignment Instructions"}
+                                </h5>
                             </Card.Header>
                             <Card.Body>
                                 <Form.Group className="mb-3">
