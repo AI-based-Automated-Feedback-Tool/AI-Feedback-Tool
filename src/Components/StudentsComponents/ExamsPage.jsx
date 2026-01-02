@@ -29,39 +29,52 @@ const ExamsPage = () => {
     }
   }, [userId, fetchEnrolledCourses]);
 
-  const getExamStatus = (exam) => {
-    const currentTime = new Date();
-    const startTime = new Date(exam.start_time);
-    const endTime = new Date(exam.end_time);
+  // Normalize type: "exam" / "assignment"
+  const getKind = (item) =>
+    String(item.exam_or_assignment || "exam").toLowerCase().trim();
 
-    if (currentTime > endTime) {
-      return "closed";
-    } else if (currentTime >= startTime && !exam.isTaken) {
-      return "open";
-    }
+  const getItemStatus = (item) => {
+    const currentTime = new Date();
+    const startTime = new Date(item.start_time);
+    const endTime = new Date(item.end_time);
+
+    if (currentTime > endTime) return "closed";
+    if (currentTime >= startTime) return "open";
     return "pending";
   };
 
-  const handleStart = (exam) => {
+  const handleStart = (item) => {
     const currentTime = new Date();
-    const startTime = new Date(exam.start_time);
-    const endTime = new Date(exam.end_time);
+    const startTime = new Date(item.start_time);
+    const endTime = new Date(item.end_time);
 
     if (currentTime >= startTime && currentTime <= endTime) {
-      console.log("Starting exam of type:", exam.type, "Exam ID:", exam.exam_id);
-      if (exam.type === "mcq") {
-        navigate(`/dashboard/task/${exam.exam_id}`);
-      } else if (exam.type === "code") {
-        navigate(`/dashboard/code/${exam.exam_id}`);
-      } else if (exam.type === "essay") {
-        navigate(`/dashboard/essay/${exam.exam_id}`);
+      console.log(
+        "Starting:",
+        getKind(item),
+        "| type:",
+        item.type,
+        "| id:",
+        item.exam_id
+      );
+
+      // For now assignment and exam can use same routes.
+      // If later you want different routes, change base here.
+      const base = "/dashboard";
+
+      if (item.type === "mcq") {
+        navigate(`${base}/task/${item.exam_id}`);
+      } else if (item.type === "code") {
+        navigate(`${base}/code/${item.exam_id}`);
+      } else if (item.type === "essay") {
+        navigate(`${base}/essay/${item.exam_id}`);
       } else {
-        alert("Unknown exam type.");
+        alert("Unknown type.");
       }
     } else if (currentTime > endTime) {
-      alert("The exam has ended.");
+      alert("This has ended.");
     } else {
-      alert("Exam hasn't started yet.");
+      alert("This hasn't started yet.");
     }
   };
 
@@ -73,11 +86,11 @@ const ExamsPage = () => {
         `/student/courses/${userId}/${courseId}/exams/reviews/${submissionId}`
       );
     } else {
-      alert("Submission ID not found for this exam.");
+      alert("Submission ID not found for this item.");
     }
   };
 
-  if (loading) return <p>Loading exams...</p>;
+  if (loading) return <p>Loading exams/assignments...</p>;
   if (error) return <p>{error}</p>;
 
   const courseTitle =
@@ -85,93 +98,106 @@ const ExamsPage = () => {
       (course) => String(course.course_id) === String(courseId)
     )?.title || "Loading course...";
 
-  const openExams = pendingExams.filter(
-    (exam) => getExamStatus(exam) === "open"
-  );
-  const closedExams = pendingExams.filter(
-    (exam) => getExamStatus(exam) === "closed"
+  // Split pending items by time status
+  const openItems = pendingExams.filter((item) => getItemStatus(item) === "open");
+  const closedItems = pendingExams.filter(
+    (item) => getItemStatus(item) === "closed"
   );
 
-  console.log("pendingExams:", pendingExams);
-  pendingExams.forEach((exam) => {
-  console.log(`Exam Title: ${exam.title}, Type: ${exam.type}, Status: ${getExamStatus(exam)}`);
-});
-  console.log("completedExams:", completedExams);
-  console.log("courseId:", courseId);
+  // Split by kind (exam vs assignment)
+  const openExams = openItems.filter((i) => getKind(i) === "exam");
+  const openAssignments = openItems.filter((i) => getKind(i) === "assignment");
+
+  const closedExams = closedItems.filter((i) => getKind(i) === "exam");
+  const closedAssignments = closedItems.filter((i) => getKind(i) === "assignment");
+
+  const completedOnlyExams = completedExams.filter((i) => getKind(i) === "exam");
+  const completedOnlyAssignments = completedExams.filter(
+    (i) => getKind(i) === "assignment"
+  );
+
+  // Debug (optional)
+  // console.log("pending kinds:", pendingExams.map(x => x.exam_or_assignment));
+
+  const renderCards = (items, status, mode) => (
+    <div className="row">
+      {items.map((item) => (
+        <div className="col-md-4" key={item.exam_id}>
+          <AssignmentCard
+            title={item.title}
+            type={item.type}
+            due={item.duration}
+            startTime={item.start_time}
+            endTime={item.end_time}
+            status={status}
+            onStart={mode === "start" ? () => handleStart(item) : undefined}
+            onReview={mode === "review" ? () => handleReview(item.exam_id) : undefined}
+          />
+        </div>
+      ))}
+    </div>
+  );
+
+  const isEmpty =
+    pendingExams.length === 0 && completedExams.length === 0;
 
   return (
     <div className="container py-4">
-      <h3> 🧪 Exams for Course: {courseTitle}</h3>
+      <h3>📚 Course Items: Exams & Assignments — {courseTitle}</h3>
 
+      {/* OPEN EXAMS */}
       {openExams.length > 0 && (
         <>
           <h5 className="mt-4 text-primary">Open Exams</h5>
-          <div className="row">
-            {openExams.map((exam) => (
-              <div className="col-md-4" key={exam.exam_id}>
-                <AssignmentCard
-                  title={exam.title}
-                  type={exam.type}
-                  due={exam.duration}
-                  startTime={exam.start_time}
-                  endTime={exam.end_time}
-                  status="open"
-                  onStart={() => handleStart(exam)}
-                />
-              </div>
-            ))}
-          </div>
+          {renderCards(openExams, "open", "start")}
         </>
       )}
 
+      {/* OPEN ASSIGNMENTS */}
+      {openAssignments.length > 0 && (
+        <>
+          <h5 className="mt-4 text-primary">Open Assignments</h5>
+          {renderCards(openAssignments, "open", "start")}
+        </>
+      )}
+
+      {/* CLOSED EXAMS */}
       {closedExams.length > 0 && (
         <>
           <h5 className="mt-5 text-danger">Closed Exams</h5>
-          <div className="row">
-            {closedExams.map((exam) => (
-              <div className="col-md-4" key={exam.exam_id}>
-                <AssignmentCard
-                  title={exam.title}
-                  type={exam.type}
-                  due={exam.duration}
-                  startTime={exam.start_time}
-                  endTime={exam.end_time}
-                  status="closed"
-                  onStart={() => handleStart(exam)}
-                />
-              </div>
-            ))}
-          </div>
+          {renderCards(closedExams, "closed", "start")}
         </>
       )}
 
-      {completedExams.length > 0 && (
+      {/* CLOSED ASSIGNMENTS */}
+      {closedAssignments.length > 0 && (
+        <>
+          <h5 className="mt-5 text-danger">Closed Assignments</h5>
+          {renderCards(closedAssignments, "closed", "start")}
+        </>
+      )}
+
+      {/* COMPLETED EXAMS */}
+      {completedOnlyExams.length > 0 && (
         <>
           <h5 className="mt-5 text-success">Completed Exams</h5>
-          <div className="row">
-            {completedExams.map((exam) => (
-              <div className="col-md-4" key={exam.exam_id}>
-                <AssignmentCard
-                  title={exam.title}
-                  type={exam.type}
-                  due={exam.duration}
-                  startTime={exam.start_time}
-                  endTime={exam.end_time}
-                  status="completed"
-                  onReview={() => handleReview(exam.exam_id)}
-                />
-              </div>
-            ))}
-          </div>
+          {renderCards(completedOnlyExams, "completed", "review")}
         </>
       )}
 
-      {pendingExams.length === 0 &&
-        !pendingExams.some((exam) => getExamStatus(exam) === "closed") &&
-        completedExams.length === 0 && (
-          <p className="mt-5 text-center text-muted">No exam is added.</p>
-        )}
-        
+      {/* COMPLETED ASSIGNMENTS */}
+      {completedOnlyAssignments.length > 0 && (
+        <>
+          <h5 className="mt-5 text-success">Completed Assignments</h5>
+          {renderCards(completedOnlyAssignments, "completed", "review")}
+        </>
+      )}
+
+      {isEmpty && (
+        <p className="mt-5 text-center text-muted">
+          No exam or assignment is added.
+        </p>
+      )}
     </div>
   );
 };
